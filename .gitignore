@@ -31,6 +31,9 @@ dist
 # Debug
 npm-debug.log*
 
+# Skills
+.agents
+
 # Misc
 .DS_Store
 *.pem

@@ -34,6 +34,9 @@ jobs:
           set -a
           source .vercel/.env.preview.local
           set +a
+          echo "Checking env vars for Clerk..."
+          echo "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:-UNDEFINED}"
+          echo "---"
           vercel build
 
       - name: Deploy Project Artifacts to Vercel

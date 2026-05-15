@@ -36,7 +36,7 @@ export function FeedbackPopover({ trigger }: { trigger?: React.ReactElement }) {
         <PopoverContent
           align="end"
           side="right"
-          sideOffset={12}
+          sideOffset={16}
           className={"min-w-80"}
         >
           <Textarea

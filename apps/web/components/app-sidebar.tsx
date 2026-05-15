@@ -186,13 +186,10 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar className="border-r-0 font-medium" {...props}>
+    <Sidebar className="border-r-0 font-medium" {...props} collapsible="icon">
       <SidebarHeader>
         <div className="flex items-center gap-2 p-1">
           <LogoWordmark className="h-6" />
-          <div className="rounded-full bg-muted px-1.5 py-0.25 text-xs font-medium text-muted-foreground uppercase">
-            Alpha
-          </div>
         </div>
         <NavMain items={data.navMain} />
       </SidebarHeader>

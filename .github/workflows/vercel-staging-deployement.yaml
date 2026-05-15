@@ -30,7 +30,11 @@ jobs:
       - name: Build Project Artifacts
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel env run -e preview -- vercel build
+        run: |
+          set -a
+          source .vercel/.env.preview.local
+          set +a
+          vercel build
 
       - name: Deploy Project Artifacts to Vercel
         env:

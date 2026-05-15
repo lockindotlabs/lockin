@@ -58,7 +58,7 @@ export default function Page() {
 
         <div className="flex h-full">
           <div className="flex-1">
-            <div className="flex h-14 items-center justify-between border-b px-3">
+            <div className="flex h-14 items-center justify-between px-3">
               <SidebarTrigger />
               <div className="flex gap-2">
                 <div className={`flex gap-2 ${isMobile && "hidden"}`}>

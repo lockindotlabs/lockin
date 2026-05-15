@@ -20,23 +20,34 @@ export function NavSecondary({
     url: string
     icon: React.ReactNode
     badge?: React.ReactNode
-    popover?: React.ReactNode
+    popover?: React.ReactElement<{ trigger?: React.ReactElement }>
   }[]
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              {item.popover && item.popover}
+          {items.map((item) => {
+            const button = (
               <SidebarMenuButton render={<a href={item.url} />}>
                 {item.icon}
                 <span>{item.title}</span>
               </SidebarMenuButton>
-              {item.badge && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}
-            </SidebarMenuItem>
-          ))}
+            )
+
+            return (
+              <SidebarMenuItem key={item.title}>
+                {item.popover && React.isValidElement(item.popover)
+                  ? React.cloneElement(item.popover, {
+                      trigger: button,
+                    })
+                  : button}
+                {item.badge && (
+                  <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+                )}
+              </SidebarMenuItem>
+            )
+          })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

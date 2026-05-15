@@ -14,6 +14,12 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
+const metadata = {
+  title: "LockIn",
+  description:
+    "A tool to help you stay focused and avoid distractions while working on your projects.",
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,6 +36,10 @@ export default function RootLayout({
         inter.variable
       )}
     >
+      <head>
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+      </head>
       <body>
         <ThemeProvider>
           <TooltipProvider>

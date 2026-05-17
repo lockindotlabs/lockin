@@ -31,7 +31,7 @@ const metadata = {
 }
 
 const clerkProviderAppearance = {
-  theme: "shadcn",
+  theme: "default",
   variables: {
     // Brand & Primary Colors
     colorPrimary: "#1D1D16",

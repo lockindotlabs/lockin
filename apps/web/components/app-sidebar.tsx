@@ -68,7 +68,7 @@ const data = {
 
     {
       title: "Home",
-      url: "#",
+      url: "/app",
       icon: <HomeIcon />,
       isActive: true,
     },
@@ -79,7 +79,7 @@ const data = {
     },
     {
       title: "New plan",
-      url: "#",
+      url: "/app/plan",
       icon: <PlusIcon />,
     },
   ],
@@ -98,33 +98,8 @@ const data = {
   favorites: [
     {
       name: "Project Management & Task Tracking",
-      url: "#",
-      emoji: "📊",
-    },
-    {
-      name: "Family Recipe Collection & Meal Planning",
-      url: "#",
-      emoji: "🍳",
-    },
-    {
-      name: "Fitness Tracker & Workout Routines",
-      url: "#",
-      emoji: "💪",
-    },
-    {
-      name: "Book Notes & Reading List",
-      url: "#",
-      emoji: "📚",
-    },
-    {
-      name: "Sustainable Gardening Tips & Plant Care",
-      url: "#",
-      emoji: "🌱",
-    },
-    {
-      name: "Language Learning Progress & Resources",
-      url: "#",
-      emoji: "🗣️",
+      url: "/app/plan",
+      emoji: "",
     },
   ],
   workspaces: [
@@ -183,8 +158,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        {/* <NavFavorites favorites={data.favorites} />
-        <NavWorkspaces workspaces={data.workspaces} /> */}
+        <NavFavorites favorites={data.favorites} />
+        {/* <NavWorkspaces workspaces={data.workspaces} /> */}
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       {/* <SidebarFooter>

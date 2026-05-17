@@ -31,7 +31,7 @@ const metadata = {
 }
 
 const clerkProviderAppearance = {
-  theme: "shadcn",
+  theme: "default",
   variables: {
     // Brand & Primary Colors
     colorPrimary: "#1D1D16",
@@ -43,7 +43,7 @@ const clerkProviderAppearance = {
     colorNeutral: "#0C0C09",
 
     // Component Specifics
-    colorInput: "#E8E8E3",
+    colorInput: "#FFFFFF",
     colorInputForeground: "#0C0C09",
     colorMuted: "#F4F4F0",
     colorMutedForeground: "#7C7C67",
@@ -96,13 +96,7 @@ export default function RootLayout({
           afterSignOutUrl={"/app"}
         >
           <ThemeProvider>
-            <TooltipProvider>
-              {children}
-
-              <div className="absolute right-5 bottom-5 z-10">
-                <FeedbackPopover />
-              </div>
-            </TooltipProvider>
+            <TooltipProvider>{children}</TooltipProvider>
           </ThemeProvider>
         </ClerkProvider>
       </body>

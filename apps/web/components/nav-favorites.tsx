@@ -17,7 +17,14 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
-import { MoreHorizontalIcon, StarOffIcon, LinkIcon, ArrowUpRightIcon, Trash2Icon } from "lucide-react"
+import {
+  MoreHorizontalIcon,
+  StarOffIcon,
+  LinkIcon,
+  ArrowUpRightIcon,
+  Trash2Icon,
+} from "lucide-react"
+import Link from "next/link"
 
 export function NavFavorites({
   favorites,
@@ -35,7 +42,9 @@ export function NavFavorites({
       <SidebarMenu>
         {favorites.map((item) => (
           <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton render={<a href={item.url} title={item.name} />}>
+            <SidebarMenuButton
+              render={<Link href={item.url} title={item.name} />}
+            >
               <span>{item.emoji}</span>
               <span>{item.name}</span>
             </SidebarMenuButton>
@@ -48,8 +57,7 @@ export function NavFavorites({
                   />
                 }
               >
-                <MoreHorizontalIcon
-                />
+                <MoreHorizontalIcon />
                 <span className="sr-only">More</span>
               </DropdownMenuTrigger>
               <DropdownMenuContent
@@ -83,13 +91,14 @@ export function NavFavorites({
             </DropdownMenu>
           </SidebarMenuItem>
         ))}
-        <SidebarMenuItem>
-          <SidebarMenuButton className="text-sidebar-foreground/70">
-            <MoreHorizontalIcon
-            />
-            <span>More</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+        {favorites.length > 10 && (
+          <SidebarMenuItem>
+            <SidebarMenuButton className="text-sidebar-foreground/70">
+              <MoreHorizontalIcon />
+              <span>More</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        )}
       </SidebarMenu>
     </SidebarGroup>
   )

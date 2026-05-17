@@ -1,5 +1,10 @@
 "use client"
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip"
 import { Button } from "@workspace/ui/components/button"
 import {
   Popover,
@@ -22,7 +27,9 @@ export function FeedbackPopover() {
           render={
             <Button
               size={"icon-lg"}
-              className={"rounded-full p-6! shadow-md [&_svg]:size-5!"}
+              className={
+                "rounded-full p-6! shadow-md active:scale-[0.97] [&_svg]:size-5!"
+              }
             >
               <MessageSquareDotIcon data-icon="inline-start" />
             </Button>

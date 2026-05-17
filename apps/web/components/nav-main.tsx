@@ -6,6 +6,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar"
+import Link from "next/link"
 
 export function NavMain({
   items,
@@ -24,7 +25,7 @@ export function NavMain({
         <SidebarMenuItem key={item.title}>
           <SidebarMenuButton
             isActive={item.isActive}
-            render={<a href={item.url} />}
+            render={<Link href={item.url} />}
           >
             {item.icon}
             <span>{item.title}</span>

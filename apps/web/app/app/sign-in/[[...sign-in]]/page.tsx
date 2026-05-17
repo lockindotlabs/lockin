@@ -20,7 +20,7 @@ export default function SignInPage() {
         <LoadingState />
       </ClerkLoading>
       <ClerkLoaded>
-        <SignIn />
+        <SignIn path="/app/sign-in" />
         <ClerkDegraded>
           <DegradedState />
         </ClerkDegraded>

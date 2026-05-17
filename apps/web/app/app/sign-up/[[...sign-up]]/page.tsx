@@ -21,7 +21,7 @@ export default function SignUpPage() {
           <LoadingState />
         </ClerkLoading>
         <ClerkLoaded>
-          <SignUp />
+          <SignUp path="/app/sign-up" />
           <ClerkDegraded>
             <DegradedState />
           </ClerkDegraded>

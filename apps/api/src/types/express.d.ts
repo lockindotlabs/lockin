@@ -1,9 +1,9 @@
-import { TokenPayload } from '../lib/jwt'
+import type { User } from '../generated/prisma/index.js'
 
 declare global {
   namespace Express {
     interface Request {
-      user?: TokenPayload
+      dbUser?: User
     }
   }
 }

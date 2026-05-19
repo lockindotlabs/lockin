@@ -1,28 +1,63 @@
-import express from "express";
-import cors from "cors";
-import userRoutes from "./routes/userRoutes.js";
-import { errorBoundary } from "./middleware/errorBoundary.js";
-import { setupSwagger } from "./config/swagger.js";
+import 'dotenv/config'
+import express from 'express'
+import cors from 'cors'
+import cookieParser from 'cookie-parser'
+import { clerkMiddleware } from '@clerk/express'
+import userRoutes from './routes/userRoutes.js'
+import webhookRouter from './modules/webhook/webhook.router.js'
+import { requireAuth } from './middleware/auth.js'
+import { syncUser } from './middleware/syncUser.js'
+import { errorBoundary } from './middleware/errorBoundary.js'
+import { setupSwagger } from './config/swagger.js'
 
-const app = express();
-const port = process.env.PORT || 3001;
+const app = express()
+const port = process.env.PORT || 3001
 
-app.use(cors());
-app.use(express.json());
+app.use(cors({ origin: true, credentials: true }))
+app.use(cookieParser())
 
-// Set up Swagger UI
-setupSwagger(app);
+// Must be before express.json() — Clerk webhook needs raw body for signature verification
+app.use('/webhooks', webhookRouter)
 
-// Routes
-app.get("/", (req, res) => {
-  res.json({ message: "Hello from Express API!" });
-});
+app.use(express.json())
+app.use(clerkMiddleware())
 
-app.use("/api/users", userRoutes);
+setupSwagger(app)
 
-// Error handler (AFTER all routes)
-app.use(errorBoundary);
+app.get('/', (_req, res) => {
+  res.json({ message: 'Hello from Express API!' })
+})
+
+/**
+ * @openapi
+ * /api/me:
+ *   get:
+ *     summary: Get current authenticated user
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Current user record from database
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+app.get('/api/me', requireAuth(), syncUser, (req, res) => {
+  res.json(req.dbUser)
+})
+
+app.use('/api/users', userRoutes)
+
+app.use(errorBoundary)
 
 app.listen(port, () => {
-  console.log(`API server running on port ${port}`);
-});
+  console.log(`API server running on port ${port}`)
+})

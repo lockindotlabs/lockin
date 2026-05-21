@@ -1,75 +1,49 @@
-import swaggerJsdoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
-import { Application } from "express";
+import swaggerJsdoc from 'swagger-jsdoc'
+import swaggerUi from 'swagger-ui-express'
+import { Application } from 'express'
 
 const options = {
   definition: {
-    openapi: "3.0.0",
+    openapi: '3.0.0',
     info: {
-      title: "User Management API",
-      version: "1.0.0",
-      description: "API for managing users and authentication",
+      title: 'LockIn API',
+      version: '1.0.0',
+      description: 'LockIn backend API. Authenticate via Clerk — paste a Bearer token to test protected routes.',
     },
-    servers: [
-      {
-        url: "http://localhost:3001",
-        description: "Development server",
-      },
-    ],
+    servers: [{ url: 'http://localhost:3001', description: 'Development server' }],
     components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'Clerk session token. Get it from the browser console: `await window.Clerk.session.getToken()`',
+        },
+      },
       schemas: {
         User: {
-          type: "object",
-          required: ["id", "name", "email"],
+          type: 'object',
           properties: {
-            id: {
-              type: "string",
-              description: "Unique user identifier",
-            },
-            name: {
-              type: "string",
-              description: "User's full name",
-            },
-            email: {
-              type: "string",
-              format: "email",
-              description: "User's email address",
-            },
-          },
-        },
-        CreateUserRequest: {
-          type: "object",
-          required: ["name", "email"],
-          properties: {
-            name: {
-              type: "string",
-            },
-            email: {
-              type: "string",
-              format: "email",
-            },
+            id: { type: 'string', example: 'user_2abc...' },
+            isActive: { type: 'boolean', example: true },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time' },
           },
         },
         Error: {
-          type: "object",
-          required: ["code", "message"],
+          type: 'object',
           properties: {
-            code: {
-              type: "string",
-            },
-            message: {
-              type: "string",
-            },
+            error: { type: 'string', example: 'Unauthorized' },
           },
         },
       },
     },
   },
-  apis: ["./src/routes/*.ts"],
-};
+  apis: ['./src/routes/*.ts', './src/index.ts'],
+}
 
-export const swaggerSpec = swaggerJsdoc(options);
+export const swaggerSpec = swaggerJsdoc(options)
 
 export const setupSwagger = (app: Application) => {
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-};
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+}

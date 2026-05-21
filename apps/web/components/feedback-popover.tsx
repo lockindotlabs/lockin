@@ -1,3 +1,6 @@
+"use client"
+
+
 import { Button } from "@workspace/ui/components/button"
 import {
   Popover,
@@ -24,13 +27,14 @@ export function FeedbackPopover({ trigger }: { trigger?: React.ReactElement }) {
       <Popover defaultOpen>
         <PopoverTrigger
           render={
-            trigger ? (
-              trigger
-            ) : (
-              <Button variant="outline" className="w-fit">
-                Open Popover
-              </Button>
-            )
+            <Button
+              size={"icon-lg"}
+              className={
+                "rounded-full p-6! shadow-md active:scale-[0.97] [&_svg]:size-5!"
+              }
+            >
+              <MessageSquareDotIcon data-icon="inline-start" />
+            </Button>
           }
         />
         <PopoverContent

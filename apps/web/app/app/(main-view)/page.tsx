@@ -1,37 +1,15 @@
 "use client"
 
 import { Button } from "@workspace/ui/components/button"
-import {
-  Avatar,
-  AvatarBadge,
-  AvatarFallback,
-  AvatarGroup,
-  AvatarGroupCount,
-  AvatarImage,
-} from "@workspace/ui/components/avatar"
-import {
-  BellDotIcon,
-  BellIcon,
-  BotMessageSquareIcon,
-  BubblesIcon,
-  BusIcon,
-  ChartGanttIcon,
-  FolderIcon,
-  HandIcon,
-  HdIcon,
-  HdmiPortIcon,
-  SparklesIcon,
-} from "lucide-react"
+import { BellDotIcon, BotMessageSquareIcon, FolderIcon } from "lucide-react"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
 import { useIsMobile } from "@workspace/ui/hooks/use-mobile"
 import { LogoWordmark } from "@workspace/ui/components/logo-wordmark"
-import { RightAiSidebar } from "@/components/right-ai-sidebar"
 import { useState } from "react"
-import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs"
+import { RedirectToSignIn, Show, UserButton } from "@clerk/nextjs"
 import {
   Popover,
   PopoverContent,
-  PopoverHeader,
   PopoverTrigger,
 } from "@workspace/ui/components/popover"
 import { ScrollArea } from "@workspace/ui/components/scroll-area"
@@ -116,45 +94,44 @@ export default function Page() {
 
   return (
     <>
-      <div className="min-h-svh">
-        {isMobile && (
-          <>
-            <div className="flex flex-row items-center justify-between border-b p-3 text-xs">
-              <div className="flex flex-row items-center gap-3">
-                <div className="flex aspect-square size-10 items-center justify-center rounded-md bg-muted">
-                  <LogoWordmark className="h-3" />
-                </div>
-                <span>Download app for better experiences on mobile</span>
+      {isMobile && (
+        <>
+          <div className="flex flex-row items-center justify-between border-b p-3 text-xs">
+            <div className="flex flex-row items-center gap-3">
+              <div className="flex aspect-square size-10 items-center justify-center rounded-md bg-muted">
+                <LogoWordmark className="h-3" />
               </div>
-
-              <Button
-                variant={"secondary"}
-                size={"xs"}
-                className={"rounded-full"}
-              >
-                GET APP
-              </Button>
+              <span>Download app for better experiences on mobile</span>
             </div>
-          </>
-        )}
 
-        <div className="flex h-full">
-          <div className="flex-1">
-            <div className="flex h-14 items-center justify-between px-3">
-              <SidebarTrigger />
-              <div className="flex items-center gap-2">
-                <div className={`flex gap-2 ${isMobile && "hidden"}`}>
-                  <Button variant={"outline"} size={"sm"}>
-                    Docs
-                  </Button>
-                  <Button variant={"outline"} size={"sm"}>
-                    <BotMessageSquareIcon data-icon="inline-start" />
-                    Ask
-                  </Button>
-                  <Button variant={"outline"} size={"icon-sm"}>
-                    <FolderIcon />
-                  </Button>
-                  {/* 
+            <Button
+              variant={"secondary"}
+              size={"xs"}
+              className={"rounded-full"}
+            >
+              GET APP
+            </Button>
+          </div>
+        </>
+      )}
+
+      <div className="flex h-screen">
+        <div className="flex-1">
+          <header className="flex h-14 items-center justify-between px-3">
+            <SidebarTrigger />
+            <div className="flex items-center gap-2">
+              <div className={`flex gap-2 ${isMobile && "hidden"}`}>
+                <Button variant={"outline"} size={"sm"}>
+                  Docs
+                </Button>
+                <Button variant={"outline"} size={"sm"}>
+                  <BotMessageSquareIcon data-icon="inline-start" />
+                  Ask
+                </Button>
+                <Button variant={"outline"} size={"icon-sm"}>
+                  <FolderIcon />
+                </Button>
+                {/* 
                   <Button
                     variant={"outline"}
                     onClick={() => setIsAiSidebarOpen(!isAiSidebarOpen)}
@@ -163,46 +140,27 @@ export default function Page() {
                     <SparklesIcon data-icon="inline-start" />
                     {isAiSidebarOpen ? "Hide AI" : "Open AI"}
                   </Button> */}
-                </div>
-
-                <NotificationsPopover />
-
-                <Show when="signed-out">
-                  <SignInButton>
-                    <Button variant={"outline"} size={"sm"}>
-                      Sign in
-                    </Button>
-                  </SignInButton>
-                  <SignUpButton>
-                    <Button size={"sm"}>Sign up</Button>
-                  </SignUpButton>
-                </Show>
-
-                <Show when="signed-in">
-                  <UserButton />
-                </Show>
               </div>
+
+              <NotificationsPopover />
+
+              <Show when="signed-in">
+                <UserButton />
+              </Show>
+
+              <Show when="signed-out">
+                <RedirectToSignIn />
+              </Show>
             </div>
-            <div className="flex p-4 px-6">
-              <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-                <div>
-                  <h1 className="font-medium">Project ready!</h1>
-                  <p>You may now add components and start building.</p>
-                  <p>We&apos;ve already added the button component for you.</p>
-                  <Button variant={"outline"} className="mt-2">
-                    Button
-                  </Button>
-                </div>
-                <div className="font-mono text-xs text-muted-foreground">
-                  (Press <kbd>d</kbd> to toggle dark mode)
-                </div>
+          </header>
+          <div className="flex p-4 px-6">
+            <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
+              <div>
+                <h1 className="font-medium">Home Screen</h1>
+                <p>Will be implemented soon.</p>
               </div>
             </div>
           </div>
-          <RightAiSidebar
-            isOpen={isAiSidebarOpen}
-            onOpenChange={setIsAiSidebarOpen}
-          />
         </div>
       </div>
     </>

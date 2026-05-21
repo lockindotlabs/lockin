@@ -1,6 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { FeedbackPopover } from "@/components/feedback-popover"
-import { RightAiSidebar } from "@/components/right-ai-sidebar"
 import RightAiSidebarProvider from "@/components/right-ai-sidebar-provider"
 import { SidebarInset, SidebarProvider } from "@workspace/ui/components/sidebar"
 

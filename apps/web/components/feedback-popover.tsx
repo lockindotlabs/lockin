@@ -1,6 +1,10 @@
 "use client"
 
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip"
 import { Button } from "@workspace/ui/components/button"
 import {
   Popover,
@@ -11,20 +15,14 @@ import {
   PopoverTrigger,
 } from "@workspace/ui/components/popover"
 import { Textarea } from "@workspace/ui/components/textarea"
+import { MessageSquareCodeIcon, MessageSquareDotIcon } from "lucide-react"
 import { time } from "node:console"
+import React from "react"
 
-export function FeedbackPopover({ trigger }: { trigger?: React.ReactElement }) {
-  const handleSubmit = () => {
-    Promise.resolve(new Promise((resolve) => setTimeout(resolve, 1000)))
-      .then(() => {
-        alert("Feedback submitted! Thank you for your input.")
-      })
-      .finally(() => {})
-  }
-
+export function FeedbackPopover() {
   return (
     <>
-      <Popover defaultOpen>
+      <Popover>
         <PopoverTrigger
           render={
             <Button
@@ -39,23 +37,21 @@ export function FeedbackPopover({ trigger }: { trigger?: React.ReactElement }) {
         />
         <PopoverContent
           align="end"
-          side="right"
-          sideOffset={16}
-          className={"min-w-80"}
+          side="top"
+          sideOffset={12}
+          className={"min-w-80 gap-3 p-3"}
         >
           <Textarea
             placeholder="Type your feedback here..."
             rows={6}
             className="max-h-60 resize-none"
           />
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <div className="text-xs text-muted-foreground">
               We don't response to submissions, but we read all of them
               carefully
             </div>
-            <Button variant={"outline"} onClick={handleSubmit}>
-              Submit
-            </Button>
+            <Button onClick={() => {}}>Submit</Button>
           </div>
         </PopoverContent>
       </Popover>

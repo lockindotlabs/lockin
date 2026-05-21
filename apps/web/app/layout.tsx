@@ -1,20 +1,34 @@
-import { Geist_Mono, Inter } from "next/font/google"
-
+import type { Metadata } from "next"
+import {
+  Inter,
+  Geist_Mono,
+  Funnel_Display,
+  Archivo,
+  Inter_Tight,
+} from "next/font/google"
 import "@workspace/ui/globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
+import { Providers } from "@/components/providers"
 import { cn } from "@workspace/ui/lib/utils"
-import { TooltipProvider } from "@workspace/ui/components/tooltip"
-import { AppSidebar } from "@/components/app-sidebar"
-import { SidebarInset, SidebarProvider } from "@workspace/ui/components/sidebar"
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
-
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
+const inter = Inter({
+  subsets: ["vietnamese"],
+  variable: "--font-sans",
 })
 
-const metadata = {
+const interTight = Inter_Tight({
+  subsets: ["vietnamese"],
+  variable: "--font-sans-tight",
+})
+
+const fontMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" })
+
+const funnelDisplay = Funnel_Display({
+  subsets: ["latin-ext"],
+  variable: "--font-funnel",
+  weight: ["600"],
+})
+
+export const metadata: Metadata = {
   title: "LockIn",
   description:
     "A tool to help you stay focused and avoid distractions while working on your projects.",
@@ -22,33 +36,23 @@ const metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
     <html
-      lang="en"
+      lang="vi"
       suppressHydrationWarning
       className={cn(
-        "antialiased",
+        "font-sans antialiased",
+        inter.variable,
         fontMono.variable,
-        "font-sans",
-        inter.variable
+        funnelDisplay.variable,
+        interTight.variable
       )}
     >
-      <head>
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
-      </head>
       <body>
-        <ThemeProvider>
-          <TooltipProvider>
-            <SidebarProvider>
-              <AppSidebar />
-              <SidebarInset>{children}</SidebarInset>
-            </SidebarProvider>
-          </TooltipProvider>
-        </ThemeProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )

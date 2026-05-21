@@ -3,8 +3,13 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { clerkMiddleware } from '@clerk/express'
-import userRoutes from './routes/userRoutes.js'
 import webhookRouter from './modules/webhook/webhook.router.js'
+import authRouter from './modules/auth/auth.router.js'
+import settingsRouter from './modules/settings/settings.router.js'
+import planRouter from './modules/plan/plan.router.js'
+import taskRouter from './modules/task/task.router.js'
+import projectRouter from './modules/project/project.router.js'
+import focusSessionRouter from './modules/focus-session/focus-session.router.js'
 import { requireAuth } from './middleware/auth.js'
 import { syncUser } from './middleware/syncUser.js'
 import { errorBoundary } from './middleware/errorBoundary.js'
@@ -54,7 +59,12 @@ app.get('/api/me', requireAuth(), syncUser, (req, res) => {
   res.json(req.dbUser)
 })
 
-app.use('/api/users', userRoutes)
+app.use('/api/auth/extension-tokens', authRouter)
+app.use('/api/settings', settingsRouter)
+app.use('/api/projects', projectRouter)
+app.use('/api/plans', planRouter)
+app.use('/api/tasks', taskRouter)
+app.use('/api/focus-sessions', focusSessionRouter)
 
 app.use(errorBoundary)
 

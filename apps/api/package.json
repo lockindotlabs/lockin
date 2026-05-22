@@ -10,7 +10,8 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "lint": "eslint \"src/**/*.ts\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "prisma generate && tsc --noEmit",
+    "test": "echo \"No api tests yet\""
   },
   "dependencies": {
     "@clerk/express": "^2.1.17",

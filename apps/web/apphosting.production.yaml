@@ -1,0 +1,37 @@
+# apps/web/apphosting.production.yaml
+
+env:
+  - variable: NEXT_PUBLIC_APP_ENV
+    value: production
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_APP_URL
+    value: https://lockin.app
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+    secret: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY_PRODUCTION
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: CLERK_SECRET_KEY
+    secret: CLERK_SECRET_KEY_PRODUCTION
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: GOOGLE_GENERATIVE_AI_API_KEY
+    secret: GOOGLE_GENERATIVE_AI_API_KEY_PRODUCTION
+    availability:
+      - RUNTIME
+
+runConfig:
+  minInstances: 0
+  maxInstances: 10
+  cpu: 1
+  memoryMiB: 1024

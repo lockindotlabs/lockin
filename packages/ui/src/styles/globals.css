@@ -48,6 +48,8 @@
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
     --font-sans: var(--font-sans);
+    --font-sans-tight: var(--font-sans-tight);
+    --font-mono: var(--font-mono);
 }
 
 :root {
@@ -73,7 +75,7 @@
     --chart-4: oklch(0.394 0.023 107.4);
     --chart-5: oklch(0.286 0.016 107.4);
     --radius: 0.625rem;
-    --sidebar: oklch(0.988 0.003 106.5);
+    --sidebar: oklch(1 0 0);
     --sidebar-foreground: oklch(0.153 0.006 107.1);
     --sidebar-primary: oklch(22.823% 0.01299 107.425);
     --sidebar-primary-foreground: oklch(0.987 0.026 102.212);
@@ -83,6 +85,7 @@
     --sidebar-ring: oklch(0.737 0.021 106.9);
     --background: oklch(1 0 0);
     --foreground: oklch(0.153 0.006 107.1);
+    --logo: oklch(0% 0 0);
 }
 
 .dark {
@@ -117,6 +120,7 @@
     --sidebar-accent-foreground: oklch(0.988 0.003 106.5);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.58 0.031 107.3);
+    --logo: oklch(100% 0.00011 271.152);
 }
 
 @layer base {
@@ -131,5 +135,138 @@
     }
   html {
     @apply font-sans;
+    }
+}
+
+@utility hit-area-debug {
+    position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+    @apply border border-dashed border-blue-500 bg-blue-500/10;
+    }
+  &:hover::before {
+    @apply border border-dashed border-green-500 bg-green-500/10;
+    }
+}
+
+@utility hit-area {
+    position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+    }
+}
+
+@utility hit-area-* {
+    position: relative;
+    --hit-area-t: --spacing(--value(number) * -1); --hit-area-t: calc(--value([*]) * -1);
+    --hit-area-b: --spacing(--value(number) * -1); --hit-area-b: calc(--value([*]) * -1);
+    --hit-area-l: --spacing(--value(number) * -1); --hit-area-l: calc(--value([*]) * -1);
+    --hit-area-r: --spacing(--value(number) * -1); --hit-area-r: calc(--value([*]) * -1);
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+    }
+}
+
+@utility hit-area-l-* {
+    position: relative;
+    --hit-area-l: --spacing(--value(number) * -1); --hit-area-l: calc(--value([*]) * -1);
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+    }
+}
+
+@utility hit-area-r-* {
+    position: relative;
+    --hit-area-r: --spacing(--value(number) * -1); --hit-area-r: calc(--value([*]) * -1);
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+    }
+}
+
+@utility hit-area-t-* {
+    position: relative;
+    --hit-area-t: --spacing(--value(number) * -1); --hit-area-t: calc(--value([*]) * -1);
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+    }
+}
+
+@utility hit-area-b-* {
+    position: relative;
+    --hit-area-b: --spacing(--value(number) * -1); --hit-area-b: calc(--value([*]) * -1);
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+    }
+}
+
+@utility hit-area-x-* {
+    position: relative;
+    --hit-area-l: --spacing(--value(number) * -1); --hit-area-l: calc(--value([*]) * -1);
+    --hit-area-r: --spacing(--value(number) * -1); --hit-area-r: calc(--value([*]) * -1);
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+    }
+}
+
+@utility hit-area-y-* {
+    position: relative;
+    --hit-area-t: --spacing(--value(number) * -1); --hit-area-t: calc(--value([*]) * -1);
+    --hit-area-b: --spacing(--value(number) * -1); --hit-area-b: calc(--value([*]) * -1);
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
     }
 }

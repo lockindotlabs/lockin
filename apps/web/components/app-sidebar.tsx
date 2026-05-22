@@ -27,6 +27,7 @@ import {
   Trash2Icon,
   MessageCircleQuestionIcon,
   MessageSquareDotIcon,
+  PlusIcon,
 } from "lucide-react"
 import Image from "next/image"
 import { LogoWordmark } from "@workspace/ui/components/logo-wordmark"
@@ -67,7 +68,7 @@ const data = {
 
     {
       title: "Home",
-      url: "#",
+      url: "/app",
       icon: <HomeIcon />,
       isActive: true,
     },
@@ -77,10 +78,9 @@ const data = {
       icon: <SparklesIcon />,
     },
     {
-      title: "Inbox",
-      url: "#",
-      icon: <InboxIcon />,
-      badge: "10",
+      title: "New plan",
+      url: "/app/plan",
+      icon: <PlusIcon />,
     },
   ],
   navSecondary: [
@@ -94,48 +94,12 @@ const data = {
       url: "#",
       icon: <Settings2Icon />,
     },
-    {
-      title: "Templates",
-      url: "#",
-      icon: <BlocksIcon />,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: <MessageSquareDotIcon />,
-      popover: <FeedbackPopover />,
-    },
   ],
   favorites: [
     {
       name: "Project Management & Task Tracking",
-      url: "#",
-      emoji: "📊",
-    },
-    {
-      name: "Family Recipe Collection & Meal Planning",
-      url: "#",
-      emoji: "🍳",
-    },
-    {
-      name: "Fitness Tracker & Workout Routines",
-      url: "#",
-      emoji: "💪",
-    },
-    {
-      name: "Book Notes & Reading List",
-      url: "#",
-      emoji: "📚",
-    },
-    {
-      name: "Sustainable Gardening Tips & Plant Care",
-      url: "#",
-      emoji: "🌱",
-    },
-    {
-      name: "Language Learning Progress & Resources",
-      url: "#",
-      emoji: "🗣️",
+      url: "/app/plan",
+      emoji: "",
     },
   ],
   workspaces: [
@@ -194,14 +158,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        {/* <NavFavorites favorites={data.favorites} />
-        <NavWorkspaces workspaces={data.workspaces} /> */}
+        <NavFavorites favorites={data.favorites} />
+        {/* <NavWorkspaces workspaces={data.workspaces} /> */}
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>
+      {/* <SidebarFooter>
         <NavUser user={data.user} />
-        {/* <TeamSwitcher teams={data.teams} /> */}
-      </SidebarFooter>
+        <TeamSwitcher teams={data.teams} />
+      </SidebarFooter> */}
       <SidebarRail />
     </Sidebar>
   )

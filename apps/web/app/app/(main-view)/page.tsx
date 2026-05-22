@@ -1,160 +1,119 @@
 "use client"
 
+import { RedirectToSignIn, Show, UserButton } from "@clerk/nextjs"
 import { Button } from "@workspace/ui/components/button"
-import {
-  Avatar,
-  AvatarBadge,
-  AvatarFallback,
-  AvatarGroup,
-  AvatarGroupCount,
-  AvatarImage,
-} from "@workspace/ui/components/avatar"
-import {
-  BellDotIcon,
-  BellIcon,
-  BotMessageSquareIcon,
-  BubblesIcon,
-  BusIcon,
-  ChartGanttIcon,
-  FolderIcon,
-  HandIcon,
-  HdIcon,
-  HdmiPortIcon,
-  SparklesIcon,
-} from "lucide-react"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
-import { useIsMobile } from "@workspace/ui/hooks/use-mobile"
-import { LogoWordmark } from "@workspace/ui/components/logo-wordmark"
-import { RightAiSidebar } from "@/components/right-ai-sidebar"
-import { useState } from "react"
-import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs"
 import {
-  Popover,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
-} from "@workspace/ui/components/popover"
-import { ScrollArea } from "@workspace/ui/components/scroll-area"
+  ArrowRightIcon,
+  ArrowUpIcon,
+  BotMessageSquareIcon,
+  ChevronDownIcon,
+  CpuIcon,
+  FolderIcon,
+  Globe2Icon,
+  HardDriveIcon,
+  InboxIcon,
+  MoreHorizontalIcon,
+  NotebookIcon,
+  PlusIcon,
+  SparklesIcon,
+  UsersRoundIcon,
+  ZapIcon,
+} from "lucide-react"
+import type { ReactNode } from "react"
 
-const NotificationsPopover = () => {
-  return (
-    <>
-      <Popover>
-        <PopoverTrigger
-          render={
-            <Button variant={"outline"} size={"icon-sm"}>
-              <BellDotIcon />
-            </Button>
-          }
-        />
+type Suggestion = {
+  app: "drive" | "notion" | "gmail" | "teams" | "web" | "more"
+  label: ReactNode
+  action?: boolean
+}
 
-        <PopoverContent
-          className={"min-w-100"}
-          align="end"
-          side="bottom"
-          sideOffset={12}
-        >
-          <ScrollArea className={"h-[50vh] rounded-lg pr-2"}>
-            <div className="prose max-w-none text-sm">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </p>
+const suggestions: Suggestion[] = [
+  {
+    app: "drive",
+    label: (
+      <>
+        Improve my doc in <strong>Google Docs</strong>
+      </>
+    ),
+  },
+  {
+    app: "notion",
+    label: (
+      <>
+        Analyze our <strong>Notion</strong> documentation
+      </>
+    ),
+  },
+  {
+    app: "gmail",
+    label: (
+      <>
+        Cut through the noise in <strong>Gmail</strong>
+      </>
+    ),
+  },
+  {
+    app: "teams",
+    label: (
+      <>
+        Recap my <strong>Teams</strong> messages
+      </>
+    ),
+  },
+  {
+    app: "web",
+    label: <>Browse the web and write a newsletter</>,
+  },
+  {
+    app: "more",
+    label: <>Connect your apps for better answers</>,
+    action: true,
+  },
+]
 
-              <p>
-                Curabitur pretium tincidunt lacus. Nulla gravida orci a odio.
-                Nullam varius, turpis et commodo pharetra, est eros bibendum
-                elit, nec luctus magna felis sollicitudin mauris. Integer in
-                mauris eu nibh euismod gravida. Duis ac tellus et risus
-                vulputate vehicula. Donec lobortis risus a elit. Etiam tempor.
-                Ut ullamcorper, ligula eu tempor congue, eros est euismod
-                turpis, id tincidunt sapien risus a quam. Maecenas fermentum
-                consequat mi. Donec fermentum. Pellentesque malesuada nulla a
-                mi. Duis sapien sem, aliquet nec, commodo eget, consequat quis,
-                neque. Aliquam faucibus, elit ut dictum aliquet, felis nisl
-                adipiscing sapien, sed malesuada diam lacus eget erat. Cras
-                mollis scelerisque nunc. Nullam arcu. Aliquam at mauris eu nunc
-                bibendum sollicitudin. Praesent congue erat at massa. Sed cursus
-                turpis vitae tortor.
-              </p>
+function AppMark({ app }: { app: Suggestion["app"] }) {
+  if (app === "drive") {
+    return <HardDriveIcon className="size-5" strokeWidth={1.5} />
+  }
 
-              <p>
-                Phasellus consectetuer vestibulum elit. Aenean tellus metus,
-                bibendum sed, posuere ac, mattis non, nunc. Vestibulum fringilla
-                pede sit amet augue. In turpis. Pellentesque posuere. Praesent
-                turpis. Aenean posuere, tortor sed cursus feugiat, nunc augue
-                blandit nunc, eu sollicitudin urna dolor sagittis lacus. Donec
-                elit libero, sodales nec, volutpat a, suscipit non, turpis.
-                Nullam sagittis. Suspendisse potenti. Sed lectus. Integer
-                euismod lacus luctus magna. Quisque cursus, metus vitae pharetra
-                auctor, sem massa mattis sem, at interdum magna augue eget diam.
-                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
-                posuere cubilia Curae; Morbi lacinia molestie dui. Praesent
-                blandit dolor.
-              </p>
+  if (app === "notion") {
+    return <NotebookIcon className="size-5" strokeWidth={1.5} />
+  }
 
-              <p>
-                (This is filler text intended to create enough content to test
-                the scrollable area. Repeat as needed.)
-              </p>
-            </div>
-          </ScrollArea>
-        </PopoverContent>
-      </Popover>
-    </>
-  )
+  if (app === "gmail") {
+    return <InboxIcon className="size-5" strokeWidth={1.5} />
+  }
+
+  if (app === "teams") {
+    return <UsersRoundIcon className="size-5" strokeWidth={1.5} />
+  }
+
+  if (app === "web") {
+    return <Globe2Icon className="size-5" strokeWidth={1.5} />
+  }
+
+  return <MoreHorizontalIcon className="size-5" strokeWidth={1.5} />
 }
 
 export default function Page() {
-  const isMobile = useIsMobile()
-  const [isAiSidebarOpen, setIsAiSidebarOpen] = useState(false)
-
   return (
-    <>
-      <div className="min-h-svh">
-        {isMobile && (
-          <>
-            <div className="flex flex-row items-center justify-between border-b p-3 text-xs">
-              <div className="flex flex-row items-center gap-3">
-                <div className="flex aspect-square size-10 items-center justify-center rounded-md bg-muted">
-                  <LogoWordmark className="h-3" />
-                </div>
-                <span>Download app for better experiences on mobile</span>
-              </div>
-
-              <Button
-                variant={"secondary"}
-                size={"xs"}
-                className={"rounded-full"}
-              >
-                GET APP
-              </Button>
-            </div>
-          </>
-        )}
-
-        <div className="flex h-full">
-          <div className="flex-1">
-            <div className="flex h-14 items-center justify-between px-3">
-              <SidebarTrigger />
-              <div className="flex items-center gap-2">
-                <div className={`flex gap-2 ${isMobile && "hidden"}`}>
-                  <Button variant={"outline"} size={"sm"}>
-                    Docs
-                  </Button>
-                  <Button variant={"outline"} size={"sm"}>
-                    <BotMessageSquareIcon data-icon="inline-start" />
-                    Ask
-                  </Button>
-                  <Button variant={"outline"} size={"icon-sm"}>
-                    <FolderIcon />
-                  </Button>
-                  {/* 
+    <main className="flex min-h-svh flex-col bg-background text-foreground">
+      <header className="flex h-14 items-center justify-between px-3">
+        <SidebarTrigger />
+        <div className="flex items-center gap-2">
+          <div className={`flex gap-2`}>
+            <Button variant={"outline"} size={"sm"}>
+              Docs
+            </Button>
+            <Button variant={"outline"} size={"sm"}>
+              <BotMessageSquareIcon data-icon="inline-start" />
+              Ask
+            </Button>
+            <Button variant={"outline"} size={"icon-sm"}>
+              <FolderIcon />
+            </Button>
+            {/* 
                   <Button
                     variant={"outline"}
                     onClick={() => setIsAiSidebarOpen(!isAiSidebarOpen)}
@@ -163,48 +122,75 @@ export default function Page() {
                     <SparklesIcon data-icon="inline-start" />
                     {isAiSidebarOpen ? "Hide AI" : "Open AI"}
                   </Button> */}
-                </div>
-
-                <NotificationsPopover />
-
-                <Show when="signed-out">
-                  <SignInButton>
-                    <Button variant={"outline"} size={"sm"}>
-                      Sign in
-                    </Button>
-                  </SignInButton>
-                  <SignUpButton>
-                    <Button size={"sm"}>Sign up</Button>
-                  </SignUpButton>
-                </Show>
-
-                <Show when="signed-in">
-                  <UserButton />
-                </Show>
-              </div>
-            </div>
-            <div className="flex p-4 px-6">
-              <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-                <div>
-                  <h1 className="font-medium">Project ready!</h1>
-                  <p>You may now add components and start building.</p>
-                  <p>We&apos;ve already added the button component for you.</p>
-                  <Button variant={"outline"} className="mt-2">
-                    Button
-                  </Button>
-                </div>
-                <div className="font-mono text-xs text-muted-foreground">
-                  (Press <kbd>d</kbd> to toggle dark mode)
-                </div>
-              </div>
-            </div>
           </div>
-          <RightAiSidebar
-            isOpen={isAiSidebarOpen}
-            onOpenChange={setIsAiSidebarOpen}
-          />
+
+          <Show when="signed-in">
+            <UserButton />
+          </Show>
+
+          <Show when="signed-out">
+            <RedirectToSignIn />
+          </Show>
         </div>
-      </div>
-    </>
+      </header>
+
+      <section className="flex flex-1 flex-col items-center justify-center px-5 pb-12 sm:px-8">
+        <div className="w-full max-w-[880px]">
+          <h1 className="text-lg font-medium">Let's break something down.</h1>
+          <div className="mt-4 flex h-14 items-center justify-center gap-4 rounded-full border bg-muted pr-2 pl-5 text-[15px] text-muted-foreground shadow-xs">
+            <ZapIcon className="size-5" strokeWidth={1.5} />
+            <span className="min-w-0 flex-1 truncate">
+              What would you like to do?
+            </span>
+            <Button
+              size="icon-lg"
+              variant="default"
+              aria-label="Submit prompt"
+              className={"rounded-full [&_svg]:size-5!"}
+            >
+              <ArrowUpIcon />
+            </Button>
+          </div>
+
+          <div className="mt-3 flex items-center justify-between text-muted-foreground">
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="sm">
+                <SparklesIcon data-icon="inline-start" />
+                Create
+              </Button>
+              <Button variant="ghost" size="sm">
+                <PlusIcon data-icon="inline-start" />
+                Sources
+              </Button>
+            </div>
+
+            <Button variant="ghost" size="sm">
+              <CpuIcon data-icon="inline-start" />
+              Default
+            </Button>
+          </div>
+
+          <div className="mt-12 divide-y divide-border/70 border-y border-border/70">
+            {suggestions.map((suggestion) => (
+              <button
+                key={suggestion.app}
+                className="group flex min-h-17 w-full items-center gap-5 px-5 text-left text-muted-foreground hover:bg-muted/45 hover:text-foreground active:bg-muted/65"
+              >
+                <AppMark app={suggestion.app} />
+                <span className="min-w-0 flex-1 truncate">
+                  {suggestion.label}
+                </span>
+                {suggestion.action && (
+                  <ArrowRightIcon
+                    strokeWidth={1.5}
+                    className="size-5 shrink-0 text-muted-foreground transition-transform duration-150 ease-out group-hover:translate-x-0.5 group-hover:text-foreground"
+                  />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
   )
 }

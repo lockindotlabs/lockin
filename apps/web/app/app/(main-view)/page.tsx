@@ -3,6 +3,7 @@
 import { RedirectToSignIn, Show, UserButton } from "@clerk/nextjs"
 import { Button } from "@workspace/ui/components/button"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
+import { format } from "date-fns"
 import {
   ArrowRightIcon,
   ArrowUpIcon,
@@ -17,10 +18,14 @@ import {
   NotebookIcon,
   PlusIcon,
   SparklesIcon,
+  Trash2Icon,
   UsersRoundIcon,
   ZapIcon,
 } from "lucide-react"
+import Link from "next/link"
 import type { ReactNode } from "react"
+import { deletePlan } from "@/lib/plans/plan-repository"
+import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
 
 type Suggestion = {
   app: "drive" | "notion" | "gmail" | "teams" | "web" | "more"
@@ -97,6 +102,18 @@ function AppMark({ app }: { app: Suggestion["app"] }) {
 }
 
 export default function Page() {
+  const { plans } = usePlanSummaries()
+
+  const handleDeletePlan = async (plan: (typeof plans)[number]) => {
+    const planTitle = plan.title.trim() || "Untitled Plan"
+    const shouldDelete = window.confirm(`Delete "${planTitle}"?`)
+    if (!shouldDelete) {
+      return
+    }
+
+    await deletePlan(plan.id)
+  }
+
   return (
     <main className="flex min-h-svh flex-col bg-background text-foreground">
       <header className="flex h-14 items-center justify-between px-3">
@@ -189,6 +206,54 @@ export default function Page() {
               </button>
             ))}
           </div>
+
+          {plans.length > 0 && (
+            <section className="mt-10">
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="text-sm font-medium text-muted-foreground">
+                  Saved plans
+                </h2>
+              </div>
+              <div className="divide-y divide-border/70 border-y border-border/70">
+                {plans.map((plan) => {
+                  const planTitle = plan.title.trim() || "Untitled Plan"
+
+                  return (
+                    <div
+                      key={plan.id}
+                      className="group flex min-h-16 items-center gap-4 px-5 hover:bg-muted/45"
+                    >
+                      <Link
+                        href={`/app/plan/${plan.id}`}
+                        className="flex min-w-0 flex-1 items-center gap-4"
+                      >
+                        <span className="min-w-0 flex-1 truncate text-sm font-medium">
+                          {planTitle}
+                        </span>
+                        <span className="hidden text-sm text-muted-foreground sm:inline">
+                          {plan.taskCount}{" "}
+                          {plan.taskCount === 1 ? "step" : "steps"}
+                        </span>
+                        <span className="hidden text-sm text-muted-foreground md:inline">
+                          Updated {format(new Date(plan.updatedAt), "d MMM, HH:mm")}
+                        </span>
+                      </Link>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon-sm"
+                        aria-label={`Delete ${planTitle}`}
+                        className="opacity-70 hover:opacity-100"
+                        onClick={() => handleDeletePlan(plan)}
+                      >
+                        <Trash2Icon />
+                      </Button>
+                    </div>
+                  )
+                })}
+              </div>
+            </section>
+          )}
         </div>
       </section>
     </main>

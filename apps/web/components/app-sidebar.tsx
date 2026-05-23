@@ -15,50 +15,20 @@ import {
   SidebarRail,
 } from "@workspace/ui/components/sidebar"
 import {
-  TerminalIcon,
-  AudioLinesIcon,
   SearchIcon,
   SparklesIcon,
   HomeIcon,
-  InboxIcon,
   CalendarIcon,
   Settings2Icon,
-  BlocksIcon,
-  Trash2Icon,
-  MessageCircleQuestionIcon,
-  MessageSquareDotIcon,
   PlusIcon,
 } from "lucide-react"
-import Image from "next/image"
 import { LogoWordmark } from "@workspace/ui/components/logo-wordmark"
-import { LogoAccent } from "@workspace/ui/components/logo-accent"
-import { NavUser } from "./nav-user"
-import { FeedbackPopover } from "./feedback-popover"
+import { deletePlan } from "@/lib/plans/plan-repository"
+import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
+import { usePathname, useRouter } from "next/navigation"
 
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: <TerminalIcon />,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: <AudioLinesIcon />,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: <TerminalIcon />,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
       title: "Search",
@@ -95,60 +65,32 @@ const data = {
       icon: <Settings2Icon />,
     },
   ],
-  favorites: [
-    {
-      name: "Project Management & Task Tracking",
-      url: "/app/plan",
-      emoji: "",
-    },
-  ],
-  workspaces: [
-    {
-      name: "Personal Life Management",
-      emoji: "🏠",
-      pages: [
-        {
-          name: "Daily Journal & Reflection",
-          url: "#",
-          emoji: "📔",
-        },
-        {
-          name: "Health & Wellness Tracker",
-          url: "#",
-          emoji: "🍏",
-        },
-        {
-          name: "Personal Growth & Learning Goals",
-          url: "#",
-          emoji: "🌟",
-        },
-      ],
-    },
-    {
-      name: "Professional Development",
-      emoji: "💼",
-      pages: [
-        {
-          name: "Career Objectives & Milestones",
-          url: "#",
-          emoji: "🎯",
-        },
-        {
-          name: "Skill Acquisition & Training Log",
-          url: "#",
-          emoji: "🧠",
-        },
-        {
-          name: "Networking Contacts & Events",
-          url: "#",
-          emoji: "🤝",
-        },
-      ],
-    },
-  ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const { plans } = usePlanSummaries()
+
+  const recentPlans = plans.slice(0, 10).map((plan) => ({
+    id: plan.id,
+    name: plan.title.trim() || "Untitled Plan",
+    url: `/app/plan/${plan.id}`,
+  }))
+
+  const handleDeletePlan = async (item: (typeof recentPlans)[number]) => {
+    const shouldDelete = window.confirm(`Delete "${item.name}"?`)
+    if (!shouldDelete) {
+      return
+    }
+
+    await deletePlan(item.id)
+
+    if (pathname === item.url) {
+      router.replace("/app")
+    }
+  }
+
   return (
     <Sidebar className="border-r-0 font-medium" {...props} collapsible="icon">
       <SidebarHeader>
@@ -158,14 +100,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        <NavFavorites favorites={data.favorites} />
+        <NavFavorites
+          label="Recent plans"
+          emptyLabel="No saved plans yet"
+          favorites={recentPlans}
+          onDelete={handleDeletePlan}
+        />
         {/* <NavWorkspaces workspaces={data.workspaces} /> */}
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      {/* <SidebarFooter>
-        <NavUser user={data.user} />
-        <TeamSwitcher teams={data.teams} />
-      </SidebarFooter> */}
       <SidebarRail />
     </Sidebar>
   )

@@ -15,12 +15,15 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu"
+import { Input } from "@workspace/ui/components/input"
 import {
   ArchiveIcon,
   CalendarIcon,
   CheckIcon,
+  TimerIcon,
   MoreVerticalIcon,
   Trash2Icon,
 } from "lucide-react"
@@ -29,51 +32,59 @@ export interface TaskCardProps {
   taskTitle?: string
   taskDescription?: string
   dueDate?: string | Date
+  durationMinutes?: number
   isCompleted?: boolean
   savedTitle?: string
   savedDescription?: string
   onTitleChange?: (title: string) => void
   onDescriptionChange?: (description: string) => void
+  onDateChange?: (date: string) => void
+  onDurationChange?: (durationMinutes: number) => void
+  onCompletedChange?: (isCompleted: boolean) => void
+  onDelete?: () => void
+}
+
+const durationOptions = [15, 30, 45, 60, 90, 120]
+
+function formatDuration(minutes: number) {
+  if (minutes < 60) {
+    return `${minutes} minutes`
+  }
+
+  const hours = Math.floor(minutes / 60)
+  const remainingMinutes = minutes % 60
+
+  if (remainingMinutes === 0) {
+    return `${hours} ${hours === 1 ? "hour" : "hours"}`
+  }
+
+  return `${hours} hr ${remainingMinutes} min`
 }
 
 export default function TaskCard({
   taskTitle,
   taskDescription,
   dueDate,
+  durationMinutes = 30,
   isCompleted,
   savedTitle,
   savedDescription,
   onTitleChange,
   onDescriptionChange,
+  onDateChange,
+  onDurationChange,
+  onCompletedChange,
+  onDelete,
 }: TaskCardProps) {
-  // Debug log to trace props and state changes
-  React.useEffect(() => {
-    console.log("TaskCard:props", {
-      taskTitle,
-      taskDescription,
-      dueDate,
-      isCompleted,
-      savedTitle,
-      savedDescription,
-    })
-  }, [
-    taskTitle,
-    taskDescription,
-    dueDate,
-    isCompleted,
-    savedTitle,
-    savedDescription,
-  ])
-
   const parseDate = (d?: string | Date) => {
     if (!d) return undefined
     const dt = typeof d === "string" ? new Date(d) : d
     return isNaN(dt.getTime()) ? undefined : dt
   }
 
-  const [date, setDate] = React.useState<Date | undefined>(
-    parseDate(dueDate) ?? new Date(2026, 2, 3)
-  )
+  const date = parseDate(dueDate)
+  const duration = durationMinutes
+  const [customDuration, setCustomDuration] = React.useState("")
 
   const [title, setTitle] = React.useState(
     taskTitle ??
@@ -86,10 +97,6 @@ export default function TaskCard({
       "AI powered to-do list app to make starting a task easier. Always know what to do first with the help of AI. Made for students and office workers struggling with procrastination."
   )
   const descRef = React.useRef<HTMLTextAreaElement | null>(null)
-
-  // Persisted values moved to parent via props
-  const baseTitle = savedTitle ?? taskTitle ?? title
-  const baseDescription = savedDescription ?? taskDescription ?? description
 
   React.useEffect(() => {
     // when parent persisted values change, reset local inputs
@@ -116,14 +123,38 @@ export default function TaskCard({
     resizeDesc()
   }, [])
 
+  const handleCustomDurationSubmit = (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault()
+
+    const minutes = Number.parseInt(customDuration, 10)
+    if (!Number.isFinite(minutes) || minutes < 1) {
+      return
+    }
+
+    onDurationChange?.(minutes)
+    setCustomDuration("")
+  }
+
+  const handleDateChange = (newDate: Date | undefined) => {
+    if (newDate) {
+      onDateChange?.(format(newDate, "yyyy-MM-dd"))
+    }
+  }
+
+  const handleDurationChange = (minutes: number) => {
+    onDurationChange?.(minutes)
+  }
+
+  const hasCustomDuration = !durationOptions.includes(duration)
+
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-row items-start gap-3 rounded-xl p-3 transition-colors hover:bg-accent/30">
+    <div className="mx-auto flex w-full max-w-3xl flex-row items-start gap-3 border-b p-3 transition-colors hover:bg-accent/30">
       <label className="flex items-center gap-2 text-base font-normal text-gray-900">
         <Checkbox.Root
-          defaultChecked={isCompleted ?? true}
-          onCheckedChange={(isCompleted) => {
-            return console.log("TaskCard:checkbox:change", { isCompleted })
-          }}
+          checked={isCompleted ?? false}
+          onCheckedChange={onCompletedChange}
           className="flex size-6 items-center justify-center rounded-full transition duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring active:scale-[0.97] data-checked:bg-primary data-unchecked:border data-unchecked:border-ring"
         >
           <Checkbox.Indicator className="flex text-gray-50 transition duration-150 ease-out data-unchecked:scale-90 data-unchecked:opacity-0">
@@ -132,7 +163,7 @@ export default function TaskCard({
         </Checkbox.Root>
       </label>
 
-      <div className="flex flex-1 flex-col items-start gap-2">
+      <div className="flex flex-1 flex-col items-start">
         <div className="w-full flex-col items-start">
           <textarea
             ref={titleRef}
@@ -141,7 +172,6 @@ export default function TaskCard({
             onChange={(e) => {
               setTitle(e.target.value)
               if (onTitleChange) onTitleChange(e.target.value)
-              console.log("TaskCard:title:change", e.target.value)
             }}
             onInput={resizeTitle}
             className="w-full resize-none text-sm font-medium focus-visible:outline-none active:outline-none"
@@ -153,7 +183,6 @@ export default function TaskCard({
             onChange={(e) => {
               setDescription(e.target.value)
               if (onDescriptionChange) onDescriptionChange(e.target.value)
-              console.log("TaskCard:description:change", e.target.value)
             }}
             onInput={resizeDesc}
             placeholder="Task description"
@@ -163,15 +192,13 @@ export default function TaskCard({
         </div>
 
         {/* Metadata badges */}
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center gap-2 pt-1">
           <Popover>
             <PopoverTrigger
               render={
-                <Button variant="outline" size={"sm"}>
+                <Button variant="ghost" size={"xs"}>
                   <CalendarIcon className="h-4 w-4" data-icon="inline-start" />
-                  <span className="text-sm font-medium">
-                    {date ? format(date, "d MMM") : "Pick date"}
-                  </span>
+                  <span>{date ? format(date, "d MMM") : "Pick date"}</span>
                 </Button>
               }
             />
@@ -179,12 +206,75 @@ export default function TaskCard({
               <Calendar
                 mode="single"
                 selected={date}
-                onSelect={setDate}
+                onSelect={handleDateChange}
                 captionLayout="dropdown"
                 disabled={{ before: new Date() }}
               />
             </PopoverContent>
           </Popover>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button variant="ghost" size="xs">
+                  <TimerIcon data-icon="inline-start" />
+                  <span>{formatDuration(duration)}</span>
+                </Button>
+              }
+            />
+            <DropdownMenuContent className="w-44" align="start">
+              <DropdownMenuGroup>
+                {hasCustomDuration && (
+                  <DropdownMenuItem
+                    onClick={() => handleDurationChange(duration)}
+                    className="justify-between"
+                  >
+                    <span>{formatDuration(duration)}</span>
+                    <CheckIcon />
+                  </DropdownMenuItem>
+                )}
+                {durationOptions.map((option) => (
+                  <DropdownMenuItem
+                    key={option}
+                    onClick={() => handleDurationChange(option)}
+                    className="justify-between"
+                  >
+                    <span>{formatDuration(option)}</span>
+                    <CheckIcon
+                      className={
+                        duration === option ? "opacity-100" : "opacity-0"
+                      }
+                    />
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <form
+                onClick={(event) => event.stopPropagation()}
+                onSubmit={handleCustomDurationSubmit}
+                className="flex items-center gap-1 p-1"
+              >
+                <Input
+                  type="number"
+                  min={1}
+                  step={1}
+                  value={customDuration}
+                  onChange={(event) => setCustomDuration(event.target.value)}
+                  onKeyDown={(event) => event.stopPropagation()}
+                  placeholder="Minutes"
+                  className="h-8 px-2 text-sm"
+                />
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  size="xs"
+                  disabled={!customDuration.trim()}
+                >
+                  Set
+                </Button>
+              </form>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -206,7 +296,7 @@ export default function TaskCard({
               <ArchiveIcon />
               Archive
             </DropdownMenuItem>
-            <DropdownMenuItem variant="destructive">
+            <DropdownMenuItem variant="destructive" onClick={onDelete}>
               <Trash2Icon />
               Delete
             </DropdownMenuItem>

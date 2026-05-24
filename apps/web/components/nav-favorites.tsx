@@ -19,33 +19,50 @@ import {
 } from "@workspace/ui/components/sidebar"
 import {
   MoreHorizontalIcon,
-  StarOffIcon,
   LinkIcon,
   ArrowUpRightIcon,
   Trash2Icon,
 } from "lucide-react"
 import Link from "next/link"
 
+export type FavoriteItem = {
+  id: string
+  name: string
+  url: string
+  emoji?: string
+  isActive?: boolean
+}
+
 export function NavFavorites({
   favorites,
+  label = "Favorites",
+  emptyLabel,
+  onDelete,
 }: {
-  favorites: {
-    name: string
-    url: string
-    emoji: string
-  }[]
+  favorites: FavoriteItem[]
+  label?: string
+  emptyLabel?: string
+  onDelete?: (item: FavoriteItem) => void
 }) {
   const { isMobile } = useSidebar()
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Favorites</SidebarGroupLabel>
+      <SidebarGroupLabel>{label}</SidebarGroupLabel>
       <SidebarMenu>
+        {favorites.length === 0 && emptyLabel && (
+          <SidebarMenuItem>
+            <div className="px-2 py-1 text-xs text-sidebar-foreground/60">
+              {emptyLabel}
+            </div>
+          </SidebarMenuItem>
+        )}
         {favorites.map((item) => (
-          <SidebarMenuItem key={item.name}>
+          <SidebarMenuItem key={item.id}>
             <SidebarMenuButton
+              isActive={item.isActive}
               render={<Link href={item.url} title={item.name} />}
             >
-              <span>{item.emoji}</span>
+              {item.emoji && <span>{item.emoji}</span>}
               <span>{item.name}</span>
             </SidebarMenuButton>
             <DropdownMenu>
@@ -67,13 +84,6 @@ export function NavFavorites({
               >
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
-                    <StarOffIcon className="text-muted-foreground" />
-                    <span>Remove from Favorites</span>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
                     <LinkIcon className="text-muted-foreground" />
                     <span>Copy Link</span>
                   </DropdownMenuItem>
@@ -82,7 +92,10 @@ export function NavFavorites({
                     <span>Open in New Tab</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onClick={() => onDelete?.(item)}
+                  >
                     <Trash2Icon className="text-muted-foreground" />
                     <span>Delete</span>
                   </DropdownMenuItem>

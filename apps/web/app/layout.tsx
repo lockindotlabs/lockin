@@ -9,6 +9,7 @@ import {
 import "@workspace/ui/globals.css"
 import { Providers } from "@/components/providers"
 import { cn } from "@workspace/ui/lib/utils"
+import "@workspace/ui/styles/globals.css"
 
 const inter = Inter({
   subsets: ["vietnamese"],

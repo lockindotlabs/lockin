@@ -18,10 +18,9 @@ import {
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import { Separator } from "@workspace/ui/components/separator"
-import { SidebarTrigger } from "@workspace/ui/components/sidebar"
+import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar"
 import PlanDetails from "./PlanDetails"
 import TaskList from "./TaskList"
-import { RightAiSidebarTrigger } from "@/components/right-ai-sidebar-provider"
 import { ScrollArea } from "@workspace/ui/components/scroll-area"
 import { BorderBeam } from "border-beam"
 import { AiPlannerIcon } from "@/components/icons"
@@ -31,6 +30,8 @@ import {
   type SavedPlan,
   type SavedPlanTask,
 } from "@/lib/plans/plan-repository"
+import { AI_PLAN_REWRITE_EVENT } from "@/lib/plans/ai-plan-tools"
+import { RedirectToSignIn, Show, UserButton } from "@clerk/nextjs"
 
 type PlanEditorProps = {
   planId: string
@@ -104,6 +105,7 @@ function isMeaningfulDraft(plan: EditorPlan, tasks: EditorTask[]) {
 }
 
 export default function PlanEditor({ planId }: PlanEditorProps) {
+  const { state } = useSidebar()
   const [persisted, setPersisted] = React.useState<EditorTask[]>([])
   const [persistedPlan, setPersistedPlan] =
     React.useState<EditorPlan>(createEmptyPlan)
@@ -116,6 +118,22 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
   const [isPlanLoaded, setIsPlanLoaded] = React.useState(false)
   const [saveRevision, setSaveRevision] = React.useState(0)
   const [quickPrompt, setQuickPrompt] = React.useState("")
+
+  const applySavedPlan = React.useCallback((savedPlan: SavedPlan | null) => {
+    if (!savedPlan) {
+      return
+    }
+
+    setPersistedPlan({
+      savedTitle: savedPlan.title,
+      savedDescription: savedPlan.description,
+      savedCompletion: savedPlan.completion,
+    })
+    setPersisted(savedPlan.tasks.map(toEditorTask))
+    setCreatedAt(savedPlan.createdAt)
+    setLastSavedAt(new Date(savedPlan.updatedAt))
+    setHasSavedPlan(true)
+  }, [])
 
   React.useEffect(() => {
     let isActive = true
@@ -135,25 +153,34 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
         return
       }
 
-      if (savedPlan) {
-        setPersistedPlan({
-          savedTitle: savedPlan.title,
-          savedDescription: savedPlan.description,
-          savedCompletion: savedPlan.completion,
-        })
-        setPersisted(savedPlan.tasks.map(toEditorTask))
-        setCreatedAt(savedPlan.createdAt)
-        setLastSavedAt(new Date(savedPlan.updatedAt))
-        setHasSavedPlan(true)
-      }
-
+      applySavedPlan(savedPlan)
       setIsPlanLoaded(true)
     })
 
     return () => {
       isActive = false
     }
-  }, [planId])
+  }, [applySavedPlan, planId])
+
+  React.useEffect(() => {
+    if (!isPlanLoaded) {
+      return
+    }
+
+    const handleAiRewrite = (event: Event) => {
+      const detail = (event as CustomEvent<{ planId?: string }>).detail
+
+      if (detail?.planId === planId) {
+        void getPlan(planId).then(applySavedPlan)
+      }
+    }
+
+    window.addEventListener(AI_PLAN_REWRITE_EVENT, handleAiRewrite)
+
+    return () => {
+      window.removeEventListener(AI_PLAN_REWRITE_EVENT, handleAiRewrite)
+    }
+  }, [applySavedPlan, isPlanLoaded, planId])
 
   React.useEffect(() => {
     if (!isPlanLoaded) {
@@ -239,9 +266,7 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
   const updateTaskDuration = (index: number, newDurationMinutes: number) => {
     setPersisted((p) =>
       p.map((item, i) =>
-        i === index
-          ? { ...item, durationMinutes: newDurationMinutes }
-          : item
+        i === index ? { ...item, durationMinutes: newDurationMinutes } : item
       )
     )
     markChanged()
@@ -281,8 +306,7 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
       newPersisted.splice(
         toIndex,
         0,
-        removed ??
-          createTask("", "", format(new Date(), "yyyy-MM-dd"), 30)
+        removed ?? createTask("", "", format(new Date(), "yyyy-MM-dd"), 30)
       )
       return newPersisted
     })
@@ -340,7 +364,9 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
         <div className="flex-1">
           <header className="flex h-14 shrink-0 items-center gap-2">
             <div className="flex flex-1 items-center gap-2 px-3">
-              <SidebarTrigger />
+              <SidebarTrigger
+                className={`${state == "expanded" && "pointer-events-none opacity-0"} transition-all`}
+              />
               <Separator
                 orientation="vertical"
                 className="mr-2 data-vertical:h-4 data-vertical:self-auto"
@@ -365,8 +391,16 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
                     : "Not saved yet"}
                 </div>
               )}
-              <RightAiSidebarTrigger />
               <NavActions />
+              <div className="flex items-center gap-2">
+                <Show when="signed-in">
+                  <UserButton />
+                </Show>
+
+                <Show when="signed-out">
+                  <RedirectToSignIn />
+                </Show>
+              </div>
             </div>
           </header>
           <ScrollArea
@@ -413,7 +447,7 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
             <div className="pointer-events-none absolute bottom-4 left-1/2 flex -translate-x-1/2 justify-center">
               <form
                 onSubmit={handleQuickPromptSubmit}
-                className="group transition-[height, width,border-color,box-shadow,transform] pointer-events-auto relative flex h-8 w-28 max-w-[min(52rem,calc(100vw-2rem))] items-center justify-center overflow-hidden rounded-full bg-yellow-500/30 backdrop-blur duration-300 ease-out focus-within:h-14 focus-within:w-[min(52rem,calc(100vw-2rem))] focus-within:border focus-within:bg-card focus-within:shadow-lg hover:h-14 hover:w-[min(52rem,calc(100vw-2rem))] hover:border hover:shadow-lg"
+                className="group transition-[height, width,border-color,box-shadow,transform] pointer-events-auto relative flex h-8 w-20 max-w-[min(48rem,calc(100vw-3.5rem))] items-center justify-center overflow-hidden rounded-full bg-yellow-500/30 backdrop-blur duration-300 ease-out focus-within:h-14 focus-within:w-[min(40rem,calc(100vw-3.5rem))] focus-within:border focus-within:bg-card focus-within:shadow-lg hover:h-14 hover:w-[min(40rem,calc(100vw-3.5rem))] hover:border hover:shadow-lg"
                 aria-label="Improve plan"
               >
                 <div className="absolute inset-0 flex items-center justify-center transition-[opacity,transform] duration-150 ease-out group-focus-within:scale-95 group-focus-within:opacity-0 group-hover:scale-95 group-hover:opacity-0">

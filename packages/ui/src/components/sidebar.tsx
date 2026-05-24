@@ -23,7 +23,13 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip"
-import { ArrowRightFromLineIcon, PanelLeftIcon } from "lucide-react"
+import {
+  ArrowRightFromLineIcon,
+  ChevronsLeftIcon,
+  MenuIcon,
+  PanelLeftCloseIcon,
+  PanelLeftIcon,
+} from "lucide-react"
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -256,7 +262,7 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, state } = useSidebar()
 
   return (
     <Button
@@ -264,14 +270,18 @@ function SidebarTrigger({
       data-slot="sidebar-trigger"
       variant="ghost"
       size="icon-sm"
-      className={cn(className)}
+      className={cn(className, "size-7 [&_svg]:size-5!")}
       onClick={(event) => {
         onClick?.(event)
         toggleSidebar()
       }}
       {...props}
     >
-      <PanelLeftIcon />
+      {state === "collapsed" ? (
+        <MenuIcon strokeWidth={1.5} />
+      ) : (
+        <ChevronsLeftIcon strokeWidth={1.5} />
+      )}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )

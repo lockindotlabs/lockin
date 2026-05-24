@@ -1,4 +1,4 @@
-import PlanEditor from "../PlanEditor"
+import { redirect } from "next/navigation"
 
 type PageProps = {
   params: Promise<{
@@ -9,5 +9,5 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
   const { id } = await params
 
-  return <PlanEditor planId={id} />
+  redirect(`/app/plan?id=${id}`)
 }

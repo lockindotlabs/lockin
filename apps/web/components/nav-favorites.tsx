@@ -25,11 +25,12 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 
-type FavoriteItem = {
+export type FavoriteItem = {
   id: string
   name: string
   url: string
   emoji?: string
+  isActive?: boolean
 }
 
 export function NavFavorites({
@@ -58,6 +59,7 @@ export function NavFavorites({
         {favorites.map((item) => (
           <SidebarMenuItem key={item.id}>
             <SidebarMenuButton
+              isActive={item.isActive}
               render={<Link href={item.url} title={item.name} />}
             >
               {item.emoji && <span>{item.emoji}</span>}

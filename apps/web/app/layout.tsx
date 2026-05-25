@@ -5,6 +5,7 @@ import {
   Funnel_Display,
   Archivo,
   Inter_Tight,
+  IBM_Plex_Mono,
 } from "next/font/google"
 import "@workspace/ui/globals.css"
 import { Providers } from "@/components/providers"
@@ -21,6 +22,12 @@ const interTight = Inter_Tight({
 })
 
 const fontMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" })
+
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-ibm-mono",
+  weight: ["400", "500"],
+})
 
 const funnelDisplay = Funnel_Display({
   subsets: ["latin-ext"],
@@ -48,7 +55,8 @@ export default function RootLayout({
         inter.variable,
         fontMono.variable,
         funnelDisplay.variable,
-        interTight.variable
+        interTight.variable,
+        ibmPlexMono.variable
       )}
     >
       <body>

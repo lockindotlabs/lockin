@@ -104,24 +104,24 @@ export default function TaskCard({
     if (savedDescription !== undefined) setDescription(savedDescription)
   }, [savedTitle, savedDescription])
 
-  const resizeDesc = () => {
-    const el = descRef.current
-    if (!el) return
-    el.style.height = "auto"
-    el.style.height = `${el.scrollHeight}px`
-  }
+  // const resizeDesc = () => {
+  //   const el = descRef.current
+  //   if (!el) return
+  //   el.style.height = "auto"
+  //   el.style.height = `${el.scrollHeight}px`
+  // }
 
-  const resizeTitle = () => {
-    const el = titleRef.current
-    if (!el) return
-    el.style.height = "auto"
-    el.style.height = `${el.scrollHeight}px`
-  }
+  // const resizeTitle = () => {
+  //   const el = titleRef.current
+  //   if (!el) return
+  //   el.style.height = "auto"
+  //   el.style.height = `${el.scrollHeight}px`
+  // }
 
-  React.useEffect(() => {
-    resizeTitle()
-    resizeDesc()
-  }, [])
+  // React.useEffect(() => {
+  //   resizeTitle()
+  //   resizeDesc()
+  // }, [])
 
   const handleCustomDurationSubmit = (
     event: React.FormEvent<HTMLFormElement>
@@ -157,7 +157,7 @@ export default function TaskCard({
           onCheckedChange={onCompletedChange}
           className="flex size-6 items-center justify-center rounded-full transition duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring active:scale-[0.97] data-checked:bg-primary data-unchecked:border data-unchecked:border-ring"
         >
-          <Checkbox.Indicator className="flex text-gray-50 transition duration-150 ease-out data-unchecked:scale-90 data-unchecked:opacity-0">
+          <Checkbox.Indicator className="flex text-primary-foreground transition duration-150 ease-out data-unchecked:scale-90 data-unchecked:opacity-0">
             <CheckIcon className="size-4" />
           </Checkbox.Indicator>
         </Checkbox.Root>
@@ -173,9 +173,7 @@ export default function TaskCard({
               setTitle(e.target.value)
               if (onTitleChange) onTitleChange(e.target.value)
             }}
-            onInput={resizeTitle}
-            className="w-full resize-none text-sm font-medium focus-visible:outline-none active:outline-none"
-            rows={1}
+            className="field-sizing-content min-w-100 resize-none text-base leading-6 font-medium focus-visible:outline-none active:outline-none"
           />
           <textarea
             ref={descRef}
@@ -184,19 +182,17 @@ export default function TaskCard({
               setDescription(e.target.value)
               if (onDescriptionChange) onDescriptionChange(e.target.value)
             }}
-            onInput={resizeDesc}
             placeholder="Task description"
-            className="w-full resize-none overflow-hidden bg-transparent text-sm text-muted-foreground focus-visible:outline-none active:outline-none"
-            rows={1}
+            className="field-sizing-content min-w-100 resize-none overflow-hidden bg-transparent text-sm leading-6 text-muted-foreground focus-visible:outline-none active:outline-none"
           />
         </div>
 
         {/* Metadata badges */}
-        <div className="flex w-full items-center gap-2 pt-1">
+        <div className="-ml-1.5 flex w-full items-center gap-2">
           <Popover>
             <PopoverTrigger
               render={
-                <Button variant="ghost" size={"xs"}>
+                <Button variant="ghost" size={"xs"} className={"h-7.5"}>
                   <CalendarIcon className="h-4 w-4" data-icon="inline-start" />
                   <span>{date ? format(date, "d MMM") : "Pick date"}</span>
                 </Button>
@@ -216,7 +212,7 @@ export default function TaskCard({
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
-                <Button variant="ghost" size="xs">
+                <Button variant="ghost" size="xs" className={"h-7.5"}>
                   <TimerIcon data-icon="inline-start" />
                   <span>{formatDuration(duration)}</span>
                 </Button>

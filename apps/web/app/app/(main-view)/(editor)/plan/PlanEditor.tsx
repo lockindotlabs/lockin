@@ -403,8 +403,11 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
               </div>
             </div>
           </header>
+
           <ScrollArea
-            className={"relative flex h-[calc(100vh-3.5rem)] flex-col p-8"}
+            className={
+              "relative flex h-[calc(100vh-3.5rem)] flex-col px-8 pt-6"
+            }
           >
             <PlanDetails
               title={persistedPlan.savedTitle}

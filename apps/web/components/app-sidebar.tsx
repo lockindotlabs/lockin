@@ -29,6 +29,7 @@ import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
 import { buildAskHref } from "@/lib/routing/ask-url"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import type { FavoriteItem } from "@/components/nav-favorites"
+import { LogoAccent } from "@workspace/ui/components/logo-accent"
 
 type NavItem = {
   title: string
@@ -151,8 +152,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       collapsible="offcanvas"
     >
       <SidebarHeader>
-        <div className="flex items-center justify-between gap-2 px-1 py-1.5">
-          <LogoWordmark className="h-6" />
+        <div className="flex items-center justify-between gap-2 py-1 pr-1">
+          <LogoAccent className="h-8" />
           <SidebarTrigger
             className={`${state == "collapsed" && "pointer-events-none opacity-0"} transition-opacity`}
           />

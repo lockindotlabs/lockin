@@ -122,7 +122,9 @@ export default function PlanDetails({
         <textarea
           value={editableTitle}
           onChange={(e) => handleTitleChange(e.target.value)}
-          placeholder={planDetailsSummary.isEmpty ? "Name this plan" : "Plan name"}
+          placeholder={
+            planDetailsSummary.isEmpty ? "Name this plan" : "Plan name"
+          }
           className="w-full resize-none text-xl font-medium selection:bg-amber-200 focus-visible:outline-none active:outline-none"
           rows={1}
         />
@@ -140,7 +142,7 @@ export default function PlanDetails({
       </div>
 
       <div className="mt-2 flex flex-col">
-        <div className="flex h-10 items-center gap-4">
+        <div className="flex items-center gap-4 py-2">
           <div className="w-40 text-sm font-medium text-muted-foreground">
             Timeline
           </div>
@@ -160,7 +162,7 @@ export default function PlanDetails({
             </span>
           </div>
         </div>
-        <div className="flex h-10 items-center gap-4 text-sm">
+        <div className="flex items-center gap-4 py-2 text-sm">
           <div className="w-40 text-sm font-medium text-muted-foreground">
             Steps
           </div>
@@ -168,19 +170,17 @@ export default function PlanDetails({
             {steps.count} steps ({formatHours(steps.hours)} to complete)
           </div>
         </div>
-        <div className="flex h-10 items-center gap-4 text-sm">
+        <div className="flex items-start gap-4 py-2 text-sm">
           <div className="w-40 text-sm font-medium text-muted-foreground">
             Completion
           </div>
-          <div className="flex items-center gap-2">
-            <input
-              value={editableCompletion}
-              onChange={(event) => handleCompletionChange(event.target.value)}
-              placeholder="Not set"
-              aria-label="Completion"
-              className="h-7 min-w-64 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-            />
-          </div>
+          <textarea
+            value={editableCompletion}
+            onChange={(event) => handleCompletionChange(event.target.value)}
+            placeholder="Not set"
+            aria-label="Completion"
+            className="-mt-0.5 field-sizing-content min-w-64 flex-1 resize-none bg-transparent text-sm leading-6 outline-none placeholder:text-muted-foreground"
+          />
         </div>
       </div>
     </section>

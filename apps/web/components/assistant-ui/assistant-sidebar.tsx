@@ -58,8 +58,8 @@ export function AssistantSidebar({ children }: PropsWithChildren) {
 
   return (
     <ResizablePanelGroup className="h-full w-full" orientation="horizontal">
-      <ResizablePanel defaultSize={40} minSize={"30%"} className="min-w-0">
-        <div className="relative">
+      <ResizablePanel defaultSize={40} minSize={"30%"}>
+        <div className="relative w-full">
           <div className="absolute top-0 right-0 left-0 z-10 flex h-14 shrink-0 items-center gap-2 bg-background/80 backdrop-blur">
             <div className="flex flex-1 items-center gap-2 px-3 transition-transform duration-200 ease-in-out">
               <SidebarTrigger
@@ -102,7 +102,7 @@ export function AssistantSidebar({ children }: PropsWithChildren) {
         </div>
       </ResizablePanel>
       <ResizableHandle />
-      <ResizablePanel defaultSize={60} minSize={"60%"} className="min-w-0">
+      <ResizablePanel defaultSize={60} minSize={"60%"}>
         <div className="relative">
           {children}
           <div className="absolute right-5 bottom-5 z-10">

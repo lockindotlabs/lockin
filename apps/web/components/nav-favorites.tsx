@@ -70,7 +70,7 @@ export function NavFavorites({
                 render={
                   <SidebarMenuAction
                     showOnHover
-                    className="aria-expanded:bg-muted"
+                    className="aria-expanded:bg-sidebar-accent aria-expanded:text-sidebar-accent-foreground"
                   />
                 }
               >

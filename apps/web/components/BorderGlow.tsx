@@ -23,32 +23,34 @@ interface BorderGlowOwnProps {
 type BorderGlowProps = BorderGlowOwnProps &
   Omit<HTMLAttributes<HTMLDivElement>, keyof BorderGlowOwnProps>
 
-function parseHSL(hslStr: string) {
-  const match = hslStr.match(/([\d.]+)\s*([\d.]+)%?\s*([\d.]+)%?/)
-  if (!match || !match[1] || !match[2] || !match[3]) return { h: 40, s: 80, l: 80 }
-  return {
-    h: parseFloat(match[1]),
-    s: parseFloat(match[2]),
-    l: parseFloat(match[3]),
-  }
-}
-
 function buildGlowVars(glowColor: string, intensity: number) {
-  const { h, s, l } = parseHSL(glowColor)
-  const base = `${h}deg ${s}% ${l}%`
   const opacities = [100, 60, 50, 40, 30, 20, 10] as const
   const keys = ["", "-60", "-50", "-40", "-30", "-20", "-10"] as const
   const vars: Record<string, string> = {}
   for (let i = 0; i < opacities.length; i++) {
-    vars[`--glow-color${keys[i]}`] = `hsl(${base} / ${Math.min((opacities[i] as number) * intensity, 100)}%)`
+    vars[`--glow-color${keys[i]}`] =
+      `color-mix(in oklab, ${glowColor} ${Math.min((opacities[i] as number) * intensity, 100)}%, transparent)`
   }
   return vars
 }
 
-const GRADIENT_POSITIONS = ["80% 55%", "69% 34%", "8% 6%", "41% 38%", "86% 85%", "82% 18%", "51% 4%"]
+const GRADIENT_POSITIONS = [
+  "80% 55%",
+  "69% 34%",
+  "8% 6%",
+  "41% 38%",
+  "86% 85%",
+  "82% 18%",
+  "51% 4%",
+]
 const GRADIENT_KEYS = [
-  "--gradient-one", "--gradient-two", "--gradient-three", "--gradient-four",
-  "--gradient-five", "--gradient-six", "--gradient-seven",
+  "--gradient-one",
+  "--gradient-two",
+  "--gradient-three",
+  "--gradient-four",
+  "--gradient-five",
+  "--gradient-six",
+  "--gradient-seven",
 ]
 const COLOR_MAP = [0, 1, 2, 0, 1, 2, 1]
 
@@ -65,16 +67,26 @@ function buildGradientVars(colors: string[]) {
   return vars
 }
 
-function easeOutCubic(x: number) { return 1 - Math.pow(1 - x, 3) }
-function easeInCubic(x: number) { return x * x * x }
+function easeOutCubic(x: number) {
+  return 1 - Math.pow(1 - x, 3)
+}
+function easeInCubic(x: number) {
+  return x * x * x
+}
 
 function animateValue({
-  start = 0, end = 100, duration = 1000, delay = 0,
+  start = 0,
+  end = 100,
+  duration = 1000,
+  delay = 0,
   ease = easeOutCubic,
   onUpdate,
   onEnd,
 }: {
-  start?: number; end?: number; duration?: number; delay?: number
+  start?: number
+  end?: number
+  duration?: number
+  delay?: number
   ease?: (x: number) => number
   onUpdate: (v: number) => void
   onEnd?: () => void
@@ -94,8 +106,8 @@ export default function BorderGlow({
   children,
   className = "",
   edgeSensitivity = 30,
-  glowColor = "40 80 80",
-  backgroundColor = "#120F17",
+  glowColor = "var(--primary)",
+  backgroundColor = "var(--card)",
   borderRadius = 28,
   glowRadius = 40,
   glowIntensity = 1.0,
@@ -110,10 +122,13 @@ export default function BorderGlow({
 }: BorderGlowProps) {
   const cardRef = useRef<HTMLDivElement>(null)
 
-  const getCenterOfElement = useCallback((el: HTMLElement): [number, number] => {
-    const { width, height } = el.getBoundingClientRect()
-    return [width / 2, height / 2]
-  }, [])
+  const getCenterOfElement = useCallback(
+    (el: HTMLElement): [number, number] => {
+      const { width, height } = el.getBoundingClientRect()
+      return [width / 2, height / 2]
+    },
+    []
+  )
 
   const getEdgeProximity = useCallback(
     (el: HTMLElement, x: number, y: number) => {
@@ -179,17 +194,32 @@ export default function BorderGlow({
     const card = cardRef.current
     card.classList.add("sweep-active")
     card.style.setProperty("--cursor-angle", "110deg")
-    animateValue({ duration: 500, onUpdate: (v) => card.style.setProperty("--edge-proximity", String(v)) })
     animateValue({
-      ease: easeInCubic, duration: 1500, end: 50,
-      onUpdate: (v) => card.style.setProperty("--cursor-angle", `${355 * (v / 100) + 110}deg`),
+      duration: 500,
+      onUpdate: (v) => card.style.setProperty("--edge-proximity", String(v)),
     })
     animateValue({
-      ease: easeOutCubic, delay: 1500, duration: 2250, start: 50, end: 100,
-      onUpdate: (v) => card.style.setProperty("--cursor-angle", `${355 * (v / 100) + 110}deg`),
+      ease: easeInCubic,
+      duration: 1500,
+      end: 50,
+      onUpdate: (v) =>
+        card.style.setProperty("--cursor-angle", `${355 * (v / 100) + 110}deg`),
     })
     animateValue({
-      ease: easeInCubic, delay: 2500, duration: 1500, start: 100, end: 0,
+      ease: easeOutCubic,
+      delay: 1500,
+      duration: 2250,
+      start: 50,
+      end: 100,
+      onUpdate: (v) =>
+        card.style.setProperty("--cursor-angle", `${355 * (v / 100) + 110}deg`),
+    })
+    animateValue({
+      ease: easeInCubic,
+      delay: 2500,
+      duration: 1500,
+      start: 100,
+      end: 0,
       onUpdate: (v) => card.style.setProperty("--edge-proximity", String(v)),
       onEnd: () => card.classList.remove("sweep-active"),
     })

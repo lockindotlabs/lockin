@@ -120,15 +120,9 @@ export function AskPageClient() {
           </Breadcrumb>
         </div>
 
-        <div className="ml-auto flex items-center gap-2 px-3">
-          <Show when="signed-in">
-            <UserButton />
-          </Show>
-
-          <Show when="signed-out">
-            <RedirectToSignIn />
-          </Show>
-        </div>
+        <Show when="signed-out">
+          <RedirectToSignIn />
+        </Show>
       </div>
       <Show when="signed-in">
         <Assistant

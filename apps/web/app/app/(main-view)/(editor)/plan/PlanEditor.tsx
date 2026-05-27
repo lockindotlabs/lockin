@@ -12,12 +12,13 @@ import { NavActions } from "@/components/nav-actions"
 import {
   Breadcrumb,
   BreadcrumbItem,
+  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
+  BreadcrumbSeparator,
 } from "@workspace/ui/components/breadcrumb"
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
-import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar"
 import PlanDetails from "./PlanDetails"
 import TaskList from "./TaskList"
@@ -32,6 +33,7 @@ import {
 } from "@/lib/plans/plan-repository"
 import { AI_PLAN_REWRITE_EVENT } from "@/lib/plans/ai-plan-tools"
 import { RedirectToSignIn, Show, UserButton } from "@clerk/nextjs"
+import { Separator } from "@workspace/ui/components/separator"
 
 type PlanEditorProps = {
   planId: string
@@ -374,6 +376,10 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
+                    <BreadcrumbLink href="/app/plans">Plans</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
                     <BreadcrumbPage className="line-clamp-1">
                       {persistedPlan.savedTitle.trim().length === 0
                         ? "New Plan"
@@ -392,15 +398,10 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
                 </div>
               )}
               <NavActions />
-              <div className="flex items-center gap-2">
-                <Show when="signed-in">
-                  <UserButton />
-                </Show>
 
-                <Show when="signed-out">
-                  <RedirectToSignIn />
-                </Show>
-              </div>
+              <Show when="signed-out">
+                <RedirectToSignIn />
+              </Show>
             </div>
           </header>
 

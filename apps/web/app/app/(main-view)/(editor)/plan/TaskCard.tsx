@@ -150,7 +150,7 @@ export default function TaskCard({
   const hasCustomDuration = !durationOptions.includes(duration)
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-row items-start gap-3 border-b p-3 transition-colors hover:bg-accent/30">
+    <div className="mx-auto flex w-full max-w-3xl flex-row items-start gap-3 border-b p-3 transition-colors">
       <label className="flex items-center gap-2 text-base font-normal text-gray-900">
         <Checkbox.Root
           checked={isCompleted ?? false}
@@ -192,7 +192,13 @@ export default function TaskCard({
           <Popover>
             <PopoverTrigger
               render={
-                <Button variant="ghost" size={"xs"} className={"h-7.5"}>
+                <Button
+                  variant="ghost"
+                  size={"xs"}
+                  className={
+                    "h-7.5 text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-pressed:bg-sidebar-accent data-pressed:text-sidebar-accent-foreground"
+                  }
+                >
                   <CalendarIcon className="h-4 w-4" data-icon="inline-start" />
                   <span>{date ? format(date, "d MMM") : "Pick date"}</span>
                 </Button>
@@ -212,7 +218,13 @@ export default function TaskCard({
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
-                <Button variant="ghost" size="xs" className={"h-7.5"}>
+                <Button
+                  variant="ghost"
+                  size="xs"
+                  className={
+                    "h-7.5 text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-pressed:bg-sidebar-accent data-pressed:text-sidebar-accent-foreground"
+                  }
+                >
                   <TimerIcon data-icon="inline-start" />
                   <span>{formatDuration(duration)}</span>
                 </Button>

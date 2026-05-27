@@ -1,5 +1,3 @@
-"use client"
-
 import {
   BadgeCheck,
   Bell,
@@ -7,6 +5,7 @@ import {
   CreditCard,
   LogOut,
   Sparkles,
+  UserIcon,
 } from "lucide-react"
 
 import {
@@ -29,17 +28,12 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
+import { useClerk, useUser } from "@clerk/nextjs"
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}) {
+export function NavUser() {
   const { isMobile } = useSidebar()
+  const { user } = useUser()
+  const { openUserProfile, signOut } = useClerk()
 
   return (
     <SidebarMenu>
@@ -49,15 +43,24 @@ export function NavUser({
             render={
               <SidebarMenuButton
                 size="lg"
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                className="hover:bg-accent hover:text-accent-foreground data-pressed:bg-accent data-pressed:text-accent-foreground"
               >
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <Avatar className="h-8 w-8 rounded-full">
+                  <AvatarImage
+                    src={user?.imageUrl}
+                    alt={
+                      user?.fullName || user?.emailAddresses[0]?.emailAddress
+                    }
+                  />
+                  <AvatarFallback className="rounded-full">
+                    <UserIcon />
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-medium">{user?.fullName}</span>
+                  <span className="truncate text-xs">
+                    {user?.emailAddresses[0]?.emailAddress}
+                  </span>
                 </div>
                 <ChevronsUpDown className="ml-auto size-4" />
               </SidebarMenuButton>
@@ -72,13 +75,24 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <Avatar className="h-8 w-8 rounded-full">
+                    <AvatarImage
+                      src={user?.imageUrl}
+                      alt={
+                        user?.fullName || user?.emailAddresses[0]?.emailAddress
+                      }
+                    />
+                    <AvatarFallback className="rounded-full">
+                      <UserIcon />
+                    </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">{user.name}</span>
-                    <span className="truncate text-xs">{user.email}</span>
+                    <span className="truncate font-medium">
+                      {user?.fullName}
+                    </span>
+                    <span className="truncate text-xs">
+                      {user?.emailAddresses[0]?.emailAddress}
+                    </span>
                   </div>
                 </div>
               </DropdownMenuLabel>
@@ -92,7 +106,7 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => openUserProfile()}>
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
@@ -106,7 +120,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => signOut()}>
               <LogOut />
               Log out
             </DropdownMenuItem>

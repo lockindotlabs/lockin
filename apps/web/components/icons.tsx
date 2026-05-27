@@ -21,3 +21,25 @@ export function AiPlannerIcon({
     </svg>
   )
 }
+
+export function PlayFilledIcon({
+  className,
+  ...props
+}: React.ComponentProps<"svg"> & { className?: string }) {
+  return (
+    <svg
+      width="100"
+      height="100"
+      viewBox="0 0 100 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn("h-6 w-fit", className)}
+      {...props}
+    >
+      <path
+        d="M50 0C22.3868 0 0 22.3868 0 50C0 77.6132 22.3868 100 50 100C77.6132 100 100 77.6132 100 50C100 22.3868 77.6132 0 50 0ZM40.0001 70V30L70.0001 50L40.0001 70Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}

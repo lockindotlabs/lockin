@@ -4,10 +4,10 @@ import * as React from "react"
 
 import { NavFavorites } from "@/components/nav-favorites"
 import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarHeader,
   SidebarRail,
   SidebarTrigger,
@@ -15,13 +15,11 @@ import {
 } from "@workspace/ui/components/sidebar"
 import {
   SearchIcon,
-  SparklesIcon,
   HomeIcon,
   CalendarIcon,
   Settings2Icon,
   PlusIcon,
 } from "lucide-react"
-import { LogoWordmark } from "@workspace/ui/components/logo-wordmark"
 import { clearChatMessages } from "@/lib/chat/local-chat-persistence"
 import { useChatSummaries } from "@/lib/chat/use-chat-summaries"
 import { deletePlan } from "@/lib/plans/plan-repository"
@@ -30,6 +28,10 @@ import { buildAskHref } from "@/lib/routing/ask-url"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import type { FavoriteItem } from "@/components/nav-favorites"
 import { LogoAccent } from "@workspace/ui/components/logo-accent"
+import { AiPlannerIcon } from "./icons"
+import { NavUser } from "./nav-user"
+import { NavUserSkeleton } from "./nav-user-skeleton"
+import { Button } from "@workspace/ui/components/button"
 
 type NavItem = {
   title: string
@@ -84,7 +86,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     {
       title: "Ask AI",
       url: buildAskHref(),
-      icon: <SparklesIcon />,
+      icon: <AiPlannerIcon />,
       isActive: pathname === "/app/ask",
     },
     {
@@ -153,7 +155,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     >
       <SidebarHeader>
         <div className="flex items-center justify-between gap-2 py-1 pr-1">
-          <LogoAccent className="h-8" />
+          <LogoAccent
+            className="h-8 cursor-pointer"
+            onClick={() => {
+              router.push("/app")
+            }}
+          />
           <SidebarTrigger
             className={`${state == "collapsed" && "pointer-events-none opacity-0"} transition-opacity`}
           />
@@ -175,6 +182,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         />
         {/* <NavSecondary items={navSecondary} className="mt-auto" / */}
       </SidebarContent>
+      <SidebarFooter>
+        <React.Suspense fallback={<NavUserSkeleton />}>
+          <NavUser />
+        </React.Suspense>
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   )

@@ -123,15 +123,9 @@ export default function Page() {
           className={`${state == "expanded" && "pointer-events-none hidden opacity-0"} transition-all`}
         />
         <div />
-        <div className="flex items-center gap-2">
-          <Show when="signed-in">
-            <UserButton />
-          </Show>
-
-          <Show when="signed-out">
-            <RedirectToSignIn />
-          </Show>
-        </div>
+        <Show when="signed-out">
+          <RedirectToSignIn />
+        </Show>
       </header>
 
       {plans.length > 0 && (

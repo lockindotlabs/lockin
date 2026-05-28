@@ -26,6 +26,7 @@ import { MoreHorizontalIcon, XIcon } from "lucide-react"
 
 export function AskPageClient() {
   const router = useRouter()
+  const isMobile = useSidebar()
   const searchParams = useSearchParams()
   const chatSessionId = searchParams.get("id") ?? searchParams.get("t")
   const planId = searchParams.get("p")
@@ -87,37 +88,38 @@ export function AskPageClient() {
 
   return (
     <div className="relative flex flex-col">
-      <div className="absolute top-0 right-0 left-0 z-10 flex h-14 shrink-0 items-center gap-2 bg-background/80 backdrop-blur">
-        <div className="flex flex-1 items-center gap-2 px-3 transition-transform duration-200 ease-in-out">
-          <SidebarTrigger
-            className={`${state == "expanded" && "pointer-events-none hidden opacity-0"} transition-all`}
-          />
-          <Breadcrumb className="ml-2">
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink render={<Link href="/app" />}>
-                  Home
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink render={<Link href="/app/ask" />}>
-                  Ask
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage className="line-clamp-1">
-                  <div className="flex items-center gap-2">
-                    {chatTitle}
-                    <Button variant="ghost" size="icon-xs">
-                      <MoreHorizontalIcon />
-                    </Button>
-                  </div>
-                </BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+      <div className="absolute top-0 right-0 left-0 z-10 flex h-14 shrink-0 items-center gap-2">
+        <div className="flex flex-1 items-center justify-between px-3 transition-transform duration-200 ease-in-out">
+          <div className="flex items-center gap-2">
+            <SidebarTrigger
+              className={`${state == "expanded" && "pointer-events-none hidden opacity-0"} transition-all`}
+            />
+            <Breadcrumb className="ml-2">
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink render={<Link href="/app" />}>
+                    Home
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink render={<Link href="/app/ask" />}>
+                    Ask
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="line-clamp-1">
+                    <div className="flex items-center gap-2">{chatTitle}</div>
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+
+          <Button variant="ghost" size="icon-xs">
+            <MoreHorizontalIcon />
+          </Button>
         </div>
 
         <Show when="signed-out">

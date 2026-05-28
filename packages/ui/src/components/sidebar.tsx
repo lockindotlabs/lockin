@@ -262,7 +262,7 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar, state } = useSidebar()
+  const { toggleSidebar, state, isMobile } = useSidebar()
 
   return (
     <Button
@@ -277,7 +277,7 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      {state === "collapsed" ? (
+      {state === "collapsed" || isMobile ? (
         <MenuIcon strokeWidth={1.5} />
       ) : (
         <ChevronsLeftIcon strokeWidth={1.5} />

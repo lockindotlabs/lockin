@@ -5,10 +5,10 @@ import { convertToModelMessages, stepCountIs, streamText } from "ai"
 export const maxDuration = 30
 
 export async function POST(req: Request) {
-  const { messages, system, tools } = await req.json()
+  const { messages, system, tools, config } = await req.json()
 
   const result = streamText({
-    model: google("gemini-3.1-flash-lite"),
+    model: google(config?.modelName || "gemini-3.1-flash-lite"),
     system: [
       system,
       `You can manage LockIn plans with frontend tools.
@@ -21,8 +21,24 @@ After createPlan or rewriteActivePlan succeeds, always send a final assistant te
       .join("\n\n"),
     messages: await convertToModelMessages(messages),
     tools: frontendTools(tools ?? {}),
-    stopWhen: stepCountIs(5),
+    // stopWhen: stepCountIs(10),
   })
 
-  return result.toUIMessageStreamResponse()
+  return result.toUIMessageStreamResponse({
+    messageMetadata: ({ part }) => {
+      console.log(part.type, part)
+
+      if (part.type === "finish") {
+        return {
+          usage: part.totalUsage,
+        }
+      }
+      if (part.type === "finish-step") {
+        return {
+          modelId: part.response.modelId,
+        }
+      }
+      return undefined
+    },
+  })
 }

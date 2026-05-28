@@ -41,18 +41,82 @@ import {
   ChevronRightIcon,
   CopyIcon,
   DownloadIcon,
+  GlobeIcon,
   MoreHorizontalIcon,
   PencilIcon,
   RefreshCwIcon,
+  SparkleIcon,
   SquareIcon,
 } from "lucide-react"
-import type { FC } from "react"
-import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area"
-import { ScrollBar } from "@workspace/ui/components/scroll-area"
+import { useState, type FC } from "react"
+import { ModelSelector, type ModelOption } from "./model-selector"
+import GeminiLogo from "./logo-gemini"
+import { ContextDisplay } from "./context-display"
+import { CapabilitiesSelector } from "./capabilities-selector"
+
+type ThreadModelOption = ModelOption & {
+  contextWindow: number
+}
+
+const GEMINI_MODELS = [
+  {
+    id: "gemini-3.1-flash-lite",
+    name: "Gemini 3.1 Flash Lite",
+    icon: <GeminiLogo />,
+    description: "Fast and efficient",
+    contextWindow: 1_000_000,
+  },
+  {
+    id: "gemini-3.1-flash",
+    name: "Gemini 3.1 Flash",
+    icon: <GeminiLogo />,
+    description: "Balanced performance",
+    contextWindow: 1_000_000,
+  },
+  {
+    id: "gemini-3.1-pro",
+    name: "Gemini 3.1 Pro",
+    icon: <GeminiLogo />,
+    description: "Most capable",
+    contextWindow: 1_000_000,
+  },
+] satisfies ThreadModelOption[]
+
+const AI_CAPABILITIES = [
+  {
+    id: "web-search",
+    name: "Web search",
+    icon: <GlobeIcon />,
+    description: "Search the web for information and answers.",
+  },
+  {
+    id: "complex-reasoning",
+    name: "Complex reasoning",
+    icon: <SparkleIcon />,
+    description:
+      "Handle multi-step problems and provide detailed explanations.",
+  },
+]
+
+const DEFAULT_MODEL_ID = "gemini-3.1-flash-lite"
+const DEFAULT_MODEL = GEMINI_MODELS[0]!
+
+const ToolsDropdown = () => {
+  return <></>
+}
 
 export const Thread: FC<{ mode?: "onboarding" | "plan" }> = ({
   mode = "onboarding",
 }) => {
+  const [selectedModelId, setSelectedModelId] = useState(DEFAULT_MODEL_ID)
+  const [selectedCapabilityId, setSelectedCapabilityId] = useState<
+    string | undefined
+  >(undefined)
+  const isEmpty = useAuiState((s) => s.thread.isEmpty)
+
+  const selectedModel =
+    GEMINI_MODELS.find((model) => model.id === selectedModelId) ?? DEFAULT_MODEL
+
   return (
     <ThreadPrimitive.Root
       className="aui-root aui-thread-root @container flex h-screen flex-col bg-background"
@@ -69,26 +133,40 @@ export const Thread: FC<{ mode?: "onboarding" | "plan" }> = ({
         scrollToBottomOnInitialize={false}
         scrollToBottomOnThreadSwitch={true}
         data-slot="aui_thread-viewport"
-        className="relative flex flex-1 flex-col overflow-x-auto overflow-y-auto scroll-smooth"
+        className="relative my-auto flex flex-1 flex-col overflow-x-auto overflow-y-auto scroll-smooth"
       >
-        <div className="mx-auto flex w-full max-w-(--thread-max-width) flex-1 flex-col px-4 pt-18">
+        <div
+          className={cn(
+            "mx-auto my-auto flex w-full max-w-(--thread-max-width) flex-col px-4",
+            !isEmpty && "flex-1"
+          )}
+        >
           <AuiIf condition={(s) => s.thread.isEmpty}>
             <ThreadWelcome />
           </AuiIf>
 
           <div
             data-slot="aui_message-group"
-            className="mb-10 flex flex-col gap-y-8 empty:hidden"
+            className="mb-16 flex flex-col gap-y-8 empty:hidden"
           >
             <ThreadPrimitive.Messages>
               {() => <ThreadMessage />}
             </ThreadPrimitive.Messages>
           </div>
 
-          <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mt-auto flex flex-col gap-4 overflow-visible rounded-t-(--composer-radius) bg-background pb-4 md:pb-6">
+          <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mt-auto flex flex-col gap-4 overflow-visible rounded-t-(--composer-radius) bg-background pt-8 pb-4 md:pb-6">
             <ThreadScrollToBottom />
-            <Composer mode={mode} />
+            <Composer
+              mode={mode}
+              selectedModelId={selectedModelId}
+              onSelectedModelChange={setSelectedModelId}
+              selectedCapabilityId={selectedCapabilityId}
+              onSelectedCapabilityChange={setSelectedCapabilityId}
+            />
           </ThreadPrimitive.ViewportFooter>
+          <AuiIf condition={(s) => s.thread.isEmpty}>
+            <ThreadSuggestions />
+          </AuiIf>
         </div>
       </ThreadPrimitive.Viewport>
     </ThreadPrimitive.Root>
@@ -122,10 +200,10 @@ const ThreadScrollToBottom: FC = () => {
 
 const ThreadWelcome: FC = () => {
   return (
-    <div className="aui-thread-welcome-root my-auto flex grow flex-col">
+    <div className="aui-thread-welcome-root my-auto flex grow flex-col space-y-12">
       <div className="aui-thread-welcome-center flex w-full grow flex-col items-center justify-center">
         <div className="aui-thread-welcome-message flex size-full flex-col justify-center px-4">
-          <h1 className="aui-thread-welcome-message-inner animate-in text-2xl font-medium tracking-normal duration-200 fill-mode-both fade-in slide-in-from-bottom-1">
+          <h1 className="aui-thread-welcome-message-inner animate-in text-xl font-medium tracking-normal duration-200 fill-mode-both fade-in slide-in-from-bottom-1">
             What do you need to get done?
           </h1>
           <p className="aui-thread-welcome-message-inner animate-in text-muted-foreground delay-75 duration-200 fill-mode-both fade-in slide-in-from-bottom-1">
@@ -134,14 +212,13 @@ const ThreadWelcome: FC = () => {
           </p>
         </div>
       </div>
-      <ThreadSuggestions />
     </div>
   )
 }
 
 const ThreadSuggestions: FC = () => {
   return (
-    <div className="aui-thread-welcome-suggestions grid w-full gap-2 pb-4 @md:grid-cols-2">
+    <div className="aui-thread-welcome-suggestions grid w-full gap-2 pb-4 @md:flex @md:flex-wrap @md:justify-center">
       <ThreadPrimitive.Suggestions>
         {() => <ThreadSuggestionItem />}
       </ThreadPrimitive.Suggestions>
@@ -157,19 +234,29 @@ const ThreadSuggestionItem: FC = () => {
         render={
           <Button
             variant="ghost"
-            className="aui-thread-welcome-suggestion h-auto w-full flex-wrap items-start justify-start gap-1 rounded-3xl border border-border bg-background px-4 py-3 text-start text-sm transition-colors hover:bg-muted @md:flex-col"
+            className="aui-thread-welcome-suggestion h-auto flex-wrap items-start justify-center gap-1 rounded-3xl border border-border bg-background px-3 py-1.5 text-start text-sm transition-colors hover:bg-muted @md:flex-col"
           />
         }
       >
-        <SuggestionPrimitive.Title className="aui-thread-welcome-suggestion-text-1 font-medium" />
+        <SuggestionPrimitive.Title className="aui-thread-welcome-suggestion-text-1 font-normal" />
         <SuggestionPrimitive.Description className="aui-thread-welcome-suggestion-text-2 text-muted-foreground empty:hidden" />
       </SuggestionPrimitive.Trigger>
     </div>
   )
 }
 
-const Composer: FC<{ mode?: "onboarding" | "plan" }> = ({
+const Composer: FC<{
+  mode?: "onboarding" | "plan"
+  selectedModelId: string
+  onSelectedModelChange: (value: string) => void
+  selectedCapabilityId: string | undefined
+  onSelectedCapabilityChange: (value: string | undefined) => void
+}> = ({
   mode = "onboarding",
+  selectedModelId,
+  onSelectedModelChange,
+  selectedCapabilityId,
+  onSelectedCapabilityChange,
 }) => {
   return (
     <ComposerPrimitive.Root className="aui-composer-root relative flex w-full flex-col">
@@ -193,48 +280,83 @@ const Composer: FC<{ mode?: "onboarding" | "plan" }> = ({
           autoFocus
           aria-label="Message input"
         />
-        <ComposerAction />
+        <ComposerAction
+          selectedModelId={selectedModelId}
+          onSelectedModelChange={onSelectedModelChange}
+          selectedCapabilityId={selectedCapabilityId}
+          onSelectedCapabilityChange={onSelectedCapabilityChange}
+        />
       </ComposerPrimitive.AttachmentDropzone>
     </ComposerPrimitive.Root>
   )
 }
 
-const ComposerAction: FC = () => {
+const ComposerAction: FC<{
+  selectedModelId: string
+  onSelectedModelChange: (value: string) => void
+  selectedCapabilityId: string | undefined
+  onSelectedCapabilityChange: (value: string | undefined) => void
+}> = ({
+  selectedModelId,
+  onSelectedModelChange,
+  selectedCapabilityId,
+  onSelectedCapabilityChange,
+}) => {
   return (
     <div className="aui-composer-action-wrapper relative flex items-center justify-between">
-      <ComposerAddAttachment />
-      <AuiIf condition={(s) => !s.thread.isRunning}>
-        <ComposerPrimitive.Send
-          render={
-            <TooltipIconButton
-              tooltip="Send message"
-              side="bottom"
-              type="button"
-              variant="default"
-              size="icon"
-              className="aui-composer-send size-8 rounded-full"
-              aria-label="Send message"
-            />
-          }
-        >
-          <ArrowUpIcon className="aui-composer-send-icon size-4" />
-        </ComposerPrimitive.Send>
-      </AuiIf>
-      <AuiIf condition={(s) => s.thread.isRunning}>
-        <ComposerPrimitive.Cancel
-          render={
-            <Button
-              type="button"
-              variant="default"
-              size="icon"
-              className="aui-composer-cancel size-8 rounded-full"
-              aria-label="Stop generating"
-            />
-          }
-        >
-          <SquareIcon className="aui-composer-cancel-icon size-3 fill-current" />
-        </ComposerPrimitive.Cancel>
-      </AuiIf>
+      <div className="flex gap-1">
+        <ComposerAddAttachment />
+        <CapabilitiesSelector
+          capabilities={AI_CAPABILITIES}
+          value={selectedCapabilityId}
+          onValueChange={onSelectedCapabilityChange}
+          variant="ghost"
+          size="sm"
+        />
+      </div>
+
+      <div className="flex gap-2">
+        <ModelSelector
+          models={GEMINI_MODELS}
+          value={selectedModelId}
+          onValueChange={onSelectedModelChange}
+          variant={"ghost"}
+          size="sm"
+        />
+
+        <AuiIf condition={(s) => !s.thread.isRunning}>
+          <ComposerPrimitive.Send
+            render={
+              <TooltipIconButton
+                tooltip="Send message"
+                side="bottom"
+                type="button"
+                variant="default"
+                size="icon"
+                className="aui-composer-send size-8 rounded-full"
+                aria-label="Send message"
+              />
+            }
+          >
+            <ArrowUpIcon className="aui-composer-send-icon size-4" />
+          </ComposerPrimitive.Send>
+        </AuiIf>
+        <AuiIf condition={(s) => s.thread.isRunning}>
+          <ComposerPrimitive.Cancel
+            render={
+              <Button
+                type="button"
+                variant="default"
+                size="icon"
+                className="aui-composer-cancel size-8 rounded-full"
+                aria-label="Stop generating"
+              />
+            }
+          >
+            <SquareIcon className="aui-composer-cancel-icon size-3 fill-current" />
+          </ComposerPrimitive.Cancel>
+        </AuiIf>
+      </div>
     </div>
   )
 }
@@ -260,11 +382,11 @@ const AssistantMessage: FC = () => {
     <MessagePrimitive.Root
       data-slot="aui_assistant-message-root"
       data-role="assistant"
-      className="relative animate-in text-sm duration-150 [contain-intrinsic-size:auto_300px] [content-visibility:auto] fade-in slide-in-from-bottom-1"
+      className="relative animate-in text-sm duration-150 [contain-intrinsic-size:auto_300px] fade-in slide-in-from-bottom-1"
     >
       <div
         data-slot="aui_assistant-message-content"
-        className="px-2 leading-relaxed wrap-break-word text-foreground"
+        className="px-2 pb-1 leading-relaxed wrap-break-word text-foreground [content-visibility:auto]"
       >
         <MessagePrimitive.GroupedParts
           groupBy={(part) => {

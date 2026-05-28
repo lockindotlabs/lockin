@@ -17,6 +17,7 @@ import {
   saveChatMessages,
 } from "@/lib/chat/local-chat-persistence"
 import { PlanAssistantTools } from "@/lib/plans/ai-plan-tools"
+import { DevToolsFrame } from "@assistant-ui/react-devtools"
 
 export function Assistant({
   mode = "onboarding",
@@ -63,6 +64,7 @@ export function Assistant({
     <AssistantRuntimeProvider key={sessionKey} runtime={runtime} aui={aui}>
       <PlanAssistantTools />
       <Thread mode={mode} />
+      {/* <DevToolsFrame className="min-h-200 w-full" /> */}
     </AssistantRuntimeProvider>
   )
 }

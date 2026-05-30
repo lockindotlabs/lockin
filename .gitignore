@@ -38,18 +38,4 @@ npm-debug.log*
 .DS_Store
 *.pem
 .claude
-
-# Playwright
-.playwright-mcp/
-playwright-report/
-test-results/
-
-# Screenshot artifacts
-*.png
-*.jpg
-*.jpeg
-!apps/web/public/**
-
-# Docs / temp
-docs/
-landing-*.png
+.playwright-mcp

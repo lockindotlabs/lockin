@@ -21,6 +21,7 @@ export type SavedPlan = {
   source?: "MANUAL" | "AI"
   aiMode?: "MANUAL" | "ASSISTED"
   breakdownIntensity?: "LOW_ENERGY" | "NORMAL" | "HIGH_ENERGY"
+  serverId?: string  // set after first successful server sync
 }
 
 export type PlanSummary = {

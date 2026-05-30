@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  output   = "../../../packages/db/src/generated/prisma"
 }
 
 datasource db {
@@ -15,9 +15,21 @@ model User {
   settings        UserSettings?
   projects        Project[]
   plans           Plan[]
+  chats           Chat[]
   tasks           Task[]
   focusSessions   FocusSession[]
   extensionTokens ExtensionToken[]
+}
+
+model Chat {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String     @default("New chat")
+  messages  Json       @default("[]")
+  status    ChatStatus @default(IDLE)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model ExtensionToken {
@@ -109,6 +121,12 @@ enum PlanStatus {
   ACTIVE
   COMPLETED
   CANCELLED
+}
+
+enum ChatStatus {
+  IDLE
+  STREAMING
+  ERROR
 }
 
 enum Priority {

@@ -18,6 +18,7 @@ export type SavedPlan = {
   createdAt: string
   updatedAt: string
   version: 1
+  serverId?: string  // set after first successful server sync
 }
 
 export type PlanSummary = {

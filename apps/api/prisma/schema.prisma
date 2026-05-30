@@ -59,7 +59,9 @@ model Plan {
   projectId     String?
   project       Project?       @relation(fields: [projectId], references: [id], onDelete: SetNull)
   name          String
+  description   String?
   goal          String?
+  completion    String?
   status        PlanStatus     @default(PLANNING)
   startDate     DateTime?
   endDate       DateTime?
@@ -70,31 +72,43 @@ model Plan {
 }
 
 model Task {
-  id          String     @id @default(cuid())
-  userId      String
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  planId      String?
-  plan        Plan?      @relation(fields: [planId], references: [id], onDelete: SetNull)
-  title       String
-  description String?
-  status      TaskStatus @default(TODO)
-  priority    Priority   @default(MEDIUM)
-  dueDate     DateTime?
-  order       Int        @default(0)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id              String     @id @default(cuid())
+  userId          String
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId          String?
+  plan            Plan?      @relation(fields: [planId], references: [id], onDelete: SetNull)
+  title           String
+  description     String?
+  status          TaskStatus @default(TODO)
+  priority        Priority   @default(MEDIUM)
+  dueDate         DateTime?
+  durationMinutes Int?
+  order           Int        @default(0)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
 }
 
 model FocusSession {
-  id        String    @id @default(cuid())
-  userId    String
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  planId    String
-  plan      Plan      @relation(fields: [planId], references: [id], onDelete: Cascade)
-  startedAt DateTime  @default(now())
-  endedAt   DateTime?
-  duration  Int?      // seconds, computed on end
-  createdAt DateTime  @default(now())
+  id               String          @id @default(cuid())
+  userId           String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId           String?
+  plan             Plan?           @relation(fields: [planId], references: [id], onDelete: SetNull)
+  startedAt        DateTime        @default(now())
+  endedAt          DateTime?
+  duration         Int?
+  plannedDuration  Int?
+  overtimeDuration Int?            @default(0)
+  completionType   CompletionType?
+  tasksSnapshot    Json?
+  slipCount        Int?            @default(0)
+  createdAt        DateTime        @default(now())
+}
+
+enum CompletionType {
+  EARLY
+  NORMAL
+  OVERTIME
 }
 
 enum TaskStatus {

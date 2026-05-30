@@ -10,6 +10,7 @@ const CreateTaskSchema = z.object({
   status: z.enum(['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED']).optional(),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).optional(),
   dueDate: z.string().datetime().optional(),
+  durationMinutes: z.number().int().positive().optional(),
   order: z.number().int().optional(),
 })
 

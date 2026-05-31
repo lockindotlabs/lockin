@@ -4,6 +4,8 @@ import * as React from "react"
 import {
   type ToolCallMessagePartProps,
   useAssistantTool,
+  useAssistantToolUI,
+  useInlineRender,
 } from "@assistant-ui/react"
 import { format } from "date-fns"
 import {
@@ -17,8 +19,10 @@ import { useRouter, useSearchParams } from "next/navigation"
 
 import { buttonVariants } from "@workspace/ui/components/button"
 import { cn } from "@workspace/ui/lib/utils"
+import { buildPlanHref } from "@/lib/routing/plan-url"
 import {
   getPlan,
+  listPlans,
   savePlan,
   type SavedPlan,
   type SavedPlanTask,
@@ -164,6 +168,9 @@ function buildPlan(input: PlanToolInput, existingPlan?: SavedPlan): SavedPlan {
     createdAt: existingPlan?.createdAt ?? now,
     updatedAt: now,
     version: 1,
+    source: "AI",
+    aiMode: "ASSISTED",
+    breakdownIntensity: existingPlan?.breakdownIntensity ?? "NORMAL",
   }
 }
 
@@ -184,18 +191,6 @@ function getPlanConfirmation(
   taskCount: number
 ) {
   return `Done - I ${action} "${title}" with ${formatStepCount(taskCount)}.`
-}
-
-function getPlanHref(planId: string, chatSessionId: string | null) {
-  const nextParams = new URLSearchParams()
-
-  if (chatSessionId) {
-    nextParams.set("id", chatSessionId)
-  }
-
-  nextParams.set("p", planId)
-
-  return `/app/ask?${nextParams.toString()}`
 }
 
 function isPlanToolResult(value: unknown): value is PlanToolResult {
@@ -222,16 +217,16 @@ const planToolCopy = {
 
 type PlanToolCardProps = {
   action: keyof typeof planToolCopy
-  chatSessionId: string | null
+  className?: string
 } & ToolCallMessagePartProps<PlanToolInput, PlanToolResult>
 
 function PlanToolResultCard({
   action,
   args,
-  chatSessionId,
   isError,
   result,
   status,
+  className,
 }: PlanToolCardProps) {
   const copy = planToolCopy[action]
   const isRunning = status?.type === "running"
@@ -264,18 +259,54 @@ function PlanToolResultCard({
         ? String(status.error)
         : "Something interrupted the plan update. Try again when you are ready."
   const planHref = successResult
-    ? getPlanHref(successResult.planId, chatSessionId)
+    ? buildPlanHref({ planId: successResult.planId })
     : undefined
+  const [fallbackPlanId, setFallbackPlanId] = React.useState<string | null>(
+    null
+  )
+
+  React.useEffect(() => {
+    if (successResult || failed || isRunning) {
+      setFallbackPlanId(null)
+      return
+    }
+
+    let isActive = true
+
+    listPlans()
+      .then((plans) => {
+        if (!isActive) return
+
+        const matchingPlan = plans.find(
+          (plan) => plan.title === title && plan.taskCount === taskCount
+        )
+        setFallbackPlanId(matchingPlan?.id ?? null)
+      })
+      .catch(() => {
+        if (isActive) {
+          setFallbackPlanId(null)
+        }
+      })
+
+    return () => {
+      isActive = false
+    }
+  }, [failed, isRunning, successResult, taskCount, title])
+
+  const resolvedPlanHref =
+    planHref ??
+    (fallbackPlanId ? buildPlanHref({ planId: fallbackPlanId }) : undefined)
 
   return (
     <div
       className={cn(
         "w-full overflow-hidden rounded-2xl border bg-background",
-        failed && "border-destructive/30 bg-destructive/5"
+        failed && "border-destructive/30 bg-destructive/5",
+        className
       )}
     >
-      <div className="flex flex-col gap-4 p-4 @md:flex-row @md:items-stretch @md:justify-between">
-        <div className="flex min-w-0 flex-1 flex-col justify-between gap-4">
+      <div className="relative flex flex-col gap-4 p-4 @md:flex-row @md:items-stretch @md:justify-between">
+        <div className="flex max-w-[calc(100%-12rem)] min-w-0 flex-1 flex-col justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-1 text-muted-foreground">
               {isRunning ? (
@@ -304,10 +335,10 @@ function PlanToolResultCard({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            {succeeded && planHref && (
+            {!failed && !isRunning && resolvedPlanHref && (
               <Link
                 className={cn(buttonVariants({ size: "sm" }))}
-                href={planHref}
+                href={resolvedPlanHref}
               >
                 <span>Open plan</span>
               </Link>
@@ -315,7 +346,12 @@ function PlanToolResultCard({
           </div>
         </div>
 
-        <PlanPreview title={title} taskCount={taskCount} tasks={taskTitles} />
+        <PlanPreview
+          title={title}
+          taskCount={taskCount}
+          tasks={taskTitles}
+          className={"absolute top-4 right-4"}
+        />
       </div>
     </div>
   )
@@ -325,17 +361,24 @@ function PlanPreview({
   title,
   taskCount,
   tasks,
+  className,
 }: {
   title: string
   taskCount: number
   tasks: string[]
+  className?: string
 }) {
   const previewLines = tasks.length > 0 ? tasks : ["First step", "Next step"]
 
   return (
-    <div className="min-h-32 w-full shrink-0 rounded-xl border bg-card p-4 text-card-foreground shadow-xs @md:w-56">
-      <div className="mb-3 flex items-center gap-2">
-        <FileTextIcon className="size-4 text-muted-foreground" />
+    <div
+      className={cn(
+        "h-[calc(100%+2rem)] w-full shrink-0 rounded-xl border bg-card p-4 text-card-foreground shadow-md @md:w-[calc(35%)]",
+        className
+      )}
+    >
+      <div className="mb-2 flex items-center gap-2">
+        <FileTextIcon className="h-5 w-5 text-muted-foreground" />
         <span className="line-clamp-1 text-sm font-medium">{title}</span>
       </div>
       <div className="mb-3 text-xs text-muted-foreground">
@@ -365,7 +408,15 @@ export function PlanAssistantTools() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const activePlanId = searchParams.get("p")
-  const chatSessionId = searchParams.get("id") ?? searchParams.get("t")
+
+  const renderCreatePlanTool = useInlineRender<PlanToolInput, PlanToolResult>(
+    (props) => <PlanToolResultCard {...props} action="create" />
+  )
+
+  const renderRewriteActivePlanTool = useInlineRender<
+    PlanToolInput,
+    PlanToolResult
+  >((props) => <PlanToolResultCard {...props} action="rewrite" />)
 
   const createPlanTool = React.useMemo(
     () => ({
@@ -377,14 +428,7 @@ export function PlanAssistantTools() {
         const plan = buildPlan(input)
 
         await savePlan(plan)
-        const nextParams = new URLSearchParams()
-
-        if (chatSessionId) {
-          nextParams.set("id", chatSessionId)
-        }
-
-        nextParams.set("p", plan.id)
-        router.push(`/app/ask?${nextParams.toString()}`)
+        router.push(buildPlanHref({ planId: plan.id }))
 
         return {
           ok: true,
@@ -399,17 +443,8 @@ export function PlanAssistantTools() {
           ),
         }
       },
-      render: (
-        props: ToolCallMessagePartProps<PlanToolInput, PlanToolResult>
-      ) => (
-        <PlanToolResultCard
-          {...props}
-          action="create"
-          chatSessionId={chatSessionId}
-        />
-      ),
     }),
-    [chatSessionId, router]
+    [router]
   )
 
   const rewriteActivePlanTool = React.useMemo(
@@ -458,21 +493,20 @@ export function PlanAssistantTools() {
           ),
         }
       },
-      render: (
-        props: ToolCallMessagePartProps<PlanToolInput, PlanToolResult>
-      ) => (
-        <PlanToolResultCard
-          {...props}
-          action="rewrite"
-          chatSessionId={chatSessionId}
-        />
-      ),
     }),
-    [activePlanId, chatSessionId]
+    [activePlanId]
   )
 
   useAssistantTool(createPlanTool)
   useAssistantTool(rewriteActivePlanTool)
+  useAssistantToolUI({
+    toolName: "createPlan",
+    render: renderCreatePlanTool,
+  })
+  useAssistantToolUI({
+    toolName: "rewriteActivePlan",
+    render: renderRewriteActivePlanTool,
+  })
 
   return null
 }

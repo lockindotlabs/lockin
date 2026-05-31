@@ -3,9 +3,24 @@ import { z } from 'zod'
 import { BaseController } from '../../controllers/BaseController.js'
 import prisma from '../../lib/prisma.js'
 
+const HUD_STYLES = ['tiny', 'pill+ring', 'card', 'off'] as const
+const REMINDER_STYLES = ['banner', 'modal', 'toast', 'justify'] as const
+const BLOCK_TONES = ['calm', 'accountability', 'gamified', 'stark'] as const
+const POPUP_VIEWS = ['compact', 'standard', 'roomy'] as const
+
 const UpdateSettingsSchema = z.object({
+  // App settings
   theme: z.enum(['light', 'dark', 'system']).optional(),
   language: z.string().min(2).max(10).optional(),
+  // Extension settings
+  blocklistHard: z.array(z.string()).optional(),
+  blocklistSoft: z.array(z.string()).optional(),
+  hudStyle: z.enum(HUD_STYLES).optional(),
+  reminderStyle: z.enum(REMINDER_STYLES).optional(),
+  blockTone: z.enum(BLOCK_TONES).optional(),
+  popupView: z.enum(POPUP_VIEWS).optional(),
+  defaultDuration: z.number().int().min(1).max(480).optional(),
+  tabGuard: z.boolean().optional(),
 })
 
 export class SettingsController extends BaseController {

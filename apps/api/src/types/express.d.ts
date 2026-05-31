@@ -1,9 +1,9 @@
-import type { User } from '../generated/prisma/index.js'
+import type { User } from '@workspace/db'
 
 declare global {
   namespace Express {
     interface Request {
-      dbUser?: User
+      dbUser: User
       extensionTokenUserId?: string
     }
   }

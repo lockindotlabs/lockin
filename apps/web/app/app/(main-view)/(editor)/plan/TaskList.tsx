@@ -247,12 +247,11 @@ export default function TaskList({
                 <Button variant="ghost" />
               )
             }
-            className={"mx-auto"}
           >
             <PlusIcon />
             <span>Add new step</span>
           </PopoverTrigger>
-          <PopoverContent className="w-2xl" sideOffset={12}>
+          <PopoverContent className="w-2xl" align="start" sideOffset={12}>
             <div className="flex flex-col gap-2">
               <div>
                 <textarea

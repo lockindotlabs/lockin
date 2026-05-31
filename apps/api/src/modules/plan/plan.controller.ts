@@ -5,7 +5,9 @@ import prisma from '../../lib/prisma.js'
 
 const CreatePlanSchema = z.object({
   name: z.string().min(1).max(100),
+  description: z.string().max(2000).optional(),
   goal: z.string().max(500).optional(),
+  completion: z.string().max(1000).optional(),
   projectId: z.string().optional(),
   startDate: z.string().datetime().optional(),
   endDate: z.string().datetime().optional(),
@@ -13,7 +15,9 @@ const CreatePlanSchema = z.object({
 
 const UpdatePlanSchema = z.object({
   name: z.string().min(1).max(100).optional(),
+  description: z.string().max(2000).optional(),
   goal: z.string().max(500).optional(),
+  completion: z.string().max(1000).optional(),
   projectId: z.string().nullable().optional(),
   status: z.enum(['PLANNING', 'ACTIVE', 'COMPLETED', 'CANCELLED']).optional(),
   startDate: z.string().datetime().optional(),
@@ -27,6 +31,7 @@ export class PlanController extends BaseController {
       const plans = await prisma.plan.findMany({
         where: {
           userId: req.dbUser.id,
+          deletedAt: null,
           ...(projectId ? { projectId: String(projectId) } : {}),
         },
         include: { project: { select: { id: true, name: true, color: true } } },
@@ -42,10 +47,10 @@ export class PlanController extends BaseController {
     try {
       const id = req.params.id as string
       const plan = await prisma.plan.findFirst({
-        where: { id, userId: req.dbUser.id },
+        where: { id, userId: req.dbUser.id, deletedAt: null },
         include: {
           project: { select: { id: true, name: true, color: true } },
-          tasks: { orderBy: { order: 'asc' } },
+          steps: { orderBy: { order: 'asc' } },
         },
       })
       if (!plan) {
@@ -82,7 +87,7 @@ export class PlanController extends BaseController {
         res.status(400).json({ success: false, error: { message: parsed.error.message, code: 400 } })
         return
       }
-      const existing = await prisma.plan.findFirst({ where: { id, userId: req.dbUser.id } })
+      const existing = await prisma.plan.findFirst({ where: { id, userId: req.dbUser.id, deletedAt: null } })
       if (!existing) {
         res.status(404).json({ success: false, error: { message: 'Plan not found', code: 404 } })
         return
@@ -97,12 +102,12 @@ export class PlanController extends BaseController {
   async deletePlan(req: Request, res: Response): Promise<void> {
     try {
       const id = req.params.id as string
-      const existing = await prisma.plan.findFirst({ where: { id, userId: req.dbUser.id } })
+      const existing = await prisma.plan.findFirst({ where: { id, userId: req.dbUser.id, deletedAt: null } })
       if (!existing) {
         res.status(404).json({ success: false, error: { message: 'Plan not found', code: 404 } })
         return
       }
-      await prisma.plan.delete({ where: { id } })
+      await prisma.plan.update({ where: { id }, data: { deletedAt: new Date() } })
       res.status(204).send()
     } catch (error) {
       this.handleError(error, res, 'deletePlan')

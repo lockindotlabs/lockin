@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react"
 import { useEffect, useMemo, useState } from "react"
-import { usePathname, useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 import { Assistant } from "@/app/assistant"
 import {
@@ -28,13 +28,23 @@ import {
 } from "@/lib/chat/local-chat-persistence"
 import { importDbChat, loadDbChat } from "@/lib/chat/db-chat-client"
 import { Button } from "@workspace/ui/components/button"
-import { MoreHorizontalIcon } from "lucide-react"
+import { ChevronDown, MoreHorizontalIcon } from "lucide-react"
 import Link from "next/link"
 import type { UIMessage } from "ai"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@workspace/ui/components/dropdown-menu"
 
 export function AssistantSidebar({ children }: PropsWithChildren) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const router = useRouter()
   const { state } = useSidebar()
   const sessionKey = useMemo(() => {
     const chatSessionId = searchParams.get("id") ?? searchParams.get("t")
@@ -104,44 +114,78 @@ export function AssistantSidebar({ children }: PropsWithChildren) {
     <ResizablePanelGroup className="h-full w-full" orientation="horizontal">
       <ResizablePanel defaultSize={40} minSize={"35%"}>
         <div className="relative w-full">
-          <div className="flex h-12 shrink-0 items-center gap-2 bg-background/80 backdrop-blur">
-            <div className="flex flex-1 items-center gap-2 px-3 transition-transform duration-200 ease-in-out">
-              <SidebarTrigger
-                className={`${state == "expanded" && "pointer-events-none hidden opacity-0"} transition-all`}
-              />
-
-              <Breadcrumb className="ml-2">
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink
-                      render={
-                        <Link
-                          href={`/app/ask?id=${sessionKey.split(":")[1]}`}
-                        />
-                      }
-                    >
-                      Ask
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage className="line-clamp-1">
-                      {sessionKey.includes("ask:") ? (
-                        <div className="flex items-center gap-2">
-                          {chatTitle}
-                          <Button variant="ghost" size="icon-xs">
-                            <MoreHorizontalIcon />
-                          </Button>
-                        </div>
-                      ) : (
-                        ""
-                      )}
-                    </BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
+          <div className="flex h-12 shrink-0 items-center gap-2">
+            {" "}
+            <div className="flex flex-1 items-center justify-between px-2 transition-transform duration-150 ease-in-out">
+              <div className="flex items-center gap-2">
+                <SidebarTrigger
+                  className={`${state == "expanded" && "pointer-events-none hidden opacity-0"} transition-all`}
+                />
+                <Breadcrumb>
+                  <BreadcrumbList>
+                    <BreadcrumbItem>
+                      <BreadcrumbLink
+                        render={
+                          <Button
+                            variant={"ghost"}
+                            size={"sm"}
+                            className={"font-normal"}
+                            onClick={() => {
+                              router.push("/app/ask")
+                            }}
+                          />
+                        }
+                      >
+                        Ask
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage className="line-clamp-1">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger
+                            render={
+                              <Button
+                                variant={"ghost"}
+                                size={"sm"}
+                                className={"font-normal"}
+                              >
+                                {chatTitle}
+                                <ChevronDown data-icon="inline-end" />
+                              </Button>
+                            }
+                          />
+                          <DropdownMenuContent
+                            align="start"
+                            className="max-w-80"
+                          >
+                            <DropdownMenuGroup>
+                              <DropdownMenuLabel>
+                                Previous 7 days
+                              </DropdownMenuLabel>
+                              <DropdownMenuItem>{chatTitle}</DropdownMenuItem>
+                              <DropdownMenuItem>
+                                Create a new page
+                              </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuGroup>
+                              <DropdownMenuLabel>Older</DropdownMenuLabel>
+                              <DropdownMenuItem>
+                                Capabilities overview
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>Previous chat</DropdownMenuItem>
+                            </DropdownMenuGroup>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </BreadcrumbList>
+                </Breadcrumb>
+              </div>
             </div>
           </div>
+
           {initialMessages !== null ? (
             <Assistant
               key={sessionKey}

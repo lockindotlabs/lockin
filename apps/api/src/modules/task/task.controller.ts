@@ -6,7 +6,6 @@ import prisma from '../../lib/prisma.js'
 const CreateTaskSchema = z.object({
   title: z.string().min(1).max(200),
   description: z.string().max(2000).optional(),
-  planId: z.string().optional(),
   status: z.enum(['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED']).optional(),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).optional(),
   dueDate: z.string().datetime().optional(),
@@ -23,12 +22,11 @@ const ReorderSchema = z.object({
 export class TaskController extends BaseController {
   async listTasks(req: Request, res: Response): Promise<void> {
     try {
-      const { planId, status, priority } = req.query
+      const { status, priority } = req.query
 
       const tasks = await prisma.task.findMany({
         where: {
           userId: req.dbUser.id,
-          ...(planId === 'null' ? { planId: null } : planId ? { planId: String(planId) } : {}),
           ...(status ? { status: String(status) as never } : {}),
           ...(priority ? { priority: String(priority) as never } : {}),
         },

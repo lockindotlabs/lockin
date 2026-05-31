@@ -31,6 +31,7 @@ export class PlanController extends BaseController {
       const plans = await prisma.plan.findMany({
         where: {
           userId: req.dbUser.id,
+          deletedAt: null,
           ...(projectId ? { projectId: String(projectId) } : {}),
         },
         include: { project: { select: { id: true, name: true, color: true } } },
@@ -46,10 +47,10 @@ export class PlanController extends BaseController {
     try {
       const id = req.params.id as string
       const plan = await prisma.plan.findFirst({
-        where: { id, userId: req.dbUser.id },
+        where: { id, userId: req.dbUser.id, deletedAt: null },
         include: {
           project: { select: { id: true, name: true, color: true } },
-          tasks: { orderBy: { order: 'asc' } },
+          steps: { orderBy: { order: 'asc' } },
         },
       })
       if (!plan) {
@@ -86,7 +87,7 @@ export class PlanController extends BaseController {
         res.status(400).json({ success: false, error: { message: parsed.error.message, code: 400 } })
         return
       }
-      const existing = await prisma.plan.findFirst({ where: { id, userId: req.dbUser.id } })
+      const existing = await prisma.plan.findFirst({ where: { id, userId: req.dbUser.id, deletedAt: null } })
       if (!existing) {
         res.status(404).json({ success: false, error: { message: 'Plan not found', code: 404 } })
         return
@@ -101,12 +102,12 @@ export class PlanController extends BaseController {
   async deletePlan(req: Request, res: Response): Promise<void> {
     try {
       const id = req.params.id as string
-      const existing = await prisma.plan.findFirst({ where: { id, userId: req.dbUser.id } })
+      const existing = await prisma.plan.findFirst({ where: { id, userId: req.dbUser.id, deletedAt: null } })
       if (!existing) {
         res.status(404).json({ success: false, error: { message: 'Plan not found', code: 404 } })
         return
       }
-      await prisma.plan.delete({ where: { id } })
+      await prisma.plan.update({ where: { id }, data: { deletedAt: new Date() } })
       res.status(204).send()
     } catch (error) {
       this.handleError(error, res, 'deletePlan')

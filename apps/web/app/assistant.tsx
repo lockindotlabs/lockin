@@ -10,7 +10,7 @@ import {
   AssistantChatTransport,
   useChatRuntime,
 } from "@assistant-ui/react-ai-sdk"
-import type { UIMessage } from "ai"
+import { lastAssistantMessageIsCompleteWithToolCalls, type UIMessage } from "ai"
 import { useEffect, useMemo, useRef } from "react"
 
 import { Thread } from "@/components/thread"
@@ -57,6 +57,7 @@ export function Assistant({
   const runtime = useChatRuntime({
     id: chatId ?? sessionKey,
     messages: initialMessages,
+    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
     onFinish: ({ messages }) => {
       if (!chatIdRef.current && !ensureChatIdRef.current) {
         saveChatMessages(sessionKey, messages)
@@ -82,11 +83,15 @@ export function Assistant({
           return { body: { ...body, messages } }
         }
 
+        const lastMessage = messages[messages.length - 1]
+
         return {
           body: {
             ...body,
             id: requestChatId,
-            message: messages[messages.length - 1],
+            ...(lastMessage?.role === "user"
+              ? { message: lastMessage }
+              : { messages }),
           },
         }
       },

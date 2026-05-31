@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { useAuth } from "@clerk/nextjs"
 import {
   type ToolCallMessagePartProps,
   useAssistantTool,
@@ -17,10 +16,10 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { createPlanOnServer, updatePlanOnServer } from "@/lib/plans/plan-api"
 
 import { buttonVariants } from "@workspace/ui/components/button"
 import { cn } from "@workspace/ui/lib/utils"
+import { buildPlanHref } from "@/lib/routing/plan-url"
 import {
   getPlan,
   listPlans,
@@ -169,6 +168,9 @@ function buildPlan(input: PlanToolInput, existingPlan?: SavedPlan): SavedPlan {
     createdAt: existingPlan?.createdAt ?? now,
     updatedAt: now,
     version: 1,
+    source: "AI",
+    aiMode: "ASSISTED",
+    breakdownIntensity: existingPlan?.breakdownIntensity ?? "NORMAL",
   }
 }
 
@@ -189,18 +191,6 @@ function getPlanConfirmation(
   taskCount: number
 ) {
   return `Done - I ${action} "${title}" with ${formatStepCount(taskCount)}.`
-}
-
-function getPlanHref(planId: string, chatSessionId: string | null) {
-  const nextParams = new URLSearchParams()
-
-  if (chatSessionId) {
-    nextParams.set("id", chatSessionId)
-  }
-
-  nextParams.set("p", planId)
-
-  return `/app/ask?${nextParams.toString()}`
 }
 
 function isPlanToolResult(value: unknown): value is PlanToolResult {
@@ -227,14 +217,12 @@ const planToolCopy = {
 
 type PlanToolCardProps = {
   action: keyof typeof planToolCopy
-  chatSessionId: string | null
   className?: string
 } & ToolCallMessagePartProps<PlanToolInput, PlanToolResult>
 
 function PlanToolResultCard({
   action,
   args,
-  chatSessionId,
   isError,
   result,
   status,
@@ -271,7 +259,7 @@ function PlanToolResultCard({
         ? String(status.error)
         : "Something interrupted the plan update. Try again when you are ready."
   const planHref = successResult
-    ? getPlanHref(successResult.planId, chatSessionId)
+    ? buildPlanHref({ planId: successResult.planId })
     : undefined
   const [fallbackPlanId, setFallbackPlanId] = React.useState<string | null>(
     null
@@ -307,7 +295,7 @@ function PlanToolResultCard({
 
   const resolvedPlanHref =
     planHref ??
-    (fallbackPlanId ? getPlanHref(fallbackPlanId, chatSessionId) : undefined)
+    (fallbackPlanId ? buildPlanHref({ planId: fallbackPlanId }) : undefined)
 
   return (
     <div
@@ -420,28 +408,15 @@ export function PlanAssistantTools() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const activePlanId = searchParams.get("p")
-  const chatSessionId = searchParams.get("id") ?? searchParams.get("t")
 
   const renderCreatePlanTool = useInlineRender<PlanToolInput, PlanToolResult>(
-    (props) => (
-      <PlanToolResultCard
-        {...props}
-        action="create"
-        chatSessionId={chatSessionId}
-      />
-    )
+    (props) => <PlanToolResultCard {...props} action="create" />
   )
 
   const renderRewriteActivePlanTool = useInlineRender<
     PlanToolInput,
     PlanToolResult
-  >((props) => (
-    <PlanToolResultCard
-      {...props}
-      action="rewrite"
-      chatSessionId={chatSessionId}
-    />
-  ))
+  >((props) => <PlanToolResultCard {...props} action="rewrite" />)
 
   const createPlanTool = React.useMemo(
     () => ({
@@ -453,19 +428,7 @@ export function PlanAssistantTools() {
         const plan = buildPlan(input)
 
         await savePlan(plan)
-        const nextParams = new URLSearchParams()
-
-        if (chatSessionId) {
-          nextParams.set("id", chatSessionId)
-        }
-
-        nextParams.set("p", plan.id)
-        router.push(`/app/ask?${nextParams.toString()}`)
-
-        // fire-and-forget: sync to server and store serverId locally
-        createPlanOnServer(plan, getToken).then(async (serverId) => {
-          if (serverId) await savePlan({ ...plan, serverId })
-        })
+        router.push(buildPlanHref({ planId: plan.id }))
 
         return {
           ok: true,
@@ -481,7 +444,7 @@ export function PlanAssistantTools() {
         }
       },
     }),
-    [chatSessionId, router]
+    [router]
   )
 
   const rewriteActivePlanTool = React.useMemo(
@@ -516,16 +479,6 @@ export function PlanAssistantTools() {
             detail: { planId: plan.id },
           })
         )
-
-        // fire-and-forget: update server (create if not yet synced)
-        const serverId = existingPlan.serverId
-        if (serverId) {
-          updatePlanOnServer(plan, serverId, getToken)
-        } else {
-          createPlanOnServer(plan, getToken).then(async (newServerId) => {
-            if (newServerId) await savePlan({ ...plan, serverId: newServerId })
-          })
-        }
 
         return {
           ok: true,

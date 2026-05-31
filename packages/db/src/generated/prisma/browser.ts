@@ -53,6 +53,11 @@ export type Plan = Prisma.PlanModel
  */
 export type Task = Prisma.TaskModel
 /**
+ * Model PlanStep
+ * 
+ */
+export type PlanStep = Prisma.PlanStepModel
+/**
  * Model FocusSession
  * 
  */

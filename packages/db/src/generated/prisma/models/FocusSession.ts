@@ -28,10 +28,16 @@ export type AggregateFocusSession = {
 
 export type FocusSessionAvgAggregateOutputType = {
   duration: number | null
+  plannedDuration: number | null
+  overtimeDuration: number | null
+  slipCount: number | null
 }
 
 export type FocusSessionSumAggregateOutputType = {
   duration: number | null
+  plannedDuration: number | null
+  overtimeDuration: number | null
+  slipCount: number | null
 }
 
 export type FocusSessionMinAggregateOutputType = {
@@ -41,6 +47,10 @@ export type FocusSessionMinAggregateOutputType = {
   startedAt: Date | null
   endedAt: Date | null
   duration: number | null
+  plannedDuration: number | null
+  overtimeDuration: number | null
+  completionType: $Enums.CompletionType | null
+  slipCount: number | null
   createdAt: Date | null
 }
 
@@ -51,6 +61,10 @@ export type FocusSessionMaxAggregateOutputType = {
   startedAt: Date | null
   endedAt: Date | null
   duration: number | null
+  plannedDuration: number | null
+  overtimeDuration: number | null
+  completionType: $Enums.CompletionType | null
+  slipCount: number | null
   createdAt: Date | null
 }
 
@@ -61,6 +75,11 @@ export type FocusSessionCountAggregateOutputType = {
   startedAt: number
   endedAt: number
   duration: number
+  plannedDuration: number
+  overtimeDuration: number
+  completionType: number
+  tasksSnapshot: number
+  slipCount: number
   createdAt: number
   _all: number
 }
@@ -68,10 +87,16 @@ export type FocusSessionCountAggregateOutputType = {
 
 export type FocusSessionAvgAggregateInputType = {
   duration?: true
+  plannedDuration?: true
+  overtimeDuration?: true
+  slipCount?: true
 }
 
 export type FocusSessionSumAggregateInputType = {
   duration?: true
+  plannedDuration?: true
+  overtimeDuration?: true
+  slipCount?: true
 }
 
 export type FocusSessionMinAggregateInputType = {
@@ -81,6 +106,10 @@ export type FocusSessionMinAggregateInputType = {
   startedAt?: true
   endedAt?: true
   duration?: true
+  plannedDuration?: true
+  overtimeDuration?: true
+  completionType?: true
+  slipCount?: true
   createdAt?: true
 }
 
@@ -91,6 +120,10 @@ export type FocusSessionMaxAggregateInputType = {
   startedAt?: true
   endedAt?: true
   duration?: true
+  plannedDuration?: true
+  overtimeDuration?: true
+  completionType?: true
+  slipCount?: true
   createdAt?: true
 }
 
@@ -101,6 +134,11 @@ export type FocusSessionCountAggregateInputType = {
   startedAt?: true
   endedAt?: true
   duration?: true
+  plannedDuration?: true
+  overtimeDuration?: true
+  completionType?: true
+  tasksSnapshot?: true
+  slipCount?: true
   createdAt?: true
   _all?: true
 }
@@ -194,10 +232,15 @@ export type FocusSessionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 export type FocusSessionGroupByOutputType = {
   id: string
   userId: string
-  planId: string
+  planId: string | null
   startedAt: Date
   endedAt: Date | null
   duration: number | null
+  plannedDuration: number | null
+  overtimeDuration: number | null
+  completionType: $Enums.CompletionType | null
+  tasksSnapshot: runtime.JsonValue | null
+  slipCount: number | null
   createdAt: Date
   _count: FocusSessionCountAggregateOutputType | null
   _avg: FocusSessionAvgAggregateOutputType | null
@@ -227,22 +270,32 @@ export type FocusSessionWhereInput = {
   NOT?: Prisma.FocusSessionWhereInput | Prisma.FocusSessionWhereInput[]
   id?: Prisma.StringFilter<"FocusSession"> | string
   userId?: Prisma.StringFilter<"FocusSession"> | string
-  planId?: Prisma.StringFilter<"FocusSession"> | string
+  planId?: Prisma.StringNullableFilter<"FocusSession"> | string | null
   startedAt?: Prisma.DateTimeFilter<"FocusSession"> | Date | string
   endedAt?: Prisma.DateTimeNullableFilter<"FocusSession"> | Date | string | null
   duration?: Prisma.IntNullableFilter<"FocusSession"> | number | null
+  plannedDuration?: Prisma.IntNullableFilter<"FocusSession"> | number | null
+  overtimeDuration?: Prisma.IntNullableFilter<"FocusSession"> | number | null
+  completionType?: Prisma.EnumCompletionTypeNullableFilter<"FocusSession"> | $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.JsonNullableFilter<"FocusSession">
+  slipCount?: Prisma.IntNullableFilter<"FocusSession"> | number | null
   createdAt?: Prisma.DateTimeFilter<"FocusSession"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  plan?: Prisma.XOR<Prisma.PlanScalarRelationFilter, Prisma.PlanWhereInput>
+  plan?: Prisma.XOR<Prisma.PlanNullableScalarRelationFilter, Prisma.PlanWhereInput> | null
 }
 
 export type FocusSessionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  planId?: Prisma.SortOrder
+  planId?: Prisma.SortOrderInput | Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   duration?: Prisma.SortOrderInput | Prisma.SortOrder
+  plannedDuration?: Prisma.SortOrderInput | Prisma.SortOrder
+  overtimeDuration?: Prisma.SortOrderInput | Prisma.SortOrder
+  completionType?: Prisma.SortOrderInput | Prisma.SortOrder
+  tasksSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
+  slipCount?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   plan?: Prisma.PlanOrderByWithRelationInput
@@ -254,22 +307,32 @@ export type FocusSessionWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.FocusSessionWhereInput[]
   NOT?: Prisma.FocusSessionWhereInput | Prisma.FocusSessionWhereInput[]
   userId?: Prisma.StringFilter<"FocusSession"> | string
-  planId?: Prisma.StringFilter<"FocusSession"> | string
+  planId?: Prisma.StringNullableFilter<"FocusSession"> | string | null
   startedAt?: Prisma.DateTimeFilter<"FocusSession"> | Date | string
   endedAt?: Prisma.DateTimeNullableFilter<"FocusSession"> | Date | string | null
   duration?: Prisma.IntNullableFilter<"FocusSession"> | number | null
+  plannedDuration?: Prisma.IntNullableFilter<"FocusSession"> | number | null
+  overtimeDuration?: Prisma.IntNullableFilter<"FocusSession"> | number | null
+  completionType?: Prisma.EnumCompletionTypeNullableFilter<"FocusSession"> | $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.JsonNullableFilter<"FocusSession">
+  slipCount?: Prisma.IntNullableFilter<"FocusSession"> | number | null
   createdAt?: Prisma.DateTimeFilter<"FocusSession"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  plan?: Prisma.XOR<Prisma.PlanScalarRelationFilter, Prisma.PlanWhereInput>
+  plan?: Prisma.XOR<Prisma.PlanNullableScalarRelationFilter, Prisma.PlanWhereInput> | null
 }, "id">
 
 export type FocusSessionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  planId?: Prisma.SortOrder
+  planId?: Prisma.SortOrderInput | Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   duration?: Prisma.SortOrderInput | Prisma.SortOrder
+  plannedDuration?: Prisma.SortOrderInput | Prisma.SortOrder
+  overtimeDuration?: Prisma.SortOrderInput | Prisma.SortOrder
+  completionType?: Prisma.SortOrderInput | Prisma.SortOrder
+  tasksSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
+  slipCount?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.FocusSessionCountOrderByAggregateInput
   _avg?: Prisma.FocusSessionAvgOrderByAggregateInput
@@ -284,10 +347,15 @@ export type FocusSessionScalarWhereWithAggregatesInput = {
   NOT?: Prisma.FocusSessionScalarWhereWithAggregatesInput | Prisma.FocusSessionScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"FocusSession"> | string
   userId?: Prisma.StringWithAggregatesFilter<"FocusSession"> | string
-  planId?: Prisma.StringWithAggregatesFilter<"FocusSession"> | string
+  planId?: Prisma.StringNullableWithAggregatesFilter<"FocusSession"> | string | null
   startedAt?: Prisma.DateTimeWithAggregatesFilter<"FocusSession"> | Date | string
   endedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"FocusSession"> | Date | string | null
   duration?: Prisma.IntNullableWithAggregatesFilter<"FocusSession"> | number | null
+  plannedDuration?: Prisma.IntNullableWithAggregatesFilter<"FocusSession"> | number | null
+  overtimeDuration?: Prisma.IntNullableWithAggregatesFilter<"FocusSession"> | number | null
+  completionType?: Prisma.EnumCompletionTypeNullableWithAggregatesFilter<"FocusSession"> | $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.JsonNullableWithAggregatesFilter<"FocusSession">
+  slipCount?: Prisma.IntNullableWithAggregatesFilter<"FocusSession"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FocusSession"> | Date | string
 }
 
@@ -296,18 +364,28 @@ export type FocusSessionCreateInput = {
   startedAt?: Date | string
   endedAt?: Date | string | null
   duration?: number | null
+  plannedDuration?: number | null
+  overtimeDuration?: number | null
+  completionType?: $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: number | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutFocusSessionsInput
-  plan: Prisma.PlanCreateNestedOneWithoutFocusSessionsInput
+  plan?: Prisma.PlanCreateNestedOneWithoutFocusSessionsInput
 }
 
 export type FocusSessionUncheckedCreateInput = {
   id?: string
   userId: string
-  planId: string
+  planId?: string | null
   startedAt?: Date | string
   endedAt?: Date | string | null
   duration?: number | null
+  plannedDuration?: number | null
+  overtimeDuration?: number | null
+  completionType?: $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: number | null
   createdAt?: Date | string
 }
 
@@ -316,28 +394,43 @@ export type FocusSessionUpdateInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  plannedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  overtimeDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionType?: Prisma.NullableEnumCompletionTypeFieldUpdateOperationsInput | $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutFocusSessionsNestedInput
-  plan?: Prisma.PlanUpdateOneRequiredWithoutFocusSessionsNestedInput
+  plan?: Prisma.PlanUpdateOneWithoutFocusSessionsNestedInput
 }
 
 export type FocusSessionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  plannedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  overtimeDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionType?: Prisma.NullableEnumCompletionTypeFieldUpdateOperationsInput | $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FocusSessionCreateManyInput = {
   id?: string
   userId: string
-  planId: string
+  planId?: string | null
   startedAt?: Date | string
   endedAt?: Date | string | null
   duration?: number | null
+  plannedDuration?: number | null
+  overtimeDuration?: number | null
+  completionType?: $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: number | null
   createdAt?: Date | string
 }
 
@@ -346,16 +439,26 @@ export type FocusSessionUpdateManyMutationInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  plannedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  overtimeDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionType?: Prisma.NullableEnumCompletionTypeFieldUpdateOperationsInput | $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FocusSessionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  plannedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  overtimeDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionType?: Prisma.NullableEnumCompletionTypeFieldUpdateOperationsInput | $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -376,11 +479,19 @@ export type FocusSessionCountOrderByAggregateInput = {
   startedAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrder
   duration?: Prisma.SortOrder
+  plannedDuration?: Prisma.SortOrder
+  overtimeDuration?: Prisma.SortOrder
+  completionType?: Prisma.SortOrder
+  tasksSnapshot?: Prisma.SortOrder
+  slipCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type FocusSessionAvgOrderByAggregateInput = {
   duration?: Prisma.SortOrder
+  plannedDuration?: Prisma.SortOrder
+  overtimeDuration?: Prisma.SortOrder
+  slipCount?: Prisma.SortOrder
 }
 
 export type FocusSessionMaxOrderByAggregateInput = {
@@ -390,6 +501,10 @@ export type FocusSessionMaxOrderByAggregateInput = {
   startedAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrder
   duration?: Prisma.SortOrder
+  plannedDuration?: Prisma.SortOrder
+  overtimeDuration?: Prisma.SortOrder
+  completionType?: Prisma.SortOrder
+  slipCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -400,11 +515,18 @@ export type FocusSessionMinOrderByAggregateInput = {
   startedAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrder
   duration?: Prisma.SortOrder
+  plannedDuration?: Prisma.SortOrder
+  overtimeDuration?: Prisma.SortOrder
+  completionType?: Prisma.SortOrder
+  slipCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type FocusSessionSumOrderByAggregateInput = {
   duration?: Prisma.SortOrder
+  plannedDuration?: Prisma.SortOrder
+  overtimeDuration?: Prisma.SortOrder
+  slipCount?: Prisma.SortOrder
 }
 
 export type FocusSessionCreateNestedManyWithoutUserInput = {
@@ -491,12 +613,8 @@ export type FocusSessionUncheckedUpdateManyWithoutPlanNestedInput = {
   deleteMany?: Prisma.FocusSessionScalarWhereInput | Prisma.FocusSessionScalarWhereInput[]
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type NullableEnumCompletionTypeFieldUpdateOperationsInput = {
+  set?: $Enums.CompletionType | null
 }
 
 export type FocusSessionCreateWithoutUserInput = {
@@ -504,16 +622,26 @@ export type FocusSessionCreateWithoutUserInput = {
   startedAt?: Date | string
   endedAt?: Date | string | null
   duration?: number | null
+  plannedDuration?: number | null
+  overtimeDuration?: number | null
+  completionType?: $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: number | null
   createdAt?: Date | string
-  plan: Prisma.PlanCreateNestedOneWithoutFocusSessionsInput
+  plan?: Prisma.PlanCreateNestedOneWithoutFocusSessionsInput
 }
 
 export type FocusSessionUncheckedCreateWithoutUserInput = {
   id?: string
-  planId: string
+  planId?: string | null
   startedAt?: Date | string
   endedAt?: Date | string | null
   duration?: number | null
+  plannedDuration?: number | null
+  overtimeDuration?: number | null
+  completionType?: $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: number | null
   createdAt?: Date | string
 }
 
@@ -549,10 +677,15 @@ export type FocusSessionScalarWhereInput = {
   NOT?: Prisma.FocusSessionScalarWhereInput | Prisma.FocusSessionScalarWhereInput[]
   id?: Prisma.StringFilter<"FocusSession"> | string
   userId?: Prisma.StringFilter<"FocusSession"> | string
-  planId?: Prisma.StringFilter<"FocusSession"> | string
+  planId?: Prisma.StringNullableFilter<"FocusSession"> | string | null
   startedAt?: Prisma.DateTimeFilter<"FocusSession"> | Date | string
   endedAt?: Prisma.DateTimeNullableFilter<"FocusSession"> | Date | string | null
   duration?: Prisma.IntNullableFilter<"FocusSession"> | number | null
+  plannedDuration?: Prisma.IntNullableFilter<"FocusSession"> | number | null
+  overtimeDuration?: Prisma.IntNullableFilter<"FocusSession"> | number | null
+  completionType?: Prisma.EnumCompletionTypeNullableFilter<"FocusSession"> | $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.JsonNullableFilter<"FocusSession">
+  slipCount?: Prisma.IntNullableFilter<"FocusSession"> | number | null
   createdAt?: Prisma.DateTimeFilter<"FocusSession"> | Date | string
 }
 
@@ -561,6 +694,11 @@ export type FocusSessionCreateWithoutPlanInput = {
   startedAt?: Date | string
   endedAt?: Date | string | null
   duration?: number | null
+  plannedDuration?: number | null
+  overtimeDuration?: number | null
+  completionType?: $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: number | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutFocusSessionsInput
 }
@@ -571,6 +709,11 @@ export type FocusSessionUncheckedCreateWithoutPlanInput = {
   startedAt?: Date | string
   endedAt?: Date | string | null
   duration?: number | null
+  plannedDuration?: number | null
+  overtimeDuration?: number | null
+  completionType?: $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: number | null
   createdAt?: Date | string
 }
 
@@ -602,10 +745,15 @@ export type FocusSessionUpdateManyWithWhereWithoutPlanInput = {
 
 export type FocusSessionCreateManyUserInput = {
   id?: string
-  planId: string
+  planId?: string | null
   startedAt?: Date | string
   endedAt?: Date | string | null
   duration?: number | null
+  plannedDuration?: number | null
+  overtimeDuration?: number | null
+  completionType?: $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: number | null
   createdAt?: Date | string
 }
 
@@ -614,25 +762,40 @@ export type FocusSessionUpdateWithoutUserInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  plannedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  overtimeDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionType?: Prisma.NullableEnumCompletionTypeFieldUpdateOperationsInput | $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  plan?: Prisma.PlanUpdateOneRequiredWithoutFocusSessionsNestedInput
+  plan?: Prisma.PlanUpdateOneWithoutFocusSessionsNestedInput
 }
 
 export type FocusSessionUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  plannedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  overtimeDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionType?: Prisma.NullableEnumCompletionTypeFieldUpdateOperationsInput | $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type FocusSessionUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  plannedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  overtimeDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionType?: Prisma.NullableEnumCompletionTypeFieldUpdateOperationsInput | $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -642,6 +805,11 @@ export type FocusSessionCreateManyPlanInput = {
   startedAt?: Date | string
   endedAt?: Date | string | null
   duration?: number | null
+  plannedDuration?: number | null
+  overtimeDuration?: number | null
+  completionType?: $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: number | null
   createdAt?: Date | string
 }
 
@@ -650,6 +818,11 @@ export type FocusSessionUpdateWithoutPlanInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  plannedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  overtimeDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionType?: Prisma.NullableEnumCompletionTypeFieldUpdateOperationsInput | $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutFocusSessionsNestedInput
 }
@@ -660,6 +833,11 @@ export type FocusSessionUncheckedUpdateWithoutPlanInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  plannedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  overtimeDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionType?: Prisma.NullableEnumCompletionTypeFieldUpdateOperationsInput | $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -669,6 +847,11 @@ export type FocusSessionUncheckedUpdateManyWithoutPlanInput = {
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  plannedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  overtimeDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  completionType?: Prisma.NullableEnumCompletionTypeFieldUpdateOperationsInput | $Enums.CompletionType | null
+  tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  slipCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -681,9 +864,14 @@ export type FocusSessionSelect<ExtArgs extends runtime.Types.Extensions.Internal
   startedAt?: boolean
   endedAt?: boolean
   duration?: boolean
+  plannedDuration?: boolean
+  overtimeDuration?: boolean
+  completionType?: boolean
+  tasksSnapshot?: boolean
+  slipCount?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.FocusSession$planArgs<ExtArgs>
 }, ExtArgs["result"]["focusSession"]>
 
 export type FocusSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -693,9 +881,14 @@ export type FocusSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   startedAt?: boolean
   endedAt?: boolean
   duration?: boolean
+  plannedDuration?: boolean
+  overtimeDuration?: boolean
+  completionType?: boolean
+  tasksSnapshot?: boolean
+  slipCount?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.FocusSession$planArgs<ExtArgs>
 }, ExtArgs["result"]["focusSession"]>
 
 export type FocusSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -705,9 +898,14 @@ export type FocusSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   startedAt?: boolean
   endedAt?: boolean
   duration?: boolean
+  plannedDuration?: boolean
+  overtimeDuration?: boolean
+  completionType?: boolean
+  tasksSnapshot?: boolean
+  slipCount?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.FocusSession$planArgs<ExtArgs>
 }, ExtArgs["result"]["focusSession"]>
 
 export type FocusSessionSelectScalar = {
@@ -717,36 +915,46 @@ export type FocusSessionSelectScalar = {
   startedAt?: boolean
   endedAt?: boolean
   duration?: boolean
+  plannedDuration?: boolean
+  overtimeDuration?: boolean
+  completionType?: boolean
+  tasksSnapshot?: boolean
+  slipCount?: boolean
   createdAt?: boolean
 }
 
-export type FocusSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "planId" | "startedAt" | "endedAt" | "duration" | "createdAt", ExtArgs["result"]["focusSession"]>
+export type FocusSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "planId" | "startedAt" | "endedAt" | "duration" | "plannedDuration" | "overtimeDuration" | "completionType" | "tasksSnapshot" | "slipCount" | "createdAt", ExtArgs["result"]["focusSession"]>
 export type FocusSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.FocusSession$planArgs<ExtArgs>
 }
 export type FocusSessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.FocusSession$planArgs<ExtArgs>
 }
 export type FocusSessionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.FocusSession$planArgs<ExtArgs>
 }
 
 export type $FocusSessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FocusSession"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
-    plan: Prisma.$PlanPayload<ExtArgs>
+    plan: Prisma.$PlanPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
-    planId: string
+    planId: string | null
     startedAt: Date
     endedAt: Date | null
     duration: number | null
+    plannedDuration: number | null
+    overtimeDuration: number | null
+    completionType: $Enums.CompletionType | null
+    tasksSnapshot: runtime.JsonValue | null
+    slipCount: number | null
     createdAt: Date
   }, ExtArgs["result"]["focusSession"]>
   composites: {}
@@ -1143,7 +1351,7 @@ readonly fields: FocusSessionFieldRefs;
 export interface Prisma__FocusSessionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  plan<T extends Prisma.PlanDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlanDefaultArgs<ExtArgs>>): Prisma.Prisma__PlanClient<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  plan<T extends Prisma.FocusSession$planArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FocusSession$planArgs<ExtArgs>>): Prisma.Prisma__PlanClient<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1179,6 +1387,11 @@ export interface FocusSessionFieldRefs {
   readonly startedAt: Prisma.FieldRef<"FocusSession", 'DateTime'>
   readonly endedAt: Prisma.FieldRef<"FocusSession", 'DateTime'>
   readonly duration: Prisma.FieldRef<"FocusSession", 'Int'>
+  readonly plannedDuration: Prisma.FieldRef<"FocusSession", 'Int'>
+  readonly overtimeDuration: Prisma.FieldRef<"FocusSession", 'Int'>
+  readonly completionType: Prisma.FieldRef<"FocusSession", 'CompletionType'>
+  readonly tasksSnapshot: Prisma.FieldRef<"FocusSession", 'Json'>
+  readonly slipCount: Prisma.FieldRef<"FocusSession", 'Int'>
   readonly createdAt: Prisma.FieldRef<"FocusSession", 'DateTime'>
 }
     
@@ -1578,6 +1791,25 @@ export type FocusSessionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many FocusSessions to delete.
    */
   limit?: number
+}
+
+/**
+ * FocusSession.plan
+ */
+export type FocusSession$planArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Plan
+   */
+  select?: Prisma.PlanSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Plan
+   */
+  omit?: Prisma.PlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanInclude<ExtArgs> | null
+  where?: Prisma.PlanWhereInput
 }
 
 /**

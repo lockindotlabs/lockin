@@ -13,6 +13,7 @@ import { savePendingAskPrompt } from "@/lib/chat/pending-ask-prompt"
 import { deletePlan } from "@/lib/plans/plan-repository"
 import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
 import { buildAskHref } from "@/lib/routing/ask-url"
+import { buildPlanHref } from "@/lib/routing/plan-url"
 
 export default function Page() {
   const { plans } = usePlanSummaries()
@@ -122,7 +123,7 @@ export default function Page() {
                   className="group flex min-h-16 items-center gap-4 px-5 hover:bg-muted/45"
                 >
                   <Link
-                    href={buildAskHref({ planId: plan.id })}
+                    href={buildPlanHref({ planId: plan.id })}
                     className="flex min-w-0 flex-1 items-center gap-4"
                   >
                     <span className="min-w-0 flex-1 truncate text-sm font-medium">

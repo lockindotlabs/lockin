@@ -391,6 +391,7 @@ export const ModelName = {
   Project: 'Project',
   Plan: 'Plan',
   Task: 'Task',
+  PlanStep: 'PlanStep',
   FocusSession: 'FocusSession'
 } as const
 
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "chat" | "extensionToken" | "userSettings" | "project" | "plan" | "task" | "focusSession"
+    modelProps: "user" | "chat" | "extensionToken" | "userSettings" | "project" | "plan" | "task" | "planStep" | "focusSession"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -929,6 +930,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PlanStep: {
+      payload: Prisma.$PlanStepPayload<ExtArgs>
+      fields: Prisma.PlanStepFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlanStepFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanStepPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlanStepFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanStepPayload>
+        }
+        findFirst: {
+          args: Prisma.PlanStepFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanStepPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlanStepFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanStepPayload>
+        }
+        findMany: {
+          args: Prisma.PlanStepFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanStepPayload>[]
+        }
+        create: {
+          args: Prisma.PlanStepCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanStepPayload>
+        }
+        createMany: {
+          args: Prisma.PlanStepCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlanStepCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanStepPayload>[]
+        }
+        delete: {
+          args: Prisma.PlanStepDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanStepPayload>
+        }
+        update: {
+          args: Prisma.PlanStepUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanStepPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlanStepDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlanStepUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlanStepUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanStepPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlanStepUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanStepPayload>
+        }
+        aggregate: {
+          args: Prisma.PlanStepAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlanStep>
+        }
+        groupBy: {
+          args: Prisma.PlanStepGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlanStepGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlanStepCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlanStepCountAggregateOutputType> | number
+        }
+      }
+    }
     FocusSession: {
       payload: Prisma.$FocusSessionPayload<ExtArgs>
       fields: Prisma.FocusSessionFieldRefs
@@ -1107,10 +1182,17 @@ export const PlanScalarFieldEnum = {
   userId: 'userId',
   projectId: 'projectId',
   name: 'name',
+  description: 'description',
   goal: 'goal',
+  completion: 'completion',
   status: 'status',
+  source: 'source',
+  aiMode: 'aiMode',
+  breakdownIntensity: 'breakdownIntensity',
+  totalEstimatedMinutes: 'totalEstimatedMinutes',
   startDate: 'startDate',
   endDate: 'endDate',
+  deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1121,18 +1203,35 @@ export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof Plan
 export const TaskScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  planId: 'planId',
   title: 'title',
   description: 'description',
   status: 'status',
   priority: 'priority',
   dueDate: 'dueDate',
+  durationMinutes: 'durationMinutes',
   order: 'order',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
+
+
+export const PlanStepScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  planId: 'planId',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  dueDate: 'dueDate',
+  estimatedMinutes: 'estimatedMinutes',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlanStepScalarFieldEnum = (typeof PlanStepScalarFieldEnum)[keyof typeof PlanStepScalarFieldEnum]
 
 
 export const FocusSessionScalarFieldEnum = {
@@ -1142,6 +1241,11 @@ export const FocusSessionScalarFieldEnum = {
   startedAt: 'startedAt',
   endedAt: 'endedAt',
   duration: 'duration',
+  plannedDuration: 'plannedDuration',
+  overtimeDuration: 'overtimeDuration',
+  completionType: 'completionType',
+  tasksSnapshot: 'tasksSnapshot',
+  slipCount: 'slipCount',
   createdAt: 'createdAt'
 } as const
 
@@ -1161,6 +1265,14 @@ export const JsonNullValueInput = {
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -1272,6 +1384,62 @@ export type ListEnumPlanStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
+ * Reference to a field of type 'PlanSource'
+ */
+export type EnumPlanSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlanSource'>
+    
+
+
+/**
+ * Reference to a field of type 'PlanSource[]'
+ */
+export type ListEnumPlanSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlanSource[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PlanAiMode'
+ */
+export type EnumPlanAiModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlanAiMode'>
+    
+
+
+/**
+ * Reference to a field of type 'PlanAiMode[]'
+ */
+export type ListEnumPlanAiModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlanAiMode[]'>
+    
+
+
+/**
+ * Reference to a field of type 'BreakdownIntensity'
+ */
+export type EnumBreakdownIntensityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BreakdownIntensity'>
+    
+
+
+/**
+ * Reference to a field of type 'BreakdownIntensity[]'
+ */
+export type ListEnumBreakdownIntensityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BreakdownIntensity[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'TaskStatus'
  */
 export type EnumTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskStatus'>
@@ -1300,16 +1468,30 @@ export type ListEnumPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
- * Reference to a field of type 'Int'
+ * Reference to a field of type 'PlanStepStatus'
  */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+export type EnumPlanStepStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlanStepStatus'>
     
 
 
 /**
- * Reference to a field of type 'Int[]'
+ * Reference to a field of type 'PlanStepStatus[]'
  */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+export type ListEnumPlanStepStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlanStepStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'CompletionType'
+ */
+export type EnumCompletionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CompletionType'>
+    
+
+
+/**
+ * Reference to a field of type 'CompletionType[]'
+ */
+export type ListEnumCompletionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CompletionType[]'>
     
 
 
@@ -1443,6 +1625,7 @@ export type GlobalOmitConfig = {
   project?: Prisma.ProjectOmit
   plan?: Prisma.PlanOmit
   task?: Prisma.TaskOmit
+  planStep?: Prisma.PlanStepOmit
   focusSession?: Prisma.FocusSessionOmit
 }
 

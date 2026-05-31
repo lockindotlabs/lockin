@@ -177,6 +177,7 @@ export type UserWhereInput = {
   settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
   projects?: Prisma.ProjectListRelationFilter
   plans?: Prisma.PlanListRelationFilter
+  planSteps?: Prisma.PlanStepListRelationFilter
   chats?: Prisma.ChatListRelationFilter
   tasks?: Prisma.TaskListRelationFilter
   focusSessions?: Prisma.FocusSessionListRelationFilter
@@ -191,6 +192,7 @@ export type UserOrderByWithRelationInput = {
   settings?: Prisma.UserSettingsOrderByWithRelationInput
   projects?: Prisma.ProjectOrderByRelationAggregateInput
   plans?: Prisma.PlanOrderByRelationAggregateInput
+  planSteps?: Prisma.PlanStepOrderByRelationAggregateInput
   chats?: Prisma.ChatOrderByRelationAggregateInput
   tasks?: Prisma.TaskOrderByRelationAggregateInput
   focusSessions?: Prisma.FocusSessionOrderByRelationAggregateInput
@@ -208,6 +210,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
   projects?: Prisma.ProjectListRelationFilter
   plans?: Prisma.PlanListRelationFilter
+  planSteps?: Prisma.PlanStepListRelationFilter
   chats?: Prisma.ChatListRelationFilter
   tasks?: Prisma.TaskListRelationFilter
   focusSessions?: Prisma.FocusSessionListRelationFilter
@@ -242,6 +245,7 @@ export type UserCreateInput = {
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
   chats?: Prisma.ChatCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
@@ -256,6 +260,7 @@ export type UserUncheckedCreateInput = {
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
   chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
@@ -270,6 +275,7 @@ export type UserUpdateInput = {
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
   chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
@@ -284,6 +290,7 @@ export type UserUncheckedUpdateInput = {
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
   chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -433,6 +440,20 @@ export type UserUpdateOneRequiredWithoutTasksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTasksInput, Prisma.UserUpdateWithoutTasksInput>, Prisma.UserUncheckedUpdateWithoutTasksInput>
 }
 
+export type UserCreateNestedOneWithoutPlanStepsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPlanStepsInput, Prisma.UserUncheckedCreateWithoutPlanStepsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPlanStepsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPlanStepsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPlanStepsInput, Prisma.UserUncheckedCreateWithoutPlanStepsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPlanStepsInput
+  upsert?: Prisma.UserUpsertWithoutPlanStepsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPlanStepsInput, Prisma.UserUpdateWithoutPlanStepsInput>, Prisma.UserUncheckedUpdateWithoutPlanStepsInput>
+}
+
 export type UserCreateNestedOneWithoutFocusSessionsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutFocusSessionsInput, Prisma.UserUncheckedCreateWithoutFocusSessionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutFocusSessionsInput
@@ -455,6 +476,7 @@ export type UserCreateWithoutChatsInput = {
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
   extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
@@ -468,6 +490,7 @@ export type UserUncheckedCreateWithoutChatsInput = {
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
   extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
@@ -497,6 +520,7 @@ export type UserUpdateWithoutChatsInput = {
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
   extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
@@ -510,6 +534,7 @@ export type UserUncheckedUpdateWithoutChatsInput = {
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
   extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -523,6 +548,7 @@ export type UserCreateWithoutExtensionTokensInput = {
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
   chats?: Prisma.ChatCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
@@ -536,6 +562,7 @@ export type UserUncheckedCreateWithoutExtensionTokensInput = {
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
   chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
@@ -565,6 +592,7 @@ export type UserUpdateWithoutExtensionTokensInput = {
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
   chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
@@ -578,6 +606,7 @@ export type UserUncheckedUpdateWithoutExtensionTokensInput = {
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
   chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -590,6 +619,7 @@ export type UserCreateWithoutSettingsInput = {
   updatedAt?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
   chats?: Prisma.ChatCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
@@ -603,6 +633,7 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   updatedAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
   chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
@@ -632,6 +663,7 @@ export type UserUpdateWithoutSettingsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
   chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
@@ -645,6 +677,7 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
   chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -658,6 +691,7 @@ export type UserCreateWithoutProjectsInput = {
   updatedAt?: Date | string
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   plans?: Prisma.PlanCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
   chats?: Prisma.ChatCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
@@ -671,6 +705,7 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   updatedAt?: Date | string
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
   chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
@@ -700,6 +735,7 @@ export type UserUpdateWithoutProjectsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
   chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
@@ -713,6 +749,7 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
   chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -726,6 +763,7 @@ export type UserCreateWithoutPlansInput = {
   updatedAt?: Date | string
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
   chats?: Prisma.ChatCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
@@ -739,6 +777,7 @@ export type UserUncheckedCreateWithoutPlansInput = {
   updatedAt?: Date | string
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
   chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
@@ -768,6 +807,7 @@ export type UserUpdateWithoutPlansInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
   chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
@@ -781,6 +821,7 @@ export type UserUncheckedUpdateWithoutPlansInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
   chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -795,6 +836,7 @@ export type UserCreateWithoutTasksInput = {
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
   chats?: Prisma.ChatCreateNestedManyWithoutUserInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
   extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
@@ -808,6 +850,7 @@ export type UserUncheckedCreateWithoutTasksInput = {
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
   chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
   focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
   extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
@@ -837,6 +880,7 @@ export type UserUpdateWithoutTasksInput = {
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
   chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
   extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
@@ -850,7 +894,80 @@ export type UserUncheckedUpdateWithoutTasksInput = {
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
   chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPlanStepsInput = {
+  id: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  plans?: Prisma.PlanCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPlanStepsInput = {
+  id: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPlanStepsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPlanStepsInput, Prisma.UserUncheckedCreateWithoutPlanStepsInput>
+}
+
+export type UserUpsertWithoutPlanStepsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPlanStepsInput, Prisma.UserUncheckedUpdateWithoutPlanStepsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPlanStepsInput, Prisma.UserUncheckedCreateWithoutPlanStepsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPlanStepsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPlanStepsInput, Prisma.UserUncheckedUpdateWithoutPlanStepsInput>
+}
+
+export type UserUpdateWithoutPlanStepsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPlanStepsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
   extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -863,6 +980,7 @@ export type UserCreateWithoutFocusSessionsInput = {
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
   chats?: Prisma.ChatCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
   extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
@@ -876,6 +994,7 @@ export type UserUncheckedCreateWithoutFocusSessionsInput = {
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
   chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
   extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
@@ -905,6 +1024,7 @@ export type UserUpdateWithoutFocusSessionsInput = {
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
   chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
   extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
@@ -918,6 +1038,7 @@ export type UserUncheckedUpdateWithoutFocusSessionsInput = {
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
   chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
   extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -931,6 +1052,7 @@ export type UserUncheckedUpdateWithoutFocusSessionsInput = {
 export type UserCountOutputType = {
   projects: number
   plans: number
+  planSteps: number
   chats: number
   tasks: number
   focusSessions: number
@@ -940,6 +1062,7 @@ export type UserCountOutputType = {
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   projects?: boolean | UserCountOutputTypeCountProjectsArgs
   plans?: boolean | UserCountOutputTypeCountPlansArgs
+  planSteps?: boolean | UserCountOutputTypeCountPlanStepsArgs
   chats?: boolean | UserCountOutputTypeCountChatsArgs
   tasks?: boolean | UserCountOutputTypeCountTasksArgs
   focusSessions?: boolean | UserCountOutputTypeCountFocusSessionsArgs
@@ -968,6 +1091,13 @@ export type UserCountOutputTypeCountProjectsArgs<ExtArgs extends runtime.Types.E
  */
 export type UserCountOutputTypeCountPlansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PlanWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPlanStepsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlanStepWhereInput
 }
 
 /**
@@ -1007,6 +1137,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
   plans?: boolean | Prisma.User$plansArgs<ExtArgs>
+  planSteps?: boolean | Prisma.User$planStepsArgs<ExtArgs>
   chats?: boolean | Prisma.User$chatsArgs<ExtArgs>
   tasks?: boolean | Prisma.User$tasksArgs<ExtArgs>
   focusSessions?: boolean | Prisma.User$focusSessionsArgs<ExtArgs>
@@ -1040,6 +1171,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
   plans?: boolean | Prisma.User$plansArgs<ExtArgs>
+  planSteps?: boolean | Prisma.User$planStepsArgs<ExtArgs>
   chats?: boolean | Prisma.User$chatsArgs<ExtArgs>
   tasks?: boolean | Prisma.User$tasksArgs<ExtArgs>
   focusSessions?: boolean | Prisma.User$focusSessionsArgs<ExtArgs>
@@ -1055,6 +1187,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     settings: Prisma.$UserSettingsPayload<ExtArgs> | null
     projects: Prisma.$ProjectPayload<ExtArgs>[]
     plans: Prisma.$PlanPayload<ExtArgs>[]
+    planSteps: Prisma.$PlanStepPayload<ExtArgs>[]
     chats: Prisma.$ChatPayload<ExtArgs>[]
     tasks: Prisma.$TaskPayload<ExtArgs>[]
     focusSessions: Prisma.$FocusSessionPayload<ExtArgs>[]
@@ -1462,6 +1595,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   settings<T extends Prisma.User$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$settingsArgs<ExtArgs>>): Prisma.Prisma__UserSettingsClient<runtime.Types.Result.GetResult<Prisma.$UserSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   projects<T extends Prisma.User$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   plans<T extends Prisma.User$plansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$plansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  planSteps<T extends Prisma.User$planStepsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$planStepsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   chats<T extends Prisma.User$chatsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tasks<T extends Prisma.User$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   focusSessions<T extends Prisma.User$focusSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$focusSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1956,6 +2090,30 @@ export type User$plansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   take?: number
   skip?: number
   distinct?: Prisma.PlanScalarFieldEnum | Prisma.PlanScalarFieldEnum[]
+}
+
+/**
+ * User.planSteps
+ */
+export type User$planStepsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlanStep
+   */
+  select?: Prisma.PlanStepSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlanStep
+   */
+  omit?: Prisma.PlanStepOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanStepInclude<ExtArgs> | null
+  where?: Prisma.PlanStepWhereInput
+  orderBy?: Prisma.PlanStepOrderByWithRelationInput | Prisma.PlanStepOrderByWithRelationInput[]
+  cursor?: Prisma.PlanStepWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PlanStepScalarFieldEnum | Prisma.PlanStepScalarFieldEnum[]
 }
 
 /**

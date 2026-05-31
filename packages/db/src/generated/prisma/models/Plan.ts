@@ -20,8 +20,18 @@ export type PlanModel = runtime.Types.Result.DefaultSelection<Prisma.$PlanPayloa
 
 export type AggregatePlan = {
   _count: PlanCountAggregateOutputType | null
+  _avg: PlanAvgAggregateOutputType | null
+  _sum: PlanSumAggregateOutputType | null
   _min: PlanMinAggregateOutputType | null
   _max: PlanMaxAggregateOutputType | null
+}
+
+export type PlanAvgAggregateOutputType = {
+  totalEstimatedMinutes: number | null
+}
+
+export type PlanSumAggregateOutputType = {
+  totalEstimatedMinutes: number | null
 }
 
 export type PlanMinAggregateOutputType = {
@@ -29,10 +39,17 @@ export type PlanMinAggregateOutputType = {
   userId: string | null
   projectId: string | null
   name: string | null
+  description: string | null
   goal: string | null
+  completion: string | null
   status: $Enums.PlanStatus | null
+  source: $Enums.PlanSource | null
+  aiMode: $Enums.PlanAiMode | null
+  breakdownIntensity: $Enums.BreakdownIntensity | null
+  totalEstimatedMinutes: number | null
   startDate: Date | null
   endDate: Date | null
+  deletedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -42,10 +59,17 @@ export type PlanMaxAggregateOutputType = {
   userId: string | null
   projectId: string | null
   name: string | null
+  description: string | null
   goal: string | null
+  completion: string | null
   status: $Enums.PlanStatus | null
+  source: $Enums.PlanSource | null
+  aiMode: $Enums.PlanAiMode | null
+  breakdownIntensity: $Enums.BreakdownIntensity | null
+  totalEstimatedMinutes: number | null
   startDate: Date | null
   endDate: Date | null
+  deletedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -55,25 +79,47 @@ export type PlanCountAggregateOutputType = {
   userId: number
   projectId: number
   name: number
+  description: number
   goal: number
+  completion: number
   status: number
+  source: number
+  aiMode: number
+  breakdownIntensity: number
+  totalEstimatedMinutes: number
   startDate: number
   endDate: number
+  deletedAt: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
 
+export type PlanAvgAggregateInputType = {
+  totalEstimatedMinutes?: true
+}
+
+export type PlanSumAggregateInputType = {
+  totalEstimatedMinutes?: true
+}
+
 export type PlanMinAggregateInputType = {
   id?: true
   userId?: true
   projectId?: true
   name?: true
+  description?: true
   goal?: true
+  completion?: true
   status?: true
+  source?: true
+  aiMode?: true
+  breakdownIntensity?: true
+  totalEstimatedMinutes?: true
   startDate?: true
   endDate?: true
+  deletedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -83,10 +129,17 @@ export type PlanMaxAggregateInputType = {
   userId?: true
   projectId?: true
   name?: true
+  description?: true
   goal?: true
+  completion?: true
   status?: true
+  source?: true
+  aiMode?: true
+  breakdownIntensity?: true
+  totalEstimatedMinutes?: true
   startDate?: true
   endDate?: true
+  deletedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -96,10 +149,17 @@ export type PlanCountAggregateInputType = {
   userId?: true
   projectId?: true
   name?: true
+  description?: true
   goal?: true
+  completion?: true
   status?: true
+  source?: true
+  aiMode?: true
+  breakdownIntensity?: true
+  totalEstimatedMinutes?: true
   startDate?: true
   endDate?: true
+  deletedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -143,6 +203,18 @@ export type PlanAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: PlanAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: PlanSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: PlanMinAggregateInputType
@@ -173,6 +245,8 @@ export type PlanGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: PlanCountAggregateInputType | true
+  _avg?: PlanAvgAggregateInputType
+  _sum?: PlanSumAggregateInputType
   _min?: PlanMinAggregateInputType
   _max?: PlanMaxAggregateInputType
 }
@@ -182,13 +256,22 @@ export type PlanGroupByOutputType = {
   userId: string
   projectId: string | null
   name: string
+  description: string | null
   goal: string | null
+  completion: string | null
   status: $Enums.PlanStatus
+  source: $Enums.PlanSource
+  aiMode: $Enums.PlanAiMode
+  breakdownIntensity: $Enums.BreakdownIntensity
+  totalEstimatedMinutes: number
   startDate: Date | null
   endDate: Date | null
+  deletedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: PlanCountAggregateOutputType | null
+  _avg: PlanAvgAggregateOutputType | null
+  _sum: PlanSumAggregateOutputType | null
   _min: PlanMinAggregateOutputType | null
   _max: PlanMaxAggregateOutputType | null
 }
@@ -216,15 +299,22 @@ export type PlanWhereInput = {
   userId?: Prisma.StringFilter<"Plan"> | string
   projectId?: Prisma.StringNullableFilter<"Plan"> | string | null
   name?: Prisma.StringFilter<"Plan"> | string
+  description?: Prisma.StringNullableFilter<"Plan"> | string | null
   goal?: Prisma.StringNullableFilter<"Plan"> | string | null
+  completion?: Prisma.StringNullableFilter<"Plan"> | string | null
   status?: Prisma.EnumPlanStatusFilter<"Plan"> | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFilter<"Plan"> | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFilter<"Plan"> | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFilter<"Plan"> | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFilter<"Plan"> | number
   startDate?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
+  deletedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
-  tasks?: Prisma.TaskListRelationFilter
+  steps?: Prisma.PlanStepListRelationFilter
   focusSessions?: Prisma.FocusSessionListRelationFilter
 }
 
@@ -233,15 +323,22 @@ export type PlanOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   goal?: Prisma.SortOrderInput | Prisma.SortOrder
+  completion?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  aiMode?: Prisma.SortOrder
+  breakdownIntensity?: Prisma.SortOrder
+  totalEstimatedMinutes?: Prisma.SortOrder
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   endDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   project?: Prisma.ProjectOrderByWithRelationInput
-  tasks?: Prisma.TaskOrderByRelationAggregateInput
+  steps?: Prisma.PlanStepOrderByRelationAggregateInput
   focusSessions?: Prisma.FocusSessionOrderByRelationAggregateInput
 }
 
@@ -253,15 +350,22 @@ export type PlanWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringFilter<"Plan"> | string
   projectId?: Prisma.StringNullableFilter<"Plan"> | string | null
   name?: Prisma.StringFilter<"Plan"> | string
+  description?: Prisma.StringNullableFilter<"Plan"> | string | null
   goal?: Prisma.StringNullableFilter<"Plan"> | string | null
+  completion?: Prisma.StringNullableFilter<"Plan"> | string | null
   status?: Prisma.EnumPlanStatusFilter<"Plan"> | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFilter<"Plan"> | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFilter<"Plan"> | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFilter<"Plan"> | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFilter<"Plan"> | number
   startDate?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
+  deletedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
-  tasks?: Prisma.TaskListRelationFilter
+  steps?: Prisma.PlanStepListRelationFilter
   focusSessions?: Prisma.FocusSessionListRelationFilter
 }, "id">
 
@@ -270,15 +374,24 @@ export type PlanOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   goal?: Prisma.SortOrderInput | Prisma.SortOrder
+  completion?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  aiMode?: Prisma.SortOrder
+  breakdownIntensity?: Prisma.SortOrder
+  totalEstimatedMinutes?: Prisma.SortOrder
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   endDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PlanCountOrderByAggregateInput
+  _avg?: Prisma.PlanAvgOrderByAggregateInput
   _max?: Prisma.PlanMaxOrderByAggregateInput
   _min?: Prisma.PlanMinOrderByAggregateInput
+  _sum?: Prisma.PlanSumOrderByAggregateInput
 }
 
 export type PlanScalarWhereWithAggregatesInput = {
@@ -289,10 +402,17 @@ export type PlanScalarWhereWithAggregatesInput = {
   userId?: Prisma.StringWithAggregatesFilter<"Plan"> | string
   projectId?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"Plan"> | string
+  description?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
   goal?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
+  completion?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
   status?: Prisma.EnumPlanStatusWithAggregatesFilter<"Plan"> | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceWithAggregatesFilter<"Plan"> | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeWithAggregatesFilter<"Plan"> | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityWithAggregatesFilter<"Plan"> | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntWithAggregatesFilter<"Plan"> | number
   startDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
   endDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Plan"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Plan"> | Date | string
 }
@@ -300,15 +420,22 @@ export type PlanScalarWhereWithAggregatesInput = {
 export type PlanCreateInput = {
   id?: string
   name: string
+  description?: string | null
   goal?: string | null
+  completion?: string | null
   status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
   startDate?: Date | string | null
   endDate?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPlansInput
   project?: Prisma.ProjectCreateNestedOneWithoutPlansInput
-  tasks?: Prisma.TaskCreateNestedManyWithoutPlanInput
+  steps?: Prisma.PlanStepCreateNestedManyWithoutPlanInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutPlanInput
 }
 
@@ -317,28 +444,42 @@ export type PlanUncheckedCreateInput = {
   userId: string
   projectId?: string | null
   name: string
+  description?: string | null
   goal?: string | null
+  completion?: string | null
   status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
   startDate?: Date | string | null
   endDate?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutPlanInput
+  steps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutPlanInput
   focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutPlanInput
 }
 
 export type PlanUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
   project?: Prisma.ProjectUpdateOneWithoutPlansNestedInput
-  tasks?: Prisma.TaskUpdateManyWithoutPlanNestedInput
+  steps?: Prisma.PlanStepUpdateManyWithoutPlanNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutPlanNestedInput
 }
 
@@ -347,13 +488,20 @@ export type PlanUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tasks?: Prisma.TaskUncheckedUpdateManyWithoutPlanNestedInput
+  steps?: Prisma.PlanStepUncheckedUpdateManyWithoutPlanNestedInput
   focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutPlanNestedInput
 }
 
@@ -362,10 +510,17 @@ export type PlanCreateManyInput = {
   userId: string
   projectId?: string | null
   name: string
+  description?: string | null
   goal?: string | null
+  completion?: string | null
   status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
   startDate?: Date | string | null
   endDate?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -373,10 +528,17 @@ export type PlanCreateManyInput = {
 export type PlanUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -386,10 +548,17 @@ export type PlanUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -409,12 +578,23 @@ export type PlanCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   goal?: Prisma.SortOrder
+  completion?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  aiMode?: Prisma.SortOrder
+  breakdownIntensity?: Prisma.SortOrder
+  totalEstimatedMinutes?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type PlanAvgOrderByAggregateInput = {
+  totalEstimatedMinutes?: Prisma.SortOrder
 }
 
 export type PlanMaxOrderByAggregateInput = {
@@ -422,10 +602,17 @@ export type PlanMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   goal?: Prisma.SortOrder
+  completion?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  aiMode?: Prisma.SortOrder
+  breakdownIntensity?: Prisma.SortOrder
+  totalEstimatedMinutes?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -435,22 +622,33 @@ export type PlanMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   goal?: Prisma.SortOrder
+  completion?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  aiMode?: Prisma.SortOrder
+  breakdownIntensity?: Prisma.SortOrder
+  totalEstimatedMinutes?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
-export type PlanNullableScalarRelationFilter = {
-  is?: Prisma.PlanWhereInput | null
-  isNot?: Prisma.PlanWhereInput | null
+export type PlanSumOrderByAggregateInput = {
+  totalEstimatedMinutes?: Prisma.SortOrder
 }
 
 export type PlanScalarRelationFilter = {
   is?: Prisma.PlanWhereInput
   isNot?: Prisma.PlanWhereInput
+}
+
+export type PlanNullableScalarRelationFilter = {
+  is?: Prisma.PlanWhereInput | null
+  isNot?: Prisma.PlanWhereInput | null
 }
 
 export type PlanCreateNestedManyWithoutUserInput = {
@@ -541,20 +739,38 @@ export type EnumPlanStatusFieldUpdateOperationsInput = {
   set?: $Enums.PlanStatus
 }
 
-export type PlanCreateNestedOneWithoutTasksInput = {
-  create?: Prisma.XOR<Prisma.PlanCreateWithoutTasksInput, Prisma.PlanUncheckedCreateWithoutTasksInput>
-  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutTasksInput
+export type EnumPlanSourceFieldUpdateOperationsInput = {
+  set?: $Enums.PlanSource
+}
+
+export type EnumPlanAiModeFieldUpdateOperationsInput = {
+  set?: $Enums.PlanAiMode
+}
+
+export type EnumBreakdownIntensityFieldUpdateOperationsInput = {
+  set?: $Enums.BreakdownIntensity
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type PlanCreateNestedOneWithoutStepsInput = {
+  create?: Prisma.XOR<Prisma.PlanCreateWithoutStepsInput, Prisma.PlanUncheckedCreateWithoutStepsInput>
+  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutStepsInput
   connect?: Prisma.PlanWhereUniqueInput
 }
 
-export type PlanUpdateOneWithoutTasksNestedInput = {
-  create?: Prisma.XOR<Prisma.PlanCreateWithoutTasksInput, Prisma.PlanUncheckedCreateWithoutTasksInput>
-  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutTasksInput
-  upsert?: Prisma.PlanUpsertWithoutTasksInput
-  disconnect?: Prisma.PlanWhereInput | boolean
-  delete?: Prisma.PlanWhereInput | boolean
+export type PlanUpdateOneRequiredWithoutStepsNestedInput = {
+  create?: Prisma.XOR<Prisma.PlanCreateWithoutStepsInput, Prisma.PlanUncheckedCreateWithoutStepsInput>
+  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutStepsInput
+  upsert?: Prisma.PlanUpsertWithoutStepsInput
   connect?: Prisma.PlanWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PlanUpdateToOneWithWhereWithoutTasksInput, Prisma.PlanUpdateWithoutTasksInput>, Prisma.PlanUncheckedUpdateWithoutTasksInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlanUpdateToOneWithWhereWithoutStepsInput, Prisma.PlanUpdateWithoutStepsInput>, Prisma.PlanUncheckedUpdateWithoutStepsInput>
 }
 
 export type PlanCreateNestedOneWithoutFocusSessionsInput = {
@@ -563,10 +779,12 @@ export type PlanCreateNestedOneWithoutFocusSessionsInput = {
   connect?: Prisma.PlanWhereUniqueInput
 }
 
-export type PlanUpdateOneRequiredWithoutFocusSessionsNestedInput = {
+export type PlanUpdateOneWithoutFocusSessionsNestedInput = {
   create?: Prisma.XOR<Prisma.PlanCreateWithoutFocusSessionsInput, Prisma.PlanUncheckedCreateWithoutFocusSessionsInput>
   connectOrCreate?: Prisma.PlanCreateOrConnectWithoutFocusSessionsInput
   upsert?: Prisma.PlanUpsertWithoutFocusSessionsInput
+  disconnect?: Prisma.PlanWhereInput | boolean
+  delete?: Prisma.PlanWhereInput | boolean
   connect?: Prisma.PlanWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.PlanUpdateToOneWithWhereWithoutFocusSessionsInput, Prisma.PlanUpdateWithoutFocusSessionsInput>, Prisma.PlanUncheckedUpdateWithoutFocusSessionsInput>
 }
@@ -574,14 +792,21 @@ export type PlanUpdateOneRequiredWithoutFocusSessionsNestedInput = {
 export type PlanCreateWithoutUserInput = {
   id?: string
   name: string
+  description?: string | null
   goal?: string | null
+  completion?: string | null
   status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
   startDate?: Date | string | null
   endDate?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project?: Prisma.ProjectCreateNestedOneWithoutPlansInput
-  tasks?: Prisma.TaskCreateNestedManyWithoutPlanInput
+  steps?: Prisma.PlanStepCreateNestedManyWithoutPlanInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutPlanInput
 }
 
@@ -589,13 +814,20 @@ export type PlanUncheckedCreateWithoutUserInput = {
   id?: string
   projectId?: string | null
   name: string
+  description?: string | null
   goal?: string | null
+  completion?: string | null
   status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
   startDate?: Date | string | null
   endDate?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutPlanInput
+  steps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutPlanInput
   focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutPlanInput
 }
 
@@ -633,10 +865,17 @@ export type PlanScalarWhereInput = {
   userId?: Prisma.StringFilter<"Plan"> | string
   projectId?: Prisma.StringNullableFilter<"Plan"> | string | null
   name?: Prisma.StringFilter<"Plan"> | string
+  description?: Prisma.StringNullableFilter<"Plan"> | string | null
   goal?: Prisma.StringNullableFilter<"Plan"> | string | null
+  completion?: Prisma.StringNullableFilter<"Plan"> | string | null
   status?: Prisma.EnumPlanStatusFilter<"Plan"> | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFilter<"Plan"> | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFilter<"Plan"> | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFilter<"Plan"> | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFilter<"Plan"> | number
   startDate?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
+  deletedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
 }
@@ -644,14 +883,21 @@ export type PlanScalarWhereInput = {
 export type PlanCreateWithoutProjectInput = {
   id?: string
   name: string
+  description?: string | null
   goal?: string | null
+  completion?: string | null
   status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
   startDate?: Date | string | null
   endDate?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPlansInput
-  tasks?: Prisma.TaskCreateNestedManyWithoutPlanInput
+  steps?: Prisma.PlanStepCreateNestedManyWithoutPlanInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutPlanInput
 }
 
@@ -659,13 +905,20 @@ export type PlanUncheckedCreateWithoutProjectInput = {
   id?: string
   userId: string
   name: string
+  description?: string | null
   goal?: string | null
+  completion?: string | null
   status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
   startDate?: Date | string | null
   endDate?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutPlanInput
+  steps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutPlanInput
   focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutPlanInput
 }
 
@@ -695,13 +948,20 @@ export type PlanUpdateManyWithWhereWithoutProjectInput = {
   data: Prisma.XOR<Prisma.PlanUpdateManyMutationInput, Prisma.PlanUncheckedUpdateManyWithoutProjectInput>
 }
 
-export type PlanCreateWithoutTasksInput = {
+export type PlanCreateWithoutStepsInput = {
   id?: string
   name: string
+  description?: string | null
   goal?: string | null
+  completion?: string | null
   status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
   startDate?: Date | string | null
   endDate?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPlansInput
@@ -709,43 +969,57 @@ export type PlanCreateWithoutTasksInput = {
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutPlanInput
 }
 
-export type PlanUncheckedCreateWithoutTasksInput = {
+export type PlanUncheckedCreateWithoutStepsInput = {
   id?: string
   userId: string
   projectId?: string | null
   name: string
+  description?: string | null
   goal?: string | null
+  completion?: string | null
   status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
   startDate?: Date | string | null
   endDate?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutPlanInput
 }
 
-export type PlanCreateOrConnectWithoutTasksInput = {
+export type PlanCreateOrConnectWithoutStepsInput = {
   where: Prisma.PlanWhereUniqueInput
-  create: Prisma.XOR<Prisma.PlanCreateWithoutTasksInput, Prisma.PlanUncheckedCreateWithoutTasksInput>
+  create: Prisma.XOR<Prisma.PlanCreateWithoutStepsInput, Prisma.PlanUncheckedCreateWithoutStepsInput>
 }
 
-export type PlanUpsertWithoutTasksInput = {
-  update: Prisma.XOR<Prisma.PlanUpdateWithoutTasksInput, Prisma.PlanUncheckedUpdateWithoutTasksInput>
-  create: Prisma.XOR<Prisma.PlanCreateWithoutTasksInput, Prisma.PlanUncheckedCreateWithoutTasksInput>
+export type PlanUpsertWithoutStepsInput = {
+  update: Prisma.XOR<Prisma.PlanUpdateWithoutStepsInput, Prisma.PlanUncheckedUpdateWithoutStepsInput>
+  create: Prisma.XOR<Prisma.PlanCreateWithoutStepsInput, Prisma.PlanUncheckedCreateWithoutStepsInput>
   where?: Prisma.PlanWhereInput
 }
 
-export type PlanUpdateToOneWithWhereWithoutTasksInput = {
+export type PlanUpdateToOneWithWhereWithoutStepsInput = {
   where?: Prisma.PlanWhereInput
-  data: Prisma.XOR<Prisma.PlanUpdateWithoutTasksInput, Prisma.PlanUncheckedUpdateWithoutTasksInput>
+  data: Prisma.XOR<Prisma.PlanUpdateWithoutStepsInput, Prisma.PlanUncheckedUpdateWithoutStepsInput>
 }
 
-export type PlanUpdateWithoutTasksInput = {
+export type PlanUpdateWithoutStepsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
@@ -753,15 +1027,22 @@ export type PlanUpdateWithoutTasksInput = {
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutPlanNestedInput
 }
 
-export type PlanUncheckedUpdateWithoutTasksInput = {
+export type PlanUncheckedUpdateWithoutStepsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutPlanNestedInput
@@ -770,15 +1051,22 @@ export type PlanUncheckedUpdateWithoutTasksInput = {
 export type PlanCreateWithoutFocusSessionsInput = {
   id?: string
   name: string
+  description?: string | null
   goal?: string | null
+  completion?: string | null
   status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
   startDate?: Date | string | null
   endDate?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPlansInput
   project?: Prisma.ProjectCreateNestedOneWithoutPlansInput
-  tasks?: Prisma.TaskCreateNestedManyWithoutPlanInput
+  steps?: Prisma.PlanStepCreateNestedManyWithoutPlanInput
 }
 
 export type PlanUncheckedCreateWithoutFocusSessionsInput = {
@@ -786,13 +1074,20 @@ export type PlanUncheckedCreateWithoutFocusSessionsInput = {
   userId: string
   projectId?: string | null
   name: string
+  description?: string | null
   goal?: string | null
+  completion?: string | null
   status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
   startDate?: Date | string | null
   endDate?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutPlanInput
+  steps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutPlanInput
 }
 
 export type PlanCreateOrConnectWithoutFocusSessionsInput = {
@@ -814,15 +1109,22 @@ export type PlanUpdateToOneWithWhereWithoutFocusSessionsInput = {
 export type PlanUpdateWithoutFocusSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
   project?: Prisma.ProjectUpdateOneWithoutPlansNestedInput
-  tasks?: Prisma.TaskUpdateManyWithoutPlanNestedInput
+  steps?: Prisma.PlanStepUpdateManyWithoutPlanNestedInput
 }
 
 export type PlanUncheckedUpdateWithoutFocusSessionsInput = {
@@ -830,23 +1132,37 @@ export type PlanUncheckedUpdateWithoutFocusSessionsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tasks?: Prisma.TaskUncheckedUpdateManyWithoutPlanNestedInput
+  steps?: Prisma.PlanStepUncheckedUpdateManyWithoutPlanNestedInput
 }
 
 export type PlanCreateManyUserInput = {
   id?: string
   projectId?: string | null
   name: string
+  description?: string | null
   goal?: string | null
+  completion?: string | null
   status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
   startDate?: Date | string | null
   endDate?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -854,14 +1170,21 @@ export type PlanCreateManyUserInput = {
 export type PlanUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneWithoutPlansNestedInput
-  tasks?: Prisma.TaskUpdateManyWithoutPlanNestedInput
+  steps?: Prisma.PlanStepUpdateManyWithoutPlanNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutPlanNestedInput
 }
 
@@ -869,13 +1192,20 @@ export type PlanUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tasks?: Prisma.TaskUncheckedUpdateManyWithoutPlanNestedInput
+  steps?: Prisma.PlanStepUncheckedUpdateManyWithoutPlanNestedInput
   focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutPlanNestedInput
 }
 
@@ -883,10 +1213,17 @@ export type PlanUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -895,10 +1232,17 @@ export type PlanCreateManyProjectInput = {
   id?: string
   userId: string
   name: string
+  description?: string | null
   goal?: string | null
+  completion?: string | null
   status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
   startDate?: Date | string | null
   endDate?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -906,14 +1250,21 @@ export type PlanCreateManyProjectInput = {
 export type PlanUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
-  tasks?: Prisma.TaskUpdateManyWithoutPlanNestedInput
+  steps?: Prisma.PlanStepUpdateManyWithoutPlanNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutPlanNestedInput
 }
 
@@ -921,13 +1272,20 @@ export type PlanUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  tasks?: Prisma.TaskUncheckedUpdateManyWithoutPlanNestedInput
+  steps?: Prisma.PlanStepUncheckedUpdateManyWithoutPlanNestedInput
   focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutPlanNestedInput
 }
 
@@ -935,10 +1293,17 @@ export type PlanUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -949,12 +1314,12 @@ export type PlanUncheckedUpdateManyWithoutProjectInput = {
  */
 
 export type PlanCountOutputType = {
-  tasks: number
+  steps: number
   focusSessions: number
 }
 
 export type PlanCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  tasks?: boolean | PlanCountOutputTypeCountTasksArgs
+  steps?: boolean | PlanCountOutputTypeCountStepsArgs
   focusSessions?: boolean | PlanCountOutputTypeCountFocusSessionsArgs
 }
 
@@ -971,8 +1336,8 @@ export type PlanCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * PlanCountOutputType without action
  */
-export type PlanCountOutputTypeCountTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TaskWhereInput
+export type PlanCountOutputTypeCountStepsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlanStepWhereInput
 }
 
 /**
@@ -988,15 +1353,22 @@ export type PlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   userId?: boolean
   projectId?: boolean
   name?: boolean
+  description?: boolean
   goal?: boolean
+  completion?: boolean
   status?: boolean
+  source?: boolean
+  aiMode?: boolean
+  breakdownIntensity?: boolean
+  totalEstimatedMinutes?: boolean
   startDate?: boolean
   endDate?: boolean
+  deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
-  tasks?: boolean | Prisma.Plan$tasksArgs<ExtArgs>
+  steps?: boolean | Prisma.Plan$stepsArgs<ExtArgs>
   focusSessions?: boolean | Prisma.Plan$focusSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.PlanCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["plan"]>
@@ -1006,10 +1378,17 @@ export type PlanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   userId?: boolean
   projectId?: boolean
   name?: boolean
+  description?: boolean
   goal?: boolean
+  completion?: boolean
   status?: boolean
+  source?: boolean
+  aiMode?: boolean
+  breakdownIntensity?: boolean
+  totalEstimatedMinutes?: boolean
   startDate?: boolean
   endDate?: boolean
+  deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1021,10 +1400,17 @@ export type PlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   userId?: boolean
   projectId?: boolean
   name?: boolean
+  description?: boolean
   goal?: boolean
+  completion?: boolean
   status?: boolean
+  source?: boolean
+  aiMode?: boolean
+  breakdownIntensity?: boolean
+  totalEstimatedMinutes?: boolean
   startDate?: boolean
   endDate?: boolean
+  deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1036,19 +1422,26 @@ export type PlanSelectScalar = {
   userId?: boolean
   projectId?: boolean
   name?: boolean
+  description?: boolean
   goal?: boolean
+  completion?: boolean
   status?: boolean
+  source?: boolean
+  aiMode?: boolean
+  breakdownIntensity?: boolean
+  totalEstimatedMinutes?: boolean
   startDate?: boolean
   endDate?: boolean
+  deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "projectId" | "name" | "goal" | "status" | "startDate" | "endDate" | "createdAt" | "updatedAt", ExtArgs["result"]["plan"]>
+export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "projectId" | "name" | "description" | "goal" | "completion" | "status" | "source" | "aiMode" | "breakdownIntensity" | "totalEstimatedMinutes" | "startDate" | "endDate" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["plan"]>
 export type PlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
-  tasks?: boolean | Prisma.Plan$tasksArgs<ExtArgs>
+  steps?: boolean | Prisma.Plan$stepsArgs<ExtArgs>
   focusSessions?: boolean | Prisma.Plan$focusSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.PlanCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1066,7 +1459,7 @@ export type $PlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     project: Prisma.$ProjectPayload<ExtArgs> | null
-    tasks: Prisma.$TaskPayload<ExtArgs>[]
+    steps: Prisma.$PlanStepPayload<ExtArgs>[]
     focusSessions: Prisma.$FocusSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1074,10 +1467,17 @@ export type $PlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     userId: string
     projectId: string | null
     name: string
+    description: string | null
     goal: string | null
+    completion: string | null
     status: $Enums.PlanStatus
+    source: $Enums.PlanSource
+    aiMode: $Enums.PlanAiMode
+    breakdownIntensity: $Enums.BreakdownIntensity
+    totalEstimatedMinutes: number
     startDate: Date | null
     endDate: Date | null
+    deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["plan"]>
@@ -1476,7 +1876,7 @@ export interface Prisma__PlanClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   project<T extends Prisma.Plan$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  tasks<T extends Prisma.Plan$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  steps<T extends Prisma.Plan$stepsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   focusSessions<T extends Prisma.Plan$focusSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$focusSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1511,10 +1911,17 @@ export interface PlanFieldRefs {
   readonly userId: Prisma.FieldRef<"Plan", 'String'>
   readonly projectId: Prisma.FieldRef<"Plan", 'String'>
   readonly name: Prisma.FieldRef<"Plan", 'String'>
+  readonly description: Prisma.FieldRef<"Plan", 'String'>
   readonly goal: Prisma.FieldRef<"Plan", 'String'>
+  readonly completion: Prisma.FieldRef<"Plan", 'String'>
   readonly status: Prisma.FieldRef<"Plan", 'PlanStatus'>
+  readonly source: Prisma.FieldRef<"Plan", 'PlanSource'>
+  readonly aiMode: Prisma.FieldRef<"Plan", 'PlanAiMode'>
+  readonly breakdownIntensity: Prisma.FieldRef<"Plan", 'BreakdownIntensity'>
+  readonly totalEstimatedMinutes: Prisma.FieldRef<"Plan", 'Int'>
   readonly startDate: Prisma.FieldRef<"Plan", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"Plan", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Plan", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Plan", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Plan", 'DateTime'>
 }
@@ -1937,27 +2344,27 @@ export type Plan$projectArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 }
 
 /**
- * Plan.tasks
+ * Plan.steps
  */
-export type Plan$tasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Plan$stepsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Task
+   * Select specific fields to fetch from the PlanStep
    */
-  select?: Prisma.TaskSelect<ExtArgs> | null
+  select?: Prisma.PlanStepSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Task
+   * Omit specific fields from the PlanStep
    */
-  omit?: Prisma.TaskOmit<ExtArgs> | null
+  omit?: Prisma.PlanStepOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.TaskInclude<ExtArgs> | null
-  where?: Prisma.TaskWhereInput
-  orderBy?: Prisma.TaskOrderByWithRelationInput | Prisma.TaskOrderByWithRelationInput[]
-  cursor?: Prisma.TaskWhereUniqueInput
+  include?: Prisma.PlanStepInclude<ExtArgs> | null
+  where?: Prisma.PlanStepWhereInput
+  orderBy?: Prisma.PlanStepOrderByWithRelationInput | Prisma.PlanStepOrderByWithRelationInput[]
+  cursor?: Prisma.PlanStepWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.TaskScalarFieldEnum | Prisma.TaskScalarFieldEnum[]
+  distinct?: Prisma.PlanStepScalarFieldEnum | Prisma.PlanStepScalarFieldEnum[]
 }
 
 /**

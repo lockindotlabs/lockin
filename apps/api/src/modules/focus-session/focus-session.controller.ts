@@ -53,7 +53,7 @@ export class FocusSessionController extends BaseController {
 
       if (planId) {
         const plan = await prisma.plan.findFirst({
-          where: { id: planId, userId: req.dbUser.id },
+          where: { id: planId, userId: req.dbUser.id, deletedAt: null },
         })
         if (!plan) {
           res.status(404).json({ success: false, error: { message: 'Plan not found', code: 404 } })
@@ -119,7 +119,7 @@ export class FocusSessionController extends BaseController {
           .filter(t => t.id)
           .map(t => {
             const status = t.status ?? (t.done ? 'DONE' : 'TODO')
-            return prisma.task.updateMany({
+            return prisma.planStep.updateMany({
               where: { id: t.id!, planId },
               data: { status },
             })

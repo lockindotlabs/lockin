@@ -5,7 +5,9 @@ import prisma from '../../lib/prisma.js'
 
 const CreatePlanSchema = z.object({
   name: z.string().min(1).max(100),
+  description: z.string().max(2000).optional(),
   goal: z.string().max(500).optional(),
+  completion: z.string().max(1000).optional(),
   projectId: z.string().optional(),
   startDate: z.string().datetime().optional(),
   endDate: z.string().datetime().optional(),
@@ -13,7 +15,9 @@ const CreatePlanSchema = z.object({
 
 const UpdatePlanSchema = z.object({
   name: z.string().min(1).max(100).optional(),
+  description: z.string().max(2000).optional(),
   goal: z.string().max(500).optional(),
+  completion: z.string().max(1000).optional(),
   projectId: z.string().nullable().optional(),
   status: z.enum(['PLANNING', 'ACTIVE', 'COMPLETED', 'CANCELLED']).optional(),
   startDate: z.string().datetime().optional(),

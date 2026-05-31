@@ -4,6 +4,7 @@
 import {
   memo,
   useState,
+  useEffect,
   createContext,
   useContext,
   type ComponentPropsWithoutRef,
@@ -12,6 +13,7 @@ import {
 import { Select as SelectPrimitive } from "radix-ui"
 import type { VariantProps } from "class-variance-authority"
 import { CheckIcon } from "lucide-react"
+import { useAui, type ModelContext } from "@assistant-ui/react"
 import { cn } from "@workspace/ui/lib/utils"
 import {
   SelectRoot,
@@ -65,7 +67,7 @@ function CapabilitiesSelectorRoot({
   value,
   ...selectProps
 }: CapabilitiesSelectorRootProps) {
-  const defaultValue = defaultValueProp ?? capabilities[0]?.id
+  const defaultValue = defaultValueProp ?? "__none__"
   return (
     <CapabilitiesSelectorContext.Provider value={{ capabilities, value }}>
       <SelectRoot
@@ -143,7 +145,7 @@ function CapabilitiesSelectorContent({
           className={cn(
             "relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 ps-3 pe-9 text-sm outline-none select-none",
             "focus:bg-accent focus:text-accent-foreground",
-            "data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+            "data-disabled:pointer-events-none data-disabled:opacity-50"
           )}
         >
           <span className="inset-e-2 absolute flex size-4 items-center justify-center">
@@ -161,9 +163,9 @@ function CapabilitiesSelectorContent({
             value={capability.id}
             textValue={capability.name}
             className={cn(
-              "relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 ps-3 pe-9 text-sm outline-none select-none",
+              "relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 ps-3 pe-12 text-sm outline-none select-none",
               "focus:bg-accent focus:text-accent-foreground",
-              "data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+              "data-disabled:pointer-events-none data-disabled:opacity-50"
             )}
             disabled={capability.disabled}
           >
@@ -210,22 +212,41 @@ const CapabilitiesSelectorImpl = ({
 }: Omit<CapabilitiesSelectorRootProps, "children"> &
   VariantProps<typeof selectTriggerVariants> & {
     contentClassName?: string
+    onValueChange?: (value: string | undefined) => void
   }) => {
-  const isControlled = controlledValue !== undefined
+  const isControlled = controlledOnValueChange !== undefined
   const [internalValue, setInternalValue] = useState(
     () => defaultValue ?? "__none__"
   )
 
   const value = isControlled ? controlledValue : internalValue
-  const onValueChange = controlledOnValueChange ?? setInternalValue
+  const selectedCapabilityId = value === "__none__" ? undefined : value
+  const selectValue = selectedCapabilityId ?? "__none__"
+  const api = useAui()
+
+  useEffect(() => {
+    const config = selectedCapabilityId
+      ? { config: { capabilities: [selectedCapabilityId] } }
+      : {}
+
+    return api.modelContext().register({
+      getModelContext: () => config as ModelContext,
+    })
+  }, [api, selectedCapabilityId])
 
   return (
     <CapabilitiesSelectorRoot
       capabilities={capabilities}
-      value={value === "__none__" ? undefined : value}
-      onValueChange={(newValue) =>
-        onValueChange(newValue === undefined ? "__none__" : newValue)
-      }
+      value={selectValue}
+      onValueChange={(newValue) => {
+        const nextValue = newValue === "__none__" ? undefined : newValue
+
+        if (controlledOnValueChange) {
+          controlledOnValueChange(nextValue)
+        } else {
+          setInternalValue(nextValue ?? "__none__")
+        }
+      }}
       {...forwardedProps}
     >
       <CapabilitiesSelectorTrigger

@@ -31,6 +31,8 @@ import {
   MessagePrimitive,
   SuggestionPrimitive,
   ThreadPrimitive,
+  type ToolCallMessagePartComponent,
+  type ToolCallMessagePartProps,
   useAuiState,
 } from "@assistant-ui/react"
 import {
@@ -60,24 +62,15 @@ type ThreadModelOption = ModelOption & {
 
 const GEMINI_MODELS = [
   {
-    id: "gemini-3.1-flash-lite",
-    name: "Gemini 3.1 Flash Lite",
-    icon: <GeminiLogo />,
-    description: "Fast and efficient",
+    id: "gemini-3.1-flash-lite-preview",
+    name: "Fast",
+    description: "Efficient for most tasks",
     contextWindow: 1_000_000,
   },
   {
-    id: "gemini-3.1-flash",
-    name: "Gemini 3.1 Flash",
-    icon: <GeminiLogo />,
-    description: "Balanced performance",
-    contextWindow: 1_000_000,
-  },
-  {
-    id: "gemini-3.1-pro",
-    name: "Gemini 3.1 Pro",
-    icon: <GeminiLogo />,
-    description: "Most capable",
+    id: "gemini-3.1-pro-preview",
+    name: "Extended",
+    description: "Handles more complex tasks",
     contextWindow: 1_000_000,
   },
 ] satisfies ThreadModelOption[]
@@ -87,18 +80,15 @@ const AI_CAPABILITIES = [
     id: "web-search",
     name: "Web search",
     icon: <GlobeIcon />,
-    description: "Search the web for information and answers.",
   },
   {
     id: "complex-reasoning",
     name: "Complex reasoning",
     icon: <SparkleIcon />,
-    description:
-      "Handle multi-step problems and provide detailed explanations.",
   },
 ]
 
-const DEFAULT_MODEL_ID = "gemini-3.1-flash-lite"
+const DEFAULT_MODEL_ID = "gemini-3.1-flash-lite-preview"
 const DEFAULT_MODEL = GEMINI_MODELS[0]!
 
 const ToolsDropdown = () => {
@@ -119,7 +109,7 @@ export const Thread: FC<{ mode?: "onboarding" | "plan" }> = ({
 
   return (
     <ThreadPrimitive.Root
-      className="aui-root aui-thread-root @container flex h-screen flex-col bg-background"
+      className="aui-root aui-thread-root @container flex h-[calc(100vh-3rem)] flex-col bg-background"
       style={{
         ["--thread-max-width" as string]: "44rem",
         ["--composer-radius" as string]: "24px",
@@ -137,7 +127,7 @@ export const Thread: FC<{ mode?: "onboarding" | "plan" }> = ({
       >
         <div
           className={cn(
-            "mx-auto my-auto flex w-full max-w-(--thread-max-width) flex-col px-4",
+            "mx-auto my-auto flex w-full max-w-(--thread-max-width) flex-col px-4 md:px-6",
             !isEmpty && "flex-1"
           )}
         >
@@ -154,7 +144,7 @@ export const Thread: FC<{ mode?: "onboarding" | "plan" }> = ({
             </ThreadPrimitive.Messages>
           </div>
 
-          <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mt-auto flex flex-col gap-4 overflow-visible rounded-t-(--composer-radius) bg-background pt-8 pb-4 md:pb-6">
+          <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mt-auto flex flex-col gap-4 overflow-visible rounded-t-(--composer-radius) bg-background py-4 md:pb-6">
             <ThreadScrollToBottom />
             <Composer
               mode={mode}
@@ -203,7 +193,7 @@ const ThreadWelcome: FC = () => {
     <div className="aui-thread-welcome-root my-auto flex grow flex-col space-y-12">
       <div className="aui-thread-welcome-center flex w-full grow flex-col items-center justify-center">
         <div className="aui-thread-welcome-message flex size-full flex-col justify-center px-4">
-          <h1 className="aui-thread-welcome-message-inner animate-in text-xl font-medium tracking-normal duration-200 fill-mode-both fade-in slide-in-from-bottom-1">
+          <h1 className="aui-thread-welcome-message-inner mb-1 animate-in text-3xl tracking-tight duration-200 fill-mode-both fade-in slide-in-from-bottom-1">
             What do you need to get done?
           </h1>
           <p className="aui-thread-welcome-message-inner animate-in text-muted-foreground delay-75 duration-200 fill-mode-both fade-in slide-in-from-bottom-1">
@@ -234,7 +224,7 @@ const ThreadSuggestionItem: FC = () => {
         render={
           <Button
             variant="ghost"
-            className="aui-thread-welcome-suggestion h-auto flex-wrap items-start justify-center gap-1 rounded-3xl border border-border bg-background px-3 py-1.5 text-start text-sm transition-colors hover:bg-muted @md:flex-col"
+            className="aui-thread-welcome-suggestion h-auto flex-wrap items-start justify-center gap-1 rounded-3xl border border-border bg-background px-3 py-1.5 text-start text-sm text-muted-foreground transition-colors hover:bg-muted @md:flex-col"
           />
         }
       >
@@ -364,7 +354,7 @@ const ComposerAction: FC<{
 const MessageError: FC = () => {
   return (
     <MessagePrimitive.Error>
-      <ErrorPrimitive.Root className="aui-message-error-root mt-2 rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive dark:bg-destructive/5 dark:text-red-200">
+      <ErrorPrimitive.Root className="aui-message-error-root mt-2 py-3 text-sm text-destructive dark:bg-destructive/5 dark:text-red-200">
         <ErrorPrimitive.Message className="aui-message-error-message line-clamp-2" />
       </ErrorPrimitive.Root>
     </MessagePrimitive.Error>
@@ -403,10 +393,11 @@ const AssistantMessage: FC = () => {
             switch (part.type) {
               case "group-chainOfThought":
                 return <div data-slot="aui_chain-of-thought">{children}</div>
+
               case "group-reasoning": {
                 const running = part.status.type === "running"
                 return (
-                  <ReasoningRoot defaultOpen={running}>
+                  <ReasoningRoot defaultOpen={running} variant="ghost">
                     <ReasoningTrigger active={running} />
                     <ReasoningContent aria-busy={running}>
                       <ReasoningText>{children}</ReasoningText>
@@ -414,9 +405,10 @@ const AssistantMessage: FC = () => {
                   </ReasoningRoot>
                 )
               }
+
               case "group-tool":
                 return (
-                  <ToolGroupRoot variant={"ghost"} defaultOpen>
+                  <ToolGroupRoot variant="ghost" defaultOpen>
                     <ToolGroupTrigger
                       count={part.indices.length}
                       active={part.status.type === "running"}
@@ -424,17 +416,23 @@ const AssistantMessage: FC = () => {
                     <ToolGroupContent>{children}</ToolGroupContent>
                   </ToolGroupRoot>
                 )
-              case "text":
+
+              case "text": {
                 return <MarkdownText />
+              }
+
               case "reasoning":
                 return <Reasoning {...part} />
+
               case "tool-call":
-                return part.toolUI ?? <ToolFallback {...part} />
+                return <ToolCallDisplay {...part} />
+
               default:
                 return null
             }
           }}
         </MessagePrimitive.GroupedParts>
+
         <MessageError />
       </div>
 
@@ -447,6 +445,19 @@ const AssistantMessage: FC = () => {
       </div>
     </MessagePrimitive.Root>
   )
+}
+
+const ToolCallDisplay: FC<ToolCallMessagePartProps> = (part) => {
+  const Render = useAuiState((s) => {
+    const entry = s.tools.tools[part.toolName] as
+      | ToolCallMessagePartComponent
+      | ToolCallMessagePartComponent[]
+      | undefined
+
+    return Array.isArray(entry) ? entry[0] : entry
+  })
+
+  return Render ? <Render {...part} /> : <ToolFallback {...part} />
 }
 
 const AssistantActionBar: FC = () => {
@@ -536,11 +547,11 @@ const UserActionBar: FC = () => {
         render={
           <TooltipIconButton
             tooltip="Edit"
-            className="aui-user-action-edit p-4"
+            className="aui-user-action-edit p-2.5 text-muted-foreground hover:text-foreground data-[state=open]:bg-accent"
           />
         }
       >
-        <PencilIcon className="h-4 w-4" />
+        <PencilIcon />
       </ActionBarPrimitive.Edit>
     </ActionBarPrimitive.Root>
   )

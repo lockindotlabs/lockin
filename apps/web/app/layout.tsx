@@ -7,7 +7,8 @@ import {
   Inter_Tight,
   IBM_Plex_Mono,
 } from "next/font/google"
-import "@workspace/ui/globals.css"
+import "katex/dist/katex.min.css"
+;("@workspace/ui/globals.css")
 import { Providers } from "@/components/providers"
 import { cn } from "@workspace/ui/lib/utils"
 import "@workspace/ui/styles/globals.css"

@@ -136,9 +136,12 @@ function ModelSelectorValue() {
   )
 }
 
-export type ModelSelectorContentProps = ComponentPropsWithoutRef<
-  typeof SelectContent
->
+export type ModelSelectorContentProps = Omit<
+  ComponentPropsWithoutRef<typeof SelectContent>,
+  "children"
+> & {
+  children?: React.ReactNode
+}
 
 function ModelSelectorContent({
   className,
@@ -150,7 +153,7 @@ function ModelSelectorContent({
   return (
     <SelectContent
       data-slot="model-selector-content"
-      className={cn("max-w-80 min-w-60", className)}
+      className={cn("max-w-60", className)}
       {...props}
     >
       {children ??
@@ -163,7 +166,7 @@ function ModelSelectorContent({
         ))}
       <SelectSeparator />
       <p className="p-2 py-1 text-xs text-muted-foreground">
-        Models with higher capabilities would cost more.
+        Models with higher capabilities would cost more tokens.
       </p>
     </SelectContent>
   )
@@ -189,7 +192,7 @@ function ModelSelectorItem({
       className={cn(
         "relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 ps-3 pe-9 text-sm outline-none select-none",
         "focus:bg-accent focus:text-accent-foreground",
-        "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "data-disabled:pointer-events-none data-disabled:opacity-50",
         className
       )}
       {...props}

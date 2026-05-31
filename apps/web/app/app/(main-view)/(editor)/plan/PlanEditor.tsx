@@ -364,7 +364,7 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
     <>
       <div className="flex h-screen" data-plan-id={planId}>
         <div className="flex-1">
-          <header className="flex h-14 shrink-0 items-center gap-2">
+          <header className="flex h-12 shrink-0 items-center gap-2">
             <div className="flex flex-1 items-center gap-2 px-3">
               <SidebarTrigger
                 className={`${state == "expanded" && "pointer-events-none opacity-0"} transition-all`}

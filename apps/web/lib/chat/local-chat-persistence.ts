@@ -28,6 +28,10 @@ function emitChatChanges() {
   window.dispatchEvent(new Event(CHAT_CHANGE_EVENT))
 }
 
+export function notifyChatChanged() {
+  emitChatChanges()
+}
+
 function readChatIndex() {
   if (!canUseStorage()) return []
 

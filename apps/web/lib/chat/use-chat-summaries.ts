@@ -3,10 +3,10 @@
 import * as React from "react"
 
 import {
-  listChatSummaries,
   subscribeToChatChanges,
   type ChatSummary,
 } from "./local-chat-persistence"
+import { listDbChats } from "./db-chat-client"
 
 export function useChatSummaries() {
   const [chats, setChats] = React.useState<ChatSummary[]>([])
@@ -20,8 +20,23 @@ export function useChatSummaries() {
         return
       }
 
-      setChats(listChatSummaries())
-      setIsLoaded(true)
+      listDbChats()
+        .then((nextChats) => {
+          if (!isActive) {
+            return
+          }
+
+          setChats(nextChats)
+          setIsLoaded(true)
+        })
+        .catch(() => {
+          if (!isActive) {
+            return
+          }
+
+          setChats([])
+          setIsLoaded(true)
+        })
     }
 
     loadChats()

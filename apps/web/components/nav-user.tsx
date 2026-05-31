@@ -4,6 +4,7 @@ import {
   ChevronsUpDown,
   CreditCard,
   LogOut,
+  SparkleIcon,
   Sparkles,
   UserIcon,
 } from "lucide-react"
@@ -28,6 +29,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
+import { Progress } from "@workspace/ui/components/progress"
 import { useClerk, useUser } from "@clerk/nextjs"
 
 export function NavUser() {
@@ -73,38 +75,37 @@ export function NavUser() {
             sideOffset={4}
           >
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="p-0 font-normal">
-                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  <Avatar className="h-8 w-8 rounded-full">
-                    <AvatarImage
-                      src={user?.imageUrl}
-                      alt={
-                        user?.fullName || user?.emailAddresses[0]?.emailAddress
-                      }
-                    />
-                    <AvatarFallback className="rounded-full">
-                      <UserIcon />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">
-                      {user?.fullName}
+              {/* Credits card (informational) */}
+              <DropdownMenuItem className="">
+                <div className="w-full">
+                  <div className="flex items-start justify-between">
+                    <span className="text-sm font-medium">Credits</span>
+                  </div>
+
+                  <div className="mt-1 flex items-baseline gap-2">
+                    <span className="text-xl font-medium tracking-tight">
+                      7,250
                     </span>
-                    <span className="truncate text-xs">
-                      {user?.emailAddresses[0]?.emailAddress}
+                    <span className="text-sm text-muted-foreground">
+                      / 10,000
                     </span>
                   </div>
+
+                  <Progress value={72} className="mt-3 w-full" />
+
+                  <div className="mt-3 text-xs text-muted-foreground">
+                    Refills in 11 days
+                  </div>
                 </div>
-              </DropdownMenuLabel>
+              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
+                <SparkleIcon />
+                Upgrade
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => openUserProfile()}>
                 <BadgeCheck />
@@ -114,16 +115,14 @@ export function NavUser() {
                 <CreditCard />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => signOut()}>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
+            <DropdownMenuGroup>
+              <DropdownMenuItem variant="destructive" onClick={() => signOut()}>
+                <LogOut />
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

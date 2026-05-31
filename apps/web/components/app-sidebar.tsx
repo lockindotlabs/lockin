@@ -9,18 +9,26 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarMenuButton,
+  SidebarMenuItem,
   SidebarRail,
   SidebarTrigger,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@workspace/ui/components/popover"
 import {
   SearchIcon,
   HomeIcon,
   CalendarIcon,
   Settings2Icon,
   PlusIcon,
+  Circle,
 } from "lucide-react"
-import { clearChatMessages } from "@/lib/chat/local-chat-persistence"
+import { deleteDbChat } from "@/lib/chat/db-chat-client"
 import { useChatSummaries } from "@/lib/chat/use-chat-summaries"
 import { deletePlan } from "@/lib/plans/plan-repository"
 import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
@@ -89,12 +97,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       icon: <AiPlannerIcon />,
       isActive: pathname === "/app/ask",
     },
-    {
-      title: "New plan",
-      url: "/app/plan",
-      icon: <PlusIcon />,
-      isActive: pathname === "/app/plan" || pathname.startsWith("/app/plan/"),
-    },
   ]
 
   const recentChats: FavoriteItem[] = chats.slice(0, 10).map((chat) => ({
@@ -134,13 +136,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     }
   }
 
-  const handleDeleteChat = (item: FavoriteItem) => {
+  const handleDeleteChat = async (item: FavoriteItem) => {
     const shouldDelete = window.confirm(`Delete "${item.name}"?`)
     if (!shouldDelete) {
       return
     }
 
-    clearChatMessages(`ask:${item.id}`)
+    await deleteDbChat(item.id)
 
     if (pathname === "/app/ask" && searchParams.get("id") === item.id) {
       router.replace(buildAskHref())
@@ -154,7 +156,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       collapsible="offcanvas"
     >
       <SidebarHeader>
-        <div className="flex items-center justify-between gap-2 py-1 pr-1">
+        <div className="flex items-center justify-between gap-2 pr-1">
           <LogoAccent
             className="h-8 cursor-pointer"
             onClick={() => {
@@ -165,6 +167,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             className={`${state == "collapsed" && "pointer-events-none opacity-0"} transition-opacity`}
           />
         </div>
+        <SidebarMenuItem>
+          <Button
+            variant={"outline"}
+            className="w-full border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          >
+            <PlusIcon data-icon="inline-start" />
+            New Plan
+          </Button>
+        </SidebarMenuItem>
         <NavMain items={navMain} />
       </SidebarHeader>
       <SidebarContent>
@@ -183,6 +194,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* <NavSecondary items={navSecondary} className="mt-auto" / */}
       </SidebarContent>
       <SidebarFooter>
+        <Popover>
+          <PopoverTrigger
+            render={
+              <Button size="lg" variant="outline" className="w-full">
+                <Circle />
+                <span>Credits</span>
+              </Button>
+            }
+          />
+          <PopoverContent
+            align="center"
+            side="top"
+            sideOffset={8}
+            className="min-w-40"
+          >
+            Credits content
+          </PopoverContent>
+        </Popover>
         <React.Suspense fallback={<NavUserSkeleton />}>
           <NavUser />
         </React.Suspense>

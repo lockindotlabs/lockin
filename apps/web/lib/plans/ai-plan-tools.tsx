@@ -27,6 +27,7 @@ import {
   type SavedPlan,
   type SavedPlanTask,
 } from "@/lib/plans/plan-repository"
+import { buildPlanHref } from "../routing/plan-url"
 
 export const AI_PLAN_REWRITE_EVENT = "lockin:ai-plan-rewritten"
 

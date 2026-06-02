@@ -1,7 +1,49 @@
-# apps/web/apphosting.yaml
+# yamlVersion: v1beta
 
-runConfig:
-  minInstances: 0
-  maxInstances: 2
-  cpu: 1
-  memoryMiB: 512
+# # This matches the "Environment name" field from your screenshot
+# environments:
+#   develop:
+#     env:
+#       - variable: NEXT_PUBLIC_CLERK_SIGN_IN_URL
+#         value: /app/sign-in
+#       - variable: NEXT_PUBLIC_CLERK_SIGN_UP_URL
+#         value: /app/sign-up
+#       - variable: NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL
+#         value: /app
+#       - variable: NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL
+#         value: /app
+#       - variable: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+#         value: pk_test_cHJpbWFyeS1zb2xlLTc0LmNsZXJrLmFjY291bnRzLmRldiQ
+#         availability:
+#           - BUILD
+#           - RUNTIME
+#       - variable: CLERK_WEBHOOK_SECRET
+#         secret: CLERK_WEBHOOK_SECRET_DEVELOP
+#         availability:
+#           - BUILD
+#           - RUNTIME
+#       - variable: CLERK_SECRET_KEY
+#         secret: CLERK_SECRET_KEY_DEVELOP
+#         availability:
+#           - BUILD
+#           - RUNTIME
+#       - variable: GOOGLE_GENERATIVE_AI_API_KEY
+#         secret: GOOGLE_GENERATIVE_AI_API_KEY_DEVELOP
+#         availability:
+#           - BUILD
+#           - RUNTIME
+#       - variable: DATABASE_URL
+#         secret: DATABASE_URL_DEVELOP
+#         availability:
+#           - BUILD
+#           - RUNTIME
+#       - variable: DIRECT_URL
+#         secret: DIRECT_URL_DEVELOP
+#         availability:
+#           - BUILD
+#           - RUNTIME
+# runConfig:
+#   minInstances: 0
+#   maxInstances: 2
+#   cpu: 1
+#   memoryMiB: 512

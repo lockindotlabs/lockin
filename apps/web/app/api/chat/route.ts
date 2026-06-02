@@ -122,10 +122,10 @@ export async function POST(req: Request) {
 
   const previousMessages = parseStoredMessages(existingChat.messages)
   const submittedMessages =
-    message != null
-      ? [...previousMessages, message]
-      : Array.isArray(bodyMessages)
-        ? bodyMessages
+    Array.isArray(bodyMessages)
+      ? bodyMessages
+      : message != null
+        ? [...previousMessages, message]
         : null
 
   if (!submittedMessages) {
@@ -171,7 +171,14 @@ When using webSearch, ground the answer in the search results and include releva
 Use createPlan when the user asks to create, build, save, or start a new plan.
 Use rewriteActivePlan when the user asks to revise, simplify, expand, reschedule, or otherwise rewrite the currently open plan.
 Only use rewriteActivePlan for the active plan. If no plan is open, ask the user to open or create one first.
-After createPlan or rewriteActivePlan succeeds, always send a text message. If the tool result includes confirmation, use that confirmation text exactly and do not add a longer summary. If a tool returns ok: false, explain the reason and ask for the next needed step.`,
+After createPlan or rewriteActivePlan succeeds, always send a text message. If the tool result includes confirmation, use that confirmation text exactly and do not add a longer summary. If a tool returns ok: false, explain the reason and ask for the next needed step.
+
+You can ask bounded multiple-choice clarifying questions with the askChoicesBatch frontend tool.
+Prefer askChoicesBatch for all clarification questions, including when you only need one question.
+Use one askChoicesBatch call instead of multiple separate askChoice calls. Include 1-5 questions per batch, each with 2-6 mutually exclusive options.
+Do not use askChoicesBatch for open-ended conversation. Use it instead of guessing when the next plan or task choice depends on the user's preference.
+Wait for the batch result before asking another batch. After the tool returns, continue from the selected, custom, or skipped answers.
+The older askChoice tool exists only for compatibility with existing conversations; do not prefer it for new clarifying questions.`,
     ]
       .filter(Boolean)
       .join("\n\n"),
@@ -180,7 +187,7 @@ After createPlan or rewriteActivePlan succeeds, always send a text message. If t
       ignoreIncompleteToolCalls: true,
     }),
     tools: allTools,
-    stopWhen: stepCountIs(3),
+    stopWhen: stepCountIs(5),
   })
 
   result.consumeStream({

@@ -1,4 +1,5 @@
 # apps/web/apphosting.production.yaml
+yamlVersion: v1beta
 
 env:
   - variable: NEXT_PUBLIC_APP_ENV
@@ -19,8 +20,38 @@ env:
       - BUILD
       - RUNTIME
 
+  - variable: NEXT_PUBLIC_CLERK_SIGN_IN_URL
+    secret: NEXT_PUBLIC_CLERK_SIGN_IN_URL_PRODUCTION
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_CLERK_SIGN_UP_URL
+    secret: NEXT_PUBLIC_CLERK_SIGN_UP_URL_PRODUCTION
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL
+    secret: NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL_PRODUCTION
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL
+    secret: NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL_PRODUCTION
+    availability:
+      - BUILD
+      - RUNTIME
+
   - variable: CLERK_SECRET_KEY
     secret: CLERK_SECRET_KEY_PRODUCTION
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: CLERK_WEBHOOK_SECRET
+    secret: CLERK_WEBHOOK_SECRET_PRODUCTION
     availability:
       - BUILD
       - RUNTIME
@@ -28,6 +59,12 @@ env:
   - variable: GOOGLE_GENERATIVE_AI_API_KEY
     secret: GOOGLE_GENERATIVE_AI_API_KEY_PRODUCTION
     availability:
+      - RUNTIME
+
+  - variable: TAVILY_API_KEY
+    secret: TAVILY_API_KEY_PRODUCTION
+    availability:
+      - BUILD
       - RUNTIME
 
 runConfig:

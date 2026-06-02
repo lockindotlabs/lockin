@@ -58,6 +58,7 @@ export const ModelName = {
   Project: 'Project',
   Plan: 'Plan',
   Task: 'Task',
+  PlanStep: 'PlanStep',
   FocusSession: 'FocusSession'
 } as const
 
@@ -142,10 +143,17 @@ export const PlanScalarFieldEnum = {
   userId: 'userId',
   projectId: 'projectId',
   name: 'name',
+  description: 'description',
   goal: 'goal',
+  completion: 'completion',
   status: 'status',
+  source: 'source',
+  aiMode: 'aiMode',
+  breakdownIntensity: 'breakdownIntensity',
+  totalEstimatedMinutes: 'totalEstimatedMinutes',
   startDate: 'startDate',
   endDate: 'endDate',
+  deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -156,18 +164,35 @@ export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof Plan
 export const TaskScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  planId: 'planId',
   title: 'title',
   description: 'description',
   status: 'status',
   priority: 'priority',
   dueDate: 'dueDate',
+  durationMinutes: 'durationMinutes',
   order: 'order',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
+
+
+export const PlanStepScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  planId: 'planId',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  dueDate: 'dueDate',
+  estimatedMinutes: 'estimatedMinutes',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlanStepScalarFieldEnum = (typeof PlanStepScalarFieldEnum)[keyof typeof PlanStepScalarFieldEnum]
 
 
 export const FocusSessionScalarFieldEnum = {
@@ -177,6 +202,11 @@ export const FocusSessionScalarFieldEnum = {
   startedAt: 'startedAt',
   endedAt: 'endedAt',
   duration: 'duration',
+  plannedDuration: 'plannedDuration',
+  overtimeDuration: 'overtimeDuration',
+  completionType: 'completionType',
+  tasksSnapshot: 'tasksSnapshot',
+  slipCount: 'slipCount',
   createdAt: 'createdAt'
 } as const
 
@@ -196,6 +226,14 @@ export const JsonNullValueInput = {
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {

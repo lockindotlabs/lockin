@@ -84,6 +84,8 @@ export function Assistant({
           return { body: { ...body, messages } }
         }
 
+        const lastMessage = messages[messages.length - 1]
+
         return {
           body: {
             ...body,

@@ -207,7 +207,7 @@ export function AskPageClient() {
           type="button"
           variant="ghost"
           size="icon-sm"
-          className="absolute top-3 left-2.5 z-20 bg-background"
+          className="absolute top-2 left-2.5 z-20 bg-background"
           aria-label="Close editor"
           onClick={closeEditor}
         >

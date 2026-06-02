@@ -15,6 +15,7 @@ model User {
   settings        UserSettings?
   projects        Project[]
   plans           Plan[]
+  planSteps       PlanStep[]
   chats           Chat[]
   tasks           Task[]
   focusSessions   FocusSession[]
@@ -65,48 +66,87 @@ model Project {
 }
 
 model Plan {
-  id            String         @id @default(cuid())
-  userId        String
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  projectId     String?
-  project       Project?       @relation(fields: [projectId], references: [id], onDelete: SetNull)
-  name          String
-  goal          String?
-  status        PlanStatus     @default(PLANNING)
-  startDate     DateTime?
-  endDate       DateTime?
-  tasks         Task[]
-  focusSessions FocusSession[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id                    String             @id @default(cuid())
+  userId                String
+  user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId             String?
+  project               Project?           @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  name                  String
+  description           String?
+  goal                  String?
+  completion            String?
+  status                PlanStatus         @default(PLANNING)
+  source                PlanSource         @default(MANUAL)
+  aiMode                PlanAiMode         @default(MANUAL)
+  breakdownIntensity    BreakdownIntensity @default(NORMAL)
+  totalEstimatedMinutes Int                @default(0)
+  startDate             DateTime?
+  endDate               DateTime?
+  deletedAt             DateTime?
+  steps                 PlanStep[]
+  focusSessions         FocusSession[]
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+
+  @@index([userId, deletedAt])
 }
 
 model Task {
-  id          String     @id @default(cuid())
-  userId      String
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  planId      String?
-  plan        Plan?      @relation(fields: [planId], references: [id], onDelete: SetNull)
-  title       String
-  description String?
-  status      TaskStatus @default(TODO)
-  priority    Priority   @default(MEDIUM)
-  dueDate     DateTime?
-  order       Int        @default(0)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id              String     @id @default(cuid())
+  userId          String
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title           String
+  description     String?
+  status          TaskStatus @default(TODO)
+  priority        Priority   @default(MEDIUM)
+  dueDate         DateTime?
+  durationMinutes Int?
+  order           Int        @default(0)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model PlanStep {
+  id               String         @id @default(cuid())
+  userId           String
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId           String
+  plan             Plan           @relation(fields: [planId], references: [id], onDelete: Cascade)
+  title            String
+  description      String?
+  status           PlanStepStatus @default(TODO)
+  dueDate          DateTime?
+  estimatedMinutes Int            @default(30)
+  order            Int            @default(0)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([userId])
+  @@index([planId])
+  @@index([planId, order])
 }
 
 model FocusSession {
-  id        String    @id @default(cuid())
-  userId    String
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  planId    String
-  plan      Plan      @relation(fields: [planId], references: [id], onDelete: Cascade)
-  startedAt DateTime  @default(now())
-  endedAt   DateTime?
-  duration  Int?      // seconds, computed on end
-  createdAt DateTime  @default(now())
+  id               String          @id @default(cuid())
+  userId           String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId           String?
+  plan             Plan?           @relation(fields: [planId], references: [id], onDelete: SetNull)
+  startedAt        DateTime        @default(now())
+  endedAt          DateTime?
+  duration         Int?
+  plannedDuration  Int?
+  overtimeDuration Int?            @default(0)
+  completionType   CompletionType?
+  tasksSnapshot    Json?
+  slipCount        Int?            @default(0)
+  createdAt        DateTime        @default(now())
+}
+
+enum CompletionType {
+  EARLY
+  NORMAL
+  OVERTIME
 }
 
 enum TaskStatus {
@@ -121,6 +161,29 @@ enum PlanStatus {
   ACTIVE
   COMPLETED
   CANCELLED
+}
+
+enum PlanStepStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+  CANCELLED
+}
+
+enum PlanSource {
+  MANUAL
+  AI
+}
+
+enum PlanAiMode {
+  MANUAL
+  ASSISTED
+}
+
+enum BreakdownIntensity {
+  LOW_ENERGY
+  NORMAL
+  HIGH_ENERGY
 }
 
 enum ChatStatus {

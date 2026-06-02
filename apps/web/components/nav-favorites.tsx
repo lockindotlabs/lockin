@@ -17,6 +17,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
+import { Skeleton } from "@workspace/ui/components/skeleton"
 import {
   MoreHorizontalIcon,
   LinkIcon,
@@ -37,11 +38,13 @@ export function NavFavorites({
   favorites,
   label = "Favorites",
   emptyLabel,
+  isLoading = false,
   onDelete,
 }: {
   favorites: FavoriteItem[]
   label?: string
   emptyLabel?: string
+  isLoading?: boolean
   onDelete?: (item: FavoriteItem) => void
 }) {
   const { isMobile } = useSidebar()
@@ -49,7 +52,18 @@ export function NavFavorites({
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>{label}</SidebarGroupLabel>
       <SidebarMenu>
-        {favorites.length === 0 && emptyLabel && (
+        {isLoading && (
+          <>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <SidebarMenuItem key={index}>
+                <div className="flex items-center gap-2 rounded-md px-2 py-1.5">
+                  <Skeleton className="h-3 w-28 rounded-full" />
+                </div>
+              </SidebarMenuItem>
+            ))}
+          </>
+        )}
+        {!isLoading && favorites.length === 0 && emptyLabel && (
           <SidebarMenuItem>
             <div className="px-2 py-1 text-xs text-sidebar-foreground/60">
               {emptyLabel}

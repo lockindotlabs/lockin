@@ -168,6 +168,9 @@ function buildPlan(input: PlanToolInput, existingPlan?: SavedPlan): SavedPlan {
     createdAt: existingPlan?.createdAt ?? now,
     updatedAt: now,
     version: 1,
+    source: "AI",
+    aiMode: "ASSISTED",
+    breakdownIntensity: existingPlan?.breakdownIntensity ?? "NORMAL",
   }
 }
 
@@ -233,7 +236,6 @@ type PlanToolCardProps = {
 function PlanToolResultCard({
   action,
   args,
-  chatSessionId,
   isError,
   result,
   status,
@@ -270,7 +272,7 @@ function PlanToolResultCard({
         ? String(status.error)
         : "Something interrupted the plan update. Try again when you are ready."
   const planHref = successResult
-    ? getPlanHref(successResult.planId, chatSessionId)
+    ? buildPlanHref({ planId: successResult.planId })
     : undefined
   const [fallbackPlanId, setFallbackPlanId] = React.useState<string | null>(
     null
@@ -306,7 +308,7 @@ function PlanToolResultCard({
 
   const resolvedPlanHref =
     planHref ??
-    (fallbackPlanId ? getPlanHref(fallbackPlanId, chatSessionId) : undefined)
+    (fallbackPlanId ? buildPlanHref({ planId: fallbackPlanId }) : undefined)
 
   return (
     <div
@@ -441,13 +443,7 @@ export function PlanAssistantTools({
   const renderRewriteActivePlanTool = useInlineRender<
     PlanToolInput,
     PlanToolResult
-  >((props) => (
-    <PlanToolResultCard
-      {...props}
-      action="rewrite"
-      chatSessionId={chatSessionId}
-    />
-  ))
+  >((props) => <PlanToolResultCard {...props} action="rewrite" />)
 
   const createPlanTool = React.useMemo(
     () => ({

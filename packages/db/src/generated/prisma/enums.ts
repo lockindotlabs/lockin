@@ -9,6 +9,15 @@
 * 🟢 You can import this file directly.
 */
 
+export const CompletionType = {
+  EARLY: 'EARLY',
+  NORMAL: 'NORMAL',
+  OVERTIME: 'OVERTIME'
+} as const
+
+export type CompletionType = (typeof CompletionType)[keyof typeof CompletionType]
+
+
 export const TaskStatus = {
   TODO: 'TODO',
   IN_PROGRESS: 'IN_PROGRESS',
@@ -27,6 +36,41 @@ export const PlanStatus = {
 } as const
 
 export type PlanStatus = (typeof PlanStatus)[keyof typeof PlanStatus]
+
+
+export const PlanStepStatus = {
+  TODO: 'TODO',
+  IN_PROGRESS: 'IN_PROGRESS',
+  DONE: 'DONE',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type PlanStepStatus = (typeof PlanStepStatus)[keyof typeof PlanStepStatus]
+
+
+export const PlanSource = {
+  MANUAL: 'MANUAL',
+  AI: 'AI'
+} as const
+
+export type PlanSource = (typeof PlanSource)[keyof typeof PlanSource]
+
+
+export const PlanAiMode = {
+  MANUAL: 'MANUAL',
+  ASSISTED: 'ASSISTED'
+} as const
+
+export type PlanAiMode = (typeof PlanAiMode)[keyof typeof PlanAiMode]
+
+
+export const BreakdownIntensity = {
+  LOW_ENERGY: 'LOW_ENERGY',
+  NORMAL: 'NORMAL',
+  HIGH_ENERGY: 'HIGH_ENERGY'
+} as const
+
+export type BreakdownIntensity = (typeof BreakdownIntensity)[keyof typeof BreakdownIntensity]
 
 
 export const ChatStatus = {

@@ -33,6 +33,7 @@ import { useChatSummaries } from "@/lib/chat/use-chat-summaries"
 import { deletePlan } from "@/lib/plans/plan-repository"
 import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
 import { buildAskHref } from "@/lib/routing/ask-url"
+import { buildPlanHref } from "@/lib/routing/plan-url"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import type { FavoriteItem } from "@/components/nav-favorites"
 import { LogoAccent } from "@workspace/ui/components/logo-accent"
@@ -71,8 +72,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const { plans } = usePlanSummaries()
-  const { chats } = useChatSummaries()
+  const { plans, isLoaded: arePlansLoaded } = usePlanSummaries()
+  const { chats, isLoaded: areChatsLoaded } = useChatSummaries()
   const { state } = useSidebar()
 
   const currentChatId = searchParams.get("id") ?? searchParams.get("t")
@@ -111,12 +112,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const recentPlans: FavoriteItem[] = plans.slice(0, 10).map((plan) => ({
     id: plan.id,
     name: plan.title.trim() || "Untitled Plan",
-    url: `/app/plan?id=${plan.id}`,
+    url: buildPlanHref({ planId: plan.id }),
     isActive:
       (pathname === "/app/ask" && currentPlanId === plan.id) ||
       (pathname === "/app/plan" && currentPlanId === plan.id) ||
       pathnamePlanId === plan.id,
   }))
+
+  const handleCreatePlan = () => {
+    router.push(buildPlanHref())
+  }
 
   const handleDeletePlan = async (item: FavoriteItem) => {
     const shouldDelete = window.confirm(`Delete "${item.name}"?`)
@@ -171,6 +176,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <Button
             variant={"outline"}
             className="w-full border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            onClick={handleCreatePlan}
           >
             <PlusIcon data-icon="inline-start" />
             New Plan
@@ -183,12 +189,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           label="Recent chats"
           emptyLabel="No recent chats yet"
           favorites={recentChats}
+          isLoading={!areChatsLoaded}
           onDelete={handleDeleteChat}
         />
         <NavFavorites
           label="Recent plans"
           emptyLabel="No saved plans yet"
           favorites={recentPlans}
+          isLoading={!arePlansLoaded}
           onDelete={handleDeletePlan}
         />
         {/* <NavSecondary items={navSecondary} className="mt-auto" / */}

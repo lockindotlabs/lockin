@@ -15,14 +15,23 @@ export function usePlanSummaries() {
     let isActive = true
 
     const loadPlans = () => {
-      void listPlans().then((nextPlans) => {
-        if (!isActive) {
-          return
-        }
+      void listPlans()
+        .then((nextPlans) => {
+          if (!isActive) {
+            return
+          }
 
-        setPlans(nextPlans)
-        setIsLoaded(true)
-      })
+          setPlans(nextPlans)
+          setIsLoaded(true)
+        })
+        .catch(() => {
+          if (!isActive) {
+            return
+          }
+
+          setPlans([])
+          setIsLoaded(true)
+        })
     }
 
     loadPlans()

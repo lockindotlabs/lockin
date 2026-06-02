@@ -26,6 +26,32 @@ type ChatConfig = {
   capabilities?: string[]
 }
 
+function isPendingToolPart(part: UIMessage["parts"][number]) {
+  return (
+    typeof part.type === "string" &&
+    (part.type === "dynamic-tool" || part.type.startsWith("tool-")) &&
+    "state" in part &&
+    (part.state === "input-streaming" ||
+      part.state === "input-available" ||
+      part.state === "approval-requested")
+  )
+}
+
+function removePendingToolCalls(messages: UIMessage[]) {
+  return messages
+    .map((message) => {
+      if (message.role !== "assistant") {
+        return message
+      }
+
+      return {
+        ...message,
+        parts: message.parts.filter((part) => !isPendingToolPart(part)),
+      }
+    })
+    .filter((message) => message.role !== "assistant" || message.parts.length > 0)
+}
+
 export async function POST(req: Request) {
   const env = process.env as unknown as Record<string, string | undefined>
   const user = await getCurrentDbUser()
@@ -34,7 +60,14 @@ export async function POST(req: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const { id, message, messages: bodyMessages, system, tools, config } = (await req.json()) as {
+  const {
+    id,
+    message,
+    messages: bodyMessages,
+    system,
+    tools,
+    config,
+  } = (await req.json()) as {
     id?: string
     message?: UIMessage
     messages?: UIMessage[]
@@ -100,7 +133,7 @@ export async function POST(req: Request) {
   }
 
   const validatedMessages = await validateUIMessages({
-    messages: submittedMessages,
+    messages: removePendingToolCalls(submittedMessages),
   })
 
   await prisma.chat.update({
@@ -149,7 +182,10 @@ The older askChoice tool exists only for compatibility with existing conversatio
     ]
       .filter(Boolean)
       .join("\n\n"),
-    messages: await convertToModelMessages(validatedMessages),
+    messages: await convertToModelMessages(validatedMessages, {
+      tools: allTools,
+      ignoreIncompleteToolCalls: true,
+    }),
     tools: allTools,
     stopWhen: stepCountIs(5),
   })

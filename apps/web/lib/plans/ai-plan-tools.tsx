@@ -19,6 +19,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 
 import { buttonVariants } from "@workspace/ui/components/button"
 import { cn } from "@workspace/ui/lib/utils"
+import { buildAskHref } from "@/lib/routing/ask-url"
 import {
   getPlan,
   listPlans,
@@ -189,7 +190,7 @@ function getPlanConfirmation(
   return `Done - I ${action} "${title}" with ${formatStepCount(taskCount)}.`
 }
 
-function getPlanHref(planId: string, chatSessionId: string | null) {
+function getPlanHref(planId: string, chatSessionId?: string | null) {
   const nextParams = new URLSearchParams()
 
   if (chatSessionId) {
@@ -225,7 +226,7 @@ const planToolCopy = {
 
 type PlanToolCardProps = {
   action: keyof typeof planToolCopy
-  chatSessionId: string | null
+  chatSessionId?: string | null
   className?: string
 } & ToolCallMessagePartProps<PlanToolInput, PlanToolResult>
 
@@ -414,18 +415,25 @@ function PlanPreview({
   )
 }
 
-export function PlanAssistantTools() {
+export function PlanAssistantTools({
+  chatSessionId,
+  ensureChatId,
+}: {
+  chatSessionId?: string | null
+  ensureChatId?: () => Promise<string>
+} = {}) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const activePlanId = searchParams.get("p")
-  const chatSessionId = searchParams.get("id") ?? searchParams.get("t")
+  const urlChatSessionId = searchParams.get("id") ?? searchParams.get("t")
+  const effectiveChatSessionId = chatSessionId ?? urlChatSessionId
 
   const renderCreatePlanTool = useInlineRender<PlanToolInput, PlanToolResult>(
     (props) => (
       <PlanToolResultCard
         {...props}
         action="create"
-        chatSessionId={chatSessionId}
+        chatSessionId={effectiveChatSessionId}
       />
     )
   )
@@ -449,16 +457,17 @@ export function PlanAssistantTools() {
       parameters: planInputSchema,
       execute: async (input: PlanToolInput): Promise<PlanToolResult> => {
         const plan = buildPlan(input)
+        const nextChatSessionId =
+          effectiveChatSessionId ?? (ensureChatId ? await ensureChatId() : null)
 
         await savePlan(plan)
-        const nextParams = new URLSearchParams()
-
-        if (chatSessionId) {
-          nextParams.set("id", chatSessionId)
-        }
-
-        nextParams.set("p", plan.id)
-        router.push(`/app/ask?${nextParams.toString()}`)
+        router.push(
+          buildAskHref({
+            chatSessionId: nextChatSessionId ?? undefined,
+            planId: plan.id,
+            currentSearchParams: searchParams,
+          })
+        )
 
         return {
           ok: true,
@@ -474,7 +483,7 @@ export function PlanAssistantTools() {
         }
       },
     }),
-    [chatSessionId, router]
+    [effectiveChatSessionId, ensureChatId, router, searchParams]
   )
 
   const rewriteActivePlanTool = React.useMemo(

@@ -10,9 +10,10 @@ import {
   AssistantChatTransport,
   useChatRuntime,
 } from "@assistant-ui/react-ai-sdk"
-import type { UIMessage } from "ai"
+import { lastAssistantMessageIsCompleteWithToolCalls, type UIMessage } from "ai"
 import { useEffect, useMemo, useRef } from "react"
 
+import { AskChoiceTool } from "@/components/ask-choice-tool-ui"
 import { Thread } from "@/components/thread"
 import { WebSearchAssistantToolUI } from "@/components/web-search-tool-ui"
 import {
@@ -57,6 +58,7 @@ export function Assistant({
   const runtime = useChatRuntime({
     id: chatId ?? sessionKey,
     messages: initialMessages,
+    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
     onFinish: ({ messages }) => {
       if (!chatIdRef.current && !ensureChatIdRef.current) {
         saveChatMessages(sessionKey, messages)
@@ -86,7 +88,7 @@ export function Assistant({
           body: {
             ...body,
             id: requestChatId,
-            message: messages[messages.length - 1],
+            messages,
           },
         }
       },
@@ -114,7 +116,8 @@ export function Assistant({
   return (
     <AssistantRuntimeProvider key={sessionKey} runtime={runtime} aui={aui}>
       <InitialPromptSender prompt={initialPrompt} sessionKey={sessionKey} />
-      <PlanAssistantTools />
+      <PlanAssistantTools chatSessionId={chatId} ensureChatId={ensureChatId} />
+      <AskChoiceTool />
       <WebSearchAssistantToolUI />
       <Thread mode={mode} />
       {/* <DevToolsFrame className="min-h-200 w-full" /> */}

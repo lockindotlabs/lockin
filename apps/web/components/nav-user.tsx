@@ -3,10 +3,13 @@ import {
   Bell,
   ChevronsUpDown,
   CreditCard,
+  LifeBuoyIcon,
   LogOut,
+  Settings2Icon,
   SparkleIcon,
   Sparkles,
   UserIcon,
+  UserRoundIcon,
 } from "lucide-react"
 
 import {
@@ -29,7 +32,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
-import { Progress } from "@workspace/ui/components/progress"
 import { useClerk, useUser } from "@clerk/nextjs"
 
 export function NavUser() {
@@ -70,54 +72,26 @@ export function NavUser() {
           ></DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? "bottom" : "top"}
             align="end"
-            sideOffset={4}
+            sideOffset={12}
           >
             <DropdownMenuGroup>
-              {/* Credits card (informational) */}
-              <DropdownMenuItem className="">
-                <div className="w-full">
-                  <div className="flex items-start justify-between">
-                    <span className="text-sm font-medium">Credits</span>
-                  </div>
-
-                  <div className="mt-1 flex items-baseline gap-2">
-                    <span className="text-xl font-medium tracking-tight">
-                      7,250
-                    </span>
-                    <span className="text-sm text-muted-foreground">
-                      / 10,000
-                    </span>
-                  </div>
-
-                  <Progress value={72} className="mt-3 w-full" />
-
-                  <div className="mt-3 text-xs text-muted-foreground">
-                    Refills in 11 days
-                  </div>
-                </div>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <SparkleIcon />
-                Upgrade
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuGroup>
               <DropdownMenuItem onClick={() => openUserProfile()}>
-                <BadgeCheck />
-                Account
+                <UserRoundIcon />
+                Profile
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <CreditCard />
-                Billing
+                <Settings2Icon />
+                Settings
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <LifeBuoyIcon />
+                Support
+              </DropdownMenuItem>
               <DropdownMenuItem variant="destructive" onClick={() => signOut()}>
                 <LogOut />
                 Log out

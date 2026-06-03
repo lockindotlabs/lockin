@@ -20,7 +20,7 @@ export function NavMain({
   }[]
 }) {
   return (
-    <SidebarMenu>
+    <>
       {items.map((item) => (
         <SidebarMenuItem key={item.title}>
           <SidebarMenuButton
@@ -33,6 +33,6 @@ export function NavMain({
           {item.badge && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}
         </SidebarMenuItem>
       ))}
-    </SidebarMenu>
+    </>
   )
 }

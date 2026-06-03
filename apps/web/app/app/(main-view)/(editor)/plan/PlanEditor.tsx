@@ -32,6 +32,7 @@ import {
   type SavedPlan,
   type SavedPlanTask,
 } from "@/lib/plans/plan-repository"
+import { markPlanOpened } from "@/lib/plans/recently-opened-plans"
 import { AI_PLAN_REWRITE_EVENT } from "@/lib/plans/ai-plan-tools"
 import { RedirectToSignIn, Show, UserButton } from "@clerk/nextjs"
 import { Separator } from "@workspace/ui/components/separator"
@@ -204,6 +205,9 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
       }
 
       applySavedPlan(savedPlan)
+      if (savedPlan) {
+        markPlanOpened(planId)
+      }
       setIsPlanLoaded(true)
     })
 

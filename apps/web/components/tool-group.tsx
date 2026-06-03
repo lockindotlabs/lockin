@@ -80,7 +80,7 @@ function ToolGroupRoot({
       className={cn(
         toolGroupVariants({ variant }),
         "group/tool-group-root",
-        "pb-4",
+        "mt-2 mb-4",
         className
       )}
       style={

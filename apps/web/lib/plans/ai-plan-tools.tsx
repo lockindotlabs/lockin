@@ -237,6 +237,7 @@ type PlanToolCardProps = {
 function PlanToolResultCard({
   action,
   args,
+  chatSessionId,
   isError,
   result,
   status,
@@ -311,6 +312,14 @@ function PlanToolResultCard({
     planHref ??
     (fallbackPlanId ? buildPlanHref({ planId: fallbackPlanId }) : undefined)
 
+  const resolvedPeekViewHref =
+    successResult || fallbackPlanId
+      ? buildAskHref({
+          planId: successResult?.planId ?? fallbackPlanId ?? undefined,
+          chatSessionId: chatSessionId ?? undefined,
+        })
+      : undefined
+
   return (
     <div
       className={cn(
@@ -349,10 +358,10 @@ function PlanToolResultCard({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            {!failed && !isRunning && resolvedPlanHref && (
+            {!failed && !isRunning && resolvedPeekViewHref && (
               <Link
                 className={cn(buttonVariants({ size: "sm" }))}
-                href={resolvedPlanHref}
+                href={resolvedPeekViewHref}
               >
                 <span>Open plan</span>
               </Link>
@@ -444,7 +453,13 @@ export function PlanAssistantTools({
   const renderRewriteActivePlanTool = useInlineRender<
     PlanToolInput,
     PlanToolResult
-  >((props) => <PlanToolResultCard {...props} action="rewrite" />)
+  >((props) => (
+    <PlanToolResultCard
+      {...props}
+      action="rewrite"
+      chatSessionId={effectiveChatSessionId}
+    />
+  ))
 
   const createPlanTool = React.useMemo(
     () => ({

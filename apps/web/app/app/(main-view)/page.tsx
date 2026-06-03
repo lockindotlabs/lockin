@@ -3,24 +3,32 @@
 import { RedirectToSignIn, Show } from "@clerk/nextjs"
 import { Button } from "@workspace/ui/components/button"
 import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar"
-import { format } from "date-fns"
-import { ArrowUpIcon, InboxIcon, Trash2Icon } from "lucide-react"
+import {
+  ArrowRightIcon,
+  ArrowUpIcon,
+  ChevronRightIcon,
+  ChevronUpIcon,
+  InboxIcon,
+  ListCheckIcon,
+} from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState, type FormEvent } from "react"
+import { PlanGrid } from "@/components/plan-grid"
 import { createDbChat } from "@/lib/chat/db-chat-client"
 import { savePendingAskPrompt } from "@/lib/chat/pending-ask-prompt"
-import { deletePlan } from "@/lib/plans/plan-repository"
+import { useRecentlyOpenedPlans } from "@/lib/plans/recently-opened-plans"
 import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
 import { buildAskHref } from "@/lib/routing/ask-url"
-import { buildPlanHref } from "@/lib/routing/plan-url"
 
 export default function Page() {
   const { plans } = usePlanSummaries()
+  const recentlyOpenedPlans = useRecentlyOpenedPlans(plans)
   const { state } = useSidebar()
   const router = useRouter()
   const [prompt, setPrompt] = useState("")
   const [isSubmittingPrompt, setIsSubmittingPrompt] = useState(false)
+  const homePlans = recentlyOpenedPlans.slice(0, 3)
 
   const handleSubmitPrompt = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -40,16 +48,6 @@ export default function Page() {
       setIsSubmittingPrompt(false)
       throw error
     }
-  }
-
-  const handleDeletePlan = async (plan: (typeof plans)[number]) => {
-    const planTitle = plan.title.trim() || "Untitled Plan"
-    const shouldDelete = window.confirm(`Delete "${planTitle}"?`)
-    if (!shouldDelete) {
-      return
-    }
-
-    await deletePlan(plan.id)
   }
 
   return (
@@ -107,49 +105,22 @@ export default function Page() {
       </section>
 
       {plans.length > 0 ? (
-        <section className="mx-auto w-full max-w-2xl px-4 pb-10">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-medium text-muted-foreground">
-              Saved plans
-            </h2>
+        <section className="mx-auto w-full max-w-3xl px-4 pb-10">
+          <div className="mb-5 flex items-center justify-between gap-4">
+            <div className="flex min-w-0 items-center gap-3">
+              <h2 className="truncate text-sm text-muted-foreground">
+                Recently opened plans
+              </h2>
+            </div>
+            <Link
+              href="/app/plans"
+              className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              View all
+              <ChevronRightIcon className="size-4" aria-hidden="true" />
+            </Link>
           </div>
-          <div className="divide-y divide-border/70 border-y border-border/70">
-            {plans.map((plan) => {
-              const planTitle = plan.title.trim() || "Untitled Plan"
-
-              return (
-                <div
-                  key={plan.id}
-                  className="group flex min-h-16 items-center gap-4 px-5 hover:bg-muted/45"
-                >
-                  <Link
-                    href={buildPlanHref({ planId: plan.id })}
-                    className="flex min-w-0 flex-1 items-center gap-4"
-                  >
-                    <span className="min-w-0 flex-1 truncate text-sm font-medium">
-                      {planTitle}
-                    </span>
-                    <span className="hidden text-sm text-muted-foreground sm:inline">
-                      {plan.taskCount} {plan.taskCount === 1 ? "step" : "steps"}
-                    </span>
-                    <span className="hidden text-sm text-muted-foreground md:inline">
-                      Updated {format(new Date(plan.updatedAt), "d MMM, HH:mm")}
-                    </span>
-                  </Link>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon-sm"
-                    aria-label={`Delete ${planTitle}`}
-                    className="opacity-70 hover:opacity-100"
-                    onClick={() => handleDeletePlan(plan)}
-                  >
-                    <Trash2Icon />
-                  </Button>
-                </div>
-              )
-            })}
-          </div>
+          <PlanGrid plans={homePlans} />
         </section>
       ) : (
         <section className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center gap-2 px-4 py-10 text-center text-sm text-muted-foreground">

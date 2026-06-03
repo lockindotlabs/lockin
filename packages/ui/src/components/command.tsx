@@ -9,13 +9,20 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogOverlay,
+  DialogPortal,
   DialogTitle,
 } from "@workspace/ui/components/dialog"
+import { Button } from "@workspace/ui/components/button"
+
+import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
+
 import {
   InputGroup,
   InputGroupAddon,
 } from "@workspace/ui/components/input-group"
-import { SearchIcon, CheckIcon } from "lucide-react"
+import { SearchIcon, CheckIcon, XIcon } from "lucide-react"
+import { Field } from "./field.tsx"
 
 function Command({
   className,
@@ -53,38 +60,68 @@ function CommandDialog({
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>{description}</DialogDescription>
       </DialogHeader>
-      <DialogContent
-        className={cn(
-          "top-1/3 translate-y-0 overflow-hidden rounded-xl! p-0",
-          className
-        )}
-        showCloseButton={showCloseButton}
-      >
-        {children}
-      </DialogContent>
+      <DialogPortal>
+        <DialogOverlay
+          className={
+            "bg-transparent supports-backdrop-filter:backdrop-blur-none"
+          }
+        />
+        <DialogPrimitive.Popup
+          data-slot="dialog-content"
+          className={cn(
+            "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-popover p-6 text-sm text-popover-foreground shadow-2xl ring-4 ring-foreground/10 duration-100 outline-none sm:max-w-md",
+            "overflow-hidden rounded-xl! p-0",
+
+            className
+          )}
+        >
+          {children}
+          {showCloseButton && (
+            <DialogPrimitive.Close
+              data-slot="dialog-close"
+              render={
+                <Button
+                  variant="ghost"
+                  className="absolute top-4 right-4"
+                  size="icon-sm"
+                />
+              }
+            >
+              <XIcon />
+              <span className="sr-only">Close</span>
+            </DialogPrimitive.Close>
+          )}
+        </DialogPrimitive.Popup>
+      </DialogPortal>
     </Dialog>
   )
 }
 
 function CommandInput({
+  sideButtons,
   className,
   ...props
-}: React.ComponentProps<typeof CommandPrimitive.Input>) {
+}: React.ComponentProps<typeof CommandPrimitive.Input> & {
+  sideButtons?: React.ReactNode
+}) {
   return (
     <div data-slot="command-input-wrapper" className="p-1 pb-0">
-      <InputGroup className="h-8! rounded-lg! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:pl-2!">
-        <CommandPrimitive.Input
-          data-slot="command-input"
-          className={cn(
-            "w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
-            className
-          )}
-          {...props}
-        />
-        <InputGroupAddon>
-          <SearchIcon className="size-4 shrink-0 opacity-50" />
-        </InputGroupAddon>
-      </InputGroup>
+      <Field orientation="horizontal" className="gap-1">
+        <InputGroup className="h-8! rounded-lg! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:pl-2!">
+          <CommandPrimitive.Input
+            data-slot="command-input"
+            className={cn(
+              "w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
+              className
+            )}
+            {...props}
+          />
+          <InputGroupAddon>
+            <SearchIcon className="size-4 shrink-0 opacity-50" />
+          </InputGroupAddon>
+        </InputGroup>
+        {sideButtons && <div data-slot="">{sideButtons}</div>}
+      </Field>
     </div>
   )
 }
@@ -97,7 +134,7 @@ function CommandList({
     <CommandPrimitive.List
       data-slot="command-list"
       className={cn(
-        "no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none",
+        "no-scrollbar max-h-120 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none",
         className
       )}
       {...props}

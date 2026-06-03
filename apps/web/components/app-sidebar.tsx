@@ -9,12 +9,23 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
   SidebarTrigger,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandShortcut,
+} from "@workspace/ui/components/command"
 import {
   Popover,
   PopoverContent,
@@ -27,6 +38,11 @@ import {
   Settings2Icon,
   PlusIcon,
   Circle,
+  ListCheckIcon,
+  MessageCircleIcon,
+  XIcon,
+  ListFilterIcon,
+  GoalIcon,
 } from "lucide-react"
 import { deleteDbChat } from "@/lib/chat/db-chat-client"
 import { useChatSummaries } from "@/lib/chat/use-chat-summaries"
@@ -41,6 +57,7 @@ import { AiPlannerIcon } from "./icons"
 import { NavUser } from "./nav-user"
 import { NavUserSkeleton } from "./nav-user-skeleton"
 import { Button } from "@workspace/ui/components/button"
+import { Kbd, KbdGroup } from "@workspace/ui/components/kbd"
 
 type NavItem = {
   title: string
@@ -82,15 +99,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const navMain: NavItem[] = [
     {
-      title: "Search",
-      url: "#",
-      icon: <SearchIcon />,
-    },
-    {
       title: "Home",
       url: "/app",
       icon: <HomeIcon />,
       isActive: pathname === "/app",
+    },
+    {
+      title: "Plans",
+      url: "/app/plans",
+      icon: <ListCheckIcon />,
+      isActive: pathname === "/app/plans",
+    },
+    {
+      title: "Focus Mode",
+      url: "/app/focus",
+      icon: <GoalIcon />,
+      isActive: pathname === "/app/focus",
     },
     {
       title: "Ask AI",
@@ -154,6 +178,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     }
   }
 
+  const [open, setOpen] = React.useState(false)
+
   return (
     <Sidebar
       className="border-r-0 font-medium"
@@ -182,7 +208,54 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             New Plan
           </Button>
         </SidebarMenuItem>
-        <NavMain items={navMain} />
+        <SidebarMenu>
+          <SidebarMenuButton onClick={() => setOpen(!open)}>
+            <SearchIcon data-icon="inline-start" />
+            Search
+          </SidebarMenuButton>
+          <CommandDialog open={open} onOpenChange={setOpen}>
+            <Command>
+              <CommandInput
+                placeholder="Type a command or search..."
+                sideButtons={
+                  <Button variant="ghost" size="icon-sm">
+                    <ListFilterIcon />
+                    <span className="sr-only">Filter</span>
+                  </Button>
+                }
+              />
+              <CommandList>
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandGroup className="mt-1">
+                  <div className="flex gap-2">
+                    <Button variant={"ghost"} size={"sm"}>
+                      <MessageCircleIcon />
+                      Chats
+                    </Button>
+                    <Button variant={"ghost"} size={"sm"}>
+                      <ListCheckIcon />
+                      Plan
+                    </Button>
+                  </div>
+                </CommandGroup>
+                <CommandGroup heading="Recommended">
+                  <CommandItem>Calendar1</CommandItem>
+                </CommandGroup>
+                <CommandGroup heading="Recent">
+                  <CommandItem>Calendar</CommandItem>
+                  <CommandItem>Search Emoji</CommandItem>
+                  <CommandItem>Calculator</CommandItem>
+                </CommandGroup>
+              </CommandList>
+            </Command>
+            <div className="px-3 py-2 text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
+                Use <Kbd>Ctrl + K</Kbd> to open the command palette
+              </p>
+            </div>
+          </CommandDialog>
+          <NavMain items={navMain} />
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavFavorites
@@ -202,24 +275,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* <NavSecondary items={navSecondary} className="mt-auto" / */}
       </SidebarContent>
       <SidebarFooter>
-        <Popover>
-          <PopoverTrigger
-            render={
-              <Button size="lg" variant="outline" className="w-full">
-                <Circle />
-                <span>Credits</span>
-              </Button>
-            }
-          />
-          <PopoverContent
-            align="center"
-            side="top"
-            sideOffset={8}
-            className="min-w-40"
-          >
-            Credits content
-          </PopoverContent>
-        </Popover>
+        <Button size={"sm"} variant="outline" className="w-full">
+          <span>Upgrade</span>
+        </Button>
         <React.Suspense fallback={<NavUserSkeleton />}>
           <NavUser />
         </React.Suspense>

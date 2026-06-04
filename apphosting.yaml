@@ -1,6 +1,6 @@
 runConfig:
   runtime: nodejs22
-  entrypoint: node --import tsx/esm apps/api/src/index.ts
+  entrypoint: node_modules/.bin/tsx apps/api/src/index.ts
 
 buildConfig:
   buildCommand: pnpm run build:backend

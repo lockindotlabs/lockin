@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
+    "start": "node_modules/.bin/tsx apps/api/src/index.ts",
     "build:web": "turbo build --filter=web",
     "build:backend": "turbo build --filter=api",
     "dev": "turbo dev",

@@ -111,10 +111,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       isActive: pathname === "/app/plans",
     },
     {
-      title: "Focus Mode",
+      title: "Focus",
       url: "/app/focus",
       icon: <GoalIcon />,
-      isActive: pathname === "/app/focus",
+      isActive: pathname.startsWith("/app/focus"),
     },
     {
       title: "Ask AI",

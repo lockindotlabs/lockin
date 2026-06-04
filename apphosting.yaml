@@ -1,0 +1,12 @@
+runConfig:
+  runtime: nodejs22
+  entrypoint: node --import tsx/esm apps/api/src/index.ts
+
+buildConfig:
+  buildCommand: pnpm --filter api run build
+
+env:
+  - variable: NODE_ENV
+    value: production
+    availability:
+      - RUNTIME

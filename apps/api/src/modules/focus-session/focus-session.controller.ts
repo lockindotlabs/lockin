@@ -120,7 +120,7 @@ export class FocusSessionController extends BaseController {
           .map(t => {
             const status = t.status ?? (t.done ? 'DONE' : 'TODO')
             return prisma.task.updateMany({
-              where: { id: t.id!, planId },
+              where: { id: t.id! },
               data: { status },
             })
           })

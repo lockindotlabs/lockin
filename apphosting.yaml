@@ -3,7 +3,7 @@ runConfig:
   entrypoint: node --import tsx/esm apps/api/src/index.ts
 
 buildConfig:
-  buildCommand: pnpm --filter api run build
+  buildCommand: pnpm run build:backend
 
 env:
   - variable: NODE_ENV

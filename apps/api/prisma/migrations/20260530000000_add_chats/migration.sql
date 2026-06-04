@@ -1,13 +1,17 @@
+-- Migration: add_chats
+-- This migration was applied directly to the database by a team member.
+-- The Chat table was subsequently removed (superseded).
+-- File created to reconcile local migration history with the database.
+
 -- CreateEnum
-CREATE TYPE "ChatStatus" AS ENUM ('IDLE', 'STREAMING', 'ERROR');
+CREATE TYPE IF NOT EXISTS "ChatStatus" AS ENUM ('ACTIVE', 'ARCHIVED');
 
 -- CreateTable
-CREATE TABLE "Chat" (
+CREATE TABLE IF NOT EXISTS "Chat" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "title" TEXT NOT NULL DEFAULT 'New chat',
-    "messages" JSONB NOT NULL DEFAULT '[]',
-    "status" "ChatStatus" NOT NULL DEFAULT 'IDLE',
+    "title" TEXT,
+    "status" "ChatStatus" NOT NULL DEFAULT 'ACTIVE',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

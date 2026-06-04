@@ -31,13 +31,22 @@ model ExtensionToken {
 }
 
 model UserSettings {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  theme     String   @default("system")
-  language  String   @default("en")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme           String   @default("system")
+  language        String   @default("en")
+  // Extension settings — synced with Chrome extension
+  blocklistHard   String[] @default([])
+  blocklistSoft   String[] @default([])
+  hudStyle        String   @default("pill+ring")
+  reminderStyle   String   @default("banner")
+  blockTone       String   @default("calm")
+  popupView       String   @default("standard")
+  defaultDuration Int      @default(25)
+  tabGuard        Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Project {

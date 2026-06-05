@@ -21,6 +21,7 @@
     "@assistant-ui/react-markdown": "^0.14.0",
     "@base-ui/react": "^1.4.1",
     "@clerk/nextjs": "^7.3.4",
+    "@payos/node": "^2.0.5",
     "@tavily/ai-sdk": "^0.5.0",
     "@workspace/db": "workspace:*",
     "@workspace/i18n": "workspace:*",

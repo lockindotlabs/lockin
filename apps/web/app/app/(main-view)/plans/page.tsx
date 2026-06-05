@@ -33,7 +33,13 @@ export default function PlansPage() {
         <SidebarTrigger
           className={`${state == "expanded" && "pointer-events-none hidden opacity-0"} transition-all`}
         />
-        <Button variant="ghost" size="sm" render={<Link href="/app" />}>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          nativeButton={false}
+          render={<Link href="/app" />}
+        >
           <ArrowLeftIcon data-icon="inline-start" />
           Home
         </Button>
@@ -59,7 +65,10 @@ export default function PlansPage() {
               </p>
             </div>
           </div>
-          <PlanGrid plans={recentlyOpenedPlans} onDeletePlan={handleDeletePlan} />
+          <PlanGrid
+            plans={recentlyOpenedPlans}
+            onDeletePlan={handleDeletePlan}
+          />
         </section>
       ) : (
         <section className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center gap-2 px-4 py-10 text-center text-sm text-muted-foreground">

@@ -381,10 +381,6 @@ export type ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.ExtensionTokenScalarWhereInput | Prisma.ExtensionTokenScalarWhereInput[]
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type ExtensionTokenCreateWithoutUserInput = {
   id?: string
   token: string

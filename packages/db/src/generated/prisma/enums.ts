@@ -82,6 +82,26 @@ export const ChatStatus = {
 export type ChatStatus = (typeof ChatStatus)[keyof typeof ChatStatus]
 
 
+export const BillingTier = {
+  FREE: 'FREE',
+  PLUS: 'PLUS',
+  PRO: 'PRO'
+} as const
+
+export type BillingTier = (typeof BillingTier)[keyof typeof BillingTier]
+
+
+export const PaymentOrderStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  CANCELLED: 'CANCELLED',
+  FAILED: 'FAILED',
+  EXPIRED: 'EXPIRED'
+} as const
+
+export type PaymentOrderStatus = (typeof PaymentOrderStatus)[keyof typeof PaymentOrderStatus]
+
+
 export const Priority = {
   LOW: 'LOW',
   MEDIUM: 'MEDIUM',

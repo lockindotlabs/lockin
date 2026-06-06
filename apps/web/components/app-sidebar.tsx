@@ -48,6 +48,7 @@ import { NavUser } from "./nav-user"
 import { UpgradeDialog } from "./upgrade-dialog"
 import { Button } from "@workspace/ui/components/button"
 import { Kbd } from "@workspace/ui/components/kbd"
+import { useBillingState } from "@/lib/billing/use-billing-state"
 
 type NavItem = {
   title: string
@@ -73,8 +74,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const currentChatId = searchParams.get("id") ?? searchParams.get("t")
   const currentPlanId = searchParams.get("p") ?? searchParams.get("id")
   const pathnamePlanId = getPlanIdFromPath(pathname)
-
-  const [upgradeOpen, setUpgradeOpen] = React.useState(false)
 
   const navMain: NavItem[] = [
     {
@@ -256,19 +255,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           {/* <NavSecondary items={navSecondary} className="mt-auto" / */}
         </SidebarContent>
         <SidebarFooter>
-          <Button
-            size={"sm"}
-            variant="outline"
-            className="w-full"
-            onClick={() => setUpgradeOpen(true)}
-          >
-            <span>Upgrade</span>
-          </Button>
           <NavUser />
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
-      <UpgradeDialog open={upgradeOpen} onOpenChange={setUpgradeOpen} />
     </>
   )
 }

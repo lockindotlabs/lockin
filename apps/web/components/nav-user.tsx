@@ -2,6 +2,7 @@ import {
   BadgeCheck,
   Bell,
   ChevronsUpDown,
+  CircleArrowUpIcon,
   CreditCard,
   LifeBuoyIcon,
   LogOut,
@@ -35,12 +36,24 @@ import {
 import { useClerk, useUser } from "@clerk/nextjs"
 import { BillingDialog } from "./billing-dialog"
 import React from "react"
+import { useBillingState } from "@/lib/billing/use-billing-state"
+import { UpgradeDialog } from "./upgrade-dialog"
 
 export function NavUser() {
   const { isMobile } = useSidebar()
   const { user } = useUser()
   const { openUserProfile, signOut } = useClerk()
   const [billingOpen, setBillingOpen] = React.useState(false)
+  const [upgradeOpen, setUpgradeOpen] = React.useState(false)
+
+  const { billing } = useBillingState()
+
+  const userTier = React.useMemo(() => {
+    if (!billing) {
+      return "Loading..."
+    }
+    return billing.tier !== "FREE" ? billing.tier : "Free Tier"
+  }, [billing])
 
   return (
     <>
@@ -68,9 +81,7 @@ export function NavUser() {
                     <span className="truncate font-medium">
                       {user?.fullName}
                     </span>
-                    <span className="truncate text-xs">
-                      {user?.emailAddresses[0]?.emailAddress}
-                    </span>
+                    <span className="truncate text-xs">{userTier}</span>
                   </div>
                   <ChevronsUpDown className="ml-auto size-4" />
                 </SidebarMenuButton>
@@ -83,6 +94,10 @@ export function NavUser() {
               sideOffset={12}
             >
               <DropdownMenuGroup>
+                <DropdownMenuItem onClick={() => setUpgradeOpen(true)}>
+                  <CircleArrowUpIcon />
+                  Upgrade Plan
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => openUserProfile()}>
                   <UserRoundIcon />
                   Profile
@@ -111,6 +126,7 @@ export function NavUser() {
         </SidebarMenuItem>
       </SidebarMenu>
       <BillingDialog open={billingOpen} onOpenChange={setBillingOpen} />
+      <UpgradeDialog open={upgradeOpen} onOpenChange={setUpgradeOpen} />
     </>
   )
 }

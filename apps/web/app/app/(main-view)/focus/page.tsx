@@ -31,6 +31,7 @@ import {
   type PlanStep,
   type FocusSession,
 } from "@/lib/focus/focus-api"
+import DurationMismatchNotice from "./DurationMismatchNotice"
 
 // ─── Duration presets ─────────────────────────────────────────────────────────
 
@@ -77,6 +78,16 @@ function SprintSetupModal({
   )
   const estimatedSeconds = estimatedTotal * 60
   const chosenDuration = durationSeconds ?? (estimatedSeconds || 25 * 60)
+
+  // Drops the longest-estimated selected step — the quick "shrink to fit" action
+  // offered when the chosen sprint is significantly shorter than the total
+  // estimate of the steps the user picked (see DurationMismatchNotice).
+  const trimLargestSelectedStep = () => {
+    const largest = [...selectedSteps].sort(
+      (a, b) => (b.estimatedMinutes ?? 0) - (a.estimatedMinutes ?? 0)
+    )[0]
+    if (largest) toggleStep(largest.id)
+  }
 
   return (
     <div
@@ -177,6 +188,16 @@ function SprintSetupModal({
                   {p.label}
                 </button>
               ))}
+            </div>
+            <div className="mt-2">
+              <DurationMismatchNotice
+                estimatedSeconds={estimatedSeconds}
+                chosenDuration={chosenDuration}
+                presets={DURATION_PRESETS}
+                selectedStepCount={selectedSteps.length}
+                onPickDuration={setDurationSeconds}
+                onTrimLargestStep={trimLargestSelectedStep}
+              />
             </div>
           </div>
         </div>

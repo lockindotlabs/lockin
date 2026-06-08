@@ -714,7 +714,7 @@ function AskChoicesBatchCard({
     <div data-slot="ask-choices-batch-tool-ui" className="w-full">
       {context && (
         <div className="mb-2.5 flex items-center gap-2 pl-0.5">
-          <span className="truncate">{context}</span>
+          <p>{context}</p>
         </div>
       )}
 

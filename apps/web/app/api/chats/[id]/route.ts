@@ -46,10 +46,7 @@ export async function PATCH(req: Request, context: RouteContext) {
   const parsed = UpdateChatSchema.safeParse(await req.json())
 
   if (!parsed.success) {
-    return Response.json(
-      { error: parsed.error.message },
-      { status: 400 }
-    )
+    return Response.json({ error: parsed.error.message }, { status: 400 })
   }
 
   const existing = await getOwnedChat(user.id, id)

@@ -93,10 +93,9 @@ export async function updatePlanOnServer(
     if (!planRes.ok) return false
 
     // Delete old tasks then recreate — simple replace strategy
-    const existingRes = await fetch(
-      `${API_URL}/api/tasks?planId=${serverId}`,
-      { headers }
-    )
+    const existingRes = await fetch(`${API_URL}/api/tasks?planId=${serverId}`, {
+      headers,
+    })
     if (existingRes.ok) {
       const { data: existing } = await existingRes.json()
       await Promise.all(

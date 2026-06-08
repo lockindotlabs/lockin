@@ -52,17 +52,84 @@ export type TaskSnapshot = {
   durationMinutes?: number
 }
 
+type StoredPlanSummary = {
+  id: string
+  title: string
+  taskCount: number
+  updatedAt: string
+}
+
+type StoredPlan = {
+  id: string
+  title: string
+  description: string
+  completion: string
+  tasks: Array<{
+    id: string
+    title: string
+    description: string
+    dueDate: string
+    durationMinutes: number
+    isCompleted: boolean
+  }>
+  createdAt: string
+  updatedAt: string
+  version: 1
+}
+
+function getPlanStatus(tasks: StoredPlan["tasks"]): FocusPlan["status"] {
+  if (tasks.length === 0) {
+    return "PLANNING"
+  }
+
+  if (tasks.every((task) => task.isCompleted)) {
+    return "COMPLETED"
+  }
+
+  return "ACTIVE"
+}
+
+function toFocusPlan(plan: StoredPlan): FocusPlan {
+  const steps = plan.tasks.map<PlanStep>((task, index) => ({
+    id: task.id,
+    title: task.title,
+    description: task.description || null,
+    status: task.isCompleted ? "DONE" : "TODO",
+    dueDate: task.dueDate || null,
+    estimatedMinutes: task.durationMinutes,
+    order: index,
+  }))
+
+  return {
+    id: plan.id,
+    name: plan.title,
+    status: getPlanStatus(plan.tasks),
+    totalEstimatedMinutes: plan.tasks.reduce(
+      (sum, task) => sum + task.durationMinutes,
+      0
+    ),
+    updatedAt: plan.updatedAt,
+    steps,
+  }
+}
+
 // ─── Plans ────────────────────────────────────────────────────────────────────
 
 export async function fetchPlans(
   getToken: () => Promise<string | null>
 ): Promise<FocusPlan[]> {
   try {
-    const headers = await authHeaders(getToken)
-    const res = await fetch(`${API_BASE}/api/plans`, { headers })
+    const res = await fetch("/api/plans", { cache: "no-store" })
     if (!res.ok) return []
-    const { data } = await res.json()
-    return data ?? []
+    const { plans } = (await res.json()) as { plans?: StoredPlanSummary[] }
+
+    return (plans ?? []).map((plan) => ({
+      id: plan.id,
+      name: plan.title,
+      status: plan.taskCount > 0 ? "ACTIVE" : "PLANNING",
+      totalEstimatedMinutes: 0,
+      updatedAt: plan.updatedAt,
+    }))
   } catch {
     return []
   }
@@ -73,11 +140,10 @@ export async function fetchPlanWithSteps(
   getToken: () => Promise<string | null>
 ): Promise<FocusPlan | null> {
   try {
-    const headers = await authHeaders(getToken)
-    const res = await fetch(`${API_BASE}/api/plans/${planId}`, { headers })
+    const res = await fetch(`/api/plans/${planId}`, { cache: "no-store" })
     if (!res.ok) return null
-    const { data } = await res.json()
-    return data ?? null
+    const data = (await res.json()) as StoredPlan
+    return toFocusPlan(data)
   } catch {
     return null
   }

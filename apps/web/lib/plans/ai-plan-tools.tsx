@@ -268,6 +268,49 @@ function PlanToolResultCard({
   const planHref = successResult
     ? getPlanHref(successResult.planId, chatSessionId)
     : undefined
+  const [fallbackPlanId, setFallbackPlanId] = React.useState<string | null>(
+    null
+  )
+
+  React.useEffect(() => {
+    if (successResult || failed || isRunning) {
+      setFallbackPlanId(null)
+      return
+    }
+
+    let isActive = true
+
+    listPlans()
+      .then((plans) => {
+        if (!isActive) return
+
+        const matchingPlan = plans.find(
+          (plan) => plan.title === title && plan.taskCount === taskCount
+        )
+        setFallbackPlanId(matchingPlan?.id ?? null)
+      })
+      .catch(() => {
+        if (isActive) {
+          setFallbackPlanId(null)
+        }
+      })
+
+    return () => {
+      isActive = false
+    }
+  }, [failed, isRunning, successResult, taskCount, title])
+
+  const resolvedPlanHref =
+    planHref ??
+    (fallbackPlanId ? buildPlanHref({ planId: fallbackPlanId }) : undefined)
+
+  const resolvedPeekViewHref =
+    successResult || fallbackPlanId
+      ? buildAskHref({
+          planId: successResult?.planId ?? fallbackPlanId ?? undefined,
+          chatSessionId: chatSessionId ?? undefined,
+        })
+      : undefined
 
   return (
     <div
@@ -306,10 +349,10 @@ function PlanToolResultCard({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            {succeeded && planHref && (
+            {!failed && !isRunning && resolvedPeekViewHref && (
               <Link
                 className={cn(buttonVariants({ size: "sm" }))}
-                href={planHref}
+                href={resolvedPeekViewHref}
               >
                 <span>Open plan</span>
               </Link>
@@ -374,8 +417,28 @@ export function PlanAssistantTools({
   const searchParams = useSearchParams()
   const activePlanId = searchParams.get("p")
   const urlChatSessionId = searchParams.get("id") ?? searchParams.get("t")
-  const chatSessionId = propChatSessionId ?? urlChatSessionId
-  const { getToken } = useAuth()
+  const effectiveChatSessionId = chatSessionId ?? urlChatSessionId
+
+  const renderCreatePlanTool = useInlineRender<PlanToolInput, PlanToolResult>(
+    (props) => (
+      <PlanToolResultCard
+        {...props}
+        action="create"
+        chatSessionId={effectiveChatSessionId}
+      />
+    )
+  )
+
+  const renderRewriteActivePlanTool = useInlineRender<
+    PlanToolInput,
+    PlanToolResult
+  >((props) => (
+    <PlanToolResultCard
+      {...props}
+      action="rewrite"
+      chatSessionId={effectiveChatSessionId}
+    />
+  ))
 
   const createPlanTool = React.useMemo(
     () => ({
@@ -390,7 +453,8 @@ export function PlanAssistantTools({
         const nextParams = new URLSearchParams()
 
         // Ensure we have a chat ID before navigating — create one if needed
-        const resolvedChatId = chatSessionId ?? (ensureChatId ? await ensureChatId() : null)
+        const resolvedChatId =
+          chatSessionId ?? (ensureChatId ? await ensureChatId() : null)
         if (resolvedChatId) {
           nextParams.set("id", resolvedChatId)
         }

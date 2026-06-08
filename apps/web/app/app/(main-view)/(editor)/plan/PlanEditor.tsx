@@ -33,12 +33,8 @@ import {
   type SavedPlanTask,
 } from "@/lib/plans/plan-repository"
 import { markPlanOpened } from "@/lib/plans/recently-opened-plans"
-import {
-  createPlanOnServer,
-  updatePlanOnServer,
-} from "@/lib/plans/plan-api"
 import { AI_PLAN_REWRITE_EVENT } from "@/lib/plans/ai-plan-tools"
-import { RedirectToSignIn, Show, UserButton, useAuth } from "@clerk/nextjs"
+import { RedirectToSignIn, Show } from "@clerk/nextjs"
 import { Separator } from "@workspace/ui/components/separator"
 
 type PlanEditorProps = {
@@ -172,7 +168,6 @@ function PlanEditorLoadingState({ state }: { state: string }) {
 
 export default function PlanEditor({ planId }: PlanEditorProps) {
   const { state } = useSidebar()
-  const { getToken } = useAuth()
   const [persisted, setPersisted] = React.useState<EditorTask[]>([])
   const [persistedPlan, setPersistedPlan] =
     React.useState<EditorPlan>(createEmptyPlan)
@@ -186,24 +181,27 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
   const [saveRevision, setSaveRevision] = React.useState(0)
   const [quickPrompt, setQuickPrompt] = React.useState("")
 
-  const applySavedPlan = React.useCallback((savedPlan: SavedPlan | null) => {
-    if (!savedPlan) {
-      return
-    }
+  const applySavedPlan = React.useCallback(
+    (savedPlan: SavedPlan | null) => {
+      if (!savedPlan) {
+        return
+      }
 
-    // Server-side plan ID lives in module-level state (see comment above),
-    // shared by every instance rendering this planId.
-    serverIdByPlanId.set(planId, savedPlan.serverId ?? null)
-    setPersistedPlan({
-      savedTitle: savedPlan.title,
-      savedDescription: savedPlan.description,
-      savedCompletion: savedPlan.completion,
-    })
-    setPersisted(savedPlan.tasks.map(toEditorTask))
-    setCreatedAt(savedPlan.createdAt)
-    setLastSavedAt(new Date(savedPlan.updatedAt))
-    setHasSavedPlan(true)
-  }, [planId])
+      // Server-side plan ID lives in module-level state (see comment above),
+      // shared by every instance rendering this planId.
+      serverIdByPlanId.set(planId, savedPlan.serverId ?? null)
+      setPersistedPlan({
+        savedTitle: savedPlan.title,
+        savedDescription: savedPlan.description,
+        savedCompletion: savedPlan.completion,
+      })
+      setPersisted(savedPlan.tasks.map(toEditorTask))
+      setCreatedAt(savedPlan.createdAt)
+      setLastSavedAt(new Date(savedPlan.updatedAt))
+      setHasSavedPlan(true)
+    },
+    [planId]
+  )
 
   React.useEffect(() => {
     let isActive = true

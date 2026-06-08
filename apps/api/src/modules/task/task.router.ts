@@ -16,11 +16,6 @@ const controller = new TaskController()
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: planId
- *         schema:
- *           type: string
- *         description: Filter by sprint ID (use "null" for unassigned tasks)
- *       - in: query
  *         name: status
  *         schema:
  *           type: string

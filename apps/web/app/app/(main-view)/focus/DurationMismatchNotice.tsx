@@ -45,12 +45,12 @@ export default function DurationMismatchNotice({
   const estimatedLabel = formatMinutes(Math.round(estimatedSeconds / 60))
 
   const message = isUnder
-    ? `Các bước đã chọn ước tính ~${estimatedLabel}, nhưng sprint chỉ ${formatMinutes(
+    ? `Selected steps estimate ~${estimatedLabel}, but the sprint is only ${formatMinutes(
         Math.round(chosenDuration / 60)
-      )} — có thể bạn sẽ chưa làm xong hết (thiếu ~${gapLabel}).`
-    : `Sprint dài ${formatMinutes(
+      )} — you might not finish everything (short by ~${gapLabel}).`
+    : `Sprint is ${formatMinutes(
         Math.round(chosenDuration / 60)
-      )} nhưng các bước đã chọn chỉ ước tính ~${estimatedLabel} — có thể bạn sẽ còn dư thời gian (~${gapLabel}).`
+      )} but selected steps only estimate ~${estimatedLabel} — you might have extra time left (~${gapLabel}).`
 
   // Only offer the "major" actions — for "moderate" gaps we just inform,
   // since suggesting changes on every modest gap would get noisy fast.
@@ -78,7 +78,7 @@ export default function DurationMismatchNotice({
         <div className="flex flex-wrap gap-2 pl-6">
           {isUnder && selectedStepCount > 1 && (
             <Button variant="outline" size="sm" onClick={onTrimLargestStep}>
-              Bớt bước dài nhất
+              Trim longest step
             </Button>
           )}
           {!suggestedPresetIsCurrent && (
@@ -87,7 +87,7 @@ export default function DurationMismatchNotice({
               size="sm"
               onClick={() => onPickDuration(suggestedPreset.seconds)}
             >
-              Đổi sang {suggestedPreset.label}
+              Change to {suggestedPreset.label}
             </Button>
           )}
         </div>

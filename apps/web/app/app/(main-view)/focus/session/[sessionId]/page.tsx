@@ -28,6 +28,7 @@ import {
   notifyExtensionSessionPaused,
   notifyExtensionSessionResumed,
 } from "@/lib/focus/extension-bridge"
+import Aurora from "@/components/Aurora"
 
 // ─── Timer display ────────────────────────────────────────────────────────────
 
@@ -40,6 +41,209 @@ function fmt(seconds: number): string {
     return `${h}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`
   }
   return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`
+}
+
+// ─── End Sprint Checklist Modal ──────────────────────────────────────────────
+
+function EndSprintSummaryModal({
+  steps,
+  taskCheckTimes,
+  elapsed,
+  isOvertime,
+  remaining,
+  initialCompletedIds,
+  onClose,
+  onConfirm,
+  ending,
+}: {
+  steps: PlanStep[]
+  taskCheckTimes: Record<string, number>
+  elapsed: number
+  isOvertime: boolean
+  remaining: number
+  initialCompletedIds: Set<string>
+  onClose: () => void
+  onConfirm: (
+    completedIds: Set<string>,
+    stepDetails: Record<string, { spentSeconds: number; remainingMinutes: number }>
+  ) => void
+  ending: boolean
+}) {
+  const [tempCompleted, setTempCompleted] = React.useState<Set<string>>(
+    () => new Set(initialCompletedIds)
+  )
+
+  const toggleTempStep = (id: string) => {
+    setTempCompleted((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  // Calculate spent times and remaining estimates dynamically based on tempCompleted
+  const details = React.useMemo(() => {
+    const res: Record<
+      string,
+      { spentSeconds: number; remainingMinutes: number }
+    > = {}
+    let previousCompletionTime = 0
+
+    for (let i = 0; i < steps.length; i++) {
+      const s = steps[i]
+      if (!s) continue
+      const done = tempCompleted.has(s.id)
+      const originalEstimateSeconds = (s.estimatedMinutes ?? 0) * 60
+
+      let spentSeconds = 0
+      if (done) {
+        const recordedTime = taskCheckTimes[s.id]
+        if (recordedTime !== undefined) {
+          spentSeconds = Math.max(0, recordedTime - previousCompletionTime)
+          previousCompletionTime = Math.max(previousCompletionTime, recordedTime)
+        } else {
+          const potentialSpent = Math.max(0, elapsed - previousCompletionTime)
+          spentSeconds = Math.min(originalEstimateSeconds, potentialSpent)
+          previousCompletionTime += spentSeconds
+        }
+      } else {
+        const remainingElapsed = Math.max(0, elapsed - previousCompletionTime)
+        spentSeconds = remainingElapsed
+        previousCompletionTime = elapsed
+      }
+
+      const remainingEstimateSeconds = Math.max(
+        0,
+        originalEstimateSeconds - spentSeconds
+      )
+      const remainingMinutes =
+        remainingEstimateSeconds > 0
+          ? Math.max(1, Math.round(remainingEstimateSeconds / 60))
+          : 0
+
+      res[s.id] = {
+        spentSeconds,
+        remainingMinutes: done ? s.estimatedMinutes : remainingMinutes,
+      }
+    }
+    return res
+  }, [tempCompleted, steps, taskCheckTimes, elapsed])
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-md"
+        onClick={onClose}
+      />
+      <div className="relative w-full max-w-md rounded-2xl border border-border/70 bg-background/95 p-6 shadow-2xl backdrop-blur-lg z-10 text-foreground">
+        <h3 className="text-lg font-semibold tracking-tight text-foreground">
+          End Focus Sprint
+        </h3>
+        <p className="mt-1.5 text-xs text-muted-foreground">
+          Confirm completed steps. Incomplete steps will have their estimated
+          duration updated based on remaining time.
+        </p>
+
+        {/* Step checklist */}
+        <div className="mt-4 space-y-2 max-h-[40vh] overflow-y-auto pr-1">
+          {steps.map((step) => {
+            const done = tempCompleted.has(step.id)
+            const detail = details[step.id]
+            const remainingMin = detail
+              ? detail.remainingMinutes
+              : step.estimatedMinutes
+            const spentSec = detail ? detail.spentSeconds : 0
+
+            return (
+              <button
+                key={step.id}
+                onClick={() => toggleTempStep(step.id)}
+                className={`flex w-full items-start gap-3 rounded-lg border border-border/50 px-3 py-2.5 text-left transition-colors hover:bg-muted/30 ${
+                  done ? "bg-muted/10" : "bg-background"
+                }`}
+              >
+                <span
+                  className={`mt-0.5 shrink-0 ${
+                    done ? "text-emerald-500" : "text-muted-foreground"
+                  }`}
+                >
+                  {done ? (
+                    <CheckCircle2Icon className="size-4" />
+                  ) : (
+                    <CircleIcon className="size-4" />
+                  )}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p
+                    className={`text-sm font-medium truncate ${
+                      done
+                        ? "text-muted-foreground line-through"
+                        : "text-foreground"
+                    }`}
+                  >
+                    {step.title}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">
+                    {done ? (
+                      <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                        Completed
+                      </span>
+                    ) : (
+                      <>
+                        Estimate:{" "}
+                        <strong className="text-foreground">
+                          {remainingMin}m
+                        </strong>
+                        {spentSec > 0 &&
+                          ` (spent ${Math.round(spentSec / 60)}m)`}
+                      </>
+                    )}
+                  </p>
+                </div>
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Sprint Summary Details */}
+        <div className="mt-5 rounded-xl bg-primary/5 border border-primary/10 px-4 py-3 space-y-2">
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <span>Time elapsed:</span>
+            <span className="font-semibold text-foreground">{fmt(elapsed)}</span>
+          </div>
+          {!isOvertime && remaining > 0 && (
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>Remaining sprint time:</span>
+              <span className="font-semibold text-rose-500">
+                {fmt(remaining)}
+              </span>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-6 flex gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1"
+            onClick={onClose}
+            disabled={ending}
+          >
+            Cancel
+          </Button>
+          <Button
+            size="sm"
+            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white"
+            onClick={() => onConfirm(tempCompleted, details)}
+            disabled={ending}
+          >
+            {ending ? "Ending..." : "Save & End"}
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
@@ -87,10 +291,12 @@ export default function SessionPage() {
   const [plan, setPlan] = React.useState<FocusPlan | null>(null)
   const [steps, setSteps] = React.useState<PlanStep[]>([])
   const [completedIds, setCompletedIds] = React.useState<Set<string>>(new Set())
+  const [taskCheckTimes, setTaskCheckTimes] = React.useState<Record<string, number>>({})
   const [loading, setLoading] = React.useState(true)
   const [paused, setPaused] = React.useState(false)
   const [overtime, setOvertime] = React.useState(false)
   const [ending, setEnding] = React.useState(false)
+  const [showEndSprintSummary, setShowEndSprintSummary] = React.useState(false)
 
   const plannedDuration = session?.plannedDuration ?? 25 * 60
   const { elapsed, remaining, isOvertime, pct } = useTimer(plannedDuration, paused, overtime)
@@ -141,23 +347,43 @@ export default function SessionPage() {
   const toggleStep = (id: string) => {
     setCompletedIds((prev) => {
       const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
+      if (next.has(id)) {
+        next.delete(id)
+        setTaskCheckTimes((prevTimes) => {
+          const nextTimes = { ...prevTimes }
+          delete nextTimes[id]
+          return nextTimes
+        })
+      } else {
+        next.add(id)
+        setTaskCheckTimes((prevTimes) => ({
+          ...prevTimes,
+          [id]: elapsed,
+        }))
+      }
       return next
     })
   }
 
-  const handleEnd = async (completionType: "EARLY" | "NORMAL" | "OVERTIME") => {
+  const handleEnd = async (
+    completionType: "EARLY" | "NORMAL" | "OVERTIME",
+    finalCompletedIds: Set<string>,
+    finalStepDetails: Record<string, { spentSeconds: number; remainingMinutes: number }>
+  ) => {
     if (ending) return
     setEnding(true)
 
-    const snapshot: TaskSnapshot[] = steps.map((s) => ({
-      id: s.id,
-      done: completedIds.has(s.id),
-      status: completedIds.has(s.id) ? "DONE" : "IN_PROGRESS",
-      title: s.title,
-      durationMinutes: s.estimatedMinutes,
-    }))
+    const snapshot: TaskSnapshot[] = steps.map((s) => {
+      const done = finalCompletedIds.has(s.id)
+      const details = finalStepDetails[s.id]
+      return {
+        id: s.id,
+        done,
+        status: done ? "DONE" : "IN_PROGRESS",
+        title: s.title,
+        durationMinutes: details ? details.remainingMinutes : s.estimatedMinutes,
+      }
+    })
 
     await endFocusSession(
       sessionId,
@@ -182,6 +408,20 @@ export default function SessionPage() {
     router.push("/app/focus")
   }
 
+  const handleEndConfirm = (
+    finalCompletedIds: Set<string>,
+    finalStepDetails: Record<string, { spentSeconds: number; remainingMinutes: number }>
+  ) => {
+    const isAllCompleted = steps.every((s) => finalCompletedIds.has(s.id))
+    const completionType = isOvertime
+      ? "OVERTIME"
+      : isAllCompleted
+      ? "NORMAL"
+      : "EARLY"
+
+    handleEnd(completionType, finalCompletedIds, finalStepDetails)
+  }
+
   // All steps done?
   const allDone = steps.length > 0 && steps.every((s) => completedIds.has(s.id))
   const doneCount = completedIds.size
@@ -201,12 +441,21 @@ export default function SessionPage() {
   }
 
   return (
-    <main className="flex min-h-svh flex-col bg-background text-foreground">
+    <main className="relative flex min-h-svh flex-col bg-background text-foreground overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none z-0 opacity-35">
+        <Aurora
+          colorStops={["#F97316", "#EAB308", "#F97316"]}
+          blend={0.5}
+          amplitude={1.0}
+          speed={0.6}
+        />
+      </div>
+
       <Show when="signed-out">
         <RedirectToSignIn />
       </Show>
 
-      <div className="mx-auto flex w-full max-w-lg flex-col items-center px-4 pb-16 pt-12">
+      <div className="relative z-10 mx-auto flex w-full max-w-lg flex-col items-center px-4 pb-16 pt-12">
 
         {/* Plan name */}
         <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
@@ -270,7 +519,7 @@ export default function SessionPage() {
 
         {/* Current step */}
         {currentStep && (
-          <div className="mb-6 w-full rounded-xl border border-border/70 bg-muted/30 px-4 py-3 text-center">
+          <div className="mb-6 w-full rounded-xl border border-border/70 bg-background/50 backdrop-blur-md px-4 py-3 text-center shadow-sm">
             <p className="text-xs text-muted-foreground mb-0.5">Now working on</p>
             <p className="text-sm font-medium">{currentStep.title}</p>
             {currentStep.estimatedMinutes > 0 && (
@@ -316,7 +565,7 @@ export default function SessionPage() {
           {allDone ? (
             <Button
               size="sm"
-              onClick={() => handleEnd("NORMAL")}
+              onClick={() => setShowEndSprintSummary(true)}
               disabled={ending}
               className="bg-emerald-600 hover:bg-emerald-700 text-white"
             >
@@ -327,7 +576,7 @@ export default function SessionPage() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => handleEnd(isOvertime ? "OVERTIME" : "EARLY")}
+              onClick={() => setShowEndSprintSummary(true)}
               disabled={ending}
               className="border-rose-200 text-rose-600 hover:bg-rose-50 dark:border-rose-900 dark:text-rose-400"
             >
@@ -349,7 +598,7 @@ export default function SessionPage() {
               </span>
             </div>
 
-            <div className="divide-y divide-border/60 rounded-xl border border-border/70 bg-background">
+            <div className="divide-y divide-border/60 rounded-xl border border-border/70 bg-background/50 backdrop-blur-md shadow-sm">
               {steps.map((step) => {
                 const done = completedIds.has(step.id)
                 const isCurrent = step.id === currentStep?.id
@@ -357,7 +606,7 @@ export default function SessionPage() {
                   <button
                     key={step.id}
                     onClick={() => toggleStep(step.id)}
-                    className={`flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/30 first:rounded-t-xl last:rounded-b-xl ${
+                    className={`flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/20 first:rounded-t-xl last:rounded-b-xl ${
                       isCurrent && !done ? "bg-primary/5" : ""
                     }`}
                   >
@@ -387,6 +636,21 @@ export default function SessionPage() {
           </section>
         )}
       </div>
+
+      {/* End Sprint Summary modal */}
+      {showEndSprintSummary && (
+        <EndSprintSummaryModal
+          steps={steps}
+          taskCheckTimes={taskCheckTimes}
+          elapsed={elapsed}
+          isOvertime={isOvertime}
+          remaining={remaining}
+          initialCompletedIds={completedIds}
+          onClose={() => setShowEndSprintSummary(false)}
+          onConfirm={handleEndConfirm}
+          ending={ending}
+        />
+      )}
     </main>
   )
 }

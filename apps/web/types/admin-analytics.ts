@@ -3,15 +3,17 @@ export type DateRangeOption =
   | "last-30-days"
   | "last-90-days"
   | "this-month"
-  | "custom"
 
 export type TrendDirection = "up" | "down" | "neutral"
 
 export type MetricIconKey =
   | "users"
   | "activeUsers"
+  | "actionablePlans"
   | "aiPlans"
   | "sprintsCompleted"
+  | "successfulPayments"
+  | "paymentIssues"
   | "completionRate"
   | "focusDuration"
   | "quota"
@@ -47,7 +49,7 @@ export type ActivityTrendPoint = {
   users: number
   aiPlans: number
   sprints: number
-  completedTasks: number
+  completedSteps: number
 }
 
 export type AIUsageData = {
@@ -70,22 +72,39 @@ export type SprintTrendPoint = {
   completed: number
 }
 
-export type RecentActivityEvent = {
+export type ActivityCategory = "user" | "plan" | "sprint" | "billing"
+
+export type AdminActivityItem = {
+  id: string
   user: string
   event: string
   details: string
   plan: "Free" | "Plus" | "Pro"
   time: string
   status: "success" | "error" | "warning" | "info" | "neutral"
+  category: ActivityCategory
 }
 
-export type EventFilter =
-  | "all"
-  | "sprint"
-  | "ai"
-  | "quota"
-  | "upgrade"
-  | "errors"
+export type RecentActivityEvent = AdminActivityItem
+
+export type EventFilter = "all" | ActivityCategory | "errors"
+
+export type AdminOverviewData = {
+  overviewMetrics: MetricCardData[]
+  funnelData: FunnelStep[]
+  activityTrendData: ActivityTrendPoint[]
+}
+
+export type AdminUsageData = {
+  sprintMetrics: MetricCardData[]
+  sprintTrendData: SprintTrendPoint[]
+  recentEvents: AdminActivityItem[]
+}
+
+export type AdminBillingData = {
+  subscriptionMetrics: MetricCardData[]
+  planDistributionData: DistributionPoint[]
+}
 
 export type AnalyticsMockData = {
   overviewMetrics: MetricCardData[]
@@ -98,5 +117,5 @@ export type AnalyticsMockData = {
   sprintTrendData: SprintTrendPoint[]
   subscriptionMetrics: MetricCardData[]
   planDistributionData: DistributionPoint[]
-  recentEvents: RecentActivityEvent[]
+  recentEvents: AdminActivityItem[]
 }

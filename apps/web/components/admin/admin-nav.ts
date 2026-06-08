@@ -1,4 +1,5 @@
 import {
+  ArrowLeftIcon,
   BarChart3Icon,
   CreditCardIcon,
   HomeIcon,
@@ -26,19 +27,19 @@ export const adminNavSections: AdminNavSection[] = [
     label: "Overview",
     items: [
       {
-        title: "Analytics",
-        url: "/app/admin/analytics",
+        title: "Overview",
+        url: "/app/admin/overview",
         icon: BarChart3Icon,
         match: "prefix",
       },
     ],
   },
   {
-    label: "Management",
+    label: "Usage",
     items: [
       {
-        title: "Users",
-        url: "/app/admin/users",
+        title: "Usage & Retention",
+        url: "/app/admin/usage",
         icon: UsersIcon,
         match: "prefix",
       },
@@ -48,7 +49,7 @@ export const adminNavSections: AdminNavSection[] = [
     label: "Revenue",
     items: [
       {
-        title: "Billing & Quotas",
+        title: "Billing",
         url: "/app/admin/billing",
         icon: CreditCardIcon,
         match: "prefix",
@@ -97,7 +98,7 @@ export const adminNavItems: AdminNavItem[] = [
     match: "prefix",
   },
   {
-    title: "Billing & Quotas",
+    title: "Billing",
     url: "/app/admin/billing",
     icon: CreditCardIcon,
     match: "prefix",
@@ -107,6 +108,12 @@ export const adminNavItems: AdminNavItem[] = [
     url: "/app/admin/settings",
     icon: Settings2Icon,
     match: "prefix",
+  },
+  {
+    title: "Back to app",
+    url: "/app",
+    icon: ArrowLeftIcon,
+    match: "exact",
   },
 ]
 

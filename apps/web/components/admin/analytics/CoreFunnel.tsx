@@ -28,6 +28,23 @@ function getDropOff(current: FunnelStep, previous: FunnelStep | undefined) {
 }
 
 export function CoreFunnel({ data }: { data: FunnelStep[] }) {
+  const largestDropOffStep = data.reduce<FunnelStep | null>(
+    (largestStep, step, index) => {
+      const currentDropOff = getDropOff(step, data[index - 1]) ?? -1
+      const largestDropOff = largestStep
+        ? (getDropOff(largestStep, data[data.indexOf(largestStep) - 1]) ?? -1)
+        : -1
+
+      if (currentDropOff > largestDropOff) {
+        return step
+      }
+
+      return largestStep
+    },
+    null
+  )
+  const finalStep = data[data.length - 1]
+
   return (
     <section className="grid gap-4 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)]">
       <Card>
@@ -77,12 +94,16 @@ export function CoreFunnel({ data }: { data: FunnelStep[] }) {
 
       <div className="flex flex-col gap-4">
         <InsightCard title="Funnel health">
-          AI breakdown is converting well into saved plans, but fewer users
-          start a Sprint immediately after editing.
+          This funnel uses current relational data rather than event logs, so it
+          is best for broad movement rather than step-perfect attribution.
         </InsightCard>
         <InsightCard title="Largest drop-off">
-          The largest drop-off is after first Sprint completion, so post-Sprint
-          scheduling may need improvement.
+          {largestDropOffStep
+            ? `${largestDropOffStep.step} is currently the biggest drop-off point.`
+            : "No drop-off signal yet."}{" "}
+          {finalStep
+            ? `${formatPercent(finalStep.conversionRate)} of users reach the final step.`
+            : ""}
         </InsightCard>
       </div>
     </section>

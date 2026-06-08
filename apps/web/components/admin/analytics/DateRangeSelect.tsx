@@ -15,7 +15,6 @@ const dateRangeOptions: { label: string; value: DateRangeOption }[] = [
   { label: "Last 30 days", value: "last-30-days" },
   { label: "Last 90 days", value: "last-90-days" },
   { label: "This month", value: "this-month" },
-  { label: "Custom", value: "custom" },
 ]
 
 export function DateRangeSelect({

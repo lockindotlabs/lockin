@@ -61,6 +61,26 @@ export function SprintAnalyticsSection({
   metrics: MetricCardData[]
   trendData: SprintTrendPoint[]
 }) {
+  const totals = trendData.reduce(
+    (summary, point) => ({
+      started: summary.started + point.started,
+      completed: summary.completed + point.completed,
+    }),
+    { started: 0, completed: 0 }
+  )
+  const completionRate =
+    totals.started > 0 ? (totals.completed / totals.started) * 100 : 0
+  const busiestDay = trendData.reduce<SprintTrendPoint | null>(
+    (largest, point) => {
+      if (!largest || point.started > largest.started) {
+        return point
+      }
+
+      return largest
+    },
+    null
+  )
+
   return (
     <section className="flex flex-col gap-4">
       <div>
@@ -84,10 +104,19 @@ export function SprintAnalyticsSection({
             <SprintStartedCompletedChart data={trendData} />
           </CardContent>
         </Card>
-        <InsightCard title="Sprint completion">
-          Sprint completion rate is 68.4%. Users complete more Sprints when the
-          estimated duration is under 45 minutes.
-        </InsightCard>
+        <div className="flex flex-col gap-4">
+          <InsightCard title="Sprint completion">
+            {completionRate.toLocaleString("en-US", {
+              maximumFractionDigits: 1,
+            })}
+            % of started sessions finish successfully in this window.
+          </InsightCard>
+          <InsightCard title="Busiest day">
+            {busiestDay
+              ? `${busiestDay.date} had the highest number of started sessions.`
+              : "No focus sessions recorded yet."}
+          </InsightCard>
+        </div>
       </div>
     </section>
   )

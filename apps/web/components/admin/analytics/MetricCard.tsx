@@ -43,8 +43,11 @@ const metricIcons: Record<
 > = {
   users: UsersIcon,
   activeUsers: UserCheckIcon,
+  actionablePlans: ListChecksIcon,
   aiPlans: SparklesIcon,
   sprintsCompleted: CheckCircle2Icon,
+  successfulPayments: CreditCardIcon,
+  paymentIssues: AlertTriangleIcon,
   completionRate: GaugeIcon,
   focusDuration: TimerIcon,
   quota: AlertTriangleIcon,

@@ -33,6 +33,7 @@ import {
   MessageCircleIcon,
   ListFilterIcon,
   GoalIcon,
+  BarChart3Icon,
 } from "lucide-react"
 import { deleteDbChat } from "@/lib/chat/db-chat-client"
 import { useChatSummaries } from "@/lib/chat/use-chat-summaries"
@@ -45,10 +46,9 @@ import type { FavoriteItem } from "@/components/nav-favorites"
 import { LogoAccent } from "@workspace/ui/components/logo-accent"
 import { AiPlannerIcon } from "./icons"
 import { NavUser } from "./nav-user"
-import { UpgradeDialog } from "./upgrade-dialog"
 import { Button } from "@workspace/ui/components/button"
 import { Kbd } from "@workspace/ui/components/kbd"
-import { useBillingState } from "@/lib/billing/use-billing-state"
+import { useAdminAccess } from "@/lib/admin/use-admin-access"
 
 type NavItem = {
   title: string
@@ -70,6 +70,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { plans, isLoaded: arePlansLoaded } = usePlanSummaries()
   const { chats, isLoaded: areChatsLoaded } = useChatSummaries()
   const { state } = useSidebar()
+  const { isAdmin } = useAdminAccess()
 
   const currentChatId = searchParams.get("id") ?? searchParams.get("t")
   const currentPlanId = searchParams.get("p") ?? searchParams.get("id")
@@ -101,6 +102,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       isActive: pathname === "/app/ask",
     },
   ]
+
+  if (isAdmin) {
+    navMain.push({
+      title: "Admin",
+      url: "/app/admin/overview",
+      icon: <BarChart3Icon />,
+      isActive: pathname.startsWith("/app/admin"),
+    })
+  }
 
   const recentChats: FavoriteItem[] = chats.slice(0, 10).map((chat) => ({
     id: chat.id,

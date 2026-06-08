@@ -15,8 +15,8 @@ export function AdminPlaceholderState({
   icon: Icon,
   title,
   description,
-  actionHref = "/app/admin/analytics",
-  actionLabel = "Back to analytics",
+  actionHref = "/app/admin/overview",
+  actionLabel = "Back to overview",
 }: {
   icon: LucideIcon
   title: string

@@ -40,17 +40,17 @@ import {
 
 const eventFilters: { label: string; value: EventFilter }[] = [
   { label: "All events", value: "all" },
+  { label: "User events", value: "user" },
+  { label: "Plan events", value: "plan" },
   { label: "Sprint events", value: "sprint" },
-  { label: "AI events", value: "ai" },
-  { label: "Quota events", value: "quota" },
-  { label: "Upgrade events", value: "upgrade" },
+  { label: "Billing events", value: "billing" },
   { label: "Errors only", value: "errors" },
 ]
 
 function StatusBadge({ status }: { status: RecentActivityEvent["status"] }) {
   if (status === "success") {
     return (
-      <Badge variant="secondary">
+      <Badge variant="secondary" className="bg-green-100 text-green-800">
         <CheckCircle2Icon data-icon="inline-start" />
         Success
       </Badge>
@@ -68,7 +68,7 @@ function StatusBadge({ status }: { status: RecentActivityEvent["status"] }) {
 
   if (status === "warning") {
     return (
-      <Badge variant="outline">
+      <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
         <AlertTriangleIcon data-icon="inline-start" />
         Warning
       </Badge>
@@ -77,7 +77,7 @@ function StatusBadge({ status }: { status: RecentActivityEvent["status"] }) {
 
   if (status === "info") {
     return (
-      <Badge variant="outline">
+      <Badge variant="secondary" className="bg-blue-100 text-blue-800">
         <InfoIcon data-icon="inline-start" />
         Info
       </Badge>
@@ -85,7 +85,7 @@ function StatusBadge({ status }: { status: RecentActivityEvent["status"] }) {
   }
 
   return (
-    <Badge variant="outline">
+    <Badge variant="secondary">
       <CircleIcon data-icon="inline-start" />
       Neutral
     </Badge>
@@ -106,8 +106,8 @@ export function RecentActivityTable({
       <CardHeader>
         <CardTitle>Recent activity</CardTitle>
         <CardDescription>
-          Latest mock product events across planning, Sprint, quota, and billing
-          surfaces.
+          Latest account, plan, session, and billing activity across the admin
+          workspace.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -119,15 +119,13 @@ export function RecentActivityTable({
             }
           }}
         >
-          <div className="overflow-x-auto">
-            <TabsList aria-label="Recent activity filter">
-              {eventFilters.map((filter) => (
-                <TabsTrigger key={filter.value} value={filter.value}>
-                  {filter.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </div>
+          <TabsList aria-label="Recent activity filter">
+            {eventFilters.map((filter) => (
+              <TabsTrigger key={filter.value} value={filter.value}>
+                {filter.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
           {eventFilters.map((filter) => (
             <TabsContent key={filter.value} value={filter.value}>
               {events.length > 0 ? (
@@ -144,7 +142,7 @@ export function RecentActivityTable({
                   </TableHeader>
                   <TableBody>
                     {events.map((event) => (
-                      <TableRow key={`${event.user}-${event.time}`}>
+                      <TableRow key={event.id}>
                         <TableCell>
                           <span className="font-mono text-sm">
                             {event.user}

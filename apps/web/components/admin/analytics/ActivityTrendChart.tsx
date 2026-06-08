@@ -27,7 +27,7 @@ export type ActivitySeriesKey =
   | "users"
   | "aiPlans"
   | "sprints"
-  | "completedTasks"
+  | "completedSteps"
 
 const activitySeries: {
   key: ActivitySeriesKey
@@ -36,8 +36,12 @@ const activitySeries: {
 }[] = [
   { key: "users", label: "Users", color: "var(--chart-1)" },
   { key: "aiPlans", label: "AI Plans", color: "var(--chart-2)" },
-  { key: "sprints", label: "Sprints", color: "var(--chart-3)" },
-  { key: "completedTasks", label: "Completed Tasks", color: "var(--chart-4)" },
+  { key: "sprints", label: "Sessions", color: "var(--chart-3)" },
+  {
+    key: "completedSteps",
+    label: "Completed Steps",
+    color: "var(--chart-4)",
+  },
 ]
 
 const chartConfig = activitySeries.reduce((config, item) => {
@@ -94,7 +98,8 @@ export function ActivityTrendChart({
       <CardHeader>
         <CardTitle>Activity trends</CardTitle>
         <CardDescription>
-          Daily movement across users, AI plans, Sprints, and completed tasks.
+          Daily movement across users, AI plans, focus sessions, and completed
+          plan steps.
         </CardDescription>
       </CardHeader>
       <CardContent>

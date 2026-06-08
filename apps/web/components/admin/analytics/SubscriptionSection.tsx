@@ -22,10 +22,10 @@ export function SubscriptionSection({
     <section className="flex flex-col gap-4">
       <div>
         <h2 className="text-xl font-semibold tracking-tight">
-          Subscription and quota
+          Subscription health
         </h2>
         <p className="text-sm text-muted-foreground">
-          Monetization signals from limits, plans, and upgrade discovery.
+          Current plan mix and payment-state health from billing records.
         </p>
       </div>
       <MetricGrid metrics={metrics} />
@@ -44,9 +44,10 @@ export function SubscriptionSection({
             />
           </CardContent>
         </Card>
-        <InsightCard title="Quota signal">
-          Quota exceeded events are a useful upgrade trigger, but they should
-          not feel punitive.
+        <InsightCard title="Billing note">
+          This view tracks current access tiers and payment outcomes. It does
+          not infer upgrade intent until quota and click events are recorded for
+          real.
         </InsightCard>
       </div>
     </section>

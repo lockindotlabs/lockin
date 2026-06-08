@@ -33,12 +33,8 @@ import {
   type SavedPlanTask,
 } from "@/lib/plans/plan-repository"
 import { markPlanOpened } from "@/lib/plans/recently-opened-plans"
-import {
-  createPlanOnServer,
-  updatePlanOnServer,
-} from "@/lib/plans/plan-api"
 import { AI_PLAN_REWRITE_EVENT } from "@/lib/plans/ai-plan-tools"
-import { RedirectToSignIn, Show, UserButton, useAuth } from "@clerk/nextjs"
+import { RedirectToSignIn, Show } from "@clerk/nextjs"
 import { Separator } from "@workspace/ui/components/separator"
 
 type PlanEditorProps = {
@@ -161,7 +157,6 @@ function PlanEditorLoadingState({ state }: { state: string }) {
 
 export default function PlanEditor({ planId }: PlanEditorProps) {
   const { state } = useSidebar()
-  const { getToken } = useAuth()
   const [persisted, setPersisted] = React.useState<EditorTask[]>([])
   const [persistedPlan, setPersistedPlan] =
     React.useState<EditorPlan>(createEmptyPlan)
@@ -174,17 +169,12 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
   const [isPlanLoaded, setIsPlanLoaded] = React.useState(false)
   const [saveRevision, setSaveRevision] = React.useState(0)
   const [quickPrompt, setQuickPrompt] = React.useState("")
-  // Tracks the server-side plan ID once synced (separate from local UUID)
-  const serverIdRef = React.useRef<string | null>(null)
-  // Prevents duplicate createPlanOnServer calls during the async race window
-  const isCreatingOnServerRef = React.useRef(false)
 
   const applySavedPlan = React.useCallback((savedPlan: SavedPlan | null) => {
     if (!savedPlan) {
       return
     }
 
-    serverIdRef.current = savedPlan.serverId ?? null
     setPersistedPlan({
       savedTitle: savedPlan.title,
       savedDescription: savedPlan.description,
@@ -283,20 +273,6 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
         .then(() => {
           setLastSavedAt(new Date(updatedAt))
           setHasSavedPlan(true)
-          // Fire-and-forget: sync to API after local save
-          const currentServerId = serverIdRef.current
-          if (currentServerId) {
-            updatePlanOnServer(plan, currentServerId, getToken)
-          } else if (!isCreatingOnServerRef.current) {
-            // Guard against duplicate create calls during the async window
-            isCreatingOnServerRef.current = true
-            createPlanOnServer(plan, getToken).then(async (serverId) => {
-              isCreatingOnServerRef.current = false
-              if (!serverId) return
-              serverIdRef.current = serverId
-              await savePlan({ ...plan, serverId })
-            })
-          }
         })
         .catch(() => {})
     }, 500)

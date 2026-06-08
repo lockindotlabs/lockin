@@ -23,10 +23,8 @@ import {
   useSidebar,
 } from "@workspace/ui/components/sidebar"
 import {
-  adminNavSections,
   adminNavItems,
   isAdminNavItemActive,
-  type AdminNavSection as AdminNavSectionType,
 } from "./admin-nav"
 import { Badge } from "@workspace/ui/components/badge"
 
@@ -72,13 +70,13 @@ export function AdminSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <div className="flex items-center justify-between gap-2 pr-1">
           <Link
-            href="/app/admin/analytics"
+            href="/app/admin/overview"
             className="flex items-center"
-            aria-label="Admin analytics"
+            aria-label="Admin overview"
           >
             <LogoAccent className="h-8" />
             <Badge variant="secondary" className="ml-1">
-              Analytics
+              Admin
             </Badge>
           </Link>
           <SidebarTrigger

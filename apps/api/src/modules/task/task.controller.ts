@@ -6,10 +6,10 @@ import prisma from '../../lib/prisma.js'
 const CreateTaskSchema = z.object({
   title: z.string().min(1).max(200),
   description: z.string().max(2000).optional(),
-  planId: z.string().optional(),
   status: z.enum(['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED']).optional(),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).optional(),
   dueDate: z.string().datetime().optional(),
+  durationMinutes: z.number().int().positive().optional(),
   order: z.number().int().optional(),
 })
 
@@ -22,12 +22,40 @@ const ReorderSchema = z.object({
 export class TaskController extends BaseController {
   async listTasks(req: Request, res: Response): Promise<void> {
     try {
-      const { planId, status, priority } = req.query
+      const { status, priority, planId } = req.query
+
+      // If planId provided, return PlanSteps mapped as tasks (Task no longer has planId)
+      if (planId) {
+        const steps = await prisma.planStep.findMany({
+          where: {
+            userId: req.dbUser.id,
+            planId: String(planId),
+            ...(status ? { status: String(status) as never } : {}),
+          },
+          orderBy: { order: 'asc' },
+        })
+        // Map PlanStep → Task-compatible shape the extension expects
+        const mapped = steps.map(s => ({
+          id: s.id,
+          title: s.title,
+          description: s.description,
+          status: s.status,
+          priority: 'MEDIUM',
+          dueDate: s.dueDate,
+          durationMinutes: s.estimatedMinutes,
+          order: s.order,
+          planId: s.planId,
+          userId: s.userId,
+          createdAt: s.createdAt,
+          updatedAt: s.updatedAt,
+        }))
+        this.handleSuccess(res, mapped)
+        return
+      }
 
       const tasks = await prisma.task.findMany({
         where: {
           userId: req.dbUser.id,
-          ...(planId === 'null' ? { planId: null } : planId ? { planId: String(planId) } : {}),
           ...(status ? { status: String(status) as never } : {}),
           ...(priority ? { priority: String(priority) as never } : {}),
         },

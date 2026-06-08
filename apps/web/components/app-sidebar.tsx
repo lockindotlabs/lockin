@@ -4,31 +4,51 @@ import * as React from "react"
 
 import { NavFavorites } from "@/components/nav-favorites"
 import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
   SidebarRail,
   SidebarTrigger,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
 import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@workspace/ui/components/command"
+import {
   SearchIcon,
-  SparklesIcon,
   HomeIcon,
-  CalendarIcon,
-  Settings2Icon,
   PlusIcon,
+  ListCheckIcon,
+  MessageCircleIcon,
+  ListFilterIcon,
+  GoalIcon,
 } from "lucide-react"
-import { LogoWordmark } from "@workspace/ui/components/logo-wordmark"
-import { clearChatMessages } from "@/lib/chat/local-chat-persistence"
+import { deleteDbChat } from "@/lib/chat/db-chat-client"
 import { useChatSummaries } from "@/lib/chat/use-chat-summaries"
 import { deletePlan } from "@/lib/plans/plan-repository"
 import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
 import { buildAskHref } from "@/lib/routing/ask-url"
+import { buildPlanHref } from "@/lib/routing/plan-url"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import type { FavoriteItem } from "@/components/nav-favorites"
+import { LogoAccent } from "@workspace/ui/components/logo-accent"
+import { AiPlannerIcon } from "./icons"
+import { NavUser } from "./nav-user"
+import { UpgradeDialog } from "./upgrade-dialog"
+import { Button } from "@workspace/ui/components/button"
+import { Kbd } from "@workspace/ui/components/kbd"
+import { useBillingState } from "@/lib/billing/use-billing-state"
 
 type NavItem = {
   title: string
@@ -36,19 +56,6 @@ type NavItem = {
   icon: React.ReactNode
   isActive?: boolean
 }
-
-const navSecondary = [
-  {
-    title: "Calendar",
-    url: "#",
-    icon: <CalendarIcon />,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: <Settings2Icon />,
-  },
-]
 
 function getPlanIdFromPath(pathname: string) {
   const match = pathname.match(/^\/app\/plan\/(.+)$/)
@@ -60,8 +67,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const { plans } = usePlanSummaries()
-  const { chats } = useChatSummaries()
+  const { plans, isLoaded: arePlansLoaded } = usePlanSummaries()
+  const { chats, isLoaded: areChatsLoaded } = useChatSummaries()
   const { state } = useSidebar()
 
   const currentChatId = searchParams.get("id") ?? searchParams.get("t")
@@ -70,27 +77,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const navMain: NavItem[] = [
     {
-      title: "Search",
-      url: "#",
-      icon: <SearchIcon />,
-    },
-    {
       title: "Home",
       url: "/app",
       icon: <HomeIcon />,
       isActive: pathname === "/app",
     },
     {
-      title: "Ask AI",
-      url: buildAskHref(),
-      icon: <SparklesIcon />,
-      isActive: pathname === "/app/ask",
+      title: "Plans",
+      url: "/app/plans",
+      icon: <ListCheckIcon />,
+      isActive: pathname === "/app/plans",
     },
     {
-      title: "New plan",
-      url: "/app/plan",
-      icon: <PlusIcon />,
-      isActive: pathname === "/app/plan" || pathname.startsWith("/app/plan/"),
+      title: "Focus",
+      url: "/app/focus",
+      icon: <GoalIcon />,
+      isActive: pathname.startsWith("/app/focus"),
+    },
+    {
+      title: "Ask AI",
+      url: buildAskHref(),
+      icon: <AiPlannerIcon />,
+      isActive: pathname === "/app/ask",
     },
   ]
 
@@ -106,12 +114,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const recentPlans: FavoriteItem[] = plans.slice(0, 10).map((plan) => ({
     id: plan.id,
     name: plan.title.trim() || "Untitled Plan",
-    url: `/app/plan?id=${plan.id}`,
+    url: buildPlanHref({ planId: plan.id }),
     isActive:
       (pathname === "/app/ask" && currentPlanId === plan.id) ||
       (pathname === "/app/plan" && currentPlanId === plan.id) ||
       pathnamePlanId === plan.id,
   }))
+
+  const handleCreatePlan = () => {
+    router.push(buildPlanHref())
+  }
 
   const handleDeletePlan = async (item: FavoriteItem) => {
     const shouldDelete = window.confirm(`Delete "${item.name}"?`)
@@ -131,50 +143,122 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     }
   }
 
-  const handleDeleteChat = (item: FavoriteItem) => {
+  const handleDeleteChat = async (item: FavoriteItem) => {
     const shouldDelete = window.confirm(`Delete "${item.name}"?`)
     if (!shouldDelete) {
       return
     }
 
-    clearChatMessages(`ask:${item.id}`)
+    await deleteDbChat(item.id)
 
     if (pathname === "/app/ask" && searchParams.get("id") === item.id) {
       router.replace(buildAskHref())
     }
   }
 
+  const [open, setOpen] = React.useState(false)
+
   return (
-    <Sidebar
-      className="border-r-0 font-medium"
-      {...props}
-      collapsible="offcanvas"
-    >
-      <SidebarHeader>
-        <div className="flex items-center justify-between gap-2 px-1 py-1.5">
-          <LogoWordmark className="h-6" />
-          <SidebarTrigger
-            className={`${state == "collapsed" && "pointer-events-none opacity-0"} transition-opacity`}
+    <>
+      {" "}
+      <Sidebar
+        className="border-r-0 font-medium"
+        {...props}
+        collapsible="offcanvas"
+      >
+        <SidebarHeader>
+          <div className="flex items-center justify-between gap-2 pr-1">
+            <LogoAccent
+              className="h-8 cursor-pointer"
+              onClick={() => {
+                router.push("/app")
+              }}
+            />
+            <SidebarTrigger
+              className={`${state == "collapsed" && "pointer-events-none opacity-0"} transition-opacity`}
+            />
+          </div>
+          <SidebarMenuItem>
+            <Button
+              variant={"outline"}
+              className="w-full border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              onClick={handleCreatePlan}
+            >
+              <PlusIcon data-icon="inline-start" />
+              New Plan
+            </Button>
+          </SidebarMenuItem>
+          <SidebarMenu>
+            <SidebarMenuButton onClick={() => setOpen(!open)}>
+              <SearchIcon data-icon="inline-start" />
+              Search
+            </SidebarMenuButton>
+            <CommandDialog open={open} onOpenChange={setOpen}>
+              <Command>
+                <CommandInput
+                  placeholder="Type a command or search..."
+                  sideButtons={
+                    <Button variant="ghost" size="icon-sm">
+                      <ListFilterIcon />
+                      <span className="sr-only">Filter</span>
+                    </Button>
+                  }
+                />
+                <CommandList>
+                  <CommandEmpty>No results found.</CommandEmpty>
+                  <CommandGroup className="mt-1">
+                    <div className="flex gap-2">
+                      <Button variant={"ghost"} size={"sm"}>
+                        <MessageCircleIcon />
+                        Chats
+                      </Button>
+                      <Button variant={"ghost"} size={"sm"}>
+                        <ListCheckIcon />
+                        Plan
+                      </Button>
+                    </div>
+                  </CommandGroup>
+                  <CommandGroup heading="Recommended">
+                    <CommandItem>Calendar1</CommandItem>
+                  </CommandGroup>
+                  <CommandGroup heading="Recent">
+                    <CommandItem>Calendar</CommandItem>
+                    <CommandItem>Search Emoji</CommandItem>
+                    <CommandItem>Calculator</CommandItem>
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+              <div className="px-3 py-2 text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
+                  Use <Kbd>Ctrl + K</Kbd> to open the command palette
+                </p>
+              </div>
+            </CommandDialog>
+            <NavMain items={navMain} />
+          </SidebarMenu>
+        </SidebarHeader>
+        <SidebarContent>
+          <NavFavorites
+            label="Recent chats"
+            emptyLabel="No recent chats yet"
+            favorites={recentChats}
+            isLoading={!areChatsLoaded}
+            onDelete={handleDeleteChat}
           />
-        </div>
-        <NavMain items={navMain} />
-      </SidebarHeader>
-      <SidebarContent>
-        <NavFavorites
-          label="Recent chats"
-          emptyLabel="No recent chats yet"
-          favorites={recentChats}
-          onDelete={handleDeleteChat}
-        />
-        <NavFavorites
-          label="Recent plans"
-          emptyLabel="No saved plans yet"
-          favorites={recentPlans}
-          onDelete={handleDeletePlan}
-        />
-        {/* <NavSecondary items={navSecondary} className="mt-auto" / */}
-      </SidebarContent>
-      <SidebarRail />
-    </Sidebar>
+          <NavFavorites
+            label="Recent plans"
+            emptyLabel="No saved plans yet"
+            favorites={recentPlans}
+            isLoading={!arePlansLoaded}
+            onDelete={handleDeletePlan}
+          />
+          {/* <NavSecondary items={navSecondary} className="mt-auto" / */}
+        </SidebarContent>
+        <SidebarFooter>
+          <NavUser />
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
+    </>
   )
 }

@@ -1,0 +1,12 @@
+{
+  "functions": [
+    {
+      "source": "apps/api/dist",
+      "codebase": "api",
+      "ignore": [
+        "node_modules",
+        ".git"
+      ]
+    }
+  ]
+}

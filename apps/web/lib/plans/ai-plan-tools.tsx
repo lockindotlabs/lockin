@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useAuth } from "@clerk/nextjs"
 import {
   type ToolCallMessagePartProps,
   useAssistantTool,
@@ -14,6 +15,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
+import { createPlanOnServer, updatePlanOnServer } from "@/lib/plans/plan-api"
 
 import { buttonVariants } from "@workspace/ui/components/button"
 import { cn } from "@workspace/ui/lib/utils"
@@ -361,11 +363,19 @@ function PlanPreview({
   )
 }
 
-export function PlanAssistantTools() {
+export function PlanAssistantTools({
+  chatSessionId: propChatSessionId,
+  ensureChatId,
+}: {
+  chatSessionId?: string
+  ensureChatId?: () => Promise<string>
+} = {}) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const activePlanId = searchParams.get("p")
-  const chatSessionId = searchParams.get("id") ?? searchParams.get("t")
+  const urlChatSessionId = searchParams.get("id") ?? searchParams.get("t")
+  const chatSessionId = propChatSessionId ?? urlChatSessionId
+  const { getToken } = useAuth()
 
   const createPlanTool = React.useMemo(
     () => ({
@@ -379,12 +389,19 @@ export function PlanAssistantTools() {
         await savePlan(plan)
         const nextParams = new URLSearchParams()
 
-        if (chatSessionId) {
-          nextParams.set("id", chatSessionId)
+        // Ensure we have a chat ID before navigating — create one if needed
+        const resolvedChatId = chatSessionId ?? (ensureChatId ? await ensureChatId() : null)
+        if (resolvedChatId) {
+          nextParams.set("id", resolvedChatId)
         }
 
         nextParams.set("p", plan.id)
         router.push(`/app/ask?${nextParams.toString()}`)
+
+        // fire-and-forget: sync to server and store serverId locally
+        createPlanOnServer(plan, getToken).then(async (serverId) => {
+          if (serverId) await savePlan({ ...plan, serverId })
+        })
 
         return {
           ok: true,
@@ -445,6 +462,16 @@ export function PlanAssistantTools() {
           })
         )
 
+        // fire-and-forget: update server (create if not yet synced)
+        const serverId = existingPlan.serverId
+        if (serverId) {
+          updatePlanOnServer(plan, serverId, getToken)
+        } else {
+          createPlanOnServer(plan, getToken).then(async (newServerId) => {
+            if (newServerId) await savePlan({ ...plan, serverId: newServerId })
+          })
+        }
+
         return {
           ok: true,
           planId: plan.id,
@@ -468,7 +495,7 @@ export function PlanAssistantTools() {
         />
       ),
     }),
-    [activePlanId, chatSessionId]
+    [activePlanId, chatSessionId, getToken]
   )
 
   useAssistantTool(createPlanTool)

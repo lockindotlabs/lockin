@@ -16,12 +16,16 @@ export function requireAuth() {
     if (authHeader?.startsWith('Bearer ')) {
       const raw = authHeader.slice(7)
       if (!raw.startsWith('eyJ')) {
-        const record = await prisma.extensionToken.findUnique({ where: { token: raw } })
-        if (record) {
-          req.extensionTokenUserId = record.userId
-          prisma.extensionToken.update({ where: { id: record.id }, data: { lastUsedAt: new Date() } }).catch(() => {})
-          next()
-          return
+        try {
+          const record = await prisma.extensionToken.findUnique({ where: { token: raw } })
+          if (record) {
+            req.extensionTokenUserId = record.userId
+            prisma.extensionToken.update({ where: { id: record.id }, data: { lastUsedAt: new Date() } }).catch(() => {})
+            next()
+            return
+          }
+        } catch {
+          // DB unreachable — fall through to 401
         }
       }
     }

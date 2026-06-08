@@ -236,7 +236,7 @@ export default function TaskList({
       )}
 
       {/* Add Task Form */}
-      <div className="mx-auto my-2 flex w-full max-w-3xl">
+      <div className="mx-auto my-4 flex w-full max-w-3xl pb-24">
         <Popover open={isAddTaskOpen} onOpenChange={setIsAddTaskOpen}>
           <PopoverTrigger
             ref={popoverTriggerRef}
@@ -247,12 +247,11 @@ export default function TaskList({
                 <Button variant="ghost" />
               )
             }
-            className={"mx-auto"}
           >
             <PlusIcon />
             <span>Add new step</span>
           </PopoverTrigger>
-          <PopoverContent className="w-3xl" sideOffset={12}>
+          <PopoverContent className="w-2xl" align="start" sideOffset={12}>
             <div className="flex flex-col gap-2">
               <div>
                 <textarea

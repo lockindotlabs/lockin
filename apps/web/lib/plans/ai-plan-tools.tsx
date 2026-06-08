@@ -363,11 +363,18 @@ function PlanPreview({
   )
 }
 
-export function PlanAssistantTools() {
+export function PlanAssistantTools({
+  chatSessionId: propChatSessionId,
+  ensureChatId,
+}: {
+  chatSessionId?: string
+  ensureChatId?: () => Promise<string>
+} = {}) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const activePlanId = searchParams.get("p")
-  const chatSessionId = searchParams.get("id") ?? searchParams.get("t")
+  const urlChatSessionId = searchParams.get("id") ?? searchParams.get("t")
+  const chatSessionId = propChatSessionId ?? urlChatSessionId
   const { getToken } = useAuth()
 
   const createPlanTool = React.useMemo(
@@ -382,8 +389,10 @@ export function PlanAssistantTools() {
         await savePlan(plan)
         const nextParams = new URLSearchParams()
 
-        if (chatSessionId) {
-          nextParams.set("id", chatSessionId)
+        // Ensure we have a chat ID before navigating — create one if needed
+        const resolvedChatId = chatSessionId ?? (ensureChatId ? await ensureChatId() : null)
+        if (resolvedChatId) {
+          nextParams.set("id", resolvedChatId)
         }
 
         nextParams.set("p", plan.id)

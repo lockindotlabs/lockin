@@ -90,13 +90,18 @@ export function serializePlanSummary(plan: {
   id: string
   name: string
   updatedAt: Date
-  _count: { steps: number }
+  steps: { id: string; status: "TODO" | "IN_PROGRESS" | "DONE" | "CANCELLED"; dueDate: Date | null }[]
 }) {
   return {
     id: plan.id,
     title: plan.name,
-    taskCount: plan._count.steps,
+    taskCount: plan.steps.length,
     updatedAt: plan.updatedAt.toISOString(),
+    steps: plan.steps.map((step) => ({
+      id: step.id,
+      isCompleted: step.status === "DONE" || step.status === "CANCELLED",
+      dueDate: step.dueDate ? step.dueDate.toISOString() : null,
+    })),
   }
 }
 
@@ -112,7 +117,7 @@ export async function listOwnedPlans(userId: string) {
     where: { userId, deletedAt: null },
     orderBy: { updatedAt: "desc" },
     take: 50,
-    include: { _count: { select: { steps: true } } },
+    include: { steps: { select: { id: true, status: true, dueDate: true } } },
   })
 }
 

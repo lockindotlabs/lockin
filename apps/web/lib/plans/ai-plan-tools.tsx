@@ -5,6 +5,7 @@ import { useAuth } from "@clerk/nextjs"
 import {
   type ToolCallMessagePartProps,
   useAssistantTool,
+  useInlineRender,
 } from "@assistant-ui/react"
 import { format } from "date-fns"
 import {
@@ -22,9 +23,12 @@ import { cn } from "@workspace/ui/lib/utils"
 import {
   getPlan,
   savePlan,
+  listPlans,
   type SavedPlan,
   type SavedPlanTask,
 } from "@/lib/plans/plan-repository"
+import { buildPlanHref } from "@/lib/routing/plan-url"
+import { buildAskHref } from "@/lib/routing/ask-url"
 
 export const AI_PLAN_REWRITE_EVENT = "lockin:ai-plan-rewritten"
 
@@ -417,7 +421,8 @@ export function PlanAssistantTools({
   const searchParams = useSearchParams()
   const activePlanId = searchParams.get("p")
   const urlChatSessionId = searchParams.get("id") ?? searchParams.get("t")
-  const effectiveChatSessionId = chatSessionId ?? urlChatSessionId
+  const effectiveChatSessionId = propChatSessionId ?? urlChatSessionId
+  const { getToken } = useAuth()
 
   const renderCreatePlanTool = useInlineRender<PlanToolInput, PlanToolResult>(
     (props) => (
@@ -454,7 +459,7 @@ export function PlanAssistantTools({
 
         // Ensure we have a chat ID before navigating — create one if needed
         const resolvedChatId =
-          chatSessionId ?? (ensureChatId ? await ensureChatId() : null)
+          propChatSessionId ?? (ensureChatId ? await ensureChatId() : null)
         if (resolvedChatId) {
           nextParams.set("id", resolvedChatId)
         }
@@ -486,11 +491,11 @@ export function PlanAssistantTools({
         <PlanToolResultCard
           {...props}
           action="create"
-          chatSessionId={chatSessionId}
+          chatSessionId={propChatSessionId ?? null}
         />
       ),
     }),
-    [chatSessionId, router]
+    [propChatSessionId, router, getToken]
   )
 
   const rewriteActivePlanTool = React.useMemo(
@@ -555,11 +560,11 @@ export function PlanAssistantTools({
         <PlanToolResultCard
           {...props}
           action="rewrite"
-          chatSessionId={chatSessionId}
+          chatSessionId={propChatSessionId ?? null}
         />
       ),
     }),
-    [activePlanId, chatSessionId, getToken]
+    [activePlanId, propChatSessionId, getToken]
   )
 
   useAssistantTool(createPlanTool)

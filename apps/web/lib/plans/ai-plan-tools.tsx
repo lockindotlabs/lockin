@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useAuth } from "@clerk/nextjs"
 import {
   type ToolCallMessagePartProps,
   useAssistantTool,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
+import { createPlanOnServer, updatePlanOnServer } from "@/lib/plans/plan-api"
 
 import { buttonVariants } from "@workspace/ui/components/button"
 import { cn } from "@workspace/ui/lib/utils"
@@ -168,9 +170,6 @@ function buildPlan(input: PlanToolInput, existingPlan?: SavedPlan): SavedPlan {
     createdAt: existingPlan?.createdAt ?? now,
     updatedAt: now,
     version: 1,
-    source: "AI",
-    aiMode: "ASSISTED",
-    breakdownIntensity: existingPlan?.breakdownIntensity,
   }
 }
 
@@ -468,6 +467,11 @@ export function PlanAssistantTools({
         nextParams.set("p", plan.id)
         router.push(`/app/ask?${nextParams.toString()}`)
 
+        // fire-and-forget: sync to server and store serverId locally
+        createPlanOnServer(plan, getToken).then(async (serverId) => {
+          if (serverId) await savePlan({ ...plan, serverId })
+        })
+
         return {
           ok: true,
           planId: plan.id,
@@ -526,6 +530,16 @@ export function PlanAssistantTools({
             detail: { planId: plan.id },
           })
         )
+
+        // fire-and-forget: update server (create if not yet synced)
+        const serverId = existingPlan.serverId
+        if (serverId) {
+          updatePlanOnServer(plan, serverId, getToken)
+        } else {
+          createPlanOnServer(plan, getToken).then(async (newServerId) => {
+            if (newServerId) await savePlan({ ...plan, serverId: newServerId })
+          })
+        }
 
         return {
           ok: true,

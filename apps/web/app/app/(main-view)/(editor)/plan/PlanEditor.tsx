@@ -33,8 +33,9 @@ import {
   type SavedPlanTask,
 } from "@/lib/plans/plan-repository"
 import { markPlanOpened } from "@/lib/plans/recently-opened-plans"
+import { createPlanOnServer, updatePlanOnServer } from "@/lib/plans/plan-api"
 import { AI_PLAN_REWRITE_EVENT } from "@/lib/plans/ai-plan-tools"
-import { RedirectToSignIn, Show } from "@clerk/nextjs"
+import { RedirectToSignIn, Show, UserButton, useAuth } from "@clerk/nextjs"
 import { Separator } from "@workspace/ui/components/separator"
 
 type PlanEditorProps = {
@@ -168,6 +169,7 @@ function PlanEditorLoadingState({ state }: { state: string }) {
 
 export default function PlanEditor({ planId }: PlanEditorProps) {
   const { state } = useSidebar()
+  const { getToken } = useAuth()
   const [persisted, setPersisted] = React.useState<EditorTask[]>([])
   const [persistedPlan, setPersistedPlan] =
     React.useState<EditorPlan>(createEmptyPlan)

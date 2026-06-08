@@ -81,3 +81,16 @@ export function notifyExtensionSessionEnded(params: {
 }) {
   notifyExtension({ type: "lockin-session-end", ...params })
 }
+
+// Pause/resume are purely local UI state in the session page — never
+// persisted server-side (no API field, nothing to poll). This push is the
+// ONLY channel through which the extension can learn the sprint was paused;
+// without it the extension's timer just keeps counting down regardless of
+// what the app shows.
+export function notifyExtensionSessionPaused(sessionId: string) {
+  notifyExtension({ type: "lockin-session-pause", sessionId })
+}
+
+export function notifyExtensionSessionResumed(sessionId: string) {
+  notifyExtension({ type: "lockin-session-resume", sessionId })
+}

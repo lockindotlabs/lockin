@@ -23,7 +23,11 @@ import {
   type PlanStep,
   type TaskSnapshot,
 } from "@/lib/focus/focus-api"
-import { notifyExtensionSessionEnded } from "@/lib/focus/extension-bridge"
+import {
+  notifyExtensionSessionEnded,
+  notifyExtensionSessionPaused,
+  notifyExtensionSessionResumed,
+} from "@/lib/focus/extension-bridge"
 
 // ─── Timer display ────────────────────────────────────────────────────────────
 
@@ -282,7 +286,18 @@ export default function SessionPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setPaused((p) => !p)}
+            onClick={() =>
+              setPaused((p) => {
+                const next = !p
+                // Pause/resume is local-only UI state (never persisted to the
+                // server), so pushing to the extension is the only way it can
+                // find out — without this its timer keeps running regardless
+                // of what the app shows.
+                if (next) notifyExtensionSessionPaused(sessionId)
+                else notifyExtensionSessionResumed(sessionId)
+                return next
+              })
+            }
             disabled={ending}
           >
             {paused ? (

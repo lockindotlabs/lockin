@@ -95,7 +95,13 @@ export default function PlansPage() {
         <SidebarTrigger
           className={`${state == "expanded" && "pointer-events-none hidden opacity-0"} transition-all`}
         />
-        <Button variant="ghost" size="sm" render={<Link href="/app" />}>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          nativeButton={false}
+          render={<Link href="/app" />}
+        >
           <ArrowLeftIcon data-icon="inline-start" />
           Home
         </Button>

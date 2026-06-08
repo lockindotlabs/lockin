@@ -26,58 +26,58 @@ export type AggregateUser = {
 
 export type UserMinAggregateOutputType = {
   id: string | null
-  createdAt: Date | null
-  updatedAt: Date | null
   isActive: boolean | null
   planTier: $Enums.BillingTier | null
   planExpiresAt: Date | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type UserMaxAggregateOutputType = {
   id: string | null
-  createdAt: Date | null
-  updatedAt: Date | null
   isActive: boolean | null
   planTier: $Enums.BillingTier | null
   planExpiresAt: Date | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type UserCountAggregateOutputType = {
   id: number
-  createdAt: number
-  updatedAt: number
   isActive: number
   planTier: number
   planExpiresAt: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
 
 export type UserMinAggregateInputType = {
   id?: true
-  createdAt?: true
-  updatedAt?: true
   isActive?: true
   planTier?: true
   planExpiresAt?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type UserMaxAggregateInputType = {
   id?: true
-  createdAt?: true
-  updatedAt?: true
   isActive?: true
   planTier?: true
   planExpiresAt?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type UserCountAggregateInputType = {
   id?: true
-  createdAt?: true
-  updatedAt?: true
   isActive?: true
   planTier?: true
   planExpiresAt?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -155,11 +155,11 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type UserGroupByOutputType = {
   id: string
-  createdAt: Date
-  updatedAt: Date
   isActive: boolean
   planTier: $Enums.BillingTier
   planExpiresAt: Date | null
+  createdAt: Date
+  updatedAt: Date
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -185,40 +185,40 @@ export type UserWhereInput = {
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.StringFilter<"User"> | string
-  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   isActive?: Prisma.BoolFilter<"User"> | boolean
   planTier?: Prisma.EnumBillingTierFilter<"User"> | $Enums.BillingTier
   planExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  chats?: Prisma.ChatListRelationFilter
-  extensionTokens?: Prisma.ExtensionTokenListRelationFilter
-  focusSessions?: Prisma.FocusSessionListRelationFilter
-  PaymentOrder?: Prisma.PaymentOrderListRelationFilter
+  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
+  projects?: Prisma.ProjectListRelationFilter
   plans?: Prisma.PlanListRelationFilter
   planSteps?: Prisma.PlanStepListRelationFilter
-  projects?: Prisma.ProjectListRelationFilter
-  Sprint?: Prisma.SprintListRelationFilter
+  chats?: Prisma.ChatListRelationFilter
   tasks?: Prisma.TaskListRelationFilter
-  settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
+  focusSessions?: Prisma.FocusSessionListRelationFilter
+  extensionTokens?: Prisma.ExtensionTokenListRelationFilter
+  paymentOrders?: Prisma.PaymentOrderListRelationFilter
+  Sprint?: Prisma.SprintListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   planTier?: Prisma.SortOrder
   planExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  chats?: Prisma.ChatOrderByRelationAggregateInput
-  extensionTokens?: Prisma.ExtensionTokenOrderByRelationAggregateInput
-  focusSessions?: Prisma.FocusSessionOrderByRelationAggregateInput
-  PaymentOrder?: Prisma.PaymentOrderOrderByRelationAggregateInput
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  settings?: Prisma.UserSettingsOrderByWithRelationInput
+  projects?: Prisma.ProjectOrderByRelationAggregateInput
   plans?: Prisma.PlanOrderByRelationAggregateInput
   planSteps?: Prisma.PlanStepOrderByRelationAggregateInput
-  projects?: Prisma.ProjectOrderByRelationAggregateInput
-  Sprint?: Prisma.SprintOrderByRelationAggregateInput
+  chats?: Prisma.ChatOrderByRelationAggregateInput
   tasks?: Prisma.TaskOrderByRelationAggregateInput
-  settings?: Prisma.UserSettingsOrderByWithRelationInput
+  focusSessions?: Prisma.FocusSessionOrderByRelationAggregateInput
+  extensionTokens?: Prisma.ExtensionTokenOrderByRelationAggregateInput
+  paymentOrders?: Prisma.PaymentOrderOrderByRelationAggregateInput
+  Sprint?: Prisma.SprintOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -226,30 +226,30 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
-  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   isActive?: Prisma.BoolFilter<"User"> | boolean
   planTier?: Prisma.EnumBillingTierFilter<"User"> | $Enums.BillingTier
   planExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  chats?: Prisma.ChatListRelationFilter
-  extensionTokens?: Prisma.ExtensionTokenListRelationFilter
-  focusSessions?: Prisma.FocusSessionListRelationFilter
-  PaymentOrder?: Prisma.PaymentOrderListRelationFilter
+  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
+  projects?: Prisma.ProjectListRelationFilter
   plans?: Prisma.PlanListRelationFilter
   planSteps?: Prisma.PlanStepListRelationFilter
-  projects?: Prisma.ProjectListRelationFilter
-  Sprint?: Prisma.SprintListRelationFilter
+  chats?: Prisma.ChatListRelationFilter
   tasks?: Prisma.TaskListRelationFilter
-  settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
+  focusSessions?: Prisma.FocusSessionListRelationFilter
+  extensionTokens?: Prisma.ExtensionTokenListRelationFilter
+  paymentOrders?: Prisma.PaymentOrderListRelationFilter
+  Sprint?: Prisma.SprintListRelationFilter
 }, "id">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   planTier?: Prisma.SortOrder
   planExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -260,141 +260,141 @@ export type UserScalarWhereWithAggregatesInput = {
   OR?: Prisma.UserScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   planTier?: Prisma.EnumBillingTierWithAggregatesFilter<"User"> | $Enums.BillingTier
   planExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
 
 export type UserCreateInput = {
   id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanCreateNestedManyWithoutUserInput
   planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
   id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
   planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
   planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
   planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
   id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   planTier?: Prisma.SortOrder
   planExpiresAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   planTier?: Prisma.SortOrder
   planExpiresAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   planTier?: Prisma.SortOrder
   planExpiresAt?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -404,10 +404,6 @@ export type UserScalarRelationFilter = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
 }
 
 export type BoolFieldUpdateOperationsInput = {
@@ -420,6 +416,24 @@ export type EnumBillingTierFieldUpdateOperationsInput = {
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
+}
+
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
+}
+
+export type UserCreateNestedOneWithoutChatsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutChatsInput, Prisma.UserUncheckedCreateWithoutChatsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutChatsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutChatsInput, Prisma.UserUncheckedCreateWithoutChatsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatsInput
+  upsert?: Prisma.UserUpsertWithoutChatsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutChatsInput, Prisma.UserUpdateWithoutChatsInput>, Prisma.UserUncheckedUpdateWithoutChatsInput>
 }
 
 export type UserCreateNestedOneWithoutExtensionTokensInput = {
@@ -492,20 +506,6 @@ export type UserUpdateOneRequiredWithoutPlanStepsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPlanStepsInput, Prisma.UserUpdateWithoutPlanStepsInput>, Prisma.UserUncheckedUpdateWithoutPlanStepsInput>
 }
 
-export type UserCreateNestedOneWithoutChatsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutChatsInput, Prisma.UserUncheckedCreateWithoutChatsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatsInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutChatsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutChatsInput, Prisma.UserUncheckedCreateWithoutChatsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatsInput
-  upsert?: Prisma.UserUpsertWithoutChatsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutChatsInput, Prisma.UserUpdateWithoutChatsInput>, Prisma.UserUncheckedUpdateWithoutChatsInput>
-}
-
 export type UserCreateNestedOneWithoutTasksInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutTasksInput, Prisma.UserUncheckedCreateWithoutTasksInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutTasksInput
@@ -534,18 +534,18 @@ export type UserUpdateOneRequiredWithoutFocusSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFocusSessionsInput, Prisma.UserUpdateWithoutFocusSessionsInput>, Prisma.UserUncheckedUpdateWithoutFocusSessionsInput>
 }
 
-export type UserCreateNestedOneWithoutPaymentOrderInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutPaymentOrderInput, Prisma.UserUncheckedCreateWithoutPaymentOrderInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPaymentOrderInput
+export type UserCreateNestedOneWithoutPaymentOrdersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPaymentOrdersInput, Prisma.UserUncheckedCreateWithoutPaymentOrdersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPaymentOrdersInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutPaymentOrderNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutPaymentOrderInput, Prisma.UserUncheckedCreateWithoutPaymentOrderInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPaymentOrderInput
-  upsert?: Prisma.UserUpsertWithoutPaymentOrderInput
+export type UserUpdateOneRequiredWithoutPaymentOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPaymentOrdersInput, Prisma.UserUncheckedCreateWithoutPaymentOrdersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPaymentOrdersInput
+  upsert?: Prisma.UserUpsertWithoutPaymentOrdersInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPaymentOrderInput, Prisma.UserUpdateWithoutPaymentOrderInput>, Prisma.UserUncheckedUpdateWithoutPaymentOrderInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPaymentOrdersInput, Prisma.UserUpdateWithoutPaymentOrdersInput>, Prisma.UserUncheckedUpdateWithoutPaymentOrdersInput>
 }
 
 export type UserCreateNestedOneWithoutSprintInput = {
@@ -562,480 +562,40 @@ export type UserUpdateOneRequiredWithoutSprintNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSprintInput, Prisma.UserUpdateWithoutSprintInput>, Prisma.UserUncheckedUpdateWithoutSprintInput>
 }
 
-export type UserCreateWithoutExtensionTokensInput = {
-  id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  isActive?: boolean
-  planTier?: $Enums.BillingTier
-  planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
-  plans?: Prisma.PlanCreateNestedManyWithoutUserInput
-  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
-  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutExtensionTokensInput = {
-  id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  isActive?: boolean
-  planTier?: $Enums.BillingTier
-  planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
-  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
-  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
-  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutExtensionTokensInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutExtensionTokensInput, Prisma.UserUncheckedCreateWithoutExtensionTokensInput>
-}
-
-export type UserUpsertWithoutExtensionTokensInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutExtensionTokensInput, Prisma.UserUncheckedUpdateWithoutExtensionTokensInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutExtensionTokensInput, Prisma.UserUncheckedCreateWithoutExtensionTokensInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutExtensionTokensInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutExtensionTokensInput, Prisma.UserUncheckedUpdateWithoutExtensionTokensInput>
-}
-
-export type UserUpdateWithoutExtensionTokensInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
-  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
-  plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
-  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
-  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutExtensionTokensInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
-  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
-  plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
-  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
-  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
-}
-
-export type UserCreateWithoutSettingsInput = {
-  id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  isActive?: boolean
-  planTier?: $Enums.BillingTier
-  planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
-  plans?: Prisma.PlanCreateNestedManyWithoutUserInput
-  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
-  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutSettingsInput = {
-  id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  isActive?: boolean
-  planTier?: $Enums.BillingTier
-  planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
-  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
-  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
-  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutSettingsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
-}
-
-export type UserUpsertWithoutSettingsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutSettingsInput, Prisma.UserUncheckedUpdateWithoutSettingsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutSettingsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutSettingsInput, Prisma.UserUncheckedUpdateWithoutSettingsInput>
-}
-
-export type UserUpdateWithoutSettingsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
-  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
-  plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
-  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
-  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutSettingsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
-  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
-  plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
-  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
-  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserCreateWithoutProjectsInput = {
-  id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  isActive?: boolean
-  planTier?: $Enums.BillingTier
-  planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
-  plans?: Prisma.PlanCreateNestedManyWithoutUserInput
-  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
-  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutProjectsInput = {
-  id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  isActive?: boolean
-  planTier?: $Enums.BillingTier
-  planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
-  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
-  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
-  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutProjectsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutProjectsInput, Prisma.UserUncheckedCreateWithoutProjectsInput>
-}
-
-export type UserUpsertWithoutProjectsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutProjectsInput, Prisma.UserUncheckedUpdateWithoutProjectsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutProjectsInput, Prisma.UserUncheckedCreateWithoutProjectsInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutProjectsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutProjectsInput, Prisma.UserUncheckedUpdateWithoutProjectsInput>
-}
-
-export type UserUpdateWithoutProjectsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
-  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
-  plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
-  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
-  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutProjectsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
-  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
-  plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
-  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
-  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
-}
-
-export type UserCreateWithoutPlansInput = {
-  id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  isActive?: boolean
-  planTier?: $Enums.BillingTier
-  planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
-  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
-  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutPlansInput = {
-  id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  isActive?: boolean
-  planTier?: $Enums.BillingTier
-  planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
-  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
-  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutPlansInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutPlansInput, Prisma.UserUncheckedCreateWithoutPlansInput>
-}
-
-export type UserUpsertWithoutPlansInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutPlansInput, Prisma.UserUncheckedUpdateWithoutPlansInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutPlansInput, Prisma.UserUncheckedCreateWithoutPlansInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutPlansInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutPlansInput, Prisma.UserUncheckedUpdateWithoutPlansInput>
-}
-
-export type UserUpdateWithoutPlansInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
-  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
-  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
-  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutPlansInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
-  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
-  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
-  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
-}
-
-export type UserCreateWithoutPlanStepsInput = {
-  id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  isActive?: boolean
-  planTier?: $Enums.BillingTier
-  planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
-  plans?: Prisma.PlanCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
-  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutPlanStepsInput = {
-  id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  isActive?: boolean
-  planTier?: $Enums.BillingTier
-  planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
-  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
-  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutPlanStepsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutPlanStepsInput, Prisma.UserUncheckedCreateWithoutPlanStepsInput>
-}
-
-export type UserUpsertWithoutPlanStepsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutPlanStepsInput, Prisma.UserUncheckedUpdateWithoutPlanStepsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutPlanStepsInput, Prisma.UserUncheckedCreateWithoutPlanStepsInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutPlanStepsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutPlanStepsInput, Prisma.UserUncheckedUpdateWithoutPlanStepsInput>
-}
-
-export type UserUpdateWithoutPlanStepsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
-  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
-  plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
-  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutPlanStepsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
-  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
-  plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
-  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
-}
-
 export type UserCreateWithoutChatsInput = {
   id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
-  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanCreateNestedManyWithoutUserInput
   planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutChatsInput = {
   id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
-  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
   planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutChatsInput = {
@@ -1056,74 +616,514 @@ export type UserUpdateToOneWithWhereWithoutChatsInput = {
 
 export type UserUpdateWithoutChatsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
   planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChatsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
   planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutExtensionTokensInput = {
+  id: string
+  isActive?: boolean
+  planTier?: $Enums.BillingTier
+  planExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  plans?: Prisma.PlanCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutExtensionTokensInput = {
+  id: string
+  isActive?: boolean
+  planTier?: $Enums.BillingTier
+  planExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutExtensionTokensInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutExtensionTokensInput, Prisma.UserUncheckedCreateWithoutExtensionTokensInput>
+}
+
+export type UserUpsertWithoutExtensionTokensInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutExtensionTokensInput, Prisma.UserUncheckedUpdateWithoutExtensionTokensInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutExtensionTokensInput, Prisma.UserUncheckedCreateWithoutExtensionTokensInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutExtensionTokensInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutExtensionTokensInput, Prisma.UserUncheckedUpdateWithoutExtensionTokensInput>
+}
+
+export type UserUpdateWithoutExtensionTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutExtensionTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSettingsInput = {
+  id: string
+  isActive?: boolean
+  planTier?: $Enums.BillingTier
+  planExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  plans?: Prisma.PlanCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSettingsInput = {
+  id: string
+  isActive?: boolean
+  planTier?: $Enums.BillingTier
+  planExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSettingsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
+}
+
+export type UserUpsertWithoutSettingsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSettingsInput, Prisma.UserUncheckedUpdateWithoutSettingsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSettingsInput, Prisma.UserUncheckedCreateWithoutSettingsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSettingsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSettingsInput, Prisma.UserUncheckedUpdateWithoutSettingsInput>
+}
+
+export type UserUpdateWithoutSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutProjectsInput = {
+  id: string
+  isActive?: boolean
+  planTier?: $Enums.BillingTier
+  planExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  plans?: Prisma.PlanCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutProjectsInput = {
+  id: string
+  isActive?: boolean
+  planTier?: $Enums.BillingTier
+  planExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutProjectsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProjectsInput, Prisma.UserUncheckedCreateWithoutProjectsInput>
+}
+
+export type UserUpsertWithoutProjectsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProjectsInput, Prisma.UserUncheckedUpdateWithoutProjectsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProjectsInput, Prisma.UserUncheckedCreateWithoutProjectsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProjectsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProjectsInput, Prisma.UserUncheckedUpdateWithoutProjectsInput>
+}
+
+export type UserUpdateWithoutProjectsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProjectsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPlansInput = {
+  id: string
+  isActive?: boolean
+  planTier?: $Enums.BillingTier
+  planExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPlansInput = {
+  id: string
+  isActive?: boolean
+  planTier?: $Enums.BillingTier
+  planExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPlansInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPlansInput, Prisma.UserUncheckedCreateWithoutPlansInput>
+}
+
+export type UserUpsertWithoutPlansInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPlansInput, Prisma.UserUncheckedUpdateWithoutPlansInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPlansInput, Prisma.UserUncheckedCreateWithoutPlansInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPlansInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPlansInput, Prisma.UserUncheckedUpdateWithoutPlansInput>
+}
+
+export type UserUpdateWithoutPlansInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPlansInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPlanStepsInput = {
+  id: string
+  isActive?: boolean
+  planTier?: $Enums.BillingTier
+  planExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  plans?: Prisma.PlanCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPlanStepsInput = {
+  id: string
+  isActive?: boolean
+  planTier?: $Enums.BillingTier
+  planExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPlanStepsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPlanStepsInput, Prisma.UserUncheckedCreateWithoutPlanStepsInput>
+}
+
+export type UserUpsertWithoutPlanStepsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPlanStepsInput, Prisma.UserUncheckedUpdateWithoutPlanStepsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPlanStepsInput, Prisma.UserUncheckedCreateWithoutPlanStepsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPlanStepsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPlanStepsInput, Prisma.UserUncheckedUpdateWithoutPlanStepsInput>
+}
+
+export type UserUpdateWithoutPlanStepsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPlanStepsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTasksInput = {
   id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanCreateNestedManyWithoutUserInput
   planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTasksInput = {
   id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
   planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTasksInput = {
@@ -1144,74 +1144,74 @@ export type UserUpdateToOneWithWhereWithoutTasksInput = {
 
 export type UserUpdateWithoutTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
   planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
   planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFocusSessionsInput = {
   id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanCreateNestedManyWithoutUserInput
   planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFocusSessionsInput = {
   id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
   planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFocusSessionsInput = {
@@ -1232,162 +1232,162 @@ export type UserUpdateToOneWithWhereWithoutFocusSessionsInput = {
 
 export type UserUpdateWithoutFocusSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
   planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFocusSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
   planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutPaymentOrderInput = {
+export type UserCreateWithoutPaymentOrdersInput = {
   id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanCreateNestedManyWithoutUserInput
   planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutPaymentOrderInput = {
+export type UserUncheckedCreateWithoutPaymentOrdersInput = {
   id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
   planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
-  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutPaymentOrderInput = {
+export type UserCreateOrConnectWithoutPaymentOrdersInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutPaymentOrderInput, Prisma.UserUncheckedCreateWithoutPaymentOrderInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPaymentOrdersInput, Prisma.UserUncheckedCreateWithoutPaymentOrdersInput>
 }
 
-export type UserUpsertWithoutPaymentOrderInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutPaymentOrderInput, Prisma.UserUncheckedUpdateWithoutPaymentOrderInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutPaymentOrderInput, Prisma.UserUncheckedCreateWithoutPaymentOrderInput>
+export type UserUpsertWithoutPaymentOrdersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPaymentOrdersInput, Prisma.UserUncheckedUpdateWithoutPaymentOrdersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPaymentOrdersInput, Prisma.UserUncheckedCreateWithoutPaymentOrdersInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutPaymentOrderInput = {
+export type UserUpdateToOneWithWhereWithoutPaymentOrdersInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutPaymentOrderInput, Prisma.UserUncheckedUpdateWithoutPaymentOrderInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPaymentOrdersInput, Prisma.UserUncheckedUpdateWithoutPaymentOrdersInput>
 }
 
-export type UserUpdateWithoutPaymentOrderInput = {
+export type UserUpdateWithoutPaymentOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
   planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutPaymentOrderInput = {
+export type UserUncheckedUpdateWithoutPaymentOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
   planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
-  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSprintInput = {
   id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanCreateNestedManyWithoutUserInput
   planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSprintInput = {
   id: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
-  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
-  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
   plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
   planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
-  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
-  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSprintInput = {
@@ -1408,38 +1408,38 @@ export type UserUpdateToOneWithWhereWithoutSprintInput = {
 
 export type UserUpdateWithoutSprintInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
   planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSprintInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
-  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
-  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
-  PaymentOrder?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
   planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
-  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
-  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1448,27 +1448,27 @@ export type UserUncheckedUpdateWithoutSprintInput = {
  */
 
 export type UserCountOutputType = {
-  chats: number
-  extensionTokens: number
-  focusSessions: number
-  PaymentOrder: number
+  projects: number
   plans: number
   planSteps: number
-  projects: number
-  Sprint: number
+  chats: number
   tasks: number
+  focusSessions: number
+  extensionTokens: number
+  paymentOrders: number
+  Sprint: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  chats?: boolean | UserCountOutputTypeCountChatsArgs
-  extensionTokens?: boolean | UserCountOutputTypeCountExtensionTokensArgs
-  focusSessions?: boolean | UserCountOutputTypeCountFocusSessionsArgs
-  PaymentOrder?: boolean | UserCountOutputTypeCountPaymentOrderArgs
+  projects?: boolean | UserCountOutputTypeCountProjectsArgs
   plans?: boolean | UserCountOutputTypeCountPlansArgs
   planSteps?: boolean | UserCountOutputTypeCountPlanStepsArgs
-  projects?: boolean | UserCountOutputTypeCountProjectsArgs
-  Sprint?: boolean | UserCountOutputTypeCountSprintArgs
+  chats?: boolean | UserCountOutputTypeCountChatsArgs
   tasks?: boolean | UserCountOutputTypeCountTasksArgs
+  focusSessions?: boolean | UserCountOutputTypeCountFocusSessionsArgs
+  extensionTokens?: boolean | UserCountOutputTypeCountExtensionTokensArgs
+  paymentOrders?: boolean | UserCountOutputTypeCountPaymentOrdersArgs
+  Sprint?: boolean | UserCountOutputTypeCountSprintArgs
 }
 
 /**
@@ -1484,29 +1484,8 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountChatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ChatWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountExtensionTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ExtensionTokenWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountFocusSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.FocusSessionWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountPaymentOrderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PaymentOrderWhereInput
+export type UserCountOutputTypeCountProjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectWhereInput
 }
 
 /**
@@ -1526,15 +1505,8 @@ export type UserCountOutputTypeCountPlanStepsArgs<ExtArgs extends runtime.Types.
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountProjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProjectWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountSprintArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SprintWhereInput
+export type UserCountOutputTypeCountChatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ChatWhereInput
 }
 
 /**
@@ -1544,66 +1516,94 @@ export type UserCountOutputTypeCountTasksArgs<ExtArgs extends runtime.Types.Exte
   where?: Prisma.TaskWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFocusSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FocusSessionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountExtensionTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExtensionTokenWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPaymentOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentOrderWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSprintArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SprintWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
   isActive?: boolean
   planTier?: boolean
   planExpiresAt?: boolean
-  chats?: boolean | Prisma.User$chatsArgs<ExtArgs>
-  extensionTokens?: boolean | Prisma.User$extensionTokensArgs<ExtArgs>
-  focusSessions?: boolean | Prisma.User$focusSessionsArgs<ExtArgs>
-  PaymentOrder?: boolean | Prisma.User$PaymentOrderArgs<ExtArgs>
+  createdAt?: boolean
+  updatedAt?: boolean
+  settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
+  projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
   plans?: boolean | Prisma.User$plansArgs<ExtArgs>
   planSteps?: boolean | Prisma.User$planStepsArgs<ExtArgs>
-  projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
-  Sprint?: boolean | Prisma.User$SprintArgs<ExtArgs>
+  chats?: boolean | Prisma.User$chatsArgs<ExtArgs>
   tasks?: boolean | Prisma.User$tasksArgs<ExtArgs>
-  settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
+  focusSessions?: boolean | Prisma.User$focusSessionsArgs<ExtArgs>
+  extensionTokens?: boolean | Prisma.User$extensionTokensArgs<ExtArgs>
+  paymentOrders?: boolean | Prisma.User$paymentOrdersArgs<ExtArgs>
+  Sprint?: boolean | Prisma.User$SprintArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
   isActive?: boolean
   planTier?: boolean
   planExpiresAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
   isActive?: boolean
   planTier?: boolean
   planExpiresAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
   id?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
   isActive?: boolean
   planTier?: boolean
   planExpiresAt?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "isActive" | "planTier" | "planExpiresAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "isActive" | "planTier" | "planExpiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  chats?: boolean | Prisma.User$chatsArgs<ExtArgs>
-  extensionTokens?: boolean | Prisma.User$extensionTokensArgs<ExtArgs>
-  focusSessions?: boolean | Prisma.User$focusSessionsArgs<ExtArgs>
-  PaymentOrder?: boolean | Prisma.User$PaymentOrderArgs<ExtArgs>
+  settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
+  projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
   plans?: boolean | Prisma.User$plansArgs<ExtArgs>
   planSteps?: boolean | Prisma.User$planStepsArgs<ExtArgs>
-  projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
-  Sprint?: boolean | Prisma.User$SprintArgs<ExtArgs>
+  chats?: boolean | Prisma.User$chatsArgs<ExtArgs>
   tasks?: boolean | Prisma.User$tasksArgs<ExtArgs>
-  settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
+  focusSessions?: boolean | Prisma.User$focusSessionsArgs<ExtArgs>
+  extensionTokens?: boolean | Prisma.User$extensionTokensArgs<ExtArgs>
+  paymentOrders?: boolean | Prisma.User$paymentOrdersArgs<ExtArgs>
+  Sprint?: boolean | Prisma.User$SprintArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1612,24 +1612,24 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    chats: Prisma.$ChatPayload<ExtArgs>[]
-    extensionTokens: Prisma.$ExtensionTokenPayload<ExtArgs>[]
-    focusSessions: Prisma.$FocusSessionPayload<ExtArgs>[]
-    PaymentOrder: Prisma.$PaymentOrderPayload<ExtArgs>[]
+    settings: Prisma.$UserSettingsPayload<ExtArgs> | null
+    projects: Prisma.$ProjectPayload<ExtArgs>[]
     plans: Prisma.$PlanPayload<ExtArgs>[]
     planSteps: Prisma.$PlanStepPayload<ExtArgs>[]
-    projects: Prisma.$ProjectPayload<ExtArgs>[]
-    Sprint: Prisma.$SprintPayload<ExtArgs>[]
+    chats: Prisma.$ChatPayload<ExtArgs>[]
     tasks: Prisma.$TaskPayload<ExtArgs>[]
-    settings: Prisma.$UserSettingsPayload<ExtArgs> | null
+    focusSessions: Prisma.$FocusSessionPayload<ExtArgs>[]
+    extensionTokens: Prisma.$ExtensionTokenPayload<ExtArgs>[]
+    paymentOrders: Prisma.$PaymentOrderPayload<ExtArgs>[]
+    Sprint: Prisma.$SprintPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    createdAt: Date
-    updatedAt: Date
     isActive: boolean
     planTier: $Enums.BillingTier
     planExpiresAt: Date | null
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -2024,16 +2024,16 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  chats<T extends Prisma.User$chatsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  extensionTokens<T extends Prisma.User$extensionTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$extensionTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExtensionTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  focusSessions<T extends Prisma.User$focusSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$focusSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  PaymentOrder<T extends Prisma.User$PaymentOrderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$PaymentOrderArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  settings<T extends Prisma.User$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$settingsArgs<ExtArgs>>): Prisma.Prisma__UserSettingsClient<runtime.Types.Result.GetResult<Prisma.$UserSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  projects<T extends Prisma.User$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   plans<T extends Prisma.User$plansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$plansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   planSteps<T extends Prisma.User$planStepsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$planStepsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  projects<T extends Prisma.User$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  Sprint<T extends Prisma.User$SprintArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$SprintArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SprintPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  chats<T extends Prisma.User$chatsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tasks<T extends Prisma.User$tasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  settings<T extends Prisma.User$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$settingsArgs<ExtArgs>>): Prisma.Prisma__UserSettingsClient<runtime.Types.Result.GetResult<Prisma.$UserSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  focusSessions<T extends Prisma.User$focusSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$focusSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  extensionTokens<T extends Prisma.User$extensionTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$extensionTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExtensionTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  paymentOrders<T extends Prisma.User$paymentOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  Sprint<T extends Prisma.User$SprintArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$SprintArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SprintPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2064,11 +2064,11 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
-  readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
-  readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
   readonly planTier: Prisma.FieldRef<"User", 'BillingTier'>
   readonly planExpiresAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
     
 
@@ -2462,99 +2462,46 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.chats
+ * User.settings
  */
-export type User$chatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$settingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Chat
+   * Select specific fields to fetch from the UserSettings
    */
-  select?: Prisma.ChatSelect<ExtArgs> | null
+  select?: Prisma.UserSettingsSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Chat
+   * Omit specific fields from the UserSettings
    */
-  omit?: Prisma.ChatOmit<ExtArgs> | null
+  omit?: Prisma.UserSettingsOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ChatInclude<ExtArgs> | null
-  where?: Prisma.ChatWhereInput
-  orderBy?: Prisma.ChatOrderByWithRelationInput | Prisma.ChatOrderByWithRelationInput[]
-  cursor?: Prisma.ChatWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ChatScalarFieldEnum | Prisma.ChatScalarFieldEnum[]
+  include?: Prisma.UserSettingsInclude<ExtArgs> | null
+  where?: Prisma.UserSettingsWhereInput
 }
 
 /**
- * User.extensionTokens
+ * User.projects
  */
-export type User$extensionTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$projectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ExtensionToken
+   * Select specific fields to fetch from the Project
    */
-  select?: Prisma.ExtensionTokenSelect<ExtArgs> | null
+  select?: Prisma.ProjectSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ExtensionToken
+   * Omit specific fields from the Project
    */
-  omit?: Prisma.ExtensionTokenOmit<ExtArgs> | null
+  omit?: Prisma.ProjectOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ExtensionTokenInclude<ExtArgs> | null
-  where?: Prisma.ExtensionTokenWhereInput
-  orderBy?: Prisma.ExtensionTokenOrderByWithRelationInput | Prisma.ExtensionTokenOrderByWithRelationInput[]
-  cursor?: Prisma.ExtensionTokenWhereUniqueInput
+  include?: Prisma.ProjectInclude<ExtArgs> | null
+  where?: Prisma.ProjectWhereInput
+  orderBy?: Prisma.ProjectOrderByWithRelationInput | Prisma.ProjectOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ExtensionTokenScalarFieldEnum | Prisma.ExtensionTokenScalarFieldEnum[]
-}
-
-/**
- * User.focusSessions
- */
-export type User$focusSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FocusSession
-   */
-  select?: Prisma.FocusSessionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the FocusSession
-   */
-  omit?: Prisma.FocusSessionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FocusSessionInclude<ExtArgs> | null
-  where?: Prisma.FocusSessionWhereInput
-  orderBy?: Prisma.FocusSessionOrderByWithRelationInput | Prisma.FocusSessionOrderByWithRelationInput[]
-  cursor?: Prisma.FocusSessionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.FocusSessionScalarFieldEnum | Prisma.FocusSessionScalarFieldEnum[]
-}
-
-/**
- * User.PaymentOrder
- */
-export type User$PaymentOrderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the PaymentOrder
-   */
-  select?: Prisma.PaymentOrderSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the PaymentOrder
-   */
-  omit?: Prisma.PaymentOrderOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PaymentOrderInclude<ExtArgs> | null
-  where?: Prisma.PaymentOrderWhereInput
-  orderBy?: Prisma.PaymentOrderOrderByWithRelationInput | Prisma.PaymentOrderOrderByWithRelationInput[]
-  cursor?: Prisma.PaymentOrderWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.PaymentOrderScalarFieldEnum | Prisma.PaymentOrderScalarFieldEnum[]
+  distinct?: Prisma.ProjectScalarFieldEnum | Prisma.ProjectScalarFieldEnum[]
 }
 
 /**
@@ -2606,51 +2553,27 @@ export type User$planStepsArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.projects
+ * User.chats
  */
-export type User$projectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$chatsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Project
+   * Select specific fields to fetch from the Chat
    */
-  select?: Prisma.ProjectSelect<ExtArgs> | null
+  select?: Prisma.ChatSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Project
+   * Omit specific fields from the Chat
    */
-  omit?: Prisma.ProjectOmit<ExtArgs> | null
+  omit?: Prisma.ChatOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProjectInclude<ExtArgs> | null
-  where?: Prisma.ProjectWhereInput
-  orderBy?: Prisma.ProjectOrderByWithRelationInput | Prisma.ProjectOrderByWithRelationInput[]
-  cursor?: Prisma.ProjectWhereUniqueInput
+  include?: Prisma.ChatInclude<ExtArgs> | null
+  where?: Prisma.ChatWhereInput
+  orderBy?: Prisma.ChatOrderByWithRelationInput | Prisma.ChatOrderByWithRelationInput[]
+  cursor?: Prisma.ChatWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ProjectScalarFieldEnum | Prisma.ProjectScalarFieldEnum[]
-}
-
-/**
- * User.Sprint
- */
-export type User$SprintArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Sprint
-   */
-  select?: Prisma.SprintSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Sprint
-   */
-  omit?: Prisma.SprintOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SprintInclude<ExtArgs> | null
-  where?: Prisma.SprintWhereInput
-  orderBy?: Prisma.SprintOrderByWithRelationInput | Prisma.SprintOrderByWithRelationInput[]
-  cursor?: Prisma.SprintWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.SprintScalarFieldEnum | Prisma.SprintScalarFieldEnum[]
+  distinct?: Prisma.ChatScalarFieldEnum | Prisma.ChatScalarFieldEnum[]
 }
 
 /**
@@ -2678,22 +2601,99 @@ export type User$tasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
 }
 
 /**
- * User.settings
+ * User.focusSessions
  */
-export type User$settingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$focusSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the UserSettings
+   * Select specific fields to fetch from the FocusSession
    */
-  select?: Prisma.UserSettingsSelect<ExtArgs> | null
+  select?: Prisma.FocusSessionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the UserSettings
+   * Omit specific fields from the FocusSession
    */
-  omit?: Prisma.UserSettingsOmit<ExtArgs> | null
+  omit?: Prisma.FocusSessionOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserSettingsInclude<ExtArgs> | null
-  where?: Prisma.UserSettingsWhereInput
+  include?: Prisma.FocusSessionInclude<ExtArgs> | null
+  where?: Prisma.FocusSessionWhereInput
+  orderBy?: Prisma.FocusSessionOrderByWithRelationInput | Prisma.FocusSessionOrderByWithRelationInput[]
+  cursor?: Prisma.FocusSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FocusSessionScalarFieldEnum | Prisma.FocusSessionScalarFieldEnum[]
+}
+
+/**
+ * User.extensionTokens
+ */
+export type User$extensionTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExtensionToken
+   */
+  select?: Prisma.ExtensionTokenSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExtensionToken
+   */
+  omit?: Prisma.ExtensionTokenOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExtensionTokenInclude<ExtArgs> | null
+  where?: Prisma.ExtensionTokenWhereInput
+  orderBy?: Prisma.ExtensionTokenOrderByWithRelationInput | Prisma.ExtensionTokenOrderByWithRelationInput[]
+  cursor?: Prisma.ExtensionTokenWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExtensionTokenScalarFieldEnum | Prisma.ExtensionTokenScalarFieldEnum[]
+}
+
+/**
+ * User.paymentOrders
+ */
+export type User$paymentOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PaymentOrder
+   */
+  select?: Prisma.PaymentOrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PaymentOrder
+   */
+  omit?: Prisma.PaymentOrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentOrderInclude<ExtArgs> | null
+  where?: Prisma.PaymentOrderWhereInput
+  orderBy?: Prisma.PaymentOrderOrderByWithRelationInput | Prisma.PaymentOrderOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentOrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentOrderScalarFieldEnum | Prisma.PaymentOrderScalarFieldEnum[]
+}
+
+/**
+ * User.Sprint
+ */
+export type User$SprintArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Sprint
+   */
+  select?: Prisma.SprintSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Sprint
+   */
+  omit?: Prisma.SprintOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SprintInclude<ExtArgs> | null
+  where?: Prisma.SprintWhereInput
+  orderBy?: Prisma.SprintOrderByWithRelationInput | Prisma.SprintOrderByWithRelationInput[]
+  cursor?: Prisma.SprintWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SprintScalarFieldEnum | Prisma.SprintScalarFieldEnum[]
 }
 
 /**

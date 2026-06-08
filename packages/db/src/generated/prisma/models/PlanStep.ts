@@ -268,8 +268,8 @@ export type PlanStepWhereInput = {
   order?: Prisma.IntFilter<"PlanStep"> | number
   createdAt?: Prisma.DateTimeFilter<"PlanStep"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlanStep"> | Date | string
-  plan?: Prisma.XOR<Prisma.PlanScalarRelationFilter, Prisma.PlanWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  plan?: Prisma.XOR<Prisma.PlanScalarRelationFilter, Prisma.PlanWhereInput>
 }
 
 export type PlanStepOrderByWithRelationInput = {
@@ -284,8 +284,8 @@ export type PlanStepOrderByWithRelationInput = {
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  plan?: Prisma.PlanOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  plan?: Prisma.PlanOrderByWithRelationInput
 }
 
 export type PlanStepWhereUniqueInput = Prisma.AtLeast<{
@@ -303,8 +303,8 @@ export type PlanStepWhereUniqueInput = Prisma.AtLeast<{
   order?: Prisma.IntFilter<"PlanStep"> | number
   createdAt?: Prisma.DateTimeFilter<"PlanStep"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlanStep"> | Date | string
-  plan?: Prisma.XOR<Prisma.PlanScalarRelationFilter, Prisma.PlanWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  plan?: Prisma.XOR<Prisma.PlanScalarRelationFilter, Prisma.PlanWhereInput>
 }, "id">
 
 export type PlanStepOrderByWithAggregationInput = {
@@ -353,8 +353,8 @@ export type PlanStepCreateInput = {
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  plan: Prisma.PlanCreateNestedOneWithoutStepsInput
   user: Prisma.UserCreateNestedOneWithoutPlanStepsInput
+  plan: Prisma.PlanCreateNestedOneWithoutStepsInput
 }
 
 export type PlanStepUncheckedCreateInput = {
@@ -381,8 +381,8 @@ export type PlanStepUpdateInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  plan?: Prisma.PlanUpdateOneRequiredWithoutStepsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutPlanStepsNestedInput
+  plan?: Prisma.PlanUpdateOneRequiredWithoutStepsNestedInput
 }
 
 export type PlanStepUncheckedUpdateInput = {
@@ -828,8 +828,8 @@ export type PlanStepSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["planStep"]>
 
 export type PlanStepSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -844,8 +844,8 @@ export type PlanStepSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["planStep"]>
 
 export type PlanStepSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -860,8 +860,8 @@ export type PlanStepSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["planStep"]>
 
 export type PlanStepSelectScalar = {
@@ -880,23 +880,23 @@ export type PlanStepSelectScalar = {
 
 export type PlanStepOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "planId" | "title" | "description" | "status" | "dueDate" | "estimatedMinutes" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["planStep"]>
 export type PlanStepInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
 }
 export type PlanStepIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
 }
 export type PlanStepIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
 }
 
 export type $PlanStepPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PlanStep"
   objects: {
-    plan: Prisma.$PlanPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
+    plan: Prisma.$PlanPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1304,8 +1304,8 @@ readonly fields: PlanStepFieldRefs;
  */
 export interface Prisma__PlanStepClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  plan<T extends Prisma.PlanDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlanDefaultArgs<ExtArgs>>): Prisma.Prisma__PlanClient<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  plan<T extends Prisma.PlanDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlanDefaultArgs<ExtArgs>>): Prisma.Prisma__PlanClient<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

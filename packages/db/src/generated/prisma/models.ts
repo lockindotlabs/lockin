@@ -9,12 +9,12 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User.ts'
+export type * from './models/Chat.ts'
 export type * from './models/ExtensionToken.ts'
 export type * from './models/UserSettings.ts'
 export type * from './models/Project.ts'
 export type * from './models/Plan.ts'
 export type * from './models/PlanStep.ts'
-export type * from './models/Chat.ts'
 export type * from './models/Task.ts'
 export type * from './models/FocusSession.ts'
 export type * from './models/PaymentOrder.ts'

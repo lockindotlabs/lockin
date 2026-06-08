@@ -300,7 +300,7 @@ export type PaymentOrderWhereInput = {
   failedAt?: Prisma.DateTimeNullableFilter<"PaymentOrder"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PaymentOrder"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PaymentOrder"> | Date | string
-  User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type PaymentOrderOrderByWithRelationInput = {
@@ -320,7 +320,7 @@ export type PaymentOrderOrderByWithRelationInput = {
   failedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  User?: Prisma.UserOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type PaymentOrderWhereUniqueInput = Prisma.AtLeast<{
@@ -343,7 +343,7 @@ export type PaymentOrderWhereUniqueInput = Prisma.AtLeast<{
   failedAt?: Prisma.DateTimeNullableFilter<"PaymentOrder"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PaymentOrder"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PaymentOrder"> | Date | string
-  User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "payosOrderCode" | "paymentLinkId">
 
 export type PaymentOrderOrderByWithAggregationInput = {
@@ -393,7 +393,7 @@ export type PaymentOrderScalarWhereWithAggregatesInput = {
 }
 
 export type PaymentOrderCreateInput = {
-  id: string
+  id?: string
   tier: $Enums.BillingTier
   amount: number
   currency?: string
@@ -407,12 +407,12 @@ export type PaymentOrderCreateInput = {
   cancelledAt?: Date | string | null
   failedAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
-  User: Prisma.UserCreateNestedOneWithoutPaymentOrderInput
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutPaymentOrdersInput
 }
 
 export type PaymentOrderUncheckedCreateInput = {
-  id: string
+  id?: string
   userId: string
   tier: $Enums.BillingTier
   amount: number
@@ -427,7 +427,7 @@ export type PaymentOrderUncheckedCreateInput = {
   cancelledAt?: Date | string | null
   failedAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
 }
 
 export type PaymentOrderUpdateInput = {
@@ -446,7 +446,7 @@ export type PaymentOrderUpdateInput = {
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  User?: Prisma.UserUpdateOneRequiredWithoutPaymentOrderNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPaymentOrdersNestedInput
 }
 
 export type PaymentOrderUncheckedUpdateInput = {
@@ -469,7 +469,7 @@ export type PaymentOrderUncheckedUpdateInput = {
 }
 
 export type PaymentOrderCreateManyInput = {
-  id: string
+  id?: string
   userId: string
   tier: $Enums.BillingTier
   amount: number
@@ -484,7 +484,7 @@ export type PaymentOrderCreateManyInput = {
   cancelledAt?: Date | string | null
   failedAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
 }
 
 export type PaymentOrderUpdateManyMutationInput = {
@@ -644,7 +644,7 @@ export type EnumPaymentOrderStatusFieldUpdateOperationsInput = {
 }
 
 export type PaymentOrderCreateWithoutUserInput = {
-  id: string
+  id?: string
   tier: $Enums.BillingTier
   amount: number
   currency?: string
@@ -658,11 +658,11 @@ export type PaymentOrderCreateWithoutUserInput = {
   cancelledAt?: Date | string | null
   failedAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
 }
 
 export type PaymentOrderUncheckedCreateWithoutUserInput = {
-  id: string
+  id?: string
   tier: $Enums.BillingTier
   amount: number
   currency?: string
@@ -676,7 +676,7 @@ export type PaymentOrderUncheckedCreateWithoutUserInput = {
   cancelledAt?: Date | string | null
   failedAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
 }
 
 export type PaymentOrderCreateOrConnectWithoutUserInput = {
@@ -728,7 +728,7 @@ export type PaymentOrderScalarWhereInput = {
 }
 
 export type PaymentOrderCreateManyUserInput = {
-  id: string
+  id?: string
   tier: $Enums.BillingTier
   amount: number
   currency?: string
@@ -742,7 +742,7 @@ export type PaymentOrderCreateManyUserInput = {
   cancelledAt?: Date | string | null
   failedAt?: Date | string | null
   createdAt?: Date | string
-  updatedAt: Date | string
+  updatedAt?: Date | string
 }
 
 export type PaymentOrderUpdateWithoutUserInput = {
@@ -818,7 +818,7 @@ export type PaymentOrderSelect<ExtArgs extends runtime.Types.Extensions.Internal
   failedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["paymentOrder"]>
 
 export type PaymentOrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -838,7 +838,7 @@ export type PaymentOrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   failedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["paymentOrder"]>
 
 export type PaymentOrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -858,7 +858,7 @@ export type PaymentOrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   failedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["paymentOrder"]>
 
 export type PaymentOrderSelectScalar = {
@@ -882,19 +882,19 @@ export type PaymentOrderSelectScalar = {
 
 export type PaymentOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "tier" | "amount" | "currency" | "status" | "payosOrderCode" | "paymentLinkId" | "checkoutUrl" | "rawResponse" | "rawWebhook" | "paidAt" | "cancelledAt" | "failedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["paymentOrder"]>
 export type PaymentOrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PaymentOrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PaymentOrderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $PaymentOrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PaymentOrder"
   objects: {
-    User: Prisma.$UserPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1307,7 +1307,7 @@ readonly fields: PaymentOrderFieldRefs;
  */
 export interface Prisma__PaymentOrderClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  User<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

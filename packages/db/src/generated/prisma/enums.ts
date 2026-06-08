@@ -38,16 +38,6 @@ export const PlanStatus = {
 export type PlanStatus = (typeof PlanStatus)[keyof typeof PlanStatus]
 
 
-export const Priority = {
-  LOW: 'LOW',
-  MEDIUM: 'MEDIUM',
-  HIGH: 'HIGH',
-  URGENT: 'URGENT'
-} as const
-
-export type Priority = (typeof Priority)[keyof typeof Priority]
-
-
 export const PlanStepStatus = {
   TODO: 'TODO',
   IN_PROGRESS: 'IN_PROGRESS',
@@ -110,6 +100,16 @@ export const PaymentOrderStatus = {
 } as const
 
 export type PaymentOrderStatus = (typeof PaymentOrderStatus)[keyof typeof PaymentOrderStatus]
+
+
+export const Priority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+} as const
+
+export type Priority = (typeof Priority)[keyof typeof Priority]
 
 
 export const SprintStatus = {

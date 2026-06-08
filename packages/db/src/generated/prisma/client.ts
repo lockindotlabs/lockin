@@ -47,6 +47,11 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
+ * Model Chat
+ * 
+ */
+export type Chat = Prisma.ChatModel
+/**
  * Model ExtensionToken
  * 
  */
@@ -71,11 +76,6 @@ export type Plan = Prisma.PlanModel
  * 
  */
 export type PlanStep = Prisma.PlanStepModel
-/**
- * Model Chat
- * 
- */
-export type Chat = Prisma.ChatModel
 /**
  * Model Task
  * 

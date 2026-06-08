@@ -23,6 +23,7 @@ import {
   type PlanStep,
   type TaskSnapshot,
 } from "@/lib/focus/focus-api"
+import { notifyExtensionSessionEnded } from "@/lib/focus/extension-bridge"
 
 // ─── Timer display ────────────────────────────────────────────────────────────
 
@@ -165,6 +166,13 @@ export default function SessionPage() {
       },
       getToken
     )
+
+    // Push the end event straight to the extension — it has no other way to
+    // learn "the user just pressed End in the app" besides its periodic poll
+    // (background.js `session-poll`, up to a 1-minute lag). Without this, the
+    // extension's local timer keeps running independently after the app has
+    // already closed the sprint out.
+    notifyExtensionSessionEnded({ sessionId, completionType })
 
     sessionStorage.removeItem(`lockin:session:${sessionId}:steps`)
     router.push("/app/focus")

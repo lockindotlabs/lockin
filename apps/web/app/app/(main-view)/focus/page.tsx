@@ -31,6 +31,7 @@ import {
   type PlanStep,
   type FocusSession,
 } from "@/lib/focus/focus-api"
+import { notifyExtensionSessionStarted } from "@/lib/focus/extension-bridge"
 import DurationMismatchNotice from "./DurationMismatchNotice"
 
 // ─── Duration presets ─────────────────────────────────────────────────────────
@@ -401,6 +402,24 @@ export default function FocusPage() {
         `lockin:session:${session.id}:steps`,
         JSON.stringify(selectedSteps)
       )
+
+      // Push the start event straight to the extension so its HUD/blocking/
+      // popup mirror this sprint immediately, instead of only discovering it
+      // whenever the popup happens to open and poll the server.
+      notifyExtensionSessionStarted({
+        sessionId: session.id,
+        planId: setupPlan.id,
+        taskName: setupPlan.name,
+        duration: durationSeconds,
+        startTime: new Date(session.startedAt).getTime(),
+        tasks: selectedSteps.map((s) => ({
+          id: s.id,
+          label: s.title,
+          done: s.status === "DONE",
+          durationMinutes: s.estimatedMinutes,
+        })),
+      })
+
       router.push(`/app/focus/session/${session.id}`)
     }
 

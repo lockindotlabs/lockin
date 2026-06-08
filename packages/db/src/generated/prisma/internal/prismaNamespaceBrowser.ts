@@ -57,10 +57,11 @@ export const ModelName = {
   UserSettings: 'UserSettings',
   Project: 'Project',
   Plan: 'Plan',
-  Task: 'Task',
   PlanStep: 'PlanStep',
+  Task: 'Task',
   FocusSession: 'FocusSession',
-  PaymentOrder: 'PaymentOrder'
+  PaymentOrder: 'PaymentOrder',
+  Sprint: 'Sprint'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -172,23 +173,6 @@ export const PlanScalarFieldEnum = {
 export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof PlanScalarFieldEnum]
 
 
-export const TaskScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  title: 'title',
-  description: 'description',
-  status: 'status',
-  priority: 'priority',
-  dueDate: 'dueDate',
-  durationMinutes: 'durationMinutes',
-  order: 'order',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
-
-
 export const PlanStepScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -204,6 +188,24 @@ export const PlanStepScalarFieldEnum = {
 } as const
 
 export type PlanStepScalarFieldEnum = (typeof PlanStepScalarFieldEnum)[keyof typeof PlanStepScalarFieldEnum]
+
+
+export const TaskScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  sprintId: 'sprintId',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  priority: 'priority',
+  dueDate: 'dueDate',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  durationMinutes: 'durationMinutes'
+} as const
+
+export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
 
 
 export const FocusSessionScalarFieldEnum = {
@@ -244,6 +246,21 @@ export const PaymentOrderScalarFieldEnum = {
 } as const
 
 export type PaymentOrderScalarFieldEnum = (typeof PaymentOrderScalarFieldEnum)[keyof typeof PaymentOrderScalarFieldEnum]
+
+
+export const SprintScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  goal: 'goal',
+  status: 'status',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SprintScalarFieldEnum = (typeof SprintScalarFieldEnum)[keyof typeof SprintScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -31,6 +31,56 @@ import {
   type PlanStep,
   type FocusSession,
 } from "@/lib/focus/focus-api"
+import { notifyExtensionSessionStarted } from "@/lib/focus/extension-bridge"
+import DurationMismatchNotice from "./DurationMismatchNotice"
+
+function getPlanCategory(plan: FocusPlan) {
+  const steps = plan.steps || []
+  if (
+    plan.status === "COMPLETED" ||
+    plan.status === "CANCELLED" ||
+    (steps.length > 0 &&
+      steps.every((s) => s.status === "DONE" || s.status === "CANCELLED"))
+  ) {
+    return "COMPLETED"
+  }
+
+  const now = new Date()
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const todayEnd = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    23,
+    59,
+    59,
+    999
+  )
+
+  let hasOverdue = false
+  let hasDueToday = false
+
+  for (const step of steps) {
+    if (step.status === "DONE" || step.status === "CANCELLED") continue
+
+    if (step.dueDate) {
+      const dueDate = new Date(step.dueDate)
+      if (dueDate < todayStart) {
+        hasOverdue = true
+      } else if (dueDate >= todayStart && dueDate <= todayEnd) {
+        hasDueToday = true
+      }
+    }
+  }
+
+  if (hasOverdue) {
+    return "OVERDUE"
+  }
+  if (hasDueToday) {
+    return "DUE_TODAY"
+  }
+  return "ON_TRACK"
+}
 
 // ─── Duration presets ─────────────────────────────────────────────────────────
 
@@ -77,6 +127,16 @@ function SprintSetupModal({
   )
   const estimatedSeconds = estimatedTotal * 60
   const chosenDuration = durationSeconds ?? (estimatedSeconds || 25 * 60)
+
+  // Drops the longest-estimated selected step — the quick "shrink to fit" action
+  // offered when the chosen sprint is significantly shorter than the total
+  // estimate of the steps the user picked (see DurationMismatchNotice).
+  const trimLargestSelectedStep = () => {
+    const largest = [...selectedSteps].sort(
+      (a, b) => (b.estimatedMinutes ?? 0) - (a.estimatedMinutes ?? 0)
+    )[0]
+    if (largest) toggleStep(largest.id)
+  }
 
   return (
     <div
@@ -178,6 +238,16 @@ function SprintSetupModal({
                 </button>
               ))}
             </div>
+            <div className="mt-2">
+              <DurationMismatchNotice
+                estimatedSeconds={estimatedSeconds}
+                chosenDuration={chosenDuration}
+                presets={DURATION_PRESETS}
+                selectedStepCount={selectedSteps.length}
+                onPickDuration={setDurationSeconds}
+                onTrimLargestStep={trimLargestSelectedStep}
+              />
+            </div>
           </div>
         </div>
 
@@ -219,6 +289,7 @@ function PlanQueueCard({
   const nextStep = incomplete[0]
   const totalMin = incomplete.reduce((s, t) => s + (t.estimatedMinutes ?? 0), 0)
   const dueToday = incomplete.filter((s) => isToday(s.dueDate))
+  const isCompleted = getPlanCategory(plan) === "COMPLETED"
 
   return (
     <div className="group flex items-center gap-4 rounded-xl border border-border/70 bg-background px-4 py-3.5 transition-colors hover:border-border hover:bg-muted/30">
@@ -230,18 +301,27 @@ function PlanQueueCard({
               {dueToday.length} due today
             </span>
           )}
+          {isCompleted && (
+            <span className="shrink-0 rounded-full bg-emerald-100 dark:bg-emerald-950/40 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700 dark:text-emerald-400">
+              Completed
+            </span>
+          )}
         </div>
-        {nextStep && (
+        {nextStep ? (
           <p className="mt-0.5 truncate text-xs text-muted-foreground">
             Next: {nextStep.title}
+          </p>
+        ) : (
+          <p className="mt-0.5 truncate text-xs text-muted-foreground/75 italic">
+            All steps completed
           </p>
         )}
         <div className="mt-1 flex items-center gap-3 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
-            <CheckCircle2Icon className="size-3" />
-            {incomplete.length} step{incomplete.length !== 1 ? "s" : ""}
+            <CheckCircle2Icon className="size-3 text-emerald-500" />
+            {isCompleted ? (plan.steps?.length ?? 0) : incomplete.length} step{isCompleted || incomplete.length !== 1 ? "s" : ""}
           </span>
-          {totalMin > 0 && (
+          {!isCompleted && totalMin > 0 && (
             <span className="flex items-center gap-1">
               <ClockIcon className="size-3" />
               ~{formatMinutes(totalMin)}
@@ -249,15 +329,17 @@ function PlanQueueCard({
           )}
         </div>
       </div>
-      <Button
-        size="sm"
-        variant="outline"
-        className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
-        onClick={() => onStartSprint(plan)}
-      >
-        <PlayIcon className="size-3.5" />
-        Sprint
-      </Button>
+      {!isCompleted && (
+        <Button
+          size="sm"
+          variant="outline"
+          className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
+          onClick={() => onStartSprint(plan)}
+        >
+          <PlayIcon className="size-3.5" />
+          Sprint
+        </Button>
+      )}
     </div>
   )
 }
@@ -322,24 +404,15 @@ export default function FocusPage() {
     ]).then(async ([rawPlans, rawSessions]) => {
       if (!active) return
 
-      // For each incomplete plan, fetch steps so we can show queue correctly
-      const incompletePlans = rawPlans.filter(
-        (p) => p.status !== "COMPLETED" && p.status !== "CANCELLED"
-      )
-
       const withSteps = await Promise.all(
-        incompletePlans.map((p) =>
+        rawPlans.map((p) =>
           fetchPlanWithSteps(p.id, getToken).then((full) => full ?? p)
         )
       )
 
       if (!active) return
 
-      // Sort: plans with due-today steps first, then by updatedAt
       const sorted = withSteps.sort((a, b) => {
-        const aDue = incompleteSteps(a.steps ?? []).filter((s) => isToday(s.dueDate)).length
-        const bDue = incompleteSteps(b.steps ?? []).filter((s) => isToday(s.dueDate)).length
-        if (bDue !== aDue) return bDue - aDue
         return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       })
 
@@ -380,6 +453,24 @@ export default function FocusPage() {
         `lockin:session:${session.id}:steps`,
         JSON.stringify(selectedSteps)
       )
+
+      // Push the start event straight to the extension so its HUD/blocking/
+      // popup mirror this sprint immediately, instead of only discovering it
+      // whenever the popup happens to open and poll the server.
+      notifyExtensionSessionStarted({
+        sessionId: session.id,
+        planId: setupPlan.id,
+        taskName: setupPlan.name,
+        duration: durationSeconds,
+        startTime: new Date(session.startedAt).getTime(),
+        tasks: selectedSteps.map((s) => ({
+          id: s.id,
+          label: s.title,
+          done: s.status === "DONE",
+          durationMinutes: s.estimatedMinutes,
+        })),
+      })
+
       router.push(`/app/focus/session/${session.id}`)
     }
 
@@ -390,14 +481,11 @@ export default function FocusPage() {
   // Derived data
   const effortSeconds = effortTodaySeconds(sessions)
   const recentSessions = sessions.slice(0, 5)
-  const queuePlans = plans.filter(
-    (p) => incompleteSteps(p.steps ?? []).length > 0
-  )
 
-  const todayDuePlans = queuePlans.filter((p) =>
-    incompleteSteps(p.steps ?? []).some((s) => isToday(s.dueDate))
-  )
-  const displayQueue = todayDuePlans.length > 0 ? todayDuePlans : queuePlans.slice(0, 5)
+  const overduePlans = plans.filter((p) => getPlanCategory(p) === "OVERDUE")
+  const dueTodayPlans = plans.filter((p) => getPlanCategory(p) === "DUE_TODAY")
+  const onTrackPlans = plans.filter((p) => getPlanCategory(p) === "ON_TRACK")
+  const completedPlans = plans.filter((p) => getPlanCategory(p) === "COMPLETED")
 
   return (
     <main className="flex min-h-svh flex-col bg-background text-foreground">
@@ -432,63 +520,115 @@ export default function FocusPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-semibold tracking-tight">Focus</h1>
           <p className="mt-1.5 text-sm text-muted-foreground">
-            {todayDuePlans.length > 0
-              ? `${todayDuePlans.length} plan${todayDuePlans.length !== 1 ? "s" : ""} with steps due today.`
+            {dueTodayPlans.length > 0
+              ? `${dueTodayPlans.length} plan${dueTodayPlans.length !== 1 ? "s" : ""} with steps due today.`
               : "Pick a plan and start a sprint."}
           </p>
         </div>
 
-        {/* Today's Focus Queue */}
-        <section className="mb-10">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              {todayDuePlans.length > 0 ? "Due Today" : "Focus Queue"}
-            </h2>
-            {queuePlans.length > displayQueue.length && (
-              <span className="text-xs text-muted-foreground">
-                +{queuePlans.length - displayQueue.length} more plans
-              </span>
-            )}
-          </div>
-
+        {/* Categorized Plans sections */}
+        <div className="mb-10 space-y-8">
           {loading ? (
-            <div className="space-y-2">
-              {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="h-[72px] rounded-xl" />
-              ))}
+            <div className="space-y-4">
+              <Skeleton className="h-6 w-32" />
+              <div className="space-y-2">
+                {[1, 2, 3].map((i) => (
+                  <Skeleton key={i} className="h-[72px] rounded-xl" />
+                ))}
+              </div>
             </div>
-          ) : displayQueue.length === 0 ? (
+          ) : plans.length === 0 ? (
             <div className="rounded-xl border border-dashed border-border px-6 py-10 text-center">
               <CheckCircle2Icon className="mx-auto mb-3 size-8 text-muted-foreground/50" />
               <p className="text-sm font-medium">Nothing ready to sprint on</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                {plans.length === 0
-                  ? "Create a plan to get started."
-                  : "All steps are complete — great work!"}
+                Create a plan to get started.
               </p>
-              {plans.length === 0 && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="mt-4"
-                  onClick={() => router.push("/app/plan")}
-                >
-                  Create a plan
-                </Button>
-              )}
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-4"
+                onClick={() => router.push("/app/plan")}
+              >
+                Create a plan
+              </Button>
             </div>
           ) : (
-            <div className="space-y-2">
-              {displayQueue.map((plan) => (
-                <PlanQueueCard
-                  key={plan.id}
-                  plan={plan}
-                  onStartSprint={handleStartSprint}
-                />
-              ))}
-            </div>
+            <>
+              {overduePlans.length > 0 && (
+                <section>
+                  <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-rose-500 dark:text-rose-400 flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
+                    Overdue ({overduePlans.length})
+                  </h2>
+                  <div className="space-y-2">
+                    {overduePlans.map((plan) => (
+                      <PlanQueueCard
+                        key={plan.id}
+                        plan={plan}
+                        onStartSprint={handleStartSprint}
+                      />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {dueTodayPlans.length > 0 && (
+                <section>
+                  <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-amber-500 dark:text-amber-400 flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                    Due Today ({dueTodayPlans.length})
+                  </h2>
+                  <div className="space-y-2">
+                    {dueTodayPlans.map((plan) => (
+                      <PlanQueueCard
+                        key={plan.id}
+                        plan={plan}
+                        onStartSprint={handleStartSprint}
+                      />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {onTrackPlans.length > 0 && (
+                <section>
+                  <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-primary flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                    On Track ({onTrackPlans.length})
+                  </h2>
+                  <div className="space-y-2">
+                    {onTrackPlans.map((plan) => (
+                      <PlanQueueCard
+                        key={plan.id}
+                        plan={plan}
+                        onStartSprint={handleStartSprint}
+                      />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {completedPlans.length > 0 && (
+                <section>
+                  <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-emerald-500 dark:text-emerald-400 flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    Completed ({completedPlans.length})
+                  </h2>
+                  <div className="space-y-2">
+                    {completedPlans.map((plan) => (
+                      <PlanQueueCard
+                        key={plan.id}
+                        plan={plan}
+                        onStartSprint={handleStartSprint}
+                      />
+                    ))}
+                  </div>
+                </section>
+              )}
+            </>
           )}
-        </section>
+        </div>
 
         {/* Recent Sprints */}
         {(recentSessions.length > 0 || !loading) && (
@@ -517,13 +657,13 @@ export default function FocusPage() {
       </div>
 
       {/* Sprint Setup Modal */}
-      {setupPlan && (
+      {setupPlan && !loadingSteps && (
         <SprintSetupModal
           plan={setupPlan}
           steps={setupSteps}
           onStart={handleConfirmSprint}
           onClose={() => setSetupPlan(null)}
-          loading={starting || loadingSteps}
+          loading={starting}
         />
       )}
     </main>

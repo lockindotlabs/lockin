@@ -110,3 +110,13 @@ export const Priority = {
 } as const
 
 export type Priority = (typeof Priority)[keyof typeof Priority]
+
+
+export const SprintStatus = {
+  PLANNING: 'PLANNING',
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type SprintStatus = (typeof SprintStatus)[keyof typeof SprintStatus]

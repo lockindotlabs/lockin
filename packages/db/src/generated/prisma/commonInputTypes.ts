@@ -328,6 +328,23 @@ export type EnumBreakdownIntensityWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumBreakdownIntensityFilter<$PrismaModel>
 }
 
+export type EnumPlanStepStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.PlanStepStatus | Prisma.EnumPlanStepStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPlanStepStatusFilter<$PrismaModel> | $Enums.PlanStepStatus
+}
+
+export type EnumPlanStepStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PlanStepStatus | Prisma.EnumPlanStepStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPlanStepStatusWithAggregatesFilter<$PrismaModel> | $Enums.PlanStepStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPlanStepStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPlanStepStatusFilter<$PrismaModel>
+}
+
 export type EnumTaskStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.TaskStatus | Prisma.EnumTaskStatusFieldRefInput<$PrismaModel>
   in?: $Enums.TaskStatus[] | Prisma.ListEnumTaskStatusFieldRefInput<$PrismaModel>
@@ -387,23 +404,6 @@ export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _max?: Prisma.NestedIntNullableFilter<$PrismaModel>
-}
-
-export type EnumPlanStepStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.PlanStepStatus | Prisma.EnumPlanStepStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumPlanStepStatusFilter<$PrismaModel> | $Enums.PlanStepStatus
-}
-
-export type EnumPlanStepStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.PlanStepStatus | Prisma.EnumPlanStepStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumPlanStepStatusWithAggregatesFilter<$PrismaModel> | $Enums.PlanStepStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumPlanStepStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumPlanStepStatusFilter<$PrismaModel>
 }
 
 export type EnumCompletionTypeNullableFilter<$PrismaModel = never> = {
@@ -489,6 +489,23 @@ export type EnumPaymentOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumPaymentOrderStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumPaymentOrderStatusFilter<$PrismaModel>
+}
+
+export type EnumSprintStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.SprintStatus | Prisma.EnumSprintStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SprintStatus[] | Prisma.ListEnumSprintStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SprintStatus[] | Prisma.ListEnumSprintStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSprintStatusFilter<$PrismaModel> | $Enums.SprintStatus
+}
+
+export type EnumSprintStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SprintStatus | Prisma.EnumSprintStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SprintStatus[] | Prisma.ListEnumSprintStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SprintStatus[] | Prisma.ListEnumSprintStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSprintStatusWithAggregatesFilter<$PrismaModel> | $Enums.SprintStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSprintStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSprintStatusFilter<$PrismaModel>
 }
 
 export type NestedStringFilter<$PrismaModel = never> = {
@@ -791,6 +808,23 @@ export type NestedEnumBreakdownIntensityWithAggregatesFilter<$PrismaModel = neve
   _max?: Prisma.NestedEnumBreakdownIntensityFilter<$PrismaModel>
 }
 
+export type NestedEnumPlanStepStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.PlanStepStatus | Prisma.EnumPlanStepStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPlanStepStatusFilter<$PrismaModel> | $Enums.PlanStepStatus
+}
+
+export type NestedEnumPlanStepStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PlanStepStatus | Prisma.EnumPlanStepStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPlanStepStatusWithAggregatesFilter<$PrismaModel> | $Enums.PlanStepStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPlanStepStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPlanStepStatusFilter<$PrismaModel>
+}
+
 export type NestedEnumTaskStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.TaskStatus | Prisma.EnumTaskStatusFieldRefInput<$PrismaModel>
   in?: $Enums.TaskStatus[] | Prisma.ListEnumTaskStatusFieldRefInput<$PrismaModel>
@@ -852,23 +886,6 @@ export type NestedFloatNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null
 }
 
-export type NestedEnumPlanStepStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.PlanStepStatus | Prisma.EnumPlanStepStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumPlanStepStatusFilter<$PrismaModel> | $Enums.PlanStepStatus
-}
-
-export type NestedEnumPlanStepStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.PlanStepStatus | Prisma.EnumPlanStepStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.PlanStepStatus[] | Prisma.ListEnumPlanStepStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumPlanStepStatusWithAggregatesFilter<$PrismaModel> | $Enums.PlanStepStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumPlanStepStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumPlanStepStatusFilter<$PrismaModel>
-}
-
 export type NestedEnumCompletionTypeNullableFilter<$PrismaModel = never> = {
   equals?: $Enums.CompletionType | Prisma.EnumCompletionTypeFieldRefInput<$PrismaModel> | null
   in?: $Enums.CompletionType[] | Prisma.ListEnumCompletionTypeFieldRefInput<$PrismaModel> | null
@@ -925,6 +942,23 @@ export type NestedEnumPaymentOrderStatusWithAggregatesFilter<$PrismaModel = neve
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumPaymentOrderStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumPaymentOrderStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumSprintStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.SprintStatus | Prisma.EnumSprintStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SprintStatus[] | Prisma.ListEnumSprintStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SprintStatus[] | Prisma.ListEnumSprintStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSprintStatusFilter<$PrismaModel> | $Enums.SprintStatus
+}
+
+export type NestedEnumSprintStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SprintStatus | Prisma.EnumSprintStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.SprintStatus[] | Prisma.ListEnumSprintStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SprintStatus[] | Prisma.ListEnumSprintStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSprintStatusWithAggregatesFilter<$PrismaModel> | $Enums.SprintStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSprintStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSprintStatusFilter<$PrismaModel>
 }
 
 

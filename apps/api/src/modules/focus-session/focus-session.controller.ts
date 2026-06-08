@@ -26,14 +26,16 @@ const EndSessionSchema = z.object({
 export class FocusSessionController extends BaseController {
   async listSessions(req: Request, res: Response): Promise<void> {
     try {
-      const { planId } = req.query
+      const { planId, active } = req.query
       const sessions = await prisma.focusSession.findMany({
         where: {
           userId: req.dbUser.id,
           ...(planId ? { planId: String(planId) } : {}),
+          ...(active === 'true' ? { endedAt: null } : {}),
         },
         include: { plan: { select: { id: true, name: true } } },
         orderBy: { startedAt: 'desc' },
+        ...(active === 'true' ? { take: 1 } : {}),
       })
       this.handleSuccess(res, sessions)
     } catch (error) {
@@ -112,16 +114,22 @@ export class FocusSessionController extends BaseController {
         include: { plan: { select: { id: true, name: true } } },
       })
 
-      // Update task statuses from snapshot — only for tasks owned by this plan
+      // Sync PlanStep statuses and estimates from the snapshot — only for steps owned by this plan.
+      // NOTE: tasksSnapshot[].id holds PlanStep IDs (not Task IDs); the Task model
+      // belongs to the separate Sprint feature. Updating prisma.task here was a
+      // silent no-op (0 rows matched) that left PlanStep.status stuck at TODO.
       if (tasksSnapshot?.length && existing.planId) {
         const planId = existing.planId
         const updateOps = tasksSnapshot
           .filter(t => t.id)
           .map(t => {
             const status = t.status ?? (t.done ? 'DONE' : 'TODO')
-            return prisma.task.updateMany({
-              where: { id: t.id! },
-              data: { status },
+            return prisma.planStep.updateMany({
+              where: { id: t.id!, planId },
+              data: { 
+                status,
+                ...(t.durationMinutes !== undefined ? { estimatedMinutes: t.durationMinutes } : {})
+              },
             })
           })
         if (updateOps.length) await prisma.$transaction(updateOps)

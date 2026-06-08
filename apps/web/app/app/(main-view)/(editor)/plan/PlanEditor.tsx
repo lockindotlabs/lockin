@@ -112,6 +112,17 @@ function isMeaningfulDraft(plan: EditorPlan, tasks: EditorTask[]) {
   )
 }
 
+// Module-level guards shared across every PlanEditor instance for a given plan.
+// React Strict Mode double-mounts components in dev — each mount used to get its
+// own `useRef`, so two parallel instances could each see "no server id yet, not
+// currently creating" and both fire createPlanOnServer, producing duplicate Plan
+// rows server-side (the F1 race condition). Module scope persists across mount/
+// unmount cycles and is shared by every instance rendering the same planId,
+// which closes that race window. Keyed by planId so concurrent edits of
+// different plans (e.g. multiple tabs) don't interfere with each other.
+const serverIdByPlanId = new Map<string, string | null>()
+const creatingOnServerByPlanId = new Map<string, boolean>()
+
 function PlanEditorLoadingState({ state }: { state: string }) {
   return (
     <div className="flex h-screen" data-plan-id="loading">
@@ -174,17 +185,15 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
   const [isPlanLoaded, setIsPlanLoaded] = React.useState(false)
   const [saveRevision, setSaveRevision] = React.useState(0)
   const [quickPrompt, setQuickPrompt] = React.useState("")
-  // Tracks the server-side plan ID once synced (separate from local UUID)
-  const serverIdRef = React.useRef<string | null>(null)
-  // Prevents duplicate createPlanOnServer calls during the async race window
-  const isCreatingOnServerRef = React.useRef(false)
 
   const applySavedPlan = React.useCallback((savedPlan: SavedPlan | null) => {
     if (!savedPlan) {
       return
     }
 
-    serverIdRef.current = savedPlan.serverId ?? null
+    // Server-side plan ID lives in module-level state (see comment above),
+    // shared by every instance rendering this planId.
+    serverIdByPlanId.set(planId, savedPlan.serverId ?? null)
     setPersistedPlan({
       savedTitle: savedPlan.title,
       savedDescription: savedPlan.description,
@@ -194,7 +203,7 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
     setCreatedAt(savedPlan.createdAt)
     setLastSavedAt(new Date(savedPlan.updatedAt))
     setHasSavedPlan(true)
-  }, [])
+  }, [planId])
 
   React.useEffect(() => {
     let isActive = true
@@ -283,17 +292,20 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
         .then(() => {
           setLastSavedAt(new Date(updatedAt))
           setHasSavedPlan(true)
-          // Fire-and-forget: sync to API after local save
-          const currentServerId = serverIdRef.current
+          // Fire-and-forget: sync to API after local save.
+          // Guards read/write module-level state (keyed by planId) rather than
+          // per-instance refs, so React Strict Mode's double-mounted sibling
+          // instance observes the same "currently creating" flag and can't
+          // race past it to create a duplicate Plan server-side.
+          const currentServerId = serverIdByPlanId.get(planId) ?? null
           if (currentServerId) {
             updatePlanOnServer(plan, currentServerId, getToken)
-          } else if (!isCreatingOnServerRef.current) {
-            // Guard against duplicate create calls during the async window
-            isCreatingOnServerRef.current = true
+          } else if (!creatingOnServerByPlanId.get(planId)) {
+            creatingOnServerByPlanId.set(planId, true)
             createPlanOnServer(plan, getToken).then(async (serverId) => {
-              isCreatingOnServerRef.current = false
+              creatingOnServerByPlanId.set(planId, false)
               if (!serverId) return
-              serverIdRef.current = serverId
+              serverIdByPlanId.set(planId, serverId)
               await savePlan({ ...plan, serverId })
             })
           }

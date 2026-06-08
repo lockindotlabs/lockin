@@ -280,8 +280,8 @@ export type FocusSessionWhereInput = {
   tasksSnapshot?: Prisma.JsonNullableFilter<"FocusSession">
   slipCount?: Prisma.IntNullableFilter<"FocusSession"> | number | null
   createdAt?: Prisma.DateTimeFilter<"FocusSession"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   plan?: Prisma.XOR<Prisma.PlanNullableScalarRelationFilter, Prisma.PlanWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type FocusSessionOrderByWithRelationInput = {
@@ -297,8 +297,8 @@ export type FocusSessionOrderByWithRelationInput = {
   tasksSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
   slipCount?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
   plan?: Prisma.PlanOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type FocusSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -317,8 +317,8 @@ export type FocusSessionWhereUniqueInput = Prisma.AtLeast<{
   tasksSnapshot?: Prisma.JsonNullableFilter<"FocusSession">
   slipCount?: Prisma.IntNullableFilter<"FocusSession"> | number | null
   createdAt?: Prisma.DateTimeFilter<"FocusSession"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   plan?: Prisma.XOR<Prisma.PlanNullableScalarRelationFilter, Prisma.PlanWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type FocusSessionOrderByWithAggregationInput = {
@@ -370,8 +370,8 @@ export type FocusSessionCreateInput = {
   tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   slipCount?: number | null
   createdAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutFocusSessionsInput
   plan?: Prisma.PlanCreateNestedOneWithoutFocusSessionsInput
+  user: Prisma.UserCreateNestedOneWithoutFocusSessionsInput
 }
 
 export type FocusSessionUncheckedCreateInput = {
@@ -400,8 +400,8 @@ export type FocusSessionUpdateInput = {
   tasksSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   slipCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutFocusSessionsNestedInput
   plan?: Prisma.PlanUpdateOneWithoutFocusSessionsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutFocusSessionsNestedInput
 }
 
 export type FocusSessionUncheckedUpdateInput = {
@@ -870,8 +870,8 @@ export type FocusSessionSelect<ExtArgs extends runtime.Types.Extensions.Internal
   tasksSnapshot?: boolean
   slipCount?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.FocusSession$planArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["focusSession"]>
 
 export type FocusSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -887,8 +887,8 @@ export type FocusSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   tasksSnapshot?: boolean
   slipCount?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.FocusSession$planArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["focusSession"]>
 
 export type FocusSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -904,8 +904,8 @@ export type FocusSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   tasksSnapshot?: boolean
   slipCount?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.FocusSession$planArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["focusSession"]>
 
 export type FocusSessionSelectScalar = {
@@ -925,23 +925,23 @@ export type FocusSessionSelectScalar = {
 
 export type FocusSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "planId" | "startedAt" | "endedAt" | "duration" | "plannedDuration" | "overtimeDuration" | "completionType" | "tasksSnapshot" | "slipCount" | "createdAt", ExtArgs["result"]["focusSession"]>
 export type FocusSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.FocusSession$planArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type FocusSessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.FocusSession$planArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type FocusSessionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.FocusSession$planArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $FocusSessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FocusSession"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
     plan: Prisma.$PlanPayload<ExtArgs> | null
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1350,8 +1350,8 @@ readonly fields: FocusSessionFieldRefs;
  */
 export interface Prisma__FocusSessionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   plan<T extends Prisma.FocusSession$planArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FocusSession$planArgs<ExtArgs>>): Prisma.Prisma__PlanClient<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

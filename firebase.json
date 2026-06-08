@@ -1,15 +1,11 @@
 {
   "functions": [
     {
-      "source": "apps/api",
+      "source": "apps/api/dist",
       "codebase": "api",
       "ignore": [
         "node_modules",
-        ".git",
-        "src",
-        "prisma",
-        "tsup.config.ts",
-        "tsconfig.json"
+        ".git"
       ]
     }
   ]

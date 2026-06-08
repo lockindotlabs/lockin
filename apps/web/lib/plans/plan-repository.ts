@@ -29,6 +29,11 @@ export type PlanSummary = {
   title: string
   taskCount: number
   updatedAt: string
+  steps?: {
+    id: string
+    isCompleted: boolean
+    dueDate: string | null
+  }[]
 }
 
 const PLAN_CHANGE_EVENT = "lockin:plans-changed"

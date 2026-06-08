@@ -72,15 +72,15 @@ export type Project = Prisma.ProjectModel
  */
 export type Plan = Prisma.PlanModel
 /**
- * Model Task
- * 
- */
-export type Task = Prisma.TaskModel
-/**
  * Model PlanStep
  * 
  */
 export type PlanStep = Prisma.PlanStepModel
+/**
+ * Model Task
+ * 
+ */
+export type Task = Prisma.TaskModel
 /**
  * Model FocusSession
  * 
@@ -91,3 +91,8 @@ export type FocusSession = Prisma.FocusSessionModel
  * 
  */
 export type PaymentOrder = Prisma.PaymentOrderModel
+/**
+ * Model Sprint
+ * 
+ */
+export type Sprint = Prisma.SprintModel

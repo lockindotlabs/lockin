@@ -3,6 +3,7 @@
 import { useAuth } from '@clerk/nextjs'
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { rememberExtensionId } from '@/lib/focus/extension-bridge'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 
@@ -19,6 +20,7 @@ export default function ConnectExtensionPage() {
   useEffect(() => {
     if (!isLoaded || !isSignedIn || ran.current) return
     if (!extId) { setStatus('no-extension'); return }
+    const extensionId: string = extId
     ran.current = true
 
     async function connect() {
@@ -38,13 +40,19 @@ export default function ConnectExtensionPage() {
           return
         }
         chromeApi.runtime.sendMessage(
-          extId,
+          extensionId,
           { type: 'lockin-auth', token: data.token, apiUrl: API_URL },
           (response: any) => {
             if (chromeApi.runtime.lastError || !response?.ok) {
               setErrorMsg(chromeApi.runtime.lastError?.message ?? 'Extension did not respond')
               setStatus('error')
             } else {
+              // Remember the extension ID so the app can push sprint
+              // start/end events directly to it later (see extension-bridge) —
+              // without this, the extension only learns about app-side
+              // changes through its periodic poll, which can lag by up to a
+              // minute and looks like "the extension runs on its own".
+              rememberExtensionId(extensionId)
               setStatus('success')
               setTimeout(() => window.close(), 2000)
             }

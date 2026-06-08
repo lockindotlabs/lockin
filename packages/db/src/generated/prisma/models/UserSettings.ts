@@ -20,8 +20,18 @@ export type UserSettingsModel = runtime.Types.Result.DefaultSelection<Prisma.$Us
 
 export type AggregateUserSettings = {
   _count: UserSettingsCountAggregateOutputType | null
+  _avg: UserSettingsAvgAggregateOutputType | null
+  _sum: UserSettingsSumAggregateOutputType | null
   _min: UserSettingsMinAggregateOutputType | null
   _max: UserSettingsMaxAggregateOutputType | null
+}
+
+export type UserSettingsAvgAggregateOutputType = {
+  defaultDuration: number | null
+}
+
+export type UserSettingsSumAggregateOutputType = {
+  defaultDuration: number | null
 }
 
 export type UserSettingsMinAggregateOutputType = {
@@ -29,6 +39,12 @@ export type UserSettingsMinAggregateOutputType = {
   userId: string | null
   theme: string | null
   language: string | null
+  hudStyle: string | null
+  reminderStyle: string | null
+  blockTone: string | null
+  popupView: string | null
+  defaultDuration: number | null
+  tabGuard: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -38,6 +54,12 @@ export type UserSettingsMaxAggregateOutputType = {
   userId: string | null
   theme: string | null
   language: string | null
+  hudStyle: string | null
+  reminderStyle: string | null
+  blockTone: string | null
+  popupView: string | null
+  defaultDuration: number | null
+  tabGuard: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -47,17 +69,39 @@ export type UserSettingsCountAggregateOutputType = {
   userId: number
   theme: number
   language: number
+  blocklistHard: number
+  blocklistSoft: number
+  hudStyle: number
+  reminderStyle: number
+  blockTone: number
+  popupView: number
+  defaultDuration: number
+  tabGuard: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
 
+export type UserSettingsAvgAggregateInputType = {
+  defaultDuration?: true
+}
+
+export type UserSettingsSumAggregateInputType = {
+  defaultDuration?: true
+}
+
 export type UserSettingsMinAggregateInputType = {
   id?: true
   userId?: true
   theme?: true
   language?: true
+  hudStyle?: true
+  reminderStyle?: true
+  blockTone?: true
+  popupView?: true
+  defaultDuration?: true
+  tabGuard?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -67,6 +111,12 @@ export type UserSettingsMaxAggregateInputType = {
   userId?: true
   theme?: true
   language?: true
+  hudStyle?: true
+  reminderStyle?: true
+  blockTone?: true
+  popupView?: true
+  defaultDuration?: true
+  tabGuard?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -76,6 +126,14 @@ export type UserSettingsCountAggregateInputType = {
   userId?: true
   theme?: true
   language?: true
+  blocklistHard?: true
+  blocklistSoft?: true
+  hudStyle?: true
+  reminderStyle?: true
+  blockTone?: true
+  popupView?: true
+  defaultDuration?: true
+  tabGuard?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -119,6 +177,18 @@ export type UserSettingsAggregateArgs<ExtArgs extends runtime.Types.Extensions.I
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: UserSettingsAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: UserSettingsSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserSettingsMinAggregateInputType
@@ -149,6 +219,8 @@ export type UserSettingsGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   _count?: UserSettingsCountAggregateInputType | true
+  _avg?: UserSettingsAvgAggregateInputType
+  _sum?: UserSettingsSumAggregateInputType
   _min?: UserSettingsMinAggregateInputType
   _max?: UserSettingsMaxAggregateInputType
 }
@@ -158,9 +230,19 @@ export type UserSettingsGroupByOutputType = {
   userId: string
   theme: string
   language: string
+  blocklistHard: string[]
+  blocklistSoft: string[]
+  hudStyle: string
+  reminderStyle: string
+  blockTone: string
+  popupView: string
+  defaultDuration: number
+  tabGuard: boolean
   createdAt: Date
   updatedAt: Date
   _count: UserSettingsCountAggregateOutputType | null
+  _avg: UserSettingsAvgAggregateOutputType | null
+  _sum: UserSettingsSumAggregateOutputType | null
   _min: UserSettingsMinAggregateOutputType | null
   _max: UserSettingsMaxAggregateOutputType | null
 }
@@ -188,6 +270,14 @@ export type UserSettingsWhereInput = {
   userId?: Prisma.StringFilter<"UserSettings"> | string
   theme?: Prisma.StringFilter<"UserSettings"> | string
   language?: Prisma.StringFilter<"UserSettings"> | string
+  blocklistHard?: Prisma.StringNullableListFilter<"UserSettings">
+  blocklistSoft?: Prisma.StringNullableListFilter<"UserSettings">
+  hudStyle?: Prisma.StringFilter<"UserSettings"> | string
+  reminderStyle?: Prisma.StringFilter<"UserSettings"> | string
+  blockTone?: Prisma.StringFilter<"UserSettings"> | string
+  popupView?: Prisma.StringFilter<"UserSettings"> | string
+  defaultDuration?: Prisma.IntFilter<"UserSettings"> | number
+  tabGuard?: Prisma.BoolFilter<"UserSettings"> | boolean
   createdAt?: Prisma.DateTimeFilter<"UserSettings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserSettings"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -198,6 +288,14 @@ export type UserSettingsOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   theme?: Prisma.SortOrder
   language?: Prisma.SortOrder
+  blocklistHard?: Prisma.SortOrder
+  blocklistSoft?: Prisma.SortOrder
+  hudStyle?: Prisma.SortOrder
+  reminderStyle?: Prisma.SortOrder
+  blockTone?: Prisma.SortOrder
+  popupView?: Prisma.SortOrder
+  defaultDuration?: Prisma.SortOrder
+  tabGuard?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -211,6 +309,14 @@ export type UserSettingsWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserSettingsWhereInput | Prisma.UserSettingsWhereInput[]
   theme?: Prisma.StringFilter<"UserSettings"> | string
   language?: Prisma.StringFilter<"UserSettings"> | string
+  blocklistHard?: Prisma.StringNullableListFilter<"UserSettings">
+  blocklistSoft?: Prisma.StringNullableListFilter<"UserSettings">
+  hudStyle?: Prisma.StringFilter<"UserSettings"> | string
+  reminderStyle?: Prisma.StringFilter<"UserSettings"> | string
+  blockTone?: Prisma.StringFilter<"UserSettings"> | string
+  popupView?: Prisma.StringFilter<"UserSettings"> | string
+  defaultDuration?: Prisma.IntFilter<"UserSettings"> | number
+  tabGuard?: Prisma.BoolFilter<"UserSettings"> | boolean
   createdAt?: Prisma.DateTimeFilter<"UserSettings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"UserSettings"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -221,11 +327,21 @@ export type UserSettingsOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   theme?: Prisma.SortOrder
   language?: Prisma.SortOrder
+  blocklistHard?: Prisma.SortOrder
+  blocklistSoft?: Prisma.SortOrder
+  hudStyle?: Prisma.SortOrder
+  reminderStyle?: Prisma.SortOrder
+  blockTone?: Prisma.SortOrder
+  popupView?: Prisma.SortOrder
+  defaultDuration?: Prisma.SortOrder
+  tabGuard?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserSettingsCountOrderByAggregateInput
+  _avg?: Prisma.UserSettingsAvgOrderByAggregateInput
   _max?: Prisma.UserSettingsMaxOrderByAggregateInput
   _min?: Prisma.UserSettingsMinOrderByAggregateInput
+  _sum?: Prisma.UserSettingsSumOrderByAggregateInput
 }
 
 export type UserSettingsScalarWhereWithAggregatesInput = {
@@ -236,6 +352,14 @@ export type UserSettingsScalarWhereWithAggregatesInput = {
   userId?: Prisma.StringWithAggregatesFilter<"UserSettings"> | string
   theme?: Prisma.StringWithAggregatesFilter<"UserSettings"> | string
   language?: Prisma.StringWithAggregatesFilter<"UserSettings"> | string
+  blocklistHard?: Prisma.StringNullableListFilter<"UserSettings">
+  blocklistSoft?: Prisma.StringNullableListFilter<"UserSettings">
+  hudStyle?: Prisma.StringWithAggregatesFilter<"UserSettings"> | string
+  reminderStyle?: Prisma.StringWithAggregatesFilter<"UserSettings"> | string
+  blockTone?: Prisma.StringWithAggregatesFilter<"UserSettings"> | string
+  popupView?: Prisma.StringWithAggregatesFilter<"UserSettings"> | string
+  defaultDuration?: Prisma.IntWithAggregatesFilter<"UserSettings"> | number
+  tabGuard?: Prisma.BoolWithAggregatesFilter<"UserSettings"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"UserSettings"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"UserSettings"> | Date | string
 }
@@ -244,6 +368,14 @@ export type UserSettingsCreateInput = {
   id?: string
   theme?: string
   language?: string
+  blocklistHard?: Prisma.UserSettingsCreateblocklistHardInput | string[]
+  blocklistSoft?: Prisma.UserSettingsCreateblocklistSoftInput | string[]
+  hudStyle?: string
+  reminderStyle?: string
+  blockTone?: string
+  popupView?: string
+  defaultDuration?: number
+  tabGuard?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSettingsInput
@@ -254,6 +386,14 @@ export type UserSettingsUncheckedCreateInput = {
   userId: string
   theme?: string
   language?: string
+  blocklistHard?: Prisma.UserSettingsCreateblocklistHardInput | string[]
+  blocklistSoft?: Prisma.UserSettingsCreateblocklistSoftInput | string[]
+  hudStyle?: string
+  reminderStyle?: string
+  blockTone?: string
+  popupView?: string
+  defaultDuration?: number
+  tabGuard?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -262,6 +402,14 @@ export type UserSettingsUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
+  blocklistHard?: Prisma.UserSettingsUpdateblocklistHardInput | string[]
+  blocklistSoft?: Prisma.UserSettingsUpdateblocklistSoftInput | string[]
+  hudStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  reminderStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  blockTone?: Prisma.StringFieldUpdateOperationsInput | string
+  popupView?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultDuration?: Prisma.IntFieldUpdateOperationsInput | number
+  tabGuard?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSettingsNestedInput
@@ -272,6 +420,14 @@ export type UserSettingsUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
+  blocklistHard?: Prisma.UserSettingsUpdateblocklistHardInput | string[]
+  blocklistSoft?: Prisma.UserSettingsUpdateblocklistSoftInput | string[]
+  hudStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  reminderStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  blockTone?: Prisma.StringFieldUpdateOperationsInput | string
+  popupView?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultDuration?: Prisma.IntFieldUpdateOperationsInput | number
+  tabGuard?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -281,6 +437,14 @@ export type UserSettingsCreateManyInput = {
   userId: string
   theme?: string
   language?: string
+  blocklistHard?: Prisma.UserSettingsCreateblocklistHardInput | string[]
+  blocklistSoft?: Prisma.UserSettingsCreateblocklistSoftInput | string[]
+  hudStyle?: string
+  reminderStyle?: string
+  blockTone?: string
+  popupView?: string
+  defaultDuration?: number
+  tabGuard?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -289,6 +453,14 @@ export type UserSettingsUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
+  blocklistHard?: Prisma.UserSettingsUpdateblocklistHardInput | string[]
+  blocklistSoft?: Prisma.UserSettingsUpdateblocklistSoftInput | string[]
+  hudStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  reminderStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  blockTone?: Prisma.StringFieldUpdateOperationsInput | string
+  popupView?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultDuration?: Prisma.IntFieldUpdateOperationsInput | number
+  tabGuard?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -298,6 +470,14 @@ export type UserSettingsUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
+  blocklistHard?: Prisma.UserSettingsUpdateblocklistHardInput | string[]
+  blocklistSoft?: Prisma.UserSettingsUpdateblocklistSoftInput | string[]
+  hudStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  reminderStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  blockTone?: Prisma.StringFieldUpdateOperationsInput | string
+  popupView?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultDuration?: Prisma.IntFieldUpdateOperationsInput | number
+  tabGuard?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -307,13 +487,33 @@ export type UserSettingsNullableScalarRelationFilter = {
   isNot?: Prisma.UserSettingsWhereInput | null
 }
 
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type UserSettingsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   theme?: Prisma.SortOrder
   language?: Prisma.SortOrder
+  blocklistHard?: Prisma.SortOrder
+  blocklistSoft?: Prisma.SortOrder
+  hudStyle?: Prisma.SortOrder
+  reminderStyle?: Prisma.SortOrder
+  blockTone?: Prisma.SortOrder
+  popupView?: Prisma.SortOrder
+  defaultDuration?: Prisma.SortOrder
+  tabGuard?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type UserSettingsAvgOrderByAggregateInput = {
+  defaultDuration?: Prisma.SortOrder
 }
 
 export type UserSettingsMaxOrderByAggregateInput = {
@@ -321,6 +521,12 @@ export type UserSettingsMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   theme?: Prisma.SortOrder
   language?: Prisma.SortOrder
+  hudStyle?: Prisma.SortOrder
+  reminderStyle?: Prisma.SortOrder
+  blockTone?: Prisma.SortOrder
+  popupView?: Prisma.SortOrder
+  defaultDuration?: Prisma.SortOrder
+  tabGuard?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -330,8 +536,18 @@ export type UserSettingsMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   theme?: Prisma.SortOrder
   language?: Prisma.SortOrder
+  hudStyle?: Prisma.SortOrder
+  reminderStyle?: Prisma.SortOrder
+  blockTone?: Prisma.SortOrder
+  popupView?: Prisma.SortOrder
+  defaultDuration?: Prisma.SortOrder
+  tabGuard?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type UserSettingsSumOrderByAggregateInput = {
+  defaultDuration?: Prisma.SortOrder
 }
 
 export type UserSettingsCreateNestedOneWithoutUserInput = {
@@ -366,10 +582,44 @@ export type UserSettingsUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserSettingsUpdateToOneWithWhereWithoutUserInput, Prisma.UserSettingsUpdateWithoutUserInput>, Prisma.UserSettingsUncheckedUpdateWithoutUserInput>
 }
 
+export type UserSettingsCreateblocklistHardInput = {
+  set: string[]
+}
+
+export type UserSettingsCreateblocklistSoftInput = {
+  set: string[]
+}
+
+export type UserSettingsUpdateblocklistHardInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type UserSettingsUpdateblocklistSoftInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type UserSettingsCreateWithoutUserInput = {
   id?: string
   theme?: string
   language?: string
+  blocklistHard?: Prisma.UserSettingsCreateblocklistHardInput | string[]
+  blocklistSoft?: Prisma.UserSettingsCreateblocklistSoftInput | string[]
+  hudStyle?: string
+  reminderStyle?: string
+  blockTone?: string
+  popupView?: string
+  defaultDuration?: number
+  tabGuard?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -378,6 +628,14 @@ export type UserSettingsUncheckedCreateWithoutUserInput = {
   id?: string
   theme?: string
   language?: string
+  blocklistHard?: Prisma.UserSettingsCreateblocklistHardInput | string[]
+  blocklistSoft?: Prisma.UserSettingsCreateblocklistSoftInput | string[]
+  hudStyle?: string
+  reminderStyle?: string
+  blockTone?: string
+  popupView?: string
+  defaultDuration?: number
+  tabGuard?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -402,6 +660,14 @@ export type UserSettingsUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
+  blocklistHard?: Prisma.UserSettingsUpdateblocklistHardInput | string[]
+  blocklistSoft?: Prisma.UserSettingsUpdateblocklistSoftInput | string[]
+  hudStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  reminderStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  blockTone?: Prisma.StringFieldUpdateOperationsInput | string
+  popupView?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultDuration?: Prisma.IntFieldUpdateOperationsInput | number
+  tabGuard?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -410,6 +676,14 @@ export type UserSettingsUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   theme?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
+  blocklistHard?: Prisma.UserSettingsUpdateblocklistHardInput | string[]
+  blocklistSoft?: Prisma.UserSettingsUpdateblocklistSoftInput | string[]
+  hudStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  reminderStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  blockTone?: Prisma.StringFieldUpdateOperationsInput | string
+  popupView?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultDuration?: Prisma.IntFieldUpdateOperationsInput | number
+  tabGuard?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -421,6 +695,14 @@ export type UserSettingsSelect<ExtArgs extends runtime.Types.Extensions.Internal
   userId?: boolean
   theme?: boolean
   language?: boolean
+  blocklistHard?: boolean
+  blocklistSoft?: boolean
+  hudStyle?: boolean
+  reminderStyle?: boolean
+  blockTone?: boolean
+  popupView?: boolean
+  defaultDuration?: boolean
+  tabGuard?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -431,6 +713,14 @@ export type UserSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   userId?: boolean
   theme?: boolean
   language?: boolean
+  blocklistHard?: boolean
+  blocklistSoft?: boolean
+  hudStyle?: boolean
+  reminderStyle?: boolean
+  blockTone?: boolean
+  popupView?: boolean
+  defaultDuration?: boolean
+  tabGuard?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -441,6 +731,14 @@ export type UserSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   userId?: boolean
   theme?: boolean
   language?: boolean
+  blocklistHard?: boolean
+  blocklistSoft?: boolean
+  hudStyle?: boolean
+  reminderStyle?: boolean
+  blockTone?: boolean
+  popupView?: boolean
+  defaultDuration?: boolean
+  tabGuard?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -451,11 +749,19 @@ export type UserSettingsSelectScalar = {
   userId?: boolean
   theme?: boolean
   language?: boolean
+  blocklistHard?: boolean
+  blocklistSoft?: boolean
+  hudStyle?: boolean
+  reminderStyle?: boolean
+  blockTone?: boolean
+  popupView?: boolean
+  defaultDuration?: boolean
+  tabGuard?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "theme" | "language" | "createdAt" | "updatedAt", ExtArgs["result"]["userSettings"]>
+export type UserSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "theme" | "language" | "blocklistHard" | "blocklistSoft" | "hudStyle" | "reminderStyle" | "blockTone" | "popupView" | "defaultDuration" | "tabGuard" | "createdAt" | "updatedAt", ExtArgs["result"]["userSettings"]>
 export type UserSettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -476,6 +782,14 @@ export type $UserSettingsPayload<ExtArgs extends runtime.Types.Extensions.Intern
     userId: string
     theme: string
     language: string
+    blocklistHard: string[]
+    blocklistSoft: string[]
+    hudStyle: string
+    reminderStyle: string
+    blockTone: string
+    popupView: string
+    defaultDuration: number
+    tabGuard: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["userSettings"]>
@@ -906,6 +1220,14 @@ export interface UserSettingsFieldRefs {
   readonly userId: Prisma.FieldRef<"UserSettings", 'String'>
   readonly theme: Prisma.FieldRef<"UserSettings", 'String'>
   readonly language: Prisma.FieldRef<"UserSettings", 'String'>
+  readonly blocklistHard: Prisma.FieldRef<"UserSettings", 'String[]'>
+  readonly blocklistSoft: Prisma.FieldRef<"UserSettings", 'String[]'>
+  readonly hudStyle: Prisma.FieldRef<"UserSettings", 'String'>
+  readonly reminderStyle: Prisma.FieldRef<"UserSettings", 'String'>
+  readonly blockTone: Prisma.FieldRef<"UserSettings", 'String'>
+  readonly popupView: Prisma.FieldRef<"UserSettings", 'String'>
+  readonly defaultDuration: Prisma.FieldRef<"UserSettings", 'Int'>
+  readonly tabGuard: Prisma.FieldRef<"UserSettings", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"UserSettings", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"UserSettings", 'DateTime'>
 }

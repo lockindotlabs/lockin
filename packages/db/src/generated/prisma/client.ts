@@ -86,3 +86,8 @@ export type PlanStep = Prisma.PlanStepModel
  * 
  */
 export type FocusSession = Prisma.FocusSessionModel
+/**
+ * Model PaymentOrder
+ * 
+ */
+export type PaymentOrder = Prisma.PaymentOrderModel

@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  output   = "../../../packages/db/src/generated/prisma"
 }
 
 datasource db {
@@ -10,14 +10,30 @@ datasource db {
 model User {
   id              String           @id // Clerk user ID
   isActive        Boolean          @default(true)
+  planTier        BillingTier      @default(FREE)
+  planExpiresAt   DateTime?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   settings        UserSettings?
   projects        Project[]
   plans           Plan[]
+  planSteps       PlanStep[]
+  chats           Chat[]
   tasks           Task[]
   focusSessions   FocusSession[]
   extensionTokens ExtensionToken[]
+  paymentOrders   PaymentOrder[]
+}
+
+model Chat {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String     @default("New chat")
+  messages  Json       @default("[]")
+  status    ChatStatus @default(IDLE)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model ExtensionToken {
@@ -62,30 +78,35 @@ model Project {
 }
 
 model Plan {
-  id            String         @id @default(cuid())
-  userId        String
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  projectId     String?
-  project       Project?       @relation(fields: [projectId], references: [id], onDelete: SetNull)
-  name          String
-  description   String?
-  goal          String?
-  completion    String?
-  status        PlanStatus     @default(PLANNING)
-  startDate     DateTime?
-  endDate       DateTime?
-  tasks         Task[]
-  focusSessions FocusSession[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id                    String             @id @default(cuid())
+  userId                String
+  user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId             String?
+  project               Project?           @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  name                  String
+  description           String?
+  goal                  String?
+  completion            String?
+  status                PlanStatus         @default(PLANNING)
+  source                PlanSource         @default(MANUAL)
+  aiMode                PlanAiMode         @default(MANUAL)
+  breakdownIntensity    BreakdownIntensity @default(NORMAL)
+  totalEstimatedMinutes Int                @default(0)
+  startDate             DateTime?
+  endDate               DateTime?
+  deletedAt             DateTime?
+  steps                 PlanStep[]
+  focusSessions         FocusSession[]
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+
+  @@index([userId, deletedAt])
 }
 
 model Task {
   id              String     @id @default(cuid())
   userId          String
   user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  planId          String?
-  plan            Plan?      @relation(fields: [planId], references: [id], onDelete: SetNull)
   title           String
   description     String?
   status          TaskStatus @default(TODO)
@@ -95,6 +116,26 @@ model Task {
   order           Int        @default(0)
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
+}
+
+model PlanStep {
+  id               String         @id @default(cuid())
+  userId           String
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId           String
+  plan             Plan           @relation(fields: [planId], references: [id], onDelete: Cascade)
+  title            String
+  description      String?
+  status           PlanStepStatus @default(TODO)
+  dueDate          DateTime?
+  estimatedMinutes Int            @default(30)
+  order            Int            @default(0)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([userId])
+  @@index([planId])
+  @@index([planId, order])
 }
 
 model FocusSession {
@@ -112,6 +153,29 @@ model FocusSession {
   tasksSnapshot    Json?
   slipCount        Int?            @default(0)
   createdAt        DateTime        @default(now())
+}
+
+model PaymentOrder {
+  id             String             @id @default(cuid())
+  userId         String
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tier           BillingTier
+  amount         Int
+  currency       String             @default("VND")
+  status         PaymentOrderStatus @default(PENDING)
+  payosOrderCode Int                @unique
+  paymentLinkId  String?            @unique
+  checkoutUrl    String?
+  rawResponse    Json?
+  rawWebhook     Json?
+  paidAt         DateTime?
+  cancelledAt    DateTime?
+  failedAt       DateTime?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([status])
 }
 
 enum CompletionType {
@@ -132,6 +196,49 @@ enum PlanStatus {
   ACTIVE
   COMPLETED
   CANCELLED
+}
+
+enum PlanStepStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+  CANCELLED
+}
+
+enum PlanSource {
+  MANUAL
+  AI
+}
+
+enum PlanAiMode {
+  MANUAL
+  ASSISTED
+}
+
+enum BreakdownIntensity {
+  LOW_ENERGY
+  NORMAL
+  HIGH_ENERGY
+}
+
+enum ChatStatus {
+  IDLE
+  STREAMING
+  ERROR
+}
+
+enum BillingTier {
+  FREE
+  PLUS
+  PRO
+}
+
+enum PaymentOrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+  FAILED
+  EXPIRED
 }
 
 enum Priority {

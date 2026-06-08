@@ -751,14 +751,6 @@ export type EnumBreakdownIntensityFieldUpdateOperationsInput = {
   set?: $Enums.BreakdownIntensity
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type PlanCreateNestedOneWithoutStepsInput = {
   create?: Prisma.XOR<Prisma.PlanCreateWithoutStepsInput, Prisma.PlanUncheckedCreateWithoutStepsInput>
   connectOrCreate?: Prisma.PlanCreateOrConnectWithoutStepsInput

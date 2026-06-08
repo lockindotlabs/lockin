@@ -59,7 +59,8 @@ export const ModelName = {
   Plan: 'Plan',
   Task: 'Task',
   PlanStep: 'PlanStep',
-  FocusSession: 'FocusSession'
+  FocusSession: 'FocusSession',
+  PaymentOrder: 'PaymentOrder'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -81,6 +82,8 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const UserScalarFieldEnum = {
   id: 'id',
   isActive: 'isActive',
+  planTier: 'planTier',
+  planExpiresAt: 'planExpiresAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -118,6 +121,14 @@ export const UserSettingsScalarFieldEnum = {
   userId: 'userId',
   theme: 'theme',
   language: 'language',
+  blocklistHard: 'blocklistHard',
+  blocklistSoft: 'blocklistSoft',
+  hudStyle: 'hudStyle',
+  reminderStyle: 'reminderStyle',
+  blockTone: 'blockTone',
+  popupView: 'popupView',
+  defaultDuration: 'defaultDuration',
+  tabGuard: 'tabGuard',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -213,6 +224,28 @@ export const FocusSessionScalarFieldEnum = {
 export type FocusSessionScalarFieldEnum = (typeof FocusSessionScalarFieldEnum)[keyof typeof FocusSessionScalarFieldEnum]
 
 
+export const PaymentOrderScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tier: 'tier',
+  amount: 'amount',
+  currency: 'currency',
+  status: 'status',
+  payosOrderCode: 'payosOrderCode',
+  paymentLinkId: 'paymentLinkId',
+  checkoutUrl: 'checkoutUrl',
+  rawResponse: 'rawResponse',
+  rawWebhook: 'rawWebhook',
+  paidAt: 'paidAt',
+  cancelledAt: 'cancelledAt',
+  failedAt: 'failedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentOrderScalarFieldEnum = (typeof PaymentOrderScalarFieldEnum)[keyof typeof PaymentOrderScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -244,6 +277,14 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -251,12 +292,4 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

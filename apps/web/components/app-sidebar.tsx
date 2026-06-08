@@ -24,23 +24,13 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandShortcut,
 } from "@workspace/ui/components/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@workspace/ui/components/popover"
 import {
   SearchIcon,
   HomeIcon,
-  CalendarIcon,
-  Settings2Icon,
   PlusIcon,
-  Circle,
   ListCheckIcon,
   MessageCircleIcon,
-  XIcon,
   ListFilterIcon,
   GoalIcon,
 } from "lucide-react"
@@ -55,9 +45,10 @@ import type { FavoriteItem } from "@/components/nav-favorites"
 import { LogoAccent } from "@workspace/ui/components/logo-accent"
 import { AiPlannerIcon } from "./icons"
 import { NavUser } from "./nav-user"
-import { NavUserSkeleton } from "./nav-user-skeleton"
+import { UpgradeDialog } from "./upgrade-dialog"
 import { Button } from "@workspace/ui/components/button"
-import { Kbd, KbdGroup } from "@workspace/ui/components/kbd"
+import { Kbd } from "@workspace/ui/components/kbd"
+import { useBillingState } from "@/lib/billing/use-billing-state"
 
 type NavItem = {
   title: string
@@ -65,19 +56,6 @@ type NavItem = {
   icon: React.ReactNode
   isActive?: boolean
 }
-
-const navSecondary = [
-  {
-    title: "Calendar",
-    url: "#",
-    icon: <CalendarIcon />,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: <Settings2Icon />,
-  },
-]
 
 function getPlanIdFromPath(pathname: string) {
   const match = pathname.match(/^\/app\/plan\/(.+)$/)
@@ -181,108 +159,106 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [open, setOpen] = React.useState(false)
 
   return (
-    <Sidebar
-      className="border-r-0 font-medium"
-      {...props}
-      collapsible="offcanvas"
-    >
-      <SidebarHeader>
-        <div className="flex items-center justify-between gap-2 pr-1">
-          <LogoAccent
-            className="h-8 cursor-pointer"
-            onClick={() => {
-              router.push("/app")
-            }}
-          />
-          <SidebarTrigger
-            className={`${state == "collapsed" && "pointer-events-none opacity-0"} transition-opacity`}
-          />
-        </div>
-        <SidebarMenuItem>
-          <Button
-            variant={"outline"}
-            className="w-full border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-            onClick={handleCreatePlan}
-          >
-            <PlusIcon data-icon="inline-start" />
-            New Plan
-          </Button>
-        </SidebarMenuItem>
-        <SidebarMenu>
-          <SidebarMenuButton onClick={() => setOpen(!open)}>
-            <SearchIcon data-icon="inline-start" />
-            Search
-          </SidebarMenuButton>
-          <CommandDialog open={open} onOpenChange={setOpen}>
-            <Command>
-              <CommandInput
-                placeholder="Type a command or search..."
-                sideButtons={
-                  <Button variant="ghost" size="icon-sm">
-                    <ListFilterIcon />
-                    <span className="sr-only">Filter</span>
-                  </Button>
-                }
-              />
-              <CommandList>
-                <CommandEmpty>No results found.</CommandEmpty>
-                <CommandGroup className="mt-1">
-                  <div className="flex gap-2">
-                    <Button variant={"ghost"} size={"sm"}>
-                      <MessageCircleIcon />
-                      Chats
+    <>
+      {" "}
+      <Sidebar
+        className="border-r-0 font-medium"
+        {...props}
+        collapsible="offcanvas"
+      >
+        <SidebarHeader>
+          <div className="flex items-center justify-between gap-2 pr-1">
+            <LogoAccent
+              className="h-8 cursor-pointer"
+              onClick={() => {
+                router.push("/app")
+              }}
+            />
+            <SidebarTrigger
+              className={`${state == "collapsed" && "pointer-events-none opacity-0"} transition-opacity`}
+            />
+          </div>
+          <SidebarMenuItem>
+            <Button
+              variant={"outline"}
+              className="w-full border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              onClick={handleCreatePlan}
+            >
+              <PlusIcon data-icon="inline-start" />
+              New Plan
+            </Button>
+          </SidebarMenuItem>
+          <SidebarMenu>
+            <SidebarMenuButton onClick={() => setOpen(!open)}>
+              <SearchIcon data-icon="inline-start" />
+              Search
+            </SidebarMenuButton>
+            <CommandDialog open={open} onOpenChange={setOpen}>
+              <Command>
+                <CommandInput
+                  placeholder="Type a command or search..."
+                  sideButtons={
+                    <Button variant="ghost" size="icon-sm">
+                      <ListFilterIcon />
+                      <span className="sr-only">Filter</span>
                     </Button>
-                    <Button variant={"ghost"} size={"sm"}>
-                      <ListCheckIcon />
-                      Plan
-                    </Button>
-                  </div>
-                </CommandGroup>
-                <CommandGroup heading="Recommended">
-                  <CommandItem>Calendar1</CommandItem>
-                </CommandGroup>
-                <CommandGroup heading="Recent">
-                  <CommandItem>Calendar</CommandItem>
-                  <CommandItem>Search Emoji</CommandItem>
-                  <CommandItem>Calculator</CommandItem>
-                </CommandGroup>
-              </CommandList>
-            </Command>
-            <div className="px-3 py-2 text-xs text-muted-foreground">
-              <p className="text-xs text-muted-foreground">
-                Use <Kbd>Ctrl + K</Kbd> to open the command palette
-              </p>
-            </div>
-          </CommandDialog>
-          <NavMain items={navMain} />
-        </SidebarMenu>
-      </SidebarHeader>
-      <SidebarContent>
-        <NavFavorites
-          label="Recent chats"
-          emptyLabel="No recent chats yet"
-          favorites={recentChats}
-          isLoading={!areChatsLoaded}
-          onDelete={handleDeleteChat}
-        />
-        <NavFavorites
-          label="Recent plans"
-          emptyLabel="No saved plans yet"
-          favorites={recentPlans}
-          isLoading={!arePlansLoaded}
-          onDelete={handleDeletePlan}
-        />
-        {/* <NavSecondary items={navSecondary} className="mt-auto" / */}
-      </SidebarContent>
-      <SidebarFooter>
-        <Button size={"sm"} variant="outline" className="w-full">
-          <span>Upgrade</span>
-        </Button>
-        <React.Suspense fallback={<NavUserSkeleton />}>
+                  }
+                />
+                <CommandList>
+                  <CommandEmpty>No results found.</CommandEmpty>
+                  <CommandGroup className="mt-1">
+                    <div className="flex gap-2">
+                      <Button variant={"ghost"} size={"sm"}>
+                        <MessageCircleIcon />
+                        Chats
+                      </Button>
+                      <Button variant={"ghost"} size={"sm"}>
+                        <ListCheckIcon />
+                        Plan
+                      </Button>
+                    </div>
+                  </CommandGroup>
+                  <CommandGroup heading="Recommended">
+                    <CommandItem>Calendar1</CommandItem>
+                  </CommandGroup>
+                  <CommandGroup heading="Recent">
+                    <CommandItem>Calendar</CommandItem>
+                    <CommandItem>Search Emoji</CommandItem>
+                    <CommandItem>Calculator</CommandItem>
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+              <div className="px-3 py-2 text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
+                  Use <Kbd>Ctrl + K</Kbd> to open the command palette
+                </p>
+              </div>
+            </CommandDialog>
+            <NavMain items={navMain} />
+          </SidebarMenu>
+        </SidebarHeader>
+        <SidebarContent>
+          <NavFavorites
+            label="Recent chats"
+            emptyLabel="No recent chats yet"
+            favorites={recentChats}
+            isLoading={!areChatsLoaded}
+            onDelete={handleDeleteChat}
+          />
+          <NavFavorites
+            label="Recent plans"
+            emptyLabel="No saved plans yet"
+            favorites={recentPlans}
+            isLoading={!arePlansLoaded}
+            onDelete={handleDeletePlan}
+          />
+          {/* <NavSecondary items={navSecondary} className="mt-auto" / */}
+        </SidebarContent>
+        <SidebarFooter>
           <NavUser />
-        </React.Suspense>
-      </SidebarFooter>
-      <SidebarRail />
-    </Sidebar>
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
+    </>
   )
 }

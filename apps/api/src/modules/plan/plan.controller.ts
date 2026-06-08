@@ -101,11 +101,17 @@ export class PlanController extends BaseController {
         res.status(404).json({ success: false, error: { message: 'Plan not found', code: 404 } })
         return
       }
-      const { projectId, ...rest } = parsed.data
+      const { projectId, breakdownIntensity, totalEstimatedMinutes, ...rest } = parsed.data
       const plan = await prisma.plan.update({
         where: { id },
         data: {
           ...rest,
+          // breakdownIntensity/totalEstimatedMinutes are non-nullable columns with
+          // defaults in schema.prisma — treat an explicit `null` from the client as
+          // "no change" rather than passing it through to Prisma (which would throw
+          // a validation error at runtime).
+          ...(breakdownIntensity != null ? { breakdownIntensity } : {}),
+          ...(totalEstimatedMinutes != null ? { totalEstimatedMinutes } : {}),
           ...(projectId === null
             ? { project: { disconnect: true } }
             : projectId !== undefined

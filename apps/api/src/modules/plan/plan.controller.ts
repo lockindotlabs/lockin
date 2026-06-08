@@ -20,6 +20,10 @@ const UpdatePlanSchema = z.object({
   completion: z.string().max(1000).optional(),
   projectId: z.string().nullable().optional(),
   status: z.enum(['PLANNING', 'ACTIVE', 'COMPLETED', 'CANCELLED']).optional(),
+  source: z.enum(['MANUAL', 'AI']).optional(),
+  aiMode: z.enum(['MANUAL', 'ASSISTED']).optional(),
+  breakdownIntensity: z.enum(['LOW_ENERGY', 'NORMAL', 'HIGH_ENERGY']).nullable().optional(),
+  totalEstimatedMinutes: z.number().int().nonnegative().nullable().optional(),
   startDate: z.string().datetime().optional(),
   endDate: z.string().datetime().optional(),
 })
@@ -34,9 +38,13 @@ export class PlanController extends BaseController {
           deletedAt: null,
           ...(projectId ? { projectId: String(projectId) } : {}),
         },
-        include: { project: { select: { id: true, name: true, color: true } } },
-        orderBy: { createdAt: 'desc' },
+        include: {
+          project: { select: { id: true, name: true, color: true } },
+          steps: { orderBy: { order: 'asc' } },
+        },
+        orderBy: { updatedAt: 'desc' },
       })
+
       this.handleSuccess(res, plans)
     } catch (error) {
       this.handleError(error, res, 'listPlans')
@@ -57,6 +65,7 @@ export class PlanController extends BaseController {
         res.status(404).json({ success: false, error: { message: 'Plan not found', code: 404 } })
         return
       }
+
       this.handleSuccess(res, plan)
     } catch (error) {
       this.handleError(error, res, 'getPlan')

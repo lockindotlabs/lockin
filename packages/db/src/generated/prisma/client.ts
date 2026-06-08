@@ -47,11 +47,6 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
- * Model Chat
- * 
- */
-export type Chat = Prisma.ChatModel
-/**
  * Model ExtensionToken
  * 
  */
@@ -72,17 +67,32 @@ export type Project = Prisma.ProjectModel
  */
 export type Plan = Prisma.PlanModel
 /**
- * Model Task
- * 
- */
-export type Task = Prisma.TaskModel
-/**
  * Model PlanStep
  * 
  */
 export type PlanStep = Prisma.PlanStepModel
 /**
+ * Model Chat
+ * 
+ */
+export type Chat = Prisma.ChatModel
+/**
+ * Model Task
+ * 
+ */
+export type Task = Prisma.TaskModel
+/**
  * Model FocusSession
  * 
  */
 export type FocusSession = Prisma.FocusSessionModel
+/**
+ * Model PaymentOrder
+ * 
+ */
+export type PaymentOrder = Prisma.PaymentOrderModel
+/**
+ * Model Sprint
+ * 
+ */
+export type Sprint = Prisma.SprintModel

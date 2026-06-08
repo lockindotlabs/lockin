@@ -38,6 +38,16 @@ export const PlanStatus = {
 export type PlanStatus = (typeof PlanStatus)[keyof typeof PlanStatus]
 
 
+export const Priority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+} as const
+
+export type Priority = (typeof Priority)[keyof typeof Priority]
+
+
 export const PlanStepStatus = {
   TODO: 'TODO',
   IN_PROGRESS: 'IN_PROGRESS',
@@ -82,11 +92,31 @@ export const ChatStatus = {
 export type ChatStatus = (typeof ChatStatus)[keyof typeof ChatStatus]
 
 
-export const Priority = {
-  LOW: 'LOW',
-  MEDIUM: 'MEDIUM',
-  HIGH: 'HIGH',
-  URGENT: 'URGENT'
+export const BillingTier = {
+  FREE: 'FREE',
+  PLUS: 'PLUS',
+  PRO: 'PRO'
 } as const
 
-export type Priority = (typeof Priority)[keyof typeof Priority]
+export type BillingTier = (typeof BillingTier)[keyof typeof BillingTier]
+
+
+export const PaymentOrderStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  CANCELLED: 'CANCELLED',
+  FAILED: 'FAILED',
+  EXPIRED: 'EXPIRED'
+} as const
+
+export type PaymentOrderStatus = (typeof PaymentOrderStatus)[keyof typeof PaymentOrderStatus]
+
+
+export const SprintStatus = {
+  PLANNING: 'PLANNING',
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type SprintStatus = (typeof SprintStatus)[keyof typeof SprintStatus]

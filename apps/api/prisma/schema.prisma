@@ -8,35 +8,41 @@ datasource db {
 }
 
 model User {
-  id              String           @id // Clerk user ID
-  isActive        Boolean          @default(true)
+  id              String           @id
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
-  settings        UserSettings?
-  projects        Project[]
-  plans           Plan[]
-  tasks           Task[]
-  focusSessions   FocusSession[]
+  isActive        Boolean          @default(true)
+  planTier        BillingTier      @default(FREE)
+  planExpiresAt   DateTime?
+  chats           Chat[]
   extensionTokens ExtensionToken[]
+  focusSessions   FocusSession[]
+  PaymentOrder    PaymentOrder[]
+  plans           Plan[]
+  planSteps       PlanStep[]
+  projects        Project[]
+  Sprint          Sprint[]
+  tasks           Task[]
+  settings        UserSettings?
 }
 
 model ExtensionToken {
   id         String    @id @default(cuid())
   userId     String
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   token      String    @unique
   name       String    @default("Extension")
   createdAt  DateTime  @default(now())
   lastUsedAt DateTime?
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model UserSettings {
   id              String   @id @default(cuid())
   userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   theme           String   @default("system")
   language        String   @default("en")
-  // Extension settings — synced with Chrome extension
   blocklistHard   String[] @default([])
   blocklistSoft   String[] @default([])
   hudStyle        String   @default("pill+ring")
@@ -47,62 +53,101 @@ model UserSettings {
   tabGuard        Boolean  @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Project {
   id          String   @id @default(cuid())
   userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   name        String
   description String?
   color       String?
-  plans       Plan[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  plans       Plan[]
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Plan {
-  id            String         @id @default(cuid())
-  userId        String
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  projectId     String?
-  project       Project?       @relation(fields: [projectId], references: [id], onDelete: SetNull)
-  name          String
-  description   String?
-  goal          String?
-  completion    String?
-  status        PlanStatus     @default(PLANNING)
-  startDate     DateTime?
-  endDate       DateTime?
-  tasks         Task[]
-  focusSessions FocusSession[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id                    String             @id @default(cuid())
+  userId                String
+  projectId             String?
+  name                  String
+  description           String?
+  goal                  String?
+  completion            String?
+  status                PlanStatus         @default(PLANNING)
+  source                PlanSource         @default(MANUAL)
+  aiMode                PlanAiMode         @default(MANUAL)
+  breakdownIntensity    BreakdownIntensity @default(NORMAL)
+  totalEstimatedMinutes Int                @default(0)
+  startDate             DateTime?
+  endDate               DateTime?
+  deletedAt             DateTime?
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+  focusSessions         FocusSession[]
+  project               Project?           @relation(fields: [projectId], references: [id])
+  user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  steps                 PlanStep[]
+
+  @@index([userId, deletedAt])
+}
+
+model PlanStep {
+  id               String         @id @default(cuid())
+  userId           String
+  planId           String
+  title            String
+  description      String?
+  status           PlanStepStatus @default(TODO)
+  dueDate          DateTime?
+  estimatedMinutes Int            @default(30)
+  order            Int            @default(0)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  plan             Plan           @relation(fields: [planId], references: [id], onDelete: Cascade)
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@index([planId, order])
+  @@index([userId])
+}
+
+model Chat {
+  id        String     @id @default(cuid())
+  userId    String
+  title     String     @default("New chat")
+  messages  Json       @default("[]")
+  status    ChatStatus @default(IDLE)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Task {
   id              String     @id @default(cuid())
   userId          String
-  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  planId          String?
-  plan            Plan?      @relation(fields: [planId], references: [id], onDelete: SetNull)
+  sprintId        String?
   title           String
   description     String?
   status          TaskStatus @default(TODO)
   priority        Priority   @default(MEDIUM)
   dueDate         DateTime?
-  durationMinutes Int?
   order           Int        @default(0)
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
+  durationMinutes Int?
+  Sprint          Sprint?    @relation(fields: [sprintId], references: [id])
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model FocusSession {
   id               String          @id @default(cuid())
   userId           String
-  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   planId           String?
-  plan             Plan?           @relation(fields: [planId], references: [id], onDelete: SetNull)
   startedAt        DateTime        @default(now())
   endedAt          DateTime?
   duration         Int?
@@ -112,6 +157,48 @@ model FocusSession {
   tasksSnapshot    Json?
   slipCount        Int?            @default(0)
   createdAt        DateTime        @default(now())
+  plan             Plan?           @relation(fields: [planId], references: [id])
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@index([userId])
+}
+
+model PaymentOrder {
+  id             String             @id
+  userId         String
+  tier           BillingTier
+  amount         Int
+  currency       String             @default("VND")
+  status         PaymentOrderStatus @default(PENDING)
+  payosOrderCode Int                @unique
+  paymentLinkId  String?            @unique
+  checkoutUrl    String?
+  rawResponse    Json?
+  rawWebhook     Json?
+  paidAt         DateTime?
+  cancelledAt    DateTime?
+  failedAt       DateTime?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime
+  User           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([userId, createdAt])
+}
+
+model Sprint {
+  id        String       @id
+  userId    String
+  name      String
+  goal      String?
+  status    SprintStatus @default(PLANNING)
+  startDate DateTime?
+  endDate   DateTime?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime
+  User      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Task      Task[]
 }
 
 enum CompletionType {
@@ -139,4 +226,54 @@ enum Priority {
   MEDIUM
   HIGH
   URGENT
+}
+
+enum PlanStepStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+  CANCELLED
+}
+
+enum PlanSource {
+  MANUAL
+  AI
+}
+
+enum PlanAiMode {
+  MANUAL
+  ASSISTED
+}
+
+enum BreakdownIntensity {
+  LOW_ENERGY
+  NORMAL
+  HIGH_ENERGY
+}
+
+enum ChatStatus {
+  IDLE
+  STREAMING
+  ERROR
+}
+
+enum BillingTier {
+  FREE
+  PLUS
+  PRO
+}
+
+enum PaymentOrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+  FAILED
+  EXPIRED
+}
+
+enum SprintStatus {
+  PLANNING
+  ACTIVE
+  COMPLETED
+  CANCELLED
 }

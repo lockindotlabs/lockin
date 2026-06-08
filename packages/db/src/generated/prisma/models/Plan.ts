@@ -312,10 +312,10 @@ export type PlanWhereInput = {
   deletedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
-  steps?: Prisma.PlanStepListRelationFilter
   focusSessions?: Prisma.FocusSessionListRelationFilter
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  steps?: Prisma.PlanStepListRelationFilter
 }
 
 export type PlanOrderByWithRelationInput = {
@@ -336,10 +336,10 @@ export type PlanOrderByWithRelationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
-  project?: Prisma.ProjectOrderByWithRelationInput
-  steps?: Prisma.PlanStepOrderByRelationAggregateInput
   focusSessions?: Prisma.FocusSessionOrderByRelationAggregateInput
+  project?: Prisma.ProjectOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
+  steps?: Prisma.PlanStepOrderByRelationAggregateInput
 }
 
 export type PlanWhereUniqueInput = Prisma.AtLeast<{
@@ -363,10 +363,10 @@ export type PlanWhereUniqueInput = Prisma.AtLeast<{
   deletedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
-  steps?: Prisma.PlanStepListRelationFilter
   focusSessions?: Prisma.FocusSessionListRelationFilter
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  steps?: Prisma.PlanStepListRelationFilter
 }, "id">
 
 export type PlanOrderByWithAggregationInput = {
@@ -433,10 +433,10 @@ export type PlanCreateInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutPlansInput
-  project?: Prisma.ProjectCreateNestedOneWithoutPlansInput
-  steps?: Prisma.PlanStepCreateNestedManyWithoutPlanInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutPlanInput
+  project?: Prisma.ProjectCreateNestedOneWithoutPlansInput
+  user: Prisma.UserCreateNestedOneWithoutPlansInput
+  steps?: Prisma.PlanStepCreateNestedManyWithoutPlanInput
 }
 
 export type PlanUncheckedCreateInput = {
@@ -457,8 +457,8 @@ export type PlanUncheckedCreateInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  steps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutPlanInput
   focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutPlanInput
+  steps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutPlanInput
 }
 
 export type PlanUpdateInput = {
@@ -477,10 +477,10 @@ export type PlanUpdateInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
-  project?: Prisma.ProjectUpdateOneWithoutPlansNestedInput
-  steps?: Prisma.PlanStepUpdateManyWithoutPlanNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutPlanNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutPlansNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
+  steps?: Prisma.PlanStepUpdateManyWithoutPlanNestedInput
 }
 
 export type PlanUncheckedUpdateInput = {
@@ -501,8 +501,8 @@ export type PlanUncheckedUpdateInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  steps?: Prisma.PlanStepUncheckedUpdateManyWithoutPlanNestedInput
   focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutPlanNestedInput
+  steps?: Prisma.PlanStepUncheckedUpdateManyWithoutPlanNestedInput
 }
 
 export type PlanCreateManyInput = {
@@ -751,14 +751,6 @@ export type EnumBreakdownIntensityFieldUpdateOperationsInput = {
   set?: $Enums.BreakdownIntensity
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type PlanCreateNestedOneWithoutStepsInput = {
   create?: Prisma.XOR<Prisma.PlanCreateWithoutStepsInput, Prisma.PlanUncheckedCreateWithoutStepsInput>
   connectOrCreate?: Prisma.PlanCreateOrConnectWithoutStepsInput
@@ -805,9 +797,9 @@ export type PlanCreateWithoutUserInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutPlanInput
   project?: Prisma.ProjectCreateNestedOneWithoutPlansInput
   steps?: Prisma.PlanStepCreateNestedManyWithoutPlanInput
-  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutPlanInput
 }
 
 export type PlanUncheckedCreateWithoutUserInput = {
@@ -827,8 +819,8 @@ export type PlanUncheckedCreateWithoutUserInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  steps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutPlanInput
   focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutPlanInput
+  steps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutPlanInput
 }
 
 export type PlanCreateOrConnectWithoutUserInput = {
@@ -896,9 +888,9 @@ export type PlanCreateWithoutProjectInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutPlanInput
   user: Prisma.UserCreateNestedOneWithoutPlansInput
   steps?: Prisma.PlanStepCreateNestedManyWithoutPlanInput
-  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutPlanInput
 }
 
 export type PlanUncheckedCreateWithoutProjectInput = {
@@ -918,8 +910,8 @@ export type PlanUncheckedCreateWithoutProjectInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  steps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutPlanInput
   focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutPlanInput
+  steps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutPlanInput
 }
 
 export type PlanCreateOrConnectWithoutProjectInput = {
@@ -964,9 +956,9 @@ export type PlanCreateWithoutStepsInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutPlansInput
-  project?: Prisma.ProjectCreateNestedOneWithoutPlansInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutPlanInput
+  project?: Prisma.ProjectCreateNestedOneWithoutPlansInput
+  user: Prisma.UserCreateNestedOneWithoutPlansInput
 }
 
 export type PlanUncheckedCreateWithoutStepsInput = {
@@ -1022,9 +1014,9 @@ export type PlanUpdateWithoutStepsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
-  project?: Prisma.ProjectUpdateOneWithoutPlansNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutPlanNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutPlansNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
 }
 
 export type PlanUncheckedUpdateWithoutStepsInput = {
@@ -1064,8 +1056,8 @@ export type PlanCreateWithoutFocusSessionsInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutPlansInput
   project?: Prisma.ProjectCreateNestedOneWithoutPlansInput
+  user: Prisma.UserCreateNestedOneWithoutPlansInput
   steps?: Prisma.PlanStepCreateNestedManyWithoutPlanInput
 }
 
@@ -1122,8 +1114,8 @@ export type PlanUpdateWithoutFocusSessionsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
   project?: Prisma.ProjectUpdateOneWithoutPlansNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
   steps?: Prisma.PlanStepUpdateManyWithoutPlanNestedInput
 }
 
@@ -1183,9 +1175,9 @@ export type PlanUpdateWithoutUserInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutPlanNestedInput
   project?: Prisma.ProjectUpdateOneWithoutPlansNestedInput
   steps?: Prisma.PlanStepUpdateManyWithoutPlanNestedInput
-  focusSessions?: Prisma.FocusSessionUpdateManyWithoutPlanNestedInput
 }
 
 export type PlanUncheckedUpdateWithoutUserInput = {
@@ -1205,8 +1197,8 @@ export type PlanUncheckedUpdateWithoutUserInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  steps?: Prisma.PlanStepUncheckedUpdateManyWithoutPlanNestedInput
   focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutPlanNestedInput
+  steps?: Prisma.PlanStepUncheckedUpdateManyWithoutPlanNestedInput
 }
 
 export type PlanUncheckedUpdateManyWithoutUserInput = {
@@ -1263,9 +1255,9 @@ export type PlanUpdateWithoutProjectInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutPlanNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
   steps?: Prisma.PlanStepUpdateManyWithoutPlanNestedInput
-  focusSessions?: Prisma.FocusSessionUpdateManyWithoutPlanNestedInput
 }
 
 export type PlanUncheckedUpdateWithoutProjectInput = {
@@ -1285,8 +1277,8 @@ export type PlanUncheckedUpdateWithoutProjectInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  steps?: Prisma.PlanStepUncheckedUpdateManyWithoutPlanNestedInput
   focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutPlanNestedInput
+  steps?: Prisma.PlanStepUncheckedUpdateManyWithoutPlanNestedInput
 }
 
 export type PlanUncheckedUpdateManyWithoutProjectInput = {
@@ -1314,13 +1306,13 @@ export type PlanUncheckedUpdateManyWithoutProjectInput = {
  */
 
 export type PlanCountOutputType = {
-  steps: number
   focusSessions: number
+  steps: number
 }
 
 export type PlanCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  steps?: boolean | PlanCountOutputTypeCountStepsArgs
   focusSessions?: boolean | PlanCountOutputTypeCountFocusSessionsArgs
+  steps?: boolean | PlanCountOutputTypeCountStepsArgs
 }
 
 /**
@@ -1336,15 +1328,15 @@ export type PlanCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * PlanCountOutputType without action
  */
-export type PlanCountOutputTypeCountStepsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PlanStepWhereInput
+export type PlanCountOutputTypeCountFocusSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FocusSessionWhereInput
 }
 
 /**
  * PlanCountOutputType without action
  */
-export type PlanCountOutputTypeCountFocusSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.FocusSessionWhereInput
+export type PlanCountOutputTypeCountStepsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlanStepWhereInput
 }
 
 
@@ -1366,10 +1358,10 @@ export type PlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
-  steps?: boolean | Prisma.Plan$stepsArgs<ExtArgs>
   focusSessions?: boolean | Prisma.Plan$focusSessionsArgs<ExtArgs>
+  project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  steps?: boolean | Prisma.Plan$stepsArgs<ExtArgs>
   _count?: boolean | Prisma.PlanCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["plan"]>
 
@@ -1391,8 +1383,8 @@ export type PlanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["plan"]>
 
 export type PlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1413,8 +1405,8 @@ export type PlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["plan"]>
 
 export type PlanSelectScalar = {
@@ -1439,28 +1431,28 @@ export type PlanSelectScalar = {
 
 export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "projectId" | "name" | "description" | "goal" | "completion" | "status" | "source" | "aiMode" | "breakdownIntensity" | "totalEstimatedMinutes" | "startDate" | "endDate" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["plan"]>
 export type PlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
-  steps?: boolean | Prisma.Plan$stepsArgs<ExtArgs>
   focusSessions?: boolean | Prisma.Plan$focusSessionsArgs<ExtArgs>
+  project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  steps?: boolean | Prisma.Plan$stepsArgs<ExtArgs>
   _count?: boolean | Prisma.PlanCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PlanIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PlanIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $PlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Plan"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
-    project: Prisma.$ProjectPayload<ExtArgs> | null
-    steps: Prisma.$PlanStepPayload<ExtArgs>[]
     focusSessions: Prisma.$FocusSessionPayload<ExtArgs>[]
+    project: Prisma.$ProjectPayload<ExtArgs> | null
+    user: Prisma.$UserPayload<ExtArgs>
+    steps: Prisma.$PlanStepPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1874,10 +1866,10 @@ readonly fields: PlanFieldRefs;
  */
 export interface Prisma__PlanClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  project<T extends Prisma.Plan$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  steps<T extends Prisma.Plan$stepsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   focusSessions<T extends Prisma.Plan$focusSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$focusSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  project<T extends Prisma.Plan$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  steps<T extends Prisma.Plan$stepsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2325,6 +2317,30 @@ export type PlanDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * Plan.focusSessions
+ */
+export type Plan$focusSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FocusSession
+   */
+  select?: Prisma.FocusSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FocusSession
+   */
+  omit?: Prisma.FocusSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FocusSessionInclude<ExtArgs> | null
+  where?: Prisma.FocusSessionWhereInput
+  orderBy?: Prisma.FocusSessionOrderByWithRelationInput | Prisma.FocusSessionOrderByWithRelationInput[]
+  cursor?: Prisma.FocusSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FocusSessionScalarFieldEnum | Prisma.FocusSessionScalarFieldEnum[]
+}
+
+/**
  * Plan.project
  */
 export type Plan$projectArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2365,30 +2381,6 @@ export type Plan$stepsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   take?: number
   skip?: number
   distinct?: Prisma.PlanStepScalarFieldEnum | Prisma.PlanStepScalarFieldEnum[]
-}
-
-/**
- * Plan.focusSessions
- */
-export type Plan$focusSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FocusSession
-   */
-  select?: Prisma.FocusSessionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the FocusSession
-   */
-  omit?: Prisma.FocusSessionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FocusSessionInclude<ExtArgs> | null
-  where?: Prisma.FocusSessionWhereInput
-  orderBy?: Prisma.FocusSessionOrderByWithRelationInput | Prisma.FocusSessionOrderByWithRelationInput[]
-  cursor?: Prisma.FocusSessionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.FocusSessionScalarFieldEnum | Prisma.FocusSessionScalarFieldEnum[]
 }
 
 /**

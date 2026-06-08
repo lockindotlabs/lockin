@@ -52,14 +52,16 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  Chat: 'Chat',
   ExtensionToken: 'ExtensionToken',
   UserSettings: 'UserSettings',
   Project: 'Project',
   Plan: 'Plan',
-  Task: 'Task',
   PlanStep: 'PlanStep',
-  FocusSession: 'FocusSession'
+  Chat: 'Chat',
+  Task: 'Task',
+  FocusSession: 'FocusSession',
+  PaymentOrder: 'PaymentOrder',
+  Sprint: 'Sprint'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -80,25 +82,14 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UserScalarFieldEnum = {
   id: 'id',
-  isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isActive: 'isActive',
+  planTier: 'planTier',
+  planExpiresAt: 'planExpiresAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
-export const ChatScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  title: 'title',
-  messages: 'messages',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ChatScalarFieldEnum = (typeof ChatScalarFieldEnum)[keyof typeof ChatScalarFieldEnum]
 
 
 export const ExtensionTokenScalarFieldEnum = {
@@ -118,6 +109,14 @@ export const UserSettingsScalarFieldEnum = {
   userId: 'userId',
   theme: 'theme',
   language: 'language',
+  blocklistHard: 'blocklistHard',
+  blocklistSoft: 'blocklistSoft',
+  hudStyle: 'hudStyle',
+  reminderStyle: 'reminderStyle',
+  blockTone: 'blockTone',
+  popupView: 'popupView',
+  defaultDuration: 'defaultDuration',
+  tabGuard: 'tabGuard',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -161,23 +160,6 @@ export const PlanScalarFieldEnum = {
 export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof PlanScalarFieldEnum]
 
 
-export const TaskScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  title: 'title',
-  description: 'description',
-  status: 'status',
-  priority: 'priority',
-  dueDate: 'dueDate',
-  durationMinutes: 'durationMinutes',
-  order: 'order',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
-
-
 export const PlanStepScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -193,6 +175,37 @@ export const PlanStepScalarFieldEnum = {
 } as const
 
 export type PlanStepScalarFieldEnum = (typeof PlanStepScalarFieldEnum)[keyof typeof PlanStepScalarFieldEnum]
+
+
+export const ChatScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  messages: 'messages',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChatScalarFieldEnum = (typeof ChatScalarFieldEnum)[keyof typeof ChatScalarFieldEnum]
+
+
+export const TaskScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  sprintId: 'sprintId',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  priority: 'priority',
+  dueDate: 'dueDate',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  durationMinutes: 'durationMinutes'
+} as const
+
+export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
 
 
 export const FocusSessionScalarFieldEnum = {
@@ -211,6 +224,43 @@ export const FocusSessionScalarFieldEnum = {
 } as const
 
 export type FocusSessionScalarFieldEnum = (typeof FocusSessionScalarFieldEnum)[keyof typeof FocusSessionScalarFieldEnum]
+
+
+export const PaymentOrderScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tier: 'tier',
+  amount: 'amount',
+  currency: 'currency',
+  status: 'status',
+  payosOrderCode: 'payosOrderCode',
+  paymentLinkId: 'paymentLinkId',
+  checkoutUrl: 'checkoutUrl',
+  rawResponse: 'rawResponse',
+  rawWebhook: 'rawWebhook',
+  paidAt: 'paidAt',
+  cancelledAt: 'cancelledAt',
+  failedAt: 'failedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentOrderScalarFieldEnum = (typeof PaymentOrderScalarFieldEnum)[keyof typeof PaymentOrderScalarFieldEnum]
+
+
+export const SprintScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  goal: 'goal',
+  status: 'status',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SprintScalarFieldEnum = (typeof SprintScalarFieldEnum)[keyof typeof SprintScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -244,6 +294,14 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -251,12 +309,4 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

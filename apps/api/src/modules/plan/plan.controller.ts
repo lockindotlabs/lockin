@@ -16,6 +16,10 @@ const UpdatePlanSchema = z.object({
   goal: z.string().max(500).optional(),
   projectId: z.string().nullable().optional(),
   status: z.enum(['PLANNING', 'ACTIVE', 'COMPLETED', 'CANCELLED']).optional(),
+  source: z.enum(['MANUAL', 'AI']).optional(),
+  aiMode: z.enum(['MANUAL', 'ASSISTED']).optional(),
+  breakdownIntensity: z.enum(['LOW_ENERGY', 'NORMAL', 'HIGH_ENERGY']).optional(),
+  totalEstimatedMinutes: z.number().int().nonnegative().optional(),
   startDate: z.string().datetime().optional(),
   endDate: z.string().datetime().optional(),
 })
@@ -87,7 +91,18 @@ export class PlanController extends BaseController {
         res.status(404).json({ success: false, error: { message: 'Plan not found', code: 404 } })
         return
       }
-      const plan = await prisma.plan.update({ where: { id }, data: parsed.data })
+      const { projectId, ...rest } = parsed.data
+      const plan = await prisma.plan.update({
+        where: { id },
+        data: {
+          ...rest,
+          ...(projectId === null
+            ? { project: { disconnect: true } }
+            : projectId !== undefined
+              ? { project: { connect: { id: projectId } } }
+              : {}),
+        },
+      })
       this.handleSuccess(res, plan)
     } catch (error) {
       this.handleError(error, res, 'updatePlan')

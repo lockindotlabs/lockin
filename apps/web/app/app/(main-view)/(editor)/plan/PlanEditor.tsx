@@ -2,12 +2,7 @@
 
 import * as React from "react"
 import { format } from "date-fns"
-import {
-  ArrowUpIcon,
-  ListTodoIcon,
-  PlusIcon,
-  SlidersHorizontalIcon,
-} from "lucide-react"
+import { ListTodoIcon } from "lucide-react"
 import { NavActions } from "@/components/nav-actions"
 import {
   Breadcrumb,
@@ -18,13 +13,11 @@ import {
   BreadcrumbSeparator,
 } from "@workspace/ui/components/breadcrumb"
 import { Button } from "@workspace/ui/components/button"
-import { Input } from "@workspace/ui/components/input"
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar"
 import PlanDetails from "./PlanDetails"
 import TaskList from "./TaskList"
 import { ScrollArea } from "@workspace/ui/components/scroll-area"
-import { BorderBeam } from "border-beam"
 import { AiPlannerIcon } from "@/components/icons"
 import {
   getPlan,
@@ -33,10 +26,10 @@ import {
   type SavedPlanTask,
 } from "@/lib/plans/plan-repository"
 import { markPlanOpened } from "@/lib/plans/recently-opened-plans"
-import { createPlanOnServer, updatePlanOnServer } from "@/lib/plans/plan-api"
 import { AI_PLAN_REWRITE_EVENT } from "@/lib/plans/ai-plan-tools"
-import { RedirectToSignIn, Show, UserButton, useAuth } from "@clerk/nextjs"
-import { Separator } from "@workspace/ui/components/separator"
+import { RedirectToSignIn, Show } from "@clerk/nextjs"
+import { buildAskHref } from "@/lib/routing/ask-url"
+import { useRouter } from "next/router"
 
 type PlanEditorProps = {
   planId: string
@@ -109,17 +102,6 @@ function isMeaningfulDraft(plan: EditorPlan, tasks: EditorTask[]) {
   )
 }
 
-// Module-level guards shared across every PlanEditor instance for a given plan.
-// React Strict Mode double-mounts components in dev — each mount used to get its
-// own `useRef`, so two parallel instances could each see "no server id yet, not
-// currently creating" and both fire createPlanOnServer, producing duplicate Plan
-// rows server-side (the F1 race condition). Module scope persists across mount/
-// unmount cycles and is shared by every instance rendering the same planId,
-// which closes that race window. Keyed by planId so concurrent edits of
-// different plans (e.g. multiple tabs) don't interfere with each other.
-const serverIdByPlanId = new Map<string, string | null>()
-const creatingOnServerByPlanId = new Map<string, boolean>()
-
 function PlanEditorLoadingState({ state }: { state: string }) {
   return (
     <div className="flex h-screen" data-plan-id="loading">
@@ -169,7 +151,7 @@ function PlanEditorLoadingState({ state }: { state: string }) {
 
 export default function PlanEditor({ planId }: PlanEditorProps) {
   const { state } = useSidebar()
-  const { getToken } = useAuth()
+  const router = useRouter()
   const [persisted, setPersisted] = React.useState<EditorTask[]>([])
   const [persistedPlan, setPersistedPlan] =
     React.useState<EditorPlan>(createEmptyPlan)
@@ -181,29 +163,22 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
   const [isHydrated, setIsHydrated] = React.useState(false)
   const [isPlanLoaded, setIsPlanLoaded] = React.useState(false)
   const [saveRevision, setSaveRevision] = React.useState(0)
-  const [quickPrompt, setQuickPrompt] = React.useState("")
 
-  const applySavedPlan = React.useCallback(
-    (savedPlan: SavedPlan | null) => {
-      if (!savedPlan) {
-        return
-      }
+  const applySavedPlan = React.useCallback((savedPlan: SavedPlan | null) => {
+    if (!savedPlan) {
+      return
+    }
 
-      // Server-side plan ID lives in module-level state (see comment above),
-      // shared by every instance rendering this planId.
-      serverIdByPlanId.set(planId, savedPlan.serverId ?? null)
-      setPersistedPlan({
-        savedTitle: savedPlan.title,
-        savedDescription: savedPlan.description,
-        savedCompletion: savedPlan.completion,
-      })
-      setPersisted(savedPlan.tasks.map(toEditorTask))
-      setCreatedAt(savedPlan.createdAt)
-      setLastSavedAt(new Date(savedPlan.updatedAt))
-      setHasSavedPlan(true)
-    },
-    [planId]
-  )
+    setPersistedPlan({
+      savedTitle: savedPlan.title,
+      savedDescription: savedPlan.description,
+      savedCompletion: savedPlan.completion,
+    })
+    setPersisted(savedPlan.tasks.map(toEditorTask))
+    setCreatedAt(savedPlan.createdAt)
+    setLastSavedAt(new Date(savedPlan.updatedAt))
+    setHasSavedPlan(true)
+  }, [])
 
   React.useEffect(() => {
     let isActive = true
@@ -292,23 +267,6 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
         .then(() => {
           setLastSavedAt(new Date(updatedAt))
           setHasSavedPlan(true)
-          // Fire-and-forget: sync to API after local save.
-          // Guards read/write module-level state (keyed by planId) rather than
-          // per-instance refs, so React Strict Mode's double-mounted sibling
-          // instance observes the same "currently creating" flag and can't
-          // race past it to create a duplicate Plan server-side.
-          const currentServerId = serverIdByPlanId.get(planId) ?? null
-          if (currentServerId) {
-            updatePlanOnServer(plan, currentServerId, getToken)
-          } else if (!creatingOnServerByPlanId.get(planId)) {
-            creatingOnServerByPlanId.set(planId, true)
-            createPlanOnServer(plan, getToken).then(async (serverId) => {
-              creatingOnServerByPlanId.set(planId, false)
-              if (!serverId) return
-              serverIdByPlanId.set(planId, serverId)
-              await savePlan({ ...plan, serverId })
-            })
-          }
         })
         .catch(() => {})
     }, 500)
@@ -436,18 +394,6 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
     }
   }, [persisted])
 
-  const handleQuickPromptSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    const trimmedPrompt = quickPrompt.trim()
-    if (!trimmedPrompt) {
-      return
-    }
-
-    handleAddTask(trimmedPrompt, "")
-    setQuickPrompt("")
-  }
-
   if (!isPlanLoaded) {
     return <PlanEditorLoadingState state={state} />
   }
@@ -486,6 +432,11 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
                     : "Not saved yet"}
                 </div>
               )}
+
+              <Button>
+                <AiPlannerIcon data-icon="align-start" /> AI Planner
+              </Button>
+
               <NavActions />
 
               <Show when="signed-out">
@@ -537,17 +488,20 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
               )}
             />
 
-            <section className="absolute bottom-8 left-1/2 mx-auto flex w-full max-w-3xl flex-1 -translate-x-1/2 flex-col items-start justify-center gap-4">
-              <div className="flex flex-col gap-1">
-                <p className="mb-1 text-xs text-muted-foreground">
-                  Get started with
-                </p>
-                <Button variant="secondary" onClick={() => {}}>
-                  <AiPlannerIcon />
-                  AI Planner
-                </Button>
-              </div>
-            </section>
+            {(isPlanLoaded && !persistedPlan.savedTitle) ||
+            !persistedPlan.savedDescription ? (
+              <section className="absolute bottom-8 left-1/2 mx-auto flex w-full max-w-3xl flex-1 -translate-x-1/2 flex-col items-start justify-center gap-4">
+                <div className="flex flex-col gap-1">
+                  <p className="mb-1 text-xs text-muted-foreground">
+                    Get started with
+                  </p>
+                  <Button variant="secondary" onClick={() => {}}>
+                    <AiPlannerIcon />
+                    AI Planner
+                  </Button>
+                </div>
+              </section>
+            ) : null}
 
             {/* <div className="pointer-events-none absolute bottom-4 left-1/2 flex -translate-x-1/2 justify-center">
               <form

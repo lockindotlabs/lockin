@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Express } from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { clerkMiddleware } from '@clerk/express'
@@ -14,7 +14,7 @@ import { syncUser } from './middleware/syncUser.js'
 import { errorBoundary } from './middleware/errorBoundary.js'
 import { setupSwagger } from './config/swagger.js'
 
-export const app = express()
+export const app: Express = express()
 
 // CORS — in production, restrict to known origins via ALLOWED_ORIGINS env var
 const rawOrigins = process.env.ALLOWED_ORIGINS

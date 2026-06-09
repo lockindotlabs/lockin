@@ -101,7 +101,10 @@ export class PlanController extends BaseController {
         res.status(404).json({ success: false, error: { message: 'Plan not found', code: 404 } })
         return
       }
-      const plan = await prisma.plan.update({ where: { id }, data: parsed.data })
+      const data: any = { ...parsed.data }
+      if (typeof data.startDate === 'string') data.startDate = new Date(data.startDate)
+      if (typeof data.endDate === 'string') data.endDate = new Date(data.endDate)
+      const plan = await prisma.plan.update({ where: { id }, data })
       this.handleSuccess(res, plan)
     } catch (error) {
       this.handleError(error, res, 'updatePlan')

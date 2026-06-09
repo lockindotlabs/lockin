@@ -163,7 +163,7 @@
       },
       "patterns": {
         "label": "PATTERNS",
-        "headingOne": "You ship more",
+        "headingOne": "You work more",
         "headingTwo": "after 10am.",
         "description": "LockIn quietly learns your rhythms — when you focus best, when you slip, what task sizes you finish."
       },
@@ -186,59 +186,54 @@
         {
           "name": "Free",
           "desc": "Everything you need to try LockIn properly.",
-          "price": "$0",
+          "price": "0₫",
           "per": "/forever",
           "billed": "no credit card required",
           "features": [
-            "Unlimited tasks & projects",
-            "20 AI breakdowns per month",
-            "Sprint sessions up to 25 min",
-            "Soft distraction reminders",
-            "Browser extension (1 device)",
-            "Personal workspace"
+            "2 credits/day with Pro AI models",
+            "3 plans with AI Planner",
+            "3 projects",
+            "Basic LockIn Mode interface",
+            "Limited uploads (images, documents, recordings)"
           ],
           "cta": "Start free"
         },
         {
-          "name": "Pro",
+          "name": "Plus",
           "tag": "Most popular",
-          "desc": "For people who already know they procrastinate and want to actually stop.",
-          "price": "$9",
-          "priceMonthly": "$11",
-          "priceAnnual": "$9",
-          "per": "/ mo, billed annually",
-          "perMonthly": "/ mo",
-          "perAnnual": "/ mo, billed annually",
-          "billed": "save $120/year",
-          "billedMonthly": "billed monthly",
-          "billedAnnual": "save $120/year",
+          "desc": "Everything in Free, plus more AI credits and features.",
+          "price": "79.000₫",
+          "per": "/Month",
+          "billed": "best value for individuals",
           "features": [
             "Everything in Free",
-            "Unlimited AI breakdowns",
-            "Hard site blocking + slip detection",
-            "Sprints up to 4 hours",
-            "Ambient HUD across all tabs",
-            "Cross-device sync (ext + mobile)",
-            "Pattern analytics & daily digest",
-            "Calendar & timeline view"
+            "100 credits/month with Pro AI model",
+            "Unlimited plans with AI Planner",
+            "50 projects",
+            "Early access to new features",
+            "Customize and personalize the interface",
+            "Statistics view",
+            "Harder blocking for LockIn Mode",
+            "More uploads (images, documents, recordings)",
+            "Bonus rewards"
           ],
-          "cta": "Choose Pro"
+          "cta": "Choose Plus"
         },
         {
-          "name": "Team",
-          "desc": "Shared focus for small product, eng, & research teams.",
-          "price": "$19",
-          "per": "/ seat, annually",
-          "billed": "5-seat minimum",
+          "name": "Pro",
+          "desc": "Designed for power users and professionals.",
+          "price": "189.000₫",
+          "per": "/Month",
+          "billed": "premium features & priority support",
           "features": [
-            "Everything in Pro",
-            "Shared projects & sprints",
-            "Team blocklist templates",
-            "Admin controls & SSO",
-            "Usage analytics dashboard",
-            "Priority support"
+            "Everything in Plus",
+            "300 credits/month with Pro model",
+            "Unlimited plans with AI Planner",
+            "Unlimited projects",
+            "Unlimited uploads (images, documents, recordings)",
+            "More bonus rewards"
           ],
-          "cta": "Talk to us"
+          "cta": "Choose Pro"
         }
       ]
     },

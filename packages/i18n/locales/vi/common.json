@@ -182,63 +182,58 @@
       "description": "Bắt đầu miễn phí. Nâng cấp để chặn cứng, sprint dài hơn, và workspace cho đội nhóm.",
       "monthly": "Hàng tháng",
       "annually": "Hàng năm",
-      "tiers": [
+        "tiers": [
         {
-          "name": "Free",
-          "desc": "Đủ để bạn thử LockIn một cách nghiêm túc.",
-          "price": "$0",
+          "name": "Miễn phí",
+          "desc": "Tất cả những gì bạn cần để thử LockIn.",
+          "price": "0₫",
           "per": "/mãi mãi",
-          "billed": "không cần thẻ",
+          "billed": "Không cần thẻ tín dụng",
           "features": [
-            "Không giới hạn task & project",
-            "20 lượt AI chia nhỏ mỗi tháng",
-            "Sprint tối đa 25 phút",
-            "Nhắc xao nhãng mềm",
-            "Tiện ích trình duyệt (1 thiết bị)",
-            "Workspace cá nhân"
+            "2 credit/ngày với mô hình AI Pro",
+            "3 kế hoạch với AI Planner",
+            "3 dự án",
+            "Giao diện LockIn Mode cơ bản",
+            "Giới hạn tải lên (hình ảnh, tài liệu, ghi âm)"
           ],
           "cta": "Bắt đầu miễn phí"
         },
         {
-          "name": "Pro",
+          "name": "Plus",
           "tag": "Phổ biến nhất",
-          "desc": "Cho người biết mình hay trì hoãn và muốn thật sự dừng lại.",
-          "price": "$9",
-          "priceMonthly": "$11",
-          "priceAnnual": "$9",
-          "per": "/ tháng, trả hằng năm",
-          "perMonthly": "/ tháng",
-          "perAnnual": "/ tháng, trả hằng năm",
-          "billed": "tiết kiệm $120/năm",
-          "billedMonthly": "thanh toán hàng tháng",
-          "billedAnnual": "tiết kiệm $120/năm",
+          "desc": "Tất cả trong gói Miễn phí, cộng thêm nhiều credit AI và tính năng.",
+          "price": "79.000₫",
+          "per": "/tháng",
+          "billed": "Giá tốt nhất cho cá nhân",
           "features": [
-            "Tất cả trong Free",
-            "Không giới hạn AI chia nhỏ",
-            "Chặn trang cứng + phát hiện trượt nhịp",
-            "Sprint tối đa 4 giờ",
-            "Ambient HUD trên mọi tab",
-            "Đồng bộ thiết bị (extension + mobile)",
-            "Phân tích nhịp độ & daily digest",
-            "Lịch và timeline"
+            "Tất cả trong gói Miễn phí",
+            "100 credit/tháng với mô hình AI Pro",
+            "Số lượng kế hoạch không giới hạn với AI Planner",
+            "50 dự án",
+            "Truy cập sớm các tính năng mới",
+            "Tùy chỉnh giao diện",
+            "Chế độ xem thống kê",
+            "Chặn mạnh hơn cho LockIn Mode",
+            "Nhiều khả năng tải lên hơn (hình ảnh, tài liệu, ghi âm)",
+            "Phần thưởng thêm"
           ],
-          "cta": "Chọn Pro"
+          "cta": "Chọn Plus"
         },
         {
-          "name": "Team",
-          "desc": "Tập trung chung cho đội sản phẩm, kỹ thuật, và nghiên cứu nhỏ.",
-          "price": "$19",
-          "per": "/ ghế, hằng năm",
-          "billed": "tối thiểu 5 ghế",
+          "name": "Pro",
+          "desc": "Dành cho người dùng chuyên sâu và chuyên gia.",
+          "price": "189.000₫",
+          "per": "/tháng",
+          "billed": "Tính năng cao cấp & hỗ trợ ưu tiên",
           "features": [
-            "Tất cả trong Pro",
-            "Project & sprint dùng chung",
-            "Mẫu blocklist cho đội",
-            "Quản trị viên & SSO",
-            "Dashboard phân tích sử dụng",
-            "Hỗ trợ ưu tiên"
+            "Tất cả trong gói Plus",
+            "300 credit/tháng với mô hình Pro",
+            "Số lượng kế hoạch không giới hạn với AI Planner",
+            "Dự án không giới hạn",
+            "Tải lên không giới hạn (hình ảnh, tài liệu, ghi âm)",
+            "Thêm phần thưởng"
           ],
-          "cta": "Liên hệ"
+          "cta": "Chọn Pro"
         }
       ]
     },

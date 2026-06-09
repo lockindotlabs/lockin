@@ -65,7 +65,10 @@ function EndSprintSummaryModal({
   onClose: () => void
   onConfirm: (
     completedIds: Set<string>,
-    stepDetails: Record<string, { spentSeconds: number; remainingMinutes: number }>
+    stepDetails: Record<
+      string,
+      { spentSeconds: number; remainingMinutes: number }
+    >
   ) => void
   ending: boolean
 }) {
@@ -101,7 +104,10 @@ function EndSprintSummaryModal({
         const recordedTime = taskCheckTimes[s.id]
         if (recordedTime !== undefined) {
           spentSeconds = Math.max(0, recordedTime - previousCompletionTime)
-          previousCompletionTime = Math.max(previousCompletionTime, recordedTime)
+          previousCompletionTime = Math.max(
+            previousCompletionTime,
+            recordedTime
+          )
         } else {
           const potentialSpent = Math.max(0, elapsed - previousCompletionTime)
           spentSeconds = Math.min(originalEstimateSeconds, potentialSpent)
@@ -136,7 +142,7 @@ function EndSprintSummaryModal({
         className="absolute inset-0 bg-black/60 backdrop-blur-md"
         onClick={onClose}
       />
-      <div className="relative w-full max-w-md rounded-2xl border border-border/70 bg-background/95 p-6 shadow-2xl backdrop-blur-lg z-10 text-foreground">
+      <div className="relative z-10 w-full max-w-md rounded-2xl border border-border/70 bg-background/95 p-6 text-foreground shadow-2xl backdrop-blur-lg">
         <h3 className="text-lg font-semibold tracking-tight text-foreground">
           End Focus Sprint
         </h3>
@@ -146,7 +152,7 @@ function EndSprintSummaryModal({
         </p>
 
         {/* Step checklist */}
-        <div className="mt-4 space-y-2 max-h-[40vh] overflow-y-auto pr-1">
+        <div className="mt-4 max-h-[40vh] space-y-2 overflow-y-auto pr-1">
           {steps.map((step) => {
             const done = tempCompleted.has(step.id)
             const detail = details[step.id]
@@ -174,9 +180,9 @@ function EndSprintSummaryModal({
                     <CircleIcon className="size-4" />
                   )}
                 </span>
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <p
-                    className={`text-sm font-medium truncate ${
+                    className={`truncate text-sm font-medium ${
                       done
                         ? "text-muted-foreground line-through"
                         : "text-foreground"
@@ -184,9 +190,9 @@ function EndSprintSummaryModal({
                   >
                     {step.title}
                   </p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">
+                  <p className="mt-0.5 text-[10px] text-muted-foreground">
                     {done ? (
-                      <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                      <span className="font-medium text-emerald-600 dark:text-emerald-400">
                         Completed
                       </span>
                     ) : (
@@ -207,10 +213,12 @@ function EndSprintSummaryModal({
         </div>
 
         {/* Sprint Summary Details */}
-        <div className="mt-5 rounded-xl bg-primary/5 border border-primary/10 px-4 py-3 space-y-2">
+        <div className="mt-5 space-y-2 rounded-xl border border-primary/10 bg-primary/5 px-4 py-3">
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>Time elapsed:</span>
-            <span className="font-semibold text-foreground">{fmt(elapsed)}</span>
+            <span className="font-semibold text-foreground">
+              {fmt(elapsed)}
+            </span>
           </div>
           {!isOvertime && remaining > 0 && (
             <div className="flex justify-between text-xs text-muted-foreground">
@@ -234,7 +242,7 @@ function EndSprintSummaryModal({
           </Button>
           <Button
             size="sm"
-            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white"
+            className="flex-1 bg-emerald-600 text-white hover:bg-emerald-700"
             onClick={() => onConfirm(tempCompleted, details)}
             disabled={ending}
           >
@@ -260,12 +268,16 @@ function useTimer(plannedDuration: number, paused: boolean, overtime: boolean) {
       return
     }
     if (pausedAtRef.current !== null) {
-      pausedSecsRef.current += Math.floor((Date.now() - pausedAtRef.current) / 1000)
+      pausedSecsRef.current += Math.floor(
+        (Date.now() - pausedAtRef.current) / 1000
+      )
       pausedAtRef.current = null
     }
 
     const id = setInterval(() => {
-      const raw = Math.floor((Date.now() - startRef.current) / 1000) - pausedSecsRef.current
+      const raw =
+        Math.floor((Date.now() - startRef.current) / 1000) -
+        pausedSecsRef.current
       setElapsed(Math.max(0, raw))
     }, 500)
 
@@ -276,7 +288,13 @@ function useTimer(plannedDuration: number, paused: boolean, overtime: boolean) {
   const isOvertime = overtime || remaining <= 0
   const pct = Math.min(100, Math.round((elapsed / plannedDuration) * 100))
 
-  return { elapsed, remaining, isOvertime, pct, pausedSecs: pausedSecsRef.current }
+  return {
+    elapsed,
+    remaining,
+    isOvertime,
+    pct,
+    pausedSecs: pausedSecsRef.current,
+  }
 }
 
 // ─── Session Page ─────────────────────────────────────────────────────────────
@@ -291,7 +309,9 @@ export default function SessionPage() {
   const [plan, setPlan] = React.useState<FocusPlan | null>(null)
   const [steps, setSteps] = React.useState<PlanStep[]>([])
   const [completedIds, setCompletedIds] = React.useState<Set<string>>(new Set())
-  const [taskCheckTimes, setTaskCheckTimes] = React.useState<Record<string, number>>({})
+  const [taskCheckTimes, setTaskCheckTimes] = React.useState<
+    Record<string, number>
+  >({})
   const [loading, setLoading] = React.useState(true)
   const [paused, setPaused] = React.useState(false)
   const [overtime, setOvertime] = React.useState(false)
@@ -299,7 +319,11 @@ export default function SessionPage() {
   const [showEndSprintSummary, setShowEndSprintSummary] = React.useState(false)
 
   const plannedDuration = session?.plannedDuration ?? 25 * 60
-  const { elapsed, remaining, isOvertime, pct } = useTimer(plannedDuration, paused, overtime)
+  const { elapsed, remaining, isOvertime, pct } = useTimer(
+    plannedDuration,
+    paused,
+    overtime
+  )
 
   // Trigger overtime when timer hits 0
   React.useEffect(() => {
@@ -341,7 +365,9 @@ export default function SessionPage() {
     }
 
     load()
-    return () => { active = false }
+    return () => {
+      active = false
+    }
   }, [sessionId, getToken])
 
   const toggleStep = (id: string) => {
@@ -368,7 +394,10 @@ export default function SessionPage() {
   const handleEnd = async (
     completionType: "EARLY" | "NORMAL" | "OVERTIME",
     finalCompletedIds: Set<string>,
-    finalStepDetails: Record<string, { spentSeconds: number; remainingMinutes: number }>
+    finalStepDetails: Record<
+      string,
+      { spentSeconds: number; remainingMinutes: number }
+    >
   ) => {
     if (ending) return
     setEnding(true)
@@ -381,7 +410,9 @@ export default function SessionPage() {
         done,
         status: done ? "DONE" : "IN_PROGRESS",
         title: s.title,
-        durationMinutes: details ? details.remainingMinutes : s.estimatedMinutes,
+        durationMinutes: details
+          ? details.remainingMinutes
+          : s.estimatedMinutes,
       }
     })
 
@@ -390,7 +421,9 @@ export default function SessionPage() {
       {
         completionType,
         actualDuration: elapsed,
-        overtimeDuration: isOvertime ? Math.max(0, elapsed - plannedDuration) : 0,
+        overtimeDuration: isOvertime
+          ? Math.max(0, elapsed - plannedDuration)
+          : 0,
         slipCount: 0,
         tasksSnapshot: snapshot,
       },
@@ -410,14 +443,17 @@ export default function SessionPage() {
 
   const handleEndConfirm = (
     finalCompletedIds: Set<string>,
-    finalStepDetails: Record<string, { spentSeconds: number; remainingMinutes: number }>
+    finalStepDetails: Record<
+      string,
+      { spentSeconds: number; remainingMinutes: number }
+    >
   ) => {
     const isAllCompleted = steps.every((s) => finalCompletedIds.has(s.id))
     const completionType = isOvertime
       ? "OVERTIME"
       : isAllCompleted
-      ? "NORMAL"
-      : "EARLY"
+        ? "NORMAL"
+        : "EARLY"
 
     handleEnd(completionType, finalCompletedIds, finalStepDetails)
   }
@@ -441,8 +477,8 @@ export default function SessionPage() {
   }
 
   return (
-    <main className="relative flex min-h-svh flex-col bg-background text-foreground overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none z-0 opacity-35">
+    <main className="relative flex min-h-svh flex-col overflow-hidden bg-background text-foreground">
+      <div className="pointer-events-none absolute inset-0 z-0 opacity-35">
         <Aurora
           colorStops={["#F97316", "#EAB308", "#F97316"]}
           blend={0.5}
@@ -455,10 +491,9 @@ export default function SessionPage() {
         <RedirectToSignIn />
       </Show>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-lg flex-col items-center px-4 pb-16 pt-12">
-
+      <div className="relative z-10 mx-auto flex w-full max-w-lg flex-col items-center px-4 pt-12 pb-16">
         {/* Plan name */}
-        <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+        <p className="mb-1 text-xs font-medium tracking-wider text-muted-foreground uppercase">
           Sprint
         </p>
         <h1 className="mb-8 text-center text-xl font-semibold tracking-tight">
@@ -500,7 +535,7 @@ export default function SessionPage() {
           {/* Time text */}
           <div className="text-center">
             <div
-              className={`font-mono text-4xl font-light tabular-nums tracking-tight ${
+              className={`font-mono text-4xl font-light tracking-tight tabular-nums ${
                 isOvertime ? "text-rose-500" : ""
               }`}
             >
@@ -508,19 +543,17 @@ export default function SessionPage() {
               {isOvertime ? fmt(elapsed - plannedDuration) : fmt(remaining)}
             </div>
             <div className="mt-1 text-xs text-muted-foreground">
-              {isOvertime
-                ? "overtime"
-                : paused
-                  ? "paused"
-                  : `${pct}% complete`}
+              {isOvertime ? "overtime" : paused ? "paused" : `${pct}% complete`}
             </div>
           </div>
         </div>
 
         {/* Current step */}
         {currentStep && (
-          <div className="mb-6 w-full rounded-xl border border-border/70 bg-background/50 backdrop-blur-md px-4 py-3 text-center shadow-sm">
-            <p className="text-xs text-muted-foreground mb-0.5">Now working on</p>
+          <div className="mb-6 w-full rounded-xl border border-border/70 bg-background/50 px-4 py-3 text-center shadow-sm backdrop-blur-md">
+            <p className="mb-0.5 text-xs text-muted-foreground">
+              Now working on
+            </p>
             <p className="text-sm font-medium">{currentStep.title}</p>
             {currentStep.estimatedMinutes > 0 && (
               <p className="mt-0.5 text-xs text-muted-foreground">
@@ -567,7 +600,7 @@ export default function SessionPage() {
               size="sm"
               onClick={() => setShowEndSprintSummary(true)}
               disabled={ending}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              className="bg-emerald-600 text-white hover:bg-emerald-700"
             >
               <CheckCircle2Icon className="size-3.5" />
               {ending ? "Saving…" : "All done — End Sprint"}
@@ -590,7 +623,7 @@ export default function SessionPage() {
         {steps.length > 0 && (
           <section className="w-full">
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <h2 className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
                 Steps
               </h2>
               <span className="text-xs text-muted-foreground">
@@ -598,7 +631,7 @@ export default function SessionPage() {
               </span>
             </div>
 
-            <div className="divide-y divide-border/60 rounded-xl border border-border/70 bg-background/50 backdrop-blur-md shadow-sm">
+            <div className="divide-y divide-border/60 rounded-xl border border-border/70 bg-background/50 shadow-sm backdrop-blur-md">
               {steps.map((step) => {
                 const done = completedIds.has(step.id)
                 const isCurrent = step.id === currentStep?.id
@@ -606,7 +639,7 @@ export default function SessionPage() {
                   <button
                     key={step.id}
                     onClick={() => toggleStep(step.id)}
-                    className={`flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/20 first:rounded-t-xl last:rounded-b-xl ${
+                    className={`flex w-full items-start gap-3 px-4 py-3 text-left transition-colors first:rounded-t-xl last:rounded-b-xl hover:bg-muted/20 ${
                       isCurrent && !done ? "bg-primary/5" : ""
                     }`}
                   >

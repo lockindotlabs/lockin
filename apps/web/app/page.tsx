@@ -30,6 +30,7 @@ import {
   SUPPORTED_LOCALES,
   type AppLocale,
 } from "@workspace/i18n"
+import Image from "next/image"
 
 const revealEase = [0.16, 1, 0.3, 1] as const
 const revealViewport = {
@@ -78,7 +79,6 @@ type FaqEntry = {
 export default function LandingPage() {
   return (
     <div className="lp">
-      <div className="lp-frame" />
       <SiteHeader />
       <main>
         <HeroSection />
@@ -97,11 +97,11 @@ function SiteHeader() {
   const { t } = useTranslation()
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto w-full max-w-330 px-4 sm:px-6 lg:px-10">
-        <div className="relative flex h-18 items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 bg-background/90 backdrop-blur-xl">
+      <div className="mx-auto w-full max-w-330 px-4 sm:px-6 lg:px-0">
+        <div className="relative flex h-16 items-center justify-between gap-4">
           <Link href="/" className="inline-flex shrink-0 items-center">
-            <LogoAccent className="h-10" />
+            <LogoAccent className="h-9" />
           </Link>
 
           <div className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 text-sm font-medium text-muted-foreground *:hover:text-foreground md:flex">
@@ -117,19 +117,16 @@ function SiteHeader() {
             <Button variant="ghost" size="sm">
               <Link href="/#faq">{t("landing.nav.faq")}</Link>
             </Button>
-            <Button variant="ghost" size="sm">
-              <Link href="/#manifesto">{t("landing.nav.manifesto")}</Link>
-            </Button>
           </div>
 
           <div className="ml-auto flex items-center gap-2.5">
             <Show when={"signed-out"}>
-              <Button size={"lg"} variant="outline">
+              <Button variant="outline">
                 <Link className="text-sm font-medium" href="/app/sign-in">
                   {t("landing.auth.signIn")}
                 </Link>
               </Button>
-              <Button size={"lg"}>
+              <Button>
                 <Link className="text-sm font-medium" href="/app/sign-up">
                   {t("landing.auth.getStarted")}
                 </Link>
@@ -137,7 +134,7 @@ function SiteHeader() {
             </Show>
 
             <Show when={"signed-in"}>
-              <Button size={"lg"}>
+              <Button>
                 <Link className="text-sm font-medium" href="/app">
                   {t("landing.auth.goToApp")}
                 </Link>
@@ -203,7 +200,7 @@ function HeroSection() {
       initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
     >
-      <div className="relative z-10 mx-auto max-w-330 px-10">
+      <div className="relative z-10 mx-auto max-w-330 px-4 md:px-6 lg:px-0">
         <motion.span
           className="mb-4 inline-flex items-center gap-2 rounded-full border bg-card px-2 py-1 font-mono text-xs font-medium tracking-wider text-gray-500 uppercase"
           initial={{ opacity: 0, y: 20 }}
@@ -214,7 +211,7 @@ function HeroSection() {
           {t("landing.hero.badge")}
         </motion.span>
 
-        <motion.h1 className="max-w-[25ch] font-sans-tight text-6xl leading-none font-[550]">
+        <motion.h1 className="max-w-[25ch] font-sans-tight text-5xl leading-[110%] font-[550] lg:text-6xl">
           <motion.span
             className="inline-block"
             style={{ "--i": 0 } as React.CSSProperties}
@@ -312,13 +309,13 @@ function HeroSection() {
             </Link>
           </Button>
 
-          <span className="running">
+          {/* <span className="running">
             <span className="dot" />
             {t("landing.hero.running")}
-          </span>
+          </span> */}
         </motion.div>
 
-        <motion.div
+        {/* <motion.div
           className="mt-16 grid gap-0 overflow-hidden rounded-2xl border bg-card shadow-xl md:grid-cols-2"
           initial={{ opacity: 0, y: 16, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -399,6 +396,35 @@ function HeroSection() {
               </div>
             </div>
           </div>
+        </motion.div> */}
+
+        <motion.div
+          className="relative mt-16 grid min-h-200 gap-0 overflow-hidden rounded-lg"
+          initial={{ opacity: 0, y: 16, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.75, delay: 0.6, ease: revealEase }}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.75, delay: 0.9, ease: revealEase }}
+            className="absolute top-1/2 left-12 w-260 -translate-y-1/2 overflow-hidden rounded-md shadow-lg ring ring-foreground/10 lg:left-1/2 lg:-translate-x-1/2"
+          >
+            <Image
+              src="/product-demo.png"
+              alt="LockIn app demo"
+              width={1440}
+              height={1080}
+            />
+          </motion.div>
+
+          <Image
+            src="/lockin-gradient.png"
+            className="h-full w-full object-cover"
+            alt="LockIn app demo"
+            width={800}
+            height={600}
+          />
         </motion.div>
       </div>
     </motion.section>
@@ -643,7 +669,7 @@ function BentoSection() {
 
   return (
     <section className="py-20" id="product">
-      <div className="mx-auto max-w-330 px-10">
+      <div className="mx-auto max-w-330 sm:px-6 lg:px-0">
         <motion.div className="mb-8" {...revealUp(0)}>
           <span className="bg-canvas mb-4 inline-flex items-center gap-2 rounded-full border px-2 py-1 font-mono text-xs font-medium tracking-wider text-muted-foreground uppercase">
             {t("landing.product.eyebrow")}
@@ -788,7 +814,7 @@ function ExtensionSection() {
       id="extension"
       style={{ paddingTop: 0 }}
     >
-      <div className="lp-wrap">
+      <div className="mx-auto max-w-330 sm:px-6 lg:px-0">
         <motion.div className="lp-section-head" {...revealUp(0)}>
           <span className="lp-eyebrow-pill">
             {t("landing.extension.eyebrow")}
@@ -884,15 +910,7 @@ function ExtensionSection() {
               </h3>
               <p>{t("landing.extension.pairing.description")}</p>
               <div style={{ marginTop: "auto", paddingTop: 24 }}>
-                <div
-                  style={{
-                    background: "var(--yellow-50)",
-                    border: "1px solid var(--yellow-soft)",
-                    borderRadius: 12,
-                    padding: 22,
-                    textAlign: "center",
-                  }}
-                >
+                <div className="rounded-2xl bg-amber-50 p-8 text-center">
                   <div
                     style={{
                       fontFamily: "var(--font-ibm-mono)",
@@ -1149,7 +1167,7 @@ function PricingSection() {
 
   return (
     <section className="lp-pricing lp-section" id="pricing">
-      <div className="lp-wrap">
+      <div className="mx-auto max-w-330 sm:px-6 lg:px-0">
         <motion.div className="lp-section-head" {...revealUp(0)}>
           <span className="lp-eyebrow-pill">
             {t("landing.pricing.eyebrow")}
@@ -1202,7 +1220,7 @@ function PricingSection() {
                   {...revealScale(Number.parseInt(delay, 10) / 1000)}
                 >
                   <BorderGlow
-                    className="lp-tier-pro"
+                    className="lp-tier-pro h-full"
                     style={{ "--rd": delay } as React.CSSProperties}
                     backgroundColor="var(--card)"
                     glowColor="var(--primary)"

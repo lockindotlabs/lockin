@@ -1,82 +1,52 @@
 import type { Request, Response } from 'express'
-import { registerSchema, loginSchema } from './auth.schema.js'
-import * as authService from './auth.service.js'
+import { randomBytes } from 'crypto'
+import { BaseController } from '../../controllers/BaseController.js'
+import prisma from '../../lib/prisma.js'
 
-const COOKIE_OPTIONS = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'strict' as const,
-  maxAge: 7 * 24 * 60 * 60 * 1000,
-}
+export class AuthController extends BaseController {
+  async createToken(req: Request, res: Response): Promise<void> {
+    try {
+      const name = (req.body?.name as string) || 'Extension'
+      const token = randomBytes(32).toString('hex')
 
-export async function registerHandler(req: Request, res: Response) {
-  const parsed = registerSchema.safeParse(req.body)
-  if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.flatten().fieldErrors })
-    return
-  }
+      const record = await prisma.extensionToken.create({
+        data: { userId: req.dbUser.id, token, name },
+      })
 
-  try {
-    const { user, accessToken, refreshToken } = await authService.register(parsed.data)
-    res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS)
-    res.status(201).json({ user, accessToken })
-  } catch (err: unknown) {
-    if (err instanceof Error && err.message === 'EMAIL_TAKEN') {
-      res.status(409).json({ error: 'Email already in use' })
-      return
+      // Plaintext token returned only on creation — never retrievable again
+      this.handleSuccess(res, { id: record.id, name: record.name, token, createdAt: record.createdAt }, 'Token created', 201)
+    } catch (error) {
+      this.handleError(error, res, 'createToken')
     }
-    res.status(500).json({ error: 'Internal server error' })
-  }
-}
-
-export async function loginHandler(req: Request, res: Response) {
-  const parsed = loginSchema.safeParse(req.body)
-  if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.flatten().fieldErrors })
-    return
   }
 
-  try {
-    const { user, accessToken, refreshToken } = await authService.login(parsed.data)
-    res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS)
-    res.json({ user, accessToken })
-  } catch (err: unknown) {
-    if (err instanceof Error && err.message === 'INVALID_CREDENTIALS') {
-      res.status(401).json({ error: 'Invalid email or password' })
-      return
+  async listTokens(req: Request, res: Response): Promise<void> {
+    try {
+      const tokens = await prisma.extensionToken.findMany({
+        where: { userId: req.dbUser.id },
+        select: { id: true, name: true, createdAt: true, lastUsedAt: true },
+        orderBy: { createdAt: 'desc' },
+      })
+      this.handleSuccess(res, tokens)
+    } catch (error) {
+      this.handleError(error, res, 'listTokens')
     }
-    res.status(500).json({ error: 'Internal server error' })
-  }
-}
-
-export async function refreshHandler(req: Request, res: Response) {
-  const token = req.cookies?.refreshToken as string | undefined
-  if (!token) {
-    res.status(401).json({ error: 'No refresh token' })
-    return
   }
 
-  try {
-    const { accessToken, refreshToken } = await authService.refresh(token)
-    res.cookie('refreshToken', refreshToken, COOKIE_OPTIONS)
-    res.json({ accessToken })
-  } catch {
-    res.status(401).json({ error: 'Invalid or expired refresh token' })
+  async deleteToken(req: Request, res: Response): Promise<void> {
+    try {
+      const id = req.params.id as string
+      const existing = await prisma.extensionToken.findFirst({
+        where: { id, userId: req.dbUser.id },
+      })
+      if (!existing) {
+        res.status(404).json({ success: false, error: { message: 'Token not found', code: 404 } })
+        return
+      }
+      await prisma.extensionToken.delete({ where: { id } })
+      res.status(204).send()
+    } catch (error) {
+      this.handleError(error, res, 'deleteToken')
+    }
   }
-}
-
-export async function logoutHandler(req: Request, res: Response) {
-  const token = req.cookies?.refreshToken as string | undefined
-  if (token) await authService.logout(token)
-  res.clearCookie('refreshToken')
-  res.status(204).send()
-}
-
-export async function meHandler(req: Request, res: Response) {
-  const user = await authService.getMe(req.user!.userId)
-  if (!user) {
-    res.status(404).json({ error: 'User not found' })
-    return
-  }
-  res.json({ user })
 }

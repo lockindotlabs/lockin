@@ -1,9 +1,10 @@
-import { TokenPayload } from '../lib/jwt'
+import type { User } from '@workspace/db'
 
 declare global {
   namespace Express {
     interface Request {
-      user?: TokenPayload
+      dbUser: User
+      extensionTokenUserId?: string
     }
   }
 }

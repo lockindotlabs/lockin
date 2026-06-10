@@ -17,35 +17,66 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
+import { Skeleton } from "@workspace/ui/components/skeleton"
 import {
   MoreHorizontalIcon,
-  StarOffIcon,
   LinkIcon,
   ArrowUpRightIcon,
   Trash2Icon,
 } from "lucide-react"
 import Link from "next/link"
 
+export type FavoriteItem = {
+  id: string
+  name: string
+  url: string
+  emoji?: string
+  isActive?: boolean
+}
+
 export function NavFavorites({
   favorites,
+  label = "Favorites",
+  emptyLabel,
+  isLoading = false,
+  onDelete,
 }: {
-  favorites: {
-    name: string
-    url: string
-    emoji: string
-  }[]
+  favorites: FavoriteItem[]
+  label?: string
+  emptyLabel?: string
+  isLoading?: boolean
+  onDelete?: (item: FavoriteItem) => void
 }) {
   const { isMobile } = useSidebar()
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Favorites</SidebarGroupLabel>
+      <SidebarGroupLabel>{label}</SidebarGroupLabel>
       <SidebarMenu>
+        {isLoading && (
+          <>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <SidebarMenuItem key={index}>
+                <div className="flex items-center gap-2 rounded-md px-2 py-1.5">
+                  <Skeleton className="h-3 w-28 rounded-full" />
+                </div>
+              </SidebarMenuItem>
+            ))}
+          </>
+        )}
+        {!isLoading && favorites.length === 0 && emptyLabel && (
+          <SidebarMenuItem>
+            <div className="px-2 py-1 text-xs text-sidebar-foreground/60">
+              {emptyLabel}
+            </div>
+          </SidebarMenuItem>
+        )}
         {favorites.map((item) => (
-          <SidebarMenuItem key={item.name}>
+          <SidebarMenuItem key={item.id}>
             <SidebarMenuButton
+              isActive={item.isActive}
               render={<Link href={item.url} title={item.name} />}
             >
-              <span>{item.emoji}</span>
+              {item.emoji && <span>{item.emoji}</span>}
               <span>{item.name}</span>
             </SidebarMenuButton>
             <DropdownMenu>
@@ -53,7 +84,7 @@ export function NavFavorites({
                 render={
                   <SidebarMenuAction
                     showOnHover
-                    className="aria-expanded:bg-muted"
+                    className="aria-expanded:bg-sidebar-accent aria-expanded:text-sidebar-accent-foreground"
                   />
                 }
               >
@@ -67,13 +98,6 @@ export function NavFavorites({
               >
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
-                    <StarOffIcon className="text-muted-foreground" />
-                    <span>Remove from Favorites</span>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
                     <LinkIcon className="text-muted-foreground" />
                     <span>Copy Link</span>
                   </DropdownMenuItem>
@@ -82,7 +106,10 @@ export function NavFavorites({
                     <span>Open in New Tab</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onClick={() => onDelete?.(item)}
+                  >
                     <Trash2Icon className="text-muted-foreground" />
                     <span>Delete</span>
                   </DropdownMenuItem>

@@ -1,0 +1,45 @@
+import { cn } from "@/lib/utils"
+
+export function AiPlannerIcon({
+  className,
+  ...props
+}: React.ComponentProps<"svg"> & { className?: string }) {
+  return (
+    <svg
+      width="100"
+      height="100"
+      viewBox="0 0 100 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn("h-6 w-fit", className)}
+      {...props}
+    >
+      <path
+        d="M49.0383 1.19048C44.5974 25.6223 25.243 44.8557 0.749043 49.1168C0.318809 49.1917 0 49.5633 0 50C0 50.4367 0.318845 50.8083 0.749079 50.8832C25.3904 55.17 44.83 74.6096 49.1168 99.2509C49.1917 99.6812 49.5633 100 50 100C50.4367 100 50.8083 99.6812 50.8832 99.2509C55.17 74.6096 74.6096 55.17 99.2509 50.8832C99.6812 50.8083 100 50.4367 100 50C100 49.5633 99.6812 49.1917 99.251 49.1168C74.757 44.8557 55.4026 25.6223 50.9617 1.19048C50.9349 1.04298 50.9086 0.895285 50.8829 0.747407C50.8081 0.317171 50.4367 0 50 0C49.5633 0 49.1919 0.317171 49.1171 0.747407C49.0914 0.895285 49.0651 1.04298 49.0383 1.19048Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+export function PlayFilledIcon({
+  className,
+  ...props
+}: React.ComponentProps<"svg"> & { className?: string }) {
+  return (
+    <svg
+      width="100"
+      height="100"
+      viewBox="0 0 100 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn("h-6 w-fit", className)}
+      {...props}
+    >
+      <path
+        d="M50 0C22.3868 0 0 22.3868 0 50C0 77.6132 22.3868 100 50 100C77.6132 100 100 77.6132 100 50C100 22.3868 77.6132 0 50 0ZM40.0001 70V30L70.0001 50L40.0001 70Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}

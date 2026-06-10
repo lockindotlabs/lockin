@@ -1,12 +1,16 @@
-"use client"
-
 import {
   BadgeCheck,
   Bell,
   ChevronsUpDown,
+  CircleArrowUpIcon,
   CreditCard,
+  LifeBuoyIcon,
   LogOut,
+  Settings2Icon,
+  SparkleIcon,
   Sparkles,
+  UserIcon,
+  UserRoundIcon,
 } from "lucide-react"
 
 import {
@@ -29,90 +33,100 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
+import { useClerk, useUser } from "@clerk/nextjs"
+import { BillingDialog } from "./billing-dialog"
+import React from "react"
+import { useBillingState } from "@/lib/billing/use-billing-state"
+import { UpgradeDialog } from "./upgrade-dialog"
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}) {
+export function NavUser() {
   const { isMobile } = useSidebar()
+  const { user } = useUser()
+  const { openUserProfile, signOut } = useClerk()
+  const [billingOpen, setBillingOpen] = React.useState(false)
+  const [upgradeOpen, setUpgradeOpen] = React.useState(false)
+
+  const { billing } = useBillingState()
+
+  const userTier = React.useMemo(() => {
+    if (!billing) {
+      return "Loading..."
+    }
+    return billing.tier !== "FREE" ? billing.tier : "Free Tier"
+  }, [billing])
 
   return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={
-              <SidebarMenuButton
-                size="lg"
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              >
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
-                </div>
-                <ChevronsUpDown className="ml-auto size-4" />
-              </SidebarMenuButton>
-            }
-          ></DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
-            align="end"
-            sideOffset={4}
-          >
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="p-0 font-normal">
-                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+    <>
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <SidebarMenuButton
+                  size="lg"
+                  className="hover:bg-accent hover:text-accent-foreground data-pressed:bg-accent data-pressed:text-accent-foreground"
+                >
+                  <Avatar className="h-8 w-8 rounded-full">
+                    <AvatarImage
+                      src={user?.imageUrl}
+                      alt={
+                        user?.fullName || user?.emailAddresses[0]?.emailAddress
+                      }
+                    />
+                    <AvatarFallback className="rounded-full">
+                      <UserIcon />
+                    </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">{user.name}</span>
-                    <span className="truncate text-xs">{user.email}</span>
+                    <span className="truncate font-medium">
+                      {user?.fullName}
+                    </span>
+                    <span className="truncate text-xs">{userTier}</span>
                   </div>
-                </div>
-              </DropdownMenuLabel>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem>
-    </SidebarMenu>
+                  <ChevronsUpDown className="ml-auto size-4" />
+                </SidebarMenuButton>
+              }
+            ></DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+              side={isMobile ? "bottom" : "top"}
+              align="end"
+              sideOffset={12}
+            >
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={() => setUpgradeOpen(true)}>
+                  <CircleArrowUpIcon />
+                  Upgrade Plan
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => openUserProfile()}>
+                  <UserRoundIcon />
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setBillingOpen(true)}>
+                  <CreditCard />
+                  Billing
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <LifeBuoyIcon />
+                  Support
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => signOut()}
+                >
+                  <LogOut />
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarMenuItem>
+      </SidebarMenu>
+      <BillingDialog open={billingOpen} onOpenChange={setBillingOpen} />
+      <UpgradeDialog open={upgradeOpen} onOpenChange={setUpgradeOpen} />
+    </>
   )
 }

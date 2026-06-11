@@ -11,23 +11,28 @@ import {
   SignIn,
 } from "@clerk/nextjs"
 import { LogoAccent } from "@workspace/ui/components/logo-accent"
+import Link from "next/link"
 
 export default function SignInPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-between bg-background p-12">
-      <LogoAccent className="h-9" />
-      <ClerkLoading>
-        <LoadingState />
-      </ClerkLoading>
-      <ClerkLoaded>
-        <SignIn path="/app/sign-in" />
-        <ClerkDegraded>
-          <DegradedState />
-        </ClerkDegraded>
-      </ClerkLoaded>
-      <ClerkFailed>
-        <FailedState />
-      </ClerkFailed>
+    <div className="flex min-h-screen flex-col items-center justify-between bg-background py-12">
+      <Link href="/">
+        <LogoAccent className="h-9" />
+      </Link>
+      <div className="mx-auto">
+        <ClerkLoading>
+          <LoadingState />
+        </ClerkLoading>
+        <ClerkLoaded>
+          <SignIn path="/app/sign-in" />
+          <ClerkDegraded>
+            <DegradedState />
+          </ClerkDegraded>
+        </ClerkLoaded>
+        <ClerkFailed>
+          <FailedState />
+        </ClerkFailed>
+      </div>
       <p className="max-w-sm text-center text-xs text-muted-foreground">
         By continuing, you acknowledge that you understand and agree to the
         Terms & Conditions and Privacy Policy

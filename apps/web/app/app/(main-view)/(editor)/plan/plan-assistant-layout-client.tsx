@@ -5,11 +5,12 @@ import { useSearchParams } from "next/navigation"
 
 import { AssistantSidebar } from "@/components/assistant-ui/assistant-sidebar"
 
-export function AskLayoutClient({ children }: PropsWithChildren) {
+export function PlanAssistantLayoutClient({ children }: PropsWithChildren) {
   const searchParams = useSearchParams()
-  const planId = searchParams.get("p")
+  const planId = searchParams.get("id")
+  const isAiPanelOpen = searchParams.get("ai") === "1"
 
-  if (!planId) {
+  if (!planId || !isAiPanelOpen) {
     return children
   }
 

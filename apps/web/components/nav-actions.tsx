@@ -18,87 +18,90 @@ import {
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar"
 import {
-  Settings2Icon,
-  FileTextIcon,
   LinkIcon,
-  CopyIcon,
-  CornerUpRightIcon,
   Trash2Icon,
-  CornerUpLeftIcon,
-  ChartLineIcon,
-  GalleryVerticalEndIcon,
-  TrashIcon,
-  BellIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
   StarIcon,
   MoreHorizontalIcon,
 } from "lucide-react"
 
-const data = [
-  [
-    {
-      label: "Customize Page",
-      icon: <Settings2Icon />,
-    },
-    {
-      label: "Turn into wiki",
-      icon: <FileTextIcon />,
-    },
-  ],
-  [
-    {
-      label: "Copy Link",
-      icon: <LinkIcon />,
-    },
-    {
-      label: "Duplicate",
-      icon: <CopyIcon />,
-    },
-    {
-      label: "Move to",
-      icon: <CornerUpRightIcon />,
-    },
-    {
-      label: "Move to Trash",
-      icon: <Trash2Icon />,
-    },
-  ],
-  [
-    {
-      label: "Undo",
-      icon: <CornerUpLeftIcon />,
-    },
-    {
-      label: "View analytics",
-      icon: <ChartLineIcon />,
-    },
-    {
-      label: "Version History",
-      icon: <GalleryVerticalEndIcon />,
-    },
-    {
-      label: "Show delete pages",
-      icon: <TrashIcon />,
-    },
-    {
-      label: "Notifications",
-      icon: <BellIcon />,
-    },
-  ],
-  [
-    {
-      label: "Import",
-      icon: <ArrowUpIcon />,
-    },
-    {
-      label: "Export",
-      icon: <ArrowDownIcon />,
-    },
-  ],
-]
-export function NavActions() {
+type NavActionsProps = {
+  copyUrl?: string
+  onDelete?: () => void | Promise<void>
+}
+
+function getAbsoluteUrl(url: string) {
+  if (typeof window === "undefined") {
+    return url
+  }
+
+  return new URL(url, window.location.origin).toString()
+}
+
+async function copyText(value: string) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(value)
+    return
+  }
+
+  const textarea = document.createElement("textarea")
+  textarea.value = value
+  textarea.setAttribute("readonly", "")
+  textarea.style.position = "fixed"
+  textarea.style.top = "-9999px"
+  document.body.appendChild(textarea)
+  textarea.select()
+  document.execCommand("copy")
+  textarea.remove()
+}
+
+export function NavActions({ copyUrl, onDelete }: NavActionsProps = {}) {
   const [isOpen, setIsOpen] = React.useState(false)
+  const [didCopy, setDidCopy] = React.useState(false)
+  const [isDeleting, setIsDeleting] = React.useState(false)
+
+  React.useEffect(() => {
+    if (!didCopy) {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => setDidCopy(false), 1600)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [didCopy])
+
+  const handleCopyLink = async () => {
+    const href =
+      typeof window === "undefined"
+        ? (copyUrl ?? "")
+        : getAbsoluteUrl(copyUrl ?? window.location.href)
+
+    if (!href) {
+      return
+    }
+
+    try {
+      await copyText(href)
+      setDidCopy(true)
+    } catch {
+      window.alert("Could not copy the link. Try again in a moment.")
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!onDelete) {
+      return
+    }
+
+    setIsDeleting(true)
+
+    try {
+      await onDelete()
+      setIsOpen(false)
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
   return (
     <div className="flex items-center gap-2 text-sm">
       <Button variant="ghost" size="icon" className="h-7 w-7">
@@ -122,24 +125,28 @@ export function NavActions() {
         >
           <Sidebar collapsible="none" className="bg-transparent">
             <SidebarContent className="gap-0">
-              {data.map((group, index) => (
-                <SidebarGroup
-                  key={index}
-                  className="border-b p-1 last:border-none"
-                >
-                  <SidebarGroupContent className="gap-0">
-                    <SidebarMenu>
-                      {group.map((item, index) => (
-                        <SidebarMenuItem key={index}>
-                          <SidebarMenuButton>
-                            {item.icon} <span>{item.label}</span>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      ))}
-                    </SidebarMenu>
-                  </SidebarGroupContent>
-                </SidebarGroup>
-              ))}
+              <SidebarGroup className="border-b p-1 last:border-none">
+                <SidebarGroupContent className="gap-0">
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton onClick={handleCopyLink}>
+                        <LinkIcon />
+                        <span>{didCopy ? "Copied Link" : "Copy Link"}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        className="text-destructive hover:text-destructive"
+                        disabled={!onDelete || isDeleting}
+                        onClick={handleDelete}
+                      >
+                        <Trash2Icon />
+                        <span>{isDeleting ? "Deleting..." : "Delete"}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
             </SidebarContent>
           </Sidebar>
         </PopoverContent>

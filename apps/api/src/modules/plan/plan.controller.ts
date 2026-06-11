@@ -1,7 +1,7 @@
-import type { Request, Response } from 'express'
-import { z } from 'zod'
-import { BaseController } from '../../controllers/BaseController.js'
-import prisma from '../../lib/prisma.js'
+import type { Request, Response } from "express"
+import { z } from "zod"
+import { BaseController } from "../../controllers/BaseController.js"
+import prisma from "../../lib/prisma.js"
 
 const CreatePlanSchema = z.object({
   name: z.string().min(1).max(100),
@@ -19,10 +19,13 @@ const UpdatePlanSchema = z.object({
   goal: z.string().max(500).optional(),
   completion: z.string().max(1000).optional(),
   projectId: z.string().nullable().optional(),
-  status: z.enum(['PLANNING', 'ACTIVE', 'COMPLETED', 'CANCELLED']).optional(),
-  source: z.enum(['MANUAL', 'AI']).optional(),
-  aiMode: z.enum(['MANUAL', 'ASSISTED']).optional(),
-  breakdownIntensity: z.enum(['LOW_ENERGY', 'NORMAL', 'HIGH_ENERGY']).nullable().optional(),
+  status: z.enum(["PLANNING", "ACTIVE", "COMPLETED", "CANCELLED"]).optional(),
+  source: z.enum(["MANUAL", "AI"]).optional(),
+  aiMode: z.enum(["MANUAL", "ASSISTED"]).optional(),
+  breakdownIntensity: z
+    .enum(["LOW_ENERGY", "NORMAL", "HIGH_ENERGY"])
+    .nullable()
+    .optional(),
   totalEstimatedMinutes: z.number().int().nonnegative().nullable().optional(),
   startDate: z.string().datetime().optional(),
   endDate: z.string().datetime().optional(),
@@ -40,14 +43,14 @@ export class PlanController extends BaseController {
         },
         include: {
           project: { select: { id: true, name: true, color: true } },
-          steps: { orderBy: { order: 'asc' } },
+          steps: { orderBy: { order: "asc" } },
         },
-        orderBy: { updatedAt: 'desc' },
+        orderBy: { updatedAt: "desc" },
       })
 
       this.handleSuccess(res, plans)
     } catch (error) {
-      this.handleError(error, res, 'listPlans')
+      this.handleError(error, res, "listPlans")
     }
   }
 
@@ -58,17 +61,22 @@ export class PlanController extends BaseController {
         where: { id, userId: req.dbUser.id, deletedAt: null },
         include: {
           project: { select: { id: true, name: true, color: true } },
-          steps: { orderBy: { order: 'asc' } },
+          steps: { orderBy: { order: "asc" } },
         },
       })
       if (!plan) {
-        res.status(404).json({ success: false, error: { message: 'Plan not found', code: 404 } })
+        res
+          .status(404)
+          .json({
+            success: false,
+            error: { message: "Plan not found", code: 404 },
+          })
         return
       }
 
       this.handleSuccess(res, plan)
     } catch (error) {
-      this.handleError(error, res, 'getPlan')
+      this.handleError(error, res, "getPlan")
     }
   }
 
@@ -76,15 +84,20 @@ export class PlanController extends BaseController {
     try {
       const parsed = CreatePlanSchema.safeParse(req.body)
       if (!parsed.success) {
-        res.status(400).json({ success: false, error: { message: parsed.error.message, code: 400 } })
+        res
+          .status(400)
+          .json({
+            success: false,
+            error: { message: parsed.error.message, code: 400 },
+          })
         return
       }
       const plan = await prisma.plan.create({
         data: { userId: req.dbUser.id, ...parsed.data },
       })
-      this.handleSuccess(res, plan, 'Plan created', 201)
+      this.handleSuccess(res, plan, "Plan created", 201)
     } catch (error) {
-      this.handleError(error, res, 'createPlan')
+      this.handleError(error, res, "createPlan")
     }
   }
 
@@ -93,15 +106,28 @@ export class PlanController extends BaseController {
       const id = req.params.id as string
       const parsed = UpdatePlanSchema.safeParse(req.body)
       if (!parsed.success) {
-        res.status(400).json({ success: false, error: { message: parsed.error.message, code: 400 } })
+        res
+          .status(400)
+          .json({
+            success: false,
+            error: { message: parsed.error.message, code: 400 },
+          })
         return
       }
-      const existing = await prisma.plan.findFirst({ where: { id, userId: req.dbUser.id, deletedAt: null } })
+      const existing = await prisma.plan.findFirst({
+        where: { id, userId: req.dbUser.id, deletedAt: null },
+      })
       if (!existing) {
-        res.status(404).json({ success: false, error: { message: 'Plan not found', code: 404 } })
+        res
+          .status(404)
+          .json({
+            success: false,
+            error: { message: "Plan not found", code: 404 },
+          })
         return
       }
-      const { projectId, breakdownIntensity, totalEstimatedMinutes, ...rest } = parsed.data
+      const { projectId, breakdownIntensity, totalEstimatedMinutes, ...rest } =
+        parsed.data
       const plan = await prisma.plan.update({
         where: { id },
         data: {
@@ -121,22 +147,32 @@ export class PlanController extends BaseController {
       })
       this.handleSuccess(res, plan)
     } catch (error) {
-      this.handleError(error, res, 'updatePlan')
+      this.handleError(error, res, "updatePlan")
     }
   }
 
   async deletePlan(req: Request, res: Response): Promise<void> {
     try {
       const id = req.params.id as string
-      const existing = await prisma.plan.findFirst({ where: { id, userId: req.dbUser.id, deletedAt: null } })
+      const existing = await prisma.plan.findFirst({
+        where: { id, userId: req.dbUser.id, deletedAt: null },
+      })
       if (!existing) {
-        res.status(404).json({ success: false, error: { message: 'Plan not found', code: 404 } })
+        res
+          .status(404)
+          .json({
+            success: false,
+            error: { message: "Plan not found", code: 404 },
+          })
         return
       }
-      await prisma.plan.update({ where: { id }, data: { deletedAt: new Date() } })
+      await prisma.plan.update({
+        where: { id },
+        data: { deletedAt: new Date() },
+      })
       res.status(204).send()
     } catch (error) {
-      this.handleError(error, res, 'deletePlan')
+      this.handleError(error, res, "deletePlan")
     }
   }
 }

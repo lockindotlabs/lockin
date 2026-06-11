@@ -33,27 +33,6 @@ import {
 } from "@workspace/i18n"
 import Image from "next/image"
 
-const revealEase = [0.16, 1, 0.3, 1] as const
-const revealViewport = {
-  once: true,
-  amount: 0.08,
-  margin: "0px 0px -40px 0px",
-} as const
-
-const revealUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 28 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: revealViewport,
-  transition: { duration: 0.65, ease: revealEase, delay },
-})
-
-const revealScale = (delay = 0) => ({
-  initial: { opacity: 0, y: 16, scale: 0.97 },
-  whileInView: { opacity: 1, y: 0, scale: 1 },
-  viewport: revealViewport,
-  transition: { duration: 0.65, ease: revealEase, delay },
-})
-
 type PricingTier = {
   name: string
   desc: string
@@ -79,17 +58,55 @@ type FaqEntry = {
 /* ---- Root page ---- */
 export default function LandingPage() {
   return (
-    <div className="lp">
-      <SiteHeader />
-      <main>
-        <HeroSection />
-        <BentoSection />
-        <ExtensionSection />
-        <PricingSection />
-        <FaqSection />
-      </main>
-      <SiteFooter />
-    </div>
+    <MotionConfig reducedMotion="user">
+      <div className="lp">
+        <div className="lp-frame" aria-hidden="true" />
+        <SiteHeader />
+        <main>
+          <HeroSection />
+          <BentoSection />
+          <ExtensionSection />
+          <PricingSection />
+          <FaqSection />
+        </main>
+        <SiteFooter />
+      </div>
+    </MotionConfig>
+  )
+}
+
+/* ---- Shared section heading ---- */
+function SectionHead({
+  eyebrow,
+  headingLight,
+  heading,
+  description,
+  children,
+}: {
+  eyebrow: string
+  headingLight: string
+  heading: string
+  description: string
+  children?: React.ReactNode
+}) {
+  return (
+    <motion.div
+      className="mx-auto mb-12 max-w-190 text-center md:mb-16"
+      {...revealUp(0)}
+    >
+      <span className="mb-6 inline-flex items-center gap-2 rounded-full border bg-background px-3 py-1.5 font-mono text-[13px] font-medium tracking-widest text-muted-foreground uppercase before:size-1.5 before:rounded-full before:bg-primary before:content-['']">
+        {eyebrow}
+      </span>
+      <h2 className="font-sans-tight text-3xl leading-none font-[550] sm:text-4xl md:text-5xl">
+        <span className="text-muted-foreground">{headingLight}</span>
+        <br />
+        {heading}
+      </h2>
+      <p className="mx-auto mt-6 max-w-120 text-base leading-relaxed tracking-tight text-muted-foreground">
+        {description}
+      </p>
+      {children}
+    </motion.div>
   )
 }
 
@@ -98,11 +115,11 @@ function SiteHeader() {
   const { t } = useTranslation()
 
   return (
-    <header className="sticky top-0 z-50 bg-background/90 backdrop-blur-xl">
-      <div className="mx-auto w-full max-w-330 px-4 sm:px-6 lg:px-0">
-        <div className="relative flex h-16 items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-xl">
+      <div className="mx-auto w-full max-w-330 border-x px-4 sm:px-6 lg:px-10">
+        <div className="relative flex h-18 items-center justify-between gap-4">
           <Link href="/" className="inline-flex shrink-0 items-center">
-            <LogoAccent className="h-9" />
+            <LogoAccent className="h-10" />
           </Link>
 
           <nav
@@ -121,16 +138,19 @@ function SiteHeader() {
             <Button variant="ghost" size="sm">
               <Link href="/#faq">{t("landing.nav.faq")}</Link>
             </Button>
-          </div>
+            <Button variant="ghost" size="sm">
+              <Link href="/#manifesto">{t("landing.nav.manifesto")}</Link>
+            </Button>
+          </nav>
 
           <div className="ml-auto flex items-center gap-2.5">
             <Show when={"signed-out"}>
-              <Button variant="outline">
+              <Button size={"lg"} variant="outline">
                 <Link className="text-sm font-medium" href="/app/sign-in">
                   {t("landing.auth.signIn")}
                 </Link>
               </Button>
-              <Button>
+              <Button size={"lg"}>
                 <Link className="text-sm font-medium" href="/app/sign-up">
                   {t("landing.auth.getStarted")}
                 </Link>
@@ -138,7 +158,7 @@ function SiteHeader() {
             </Show>
 
             <Show when={"signed-in"}>
-              <Button>
+              <Button size={"lg"}>
                 <Link className="text-sm font-medium" href="/app">
                   {t("landing.auth.goToApp")}
                 </Link>
@@ -204,7 +224,7 @@ function HeroSection() {
       initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
     >
-      <div className="relative z-10 mx-auto max-w-330 px-4 md:px-6 lg:px-0">
+      <div className="relative z-10 mx-auto max-w-330 px-4 sm:px-6 lg:px-10">
         <motion.span
           className="mb-4 inline-flex items-center gap-2 rounded-full border bg-card px-2 py-1 font-mono text-xs font-medium tracking-wider text-gray-500 uppercase"
           initial={{ opacity: 0, y: 20 }}
@@ -215,7 +235,7 @@ function HeroSection() {
           {t("landing.hero.badge")}
         </motion.span>
 
-        <motion.h1 className="max-w-[25ch] font-sans-tight text-5xl leading-[110%] font-[550] lg:text-6xl">
+        <motion.h1 className="max-w-[25ch] font-sans-tight text-4xl leading-none font-[550] sm:text-5xl lg:text-6xl">
           <motion.span
             className="inline-block"
             style={{ "--i": 0 } as React.CSSProperties}
@@ -314,7 +334,7 @@ function HeroSection() {
           </Button> */}
 
           {/* <span className="running">
-            <span className="dot" />
+            <span className="dot" aria-hidden="true" />
             {t("landing.hero.running")}
           </span> */}
         </motion.div>
@@ -665,8 +685,8 @@ function BentoSection() {
   const { t } = useTranslation()
 
   return (
-    <section className="py-20" id="product">
-      <div className="mx-auto max-w-330 sm:px-6 lg:px-0">
+    <section className="border-t py-14 md:py-20" id="product">
+      <div className="mx-auto max-w-330 px-4 sm:px-6 lg:px-10">
         <motion.div className="mb-8" {...revealUp(0)}>
           <span className="mb-4 inline-flex items-center gap-2 rounded-full border bg-background px-2 py-1 font-mono text-xs font-medium tracking-wider text-muted-foreground uppercase">
             {t("landing.product.eyebrow")}
@@ -804,23 +824,14 @@ function ExtensionSection() {
   const { t } = useTranslation()
 
   return (
-    <section
-      className="lp-bento lp-section"
-      id="extension"
-      style={{ paddingTop: 0 }}
-    >
-      <div className="mx-auto max-w-330 sm:px-6 lg:px-0">
-        <motion.div className="lp-section-head" {...revealUp(0)}>
-          <span className="lp-eyebrow-pill">
-            {t("landing.extension.eyebrow")}
-          </span>
-          <h2>
-            <span className="light">{t("landing.extension.headingOne")}</span>
-            <br />
-            {t("landing.extension.headingTwo")}
-          </h2>
-          <p>{t("landing.extension.description")}</p>
-        </motion.div>
+    <section className="border-t py-14 md:py-20" id="extension">
+      <div className="relative z-1 mx-auto max-w-330 px-4 sm:px-6 lg:px-10">
+        <SectionHead
+          eyebrow={t("landing.extension.eyebrow")}
+          headingLight={t("landing.extension.headingOne")}
+          heading={t("landing.extension.headingTwo")}
+          description={t("landing.extension.description")}
+        />
 
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-6">
           <motion.div
@@ -900,17 +911,9 @@ function ExtensionSection() {
                 </span>
               </h3>
               <p>{t("landing.extension.pairing.description")}</p>
-              <div style={{ marginTop: "auto", paddingTop: 24 }}>
-                <div className="rounded-2xl bg-amber-50 p-8 text-center">
-                  <div
-                    style={{
-                      fontFamily: "var(--font-ibm-mono)",
-                      fontSize: 11,
-                      color: "var(--muted-foreground)",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.12em",
-                    }}
-                  >
+              <div className="mt-auto pt-6" aria-hidden="true">
+                <div className="rounded-xl border border-primary/40 bg-primary/10 p-5.5 text-center">
+                  <div className="font-[family-name:var(--font-ibm-mono)] text-[11px] tracking-widest text-muted-foreground uppercase">
                     {t("landing.extension.pairing.confirm")}
                   </div>
                   <div className="text-[clamp(32px,4vw,48px)] font-light tracking-[-0.04em] text-foreground tabular-nums">
@@ -1098,18 +1101,14 @@ function PricingSection() {
   }) as PricingTier[]
 
   return (
-    <section className="lp-pricing lp-section" id="pricing">
-      <div className="mx-auto max-w-330 sm:px-6 lg:px-0">
-        <motion.div className="lp-section-head" {...revealUp(0)}>
-          <span className="lp-eyebrow-pill">
-            {t("landing.pricing.eyebrow")}
-          </span>
-          <h2>
-            <span className="light">{t("landing.pricing.headingOne")}</span>
-            <br />
-            {t("landing.pricing.headingTwo")}
-          </h2>
-          <p>{t("landing.pricing.description")}</p>
+    <section className="border-t py-16 md:py-24" id="pricing">
+      <div className="relative z-1 mx-auto max-w-330 px-4 sm:px-6 lg:px-10">
+        <SectionHead
+          eyebrow={t("landing.pricing.eyebrow")}
+          headingLight={t("landing.pricing.headingOne")}
+          heading={t("landing.pricing.headingTwo")}
+          description={t("landing.pricing.description")}
+        >
           <div className="lp-billing-toggle">
             <span ref={pillRef} className="lp-bt-pill" aria-hidden="true" />
             <button
@@ -1152,7 +1151,6 @@ function PricingSection() {
                 <motion.div key={tier.name} {...revealScale(delay)}>
                   <BorderGlow
                     className="lp-tier-pro h-full"
-                    style={{ "--rd": delay } as React.CSSProperties}
                     backgroundColor="var(--card)"
                     glowColor="var(--primary)"
                     colors={["var(--primary)"]}

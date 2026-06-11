@@ -29,6 +29,7 @@ export function buildAskHref({
 
   if (nextChatSessionId) {
     params.set("id", nextChatSessionId)
+    params.set("chatSessionId", nextChatSessionId)
   }
 
   if (nextPlanId) {

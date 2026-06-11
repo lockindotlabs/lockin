@@ -2,11 +2,12 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback, useId } from "react"
 import { useTranslation } from "react-i18next"
-import { motion, useInView } from "motion/react"
+import { motion, MotionConfig, useInView } from "motion/react"
 import BorderGlow from "@/components/BorderGlow"
 import PixelCard from "@/components/PixelCard"
+import { revealEase, revealUp, revealScale } from "@/lib/landing-animations"
 import "./landing.css"
 import {
   DropdownMenu,
@@ -15,7 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu"
-import { ChevronDown, LanguagesIcon } from "lucide-react"
+import { ChevronDown, LanguagesIcon, Plus } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
 import { LogoAccent } from "@workspace/ui/components/logo-accent"
 import XIcon from "@/components/x"
@@ -30,27 +31,7 @@ import {
   SUPPORTED_LOCALES,
   type AppLocale,
 } from "@workspace/i18n"
-
-const revealEase = [0.16, 1, 0.3, 1] as const
-const revealViewport = {
-  once: true,
-  amount: 0.08,
-  margin: "0px 0px -40px 0px",
-} as const
-
-const revealUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 28 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: revealViewport,
-  transition: { duration: 0.65, ease: revealEase, delay },
-})
-
-const revealScale = (delay = 0) => ({
-  initial: { opacity: 0, y: 16, scale: 0.97 },
-  whileInView: { opacity: 1, y: 0, scale: 1 },
-  viewport: revealViewport,
-  transition: { duration: 0.65, ease: revealEase, delay },
-})
+import Image from "next/image"
 
 type PricingTier = {
   name: string
@@ -77,18 +58,55 @@ type FaqEntry = {
 /* ---- Root page ---- */
 export default function LandingPage() {
   return (
-    <div className="lp">
-      <div className="lp-frame" />
-      <SiteHeader />
-      <main>
-        <HeroSection />
-        <BentoSection />
-        <ExtensionSection />
-        <PricingSection />
-        <FaqSection />
-      </main>
-      <SiteFooter />
-    </div>
+    <MotionConfig reducedMotion="user">
+      <div className="lp">
+        <div className="lp-frame" aria-hidden="true" />
+        <SiteHeader />
+        <main>
+          <HeroSection />
+          <BentoSection />
+          <ExtensionSection />
+          <PricingSection />
+          <FaqSection />
+        </main>
+        <SiteFooter />
+      </div>
+    </MotionConfig>
+  )
+}
+
+/* ---- Shared section heading ---- */
+function SectionHead({
+  eyebrow,
+  headingLight,
+  heading,
+  description,
+  children,
+}: {
+  eyebrow: string
+  headingLight: string
+  heading: string
+  description: string
+  children?: React.ReactNode
+}) {
+  return (
+    <motion.div
+      className="mx-auto mb-12 max-w-190 text-center md:mb-16"
+      {...revealUp(0)}
+    >
+      <span className="mb-6 inline-flex items-center gap-2 rounded-full border bg-background px-3 py-1.5 font-mono text-[13px] font-medium tracking-widest text-muted-foreground uppercase before:size-1.5 before:rounded-full before:bg-primary before:content-['']">
+        {eyebrow}
+      </span>
+      <h2 className="font-sans-tight text-3xl leading-none font-[550] sm:text-4xl md:text-5xl">
+        <span className="text-muted-foreground">{headingLight}</span>
+        <br />
+        {heading}
+      </h2>
+      <p className="mx-auto mt-6 max-w-120 text-base leading-relaxed tracking-tight text-muted-foreground">
+        {description}
+      </p>
+      {children}
+    </motion.div>
   )
 }
 
@@ -98,13 +116,16 @@ function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto w-full max-w-330 px-4 sm:px-6 lg:px-10">
+      <div className="mx-auto w-full max-w-330 border-x px-4 sm:px-6 lg:px-10">
         <div className="relative flex h-18 items-center justify-between gap-4">
           <Link href="/" className="inline-flex shrink-0 items-center">
             <LogoAccent className="h-10" />
           </Link>
 
-          <div className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 text-sm font-medium text-muted-foreground *:hover:text-foreground md:flex">
+          <nav
+            aria-label="Main"
+            className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 text-sm font-medium text-muted-foreground *:hover:text-foreground md:flex"
+          >
             <Button variant="ghost" size="sm">
               <Link href="/#product">{t("landing.nav.product")}</Link>
             </Button>
@@ -120,7 +141,7 @@ function SiteHeader() {
             <Button variant="ghost" size="sm">
               <Link href="/#manifesto">{t("landing.nav.manifesto")}</Link>
             </Button>
-          </div>
+          </nav>
 
           <div className="ml-auto flex items-center gap-2.5">
             <Show when={"signed-out"}>
@@ -199,22 +220,22 @@ function HeroSection() {
 
   return (
     <motion.section
-      className="relative overflow-hidden pt-24 pb-24"
+      className="relative overflow-hidden pt-14 pb-16 md:pt-24 md:pb-24"
       initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
     >
-      <div className="relative z-10 mx-auto max-w-330 px-10">
+      <div className="relative z-10 mx-auto max-w-330 px-4 sm:px-6 lg:px-10">
         <motion.span
           className="mb-4 inline-flex items-center gap-2 rounded-full border bg-card px-2 py-1 font-mono text-xs font-medium tracking-wider text-gray-500 uppercase"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.67, ease: revealEase }}
         >
-          <span className="pulse" />
+          <span className="pulse" aria-hidden="true" />
           {t("landing.hero.badge")}
         </motion.span>
 
-        <motion.h1 className="max-w-[25ch] font-sans-tight text-6xl leading-none font-[550]">
+        <motion.h1 className="max-w-[25ch] font-sans-tight text-4xl leading-none font-[550] sm:text-5xl lg:text-6xl">
           <motion.span
             className="inline-block"
             style={{ "--i": 0 } as React.CSSProperties}
@@ -302,7 +323,7 @@ function HeroSection() {
             </Button>
           </Show>
 
-          <Button variant={"outline"} size={"lg"} className={"h-12 px-6"}>
+          {/* <Button variant={"outline"} size={"lg"} className={"h-12 px-6"}>
             <Link
               href="/app/sign-up"
               className="flex items-center text-sm font-medium"
@@ -310,30 +331,30 @@ function HeroSection() {
               {t("landing.hero.watchDemo")}
               <PlayFilledIcon className="ml-2 h-6 text-muted-foreground" />
             </Link>
-          </Button>
+          </Button> */}
 
-          <span className="running">
-            <span className="dot" />
+          {/* <span className="running">
+            <span className="dot" aria-hidden="true" />
             {t("landing.hero.running")}
-          </span>
+          </span> */}
         </motion.div>
 
-        <motion.div
+        {/* <motion.div
           className="mt-16 grid gap-0 overflow-hidden rounded-2xl border bg-card shadow-xl md:grid-cols-2"
           initial={{ opacity: 0, y: 16, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.75, delay: 0.6, ease: revealEase }}
         >
-          <div className="flex flex-col gap-2 bg-card p-10">
+          <div className="flex flex-col gap-2 bg-card p-6 sm:p-10">
             <div className="font-mono text-xs tracking-wider text-muted-foreground uppercase">
               {t("landing.hero.mock.today")}
             </div>
-            <h3 className="font-sans-tight text-4xl font-[550]">
+            <h3 className="font-sans-tight text-3xl font-[550] sm:text-4xl">
               {t("landing.hero.mock.headingOne")}
               <br />
               {t("landing.hero.mock.headingTwo")}
             </h3>
-            <div className="lp-hero-tasks">
+            <div className="lp-hero-tasks" aria-hidden="true">
               <div className="lp-htask active">
                 <span className="chk" />
                 <span className="name">{t("landing.mock.taskPrimary")}</span>
@@ -358,8 +379,8 @@ function HeroSection() {
               </div>
             </div>
           </div>
-          <div className="relative flex min-h-135 items-end bg-[url('/lockin-gradient.png')] bg-size-[150%_150%] bg-position-[bottom_right] p-10">
-            <div className="lp-sprint-mock w-full">
+          <div className="relative flex min-h-105 items-end bg-[url('/lockin-gradient.png')] bg-size-[150%_150%] bg-position-[bottom_right] p-4 sm:min-h-135 sm:p-10">
+            <div className="lp-sprint-mock w-full" aria-hidden="true">
               <div className="flex justify-between">
                 <div className="live">{t("landing.mock.sprint142")}</div>
                 <span
@@ -391,14 +412,43 @@ function HeroSection() {
                 </div>
               </div>
               <div className="footer flex flex-1 items-end">
-                <button>{t("landing.mock.actions.addFive")}</button>
-                <button>{t("landing.mock.actions.pause")}</button>
-                <button className="primary">
+                <button tabIndex={-1}>{t("landing.mock.actions.addFive")}</button>
+                <button tabIndex={-1}>{t("landing.mock.actions.pause")}</button>
+                <button className="primary" tabIndex={-1}>
                   {t("landing.mock.actions.endSprint")}
                 </button>
               </div>
             </div>
           </div>
+        </motion.div> */}
+
+        <motion.div
+          className="relative mt-16 grid min-h-200 gap-0 overflow-hidden rounded-lg"
+          initial={{ opacity: 0, y: 16, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.75, delay: 0.6, ease: revealEase }}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.75, delay: 0.9, ease: revealEase }}
+            className="absolute top-1/2 left-12 w-260 -translate-y-1/2 overflow-hidden rounded-md shadow-lg ring ring-foreground/10 lg:left-1/2 lg:-translate-x-1/2"
+          >
+            <Image
+              src="/product-demo.png"
+              alt="LockIn app demo"
+              width={1440}
+              height={1080}
+            />
+          </motion.div>
+
+          <Image
+            src="/lockin-gradient.png"
+            className="h-full w-full object-cover"
+            alt="LockIn app demo"
+            width={800}
+            height={600}
+          />
         </motion.div>
       </div>
     </motion.section>
@@ -425,7 +475,7 @@ function SprintDemoCard() {
 
   return (
     <motion.div
-      className={`lp-card dark lp-sprint-card col-span-2 ${hovered ? "sprint-active" : ""}`}
+      className={`lp-card lp-sprint-card lg:col-span-2 ${hovered ? "sprint-active" : ""}`}
       data-hint="↑ hover"
       style={{ "--rd": "160ms" } as React.CSSProperties}
       onMouseEnter={() => setHovered(true)}
@@ -433,24 +483,16 @@ function SprintDemoCard() {
       {...revealUp(0.16)}
     >
       <div className="body">
-        <div
-          className={`lp-card-label ${hovered ? "text-foreground! before:bg-foreground" : ""} transition-colors`}
-        >
-          {t("landing.cards.sprint.label")}
-        </div>
+        <div className={`lp-card-label`}>{t("landing.cards.sprint.label")}</div>
         <h3 className={`${hovered ? "text-foreground" : ""} transition-colors`}>
           {t("landing.cards.sprint.headingOne")}
           <br />
-          <span
-            className={`${hovered ? "text-muted-foreground" : ""} transition-colors`}
-          >
+          <span className={`text-muted-foreground`}>
             {t("landing.cards.sprint.headingTwo")}
           </span>
         </h3>
-        <p style={{ margin: "0 auto" }}>
-          {t("landing.cards.sprint.description")}
-        </p>
-        <div style={{ marginTop: "auto", textAlign: "center" }}>
+        <p className="mx-auto">{t("landing.cards.sprint.description")}</p>
+        <div className="mt-auto text-center" aria-hidden="true">
           <div className="lp-sprint-timer-big">
             {m}:{s}
           </div>
@@ -501,7 +543,11 @@ function BreakdownMock() {
   }, [breakdownQuery, isInView, phase])
 
   return (
-    <div className={`lp-breakdown-mock bd-phase-${phase}`} ref={mockRef}>
+    <div
+      className={`lp-breakdown-mock bd-phase-${phase}`}
+      ref={mockRef}
+      aria-hidden="true"
+    >
       <div className="uq lp-uq-typing">
         {typed || breakdownQuery}
         {cursorVisible && <span className="cursor">|</span>}
@@ -540,11 +586,15 @@ function BreakdownMock() {
         </div>
       </div>
       <div className="row-actions">
-        <button className="b primary">
+        <button className="b primary" tabIndex={-1}>
           {t("landing.breakdown.actions.start")}
         </button>
-        <button className="b">{t("landing.breakdown.actions.smaller")}</button>
-        <button className="b">{t("landing.breakdown.actions.edit")}</button>
+        <button className="b" tabIndex={-1}>
+          {t("landing.breakdown.actions.smaller")}
+        </button>
+        <button className="b" tabIndex={-1}>
+          {t("landing.breakdown.actions.edit")}
+        </button>
       </div>
     </div>
   )
@@ -556,7 +606,7 @@ function HudDemoCard() {
 
   return (
     <motion.div
-      className="lp-card lp-hud-demo-card col-span-2"
+      className="lp-card lp-hud-demo-card lg:col-span-2"
       data-hint="↑ hover"
       style={{ "--rd": "160ms" } as React.CSSProperties}
       {...revealUp(0.16)}
@@ -569,19 +619,12 @@ function HudDemoCard() {
           <span className="light">{t("landing.cards.hud.headingTwo")}</span>
         </h3>
         <p>{t("landing.cards.hud.description")}</p>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "auto",
-            paddingTop: 24,
-          }}
-        >
+        <div className="mt-auto flex justify-center pt-6" aria-hidden="true">
           <div className="lp-hud">
             <span className="live" />
             <span className="t">12:48</span>
             <span className="nm">· {t("landing.mock.taskShort")}</span>
-            <span className="ring" />
+            <span className="progress-ring" />
           </div>
         </div>
       </div>
@@ -595,7 +638,7 @@ function DistractionCard() {
 
   return (
     <motion.div
-      className="lp-card col-span-2"
+      className="lp-card lg:col-span-2"
       data-hint="↑ hover"
       style={{ "--rd": "80ms" } as React.CSSProperties}
       {...revealUp(0.08)}
@@ -612,7 +655,7 @@ function DistractionCard() {
           </span>
         </h3>
         <p>{t("landing.cards.blocklist.description")}</p>
-        <div className="lp-distraction-tabs">
+        <div className="lp-distraction-tabs" aria-hidden="true">
           <div className="lp-dt-tab">
             <XIcon />
             <span className="lp-dt-nm">x.com</span>
@@ -642,10 +685,10 @@ function BentoSection() {
   const { t } = useTranslation()
 
   return (
-    <section className="py-20" id="product">
-      <div className="mx-auto max-w-330 px-10">
+    <section className="border-t py-14 md:py-20" id="product">
+      <div className="mx-auto max-w-330 px-4 sm:px-6 lg:px-10">
         <motion.div className="mb-8" {...revealUp(0)}>
-          <span className="bg-canvas mb-4 inline-flex items-center gap-2 rounded-full border px-2 py-1 font-mono text-xs font-medium tracking-wider text-muted-foreground uppercase">
+          <span className="mb-4 inline-flex items-center gap-2 rounded-full border bg-background px-2 py-1 font-mono text-xs font-medium tracking-wider text-muted-foreground uppercase">
             {t("landing.product.eyebrow")}
           </span>
           <h2 className="font-sans-tight text-3xl font-[550] md:text-4xl">
@@ -658,9 +701,9 @@ function BentoSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-6 gap-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-6">
           <motion.div
-            className="lp-card col-span-4 row-span-2"
+            className="lp-card md:col-span-2 lg:col-span-4 lg:row-span-2"
             style={{ "--rd": "0ms" } as React.CSSProperties}
             {...revealUp(0)}
           >
@@ -688,39 +731,37 @@ function BentoSection() {
           <HudDemoCard />
 
           <motion.div
-            className="lp-card with-gradient bl col-span-3"
+            className="lp-card with-gradient bl lg:col-span-3"
             {...revealUp(0)}
           >
             <div className="body">
-              <div
-                className="lp-card-label"
-                style={{ color: "rgba(255,255,255,0.8)" }}
-              >
+              <div className="lp-card-label">
                 {t("landing.cards.shield.label")}
               </div>
-              <h3 style={{ color: "#fff", marginTop: "auto" }}>
+              <h3 className="mt-auto">
                 {t("landing.cards.shield.headingOne")}
                 <br />
                 <span className="light">
                   {t("landing.cards.shield.headingTwo")}
                 </span>
               </h3>
-              <p style={{ color: "rgba(255,255,255,0.85)" }}>
-                {t("landing.cards.shield.description")}
-              </p>
+              <p>{t("landing.cards.shield.description")}</p>
             </div>
           </motion.div>
 
-          <motion.div {...revealUp(0.1)} className="col-span-3">
+          <motion.div {...revealUp(0.1)} className="lg:col-span-3">
             <PixelCard
               variant="default"
               colors="#0c0404,#1a1014,#2a1820,#F9B314,#FFC22E"
               gap={6}
               speed={40}
-              className="lp-card lp-pixel-bento col-span-3"
+              className="lp-card lp-pixel-bento"
               style={{ "--rd": "100ms" } as React.CSSProperties}
             >
-              <div className="lp-block-mock lp-pixel-content">
+              <div
+                className="lp-block-mock lp-pixel-content"
+                aria-hidden="true"
+              >
                 <span className="tld">{t("landing.blocked.eyebrow")}</span>
                 <h4>
                   {t("landing.blocked.headingPrefix")}{" "}
@@ -762,7 +803,7 @@ function Heatmap() {
   ]
 
   return (
-    <motion.div className="lp-heat-grid" {...revealUp(0.12)}>
+    <motion.div className="lp-heat-grid" aria-hidden="true" {...revealUp(0.12)}>
       {levels.map((lvl, i) => (
         <motion.span
           key={i}
@@ -783,39 +824,22 @@ function ExtensionSection() {
   const { t } = useTranslation()
 
   return (
-    <section
-      className="lp-bento lp-section"
-      id="extension"
-      style={{ paddingTop: 0 }}
-    >
-      <div className="lp-wrap">
-        <motion.div className="lp-section-head" {...revealUp(0)}>
-          <span className="lp-eyebrow-pill">
-            {t("landing.extension.eyebrow")}
-          </span>
-          <h2>
-            <span className="light">{t("landing.extension.headingOne")}</span>
-            <br />
-            {t("landing.extension.headingTwo")}
-          </h2>
-          <p>{t("landing.extension.description")}</p>
-        </motion.div>
+    <section className="border-t py-14 md:py-20" id="extension">
+      <div className="relative z-1 mx-auto max-w-330 px-4 sm:px-6 lg:px-10">
+        <SectionHead
+          eyebrow={t("landing.extension.eyebrow")}
+          headingLight={t("landing.extension.headingOne")}
+          heading={t("landing.extension.headingTwo")}
+          description={t("landing.extension.description")}
+        />
 
-        <div className="grid grid-cols-6 gap-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-6">
           <motion.div
-            className="lp-card fog col-span-4"
-            style={{ "--rd": "0ms", padding: 40 } as React.CSSProperties}
+            className="lp-card fog p-6 sm:p-10 md:col-span-2 lg:col-span-4"
+            style={{ "--rd": "0ms" } as React.CSSProperties}
             {...revealUp(0)}
           >
-            <div
-              className="body"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 32,
-                alignItems: "start",
-              }}
-            >
+            <div className="body grid items-start gap-8 md:grid-cols-2">
               <div>
                 <div className="lp-card-label">
                   {t("landing.extension.popup.label")}
@@ -827,11 +851,11 @@ function ExtensionSection() {
                     {t("landing.extension.popup.headingTwo")}
                   </span>
                 </h3>
-                <p style={{ marginTop: 12 }}>
+                <p className="mt-3">
                   {t("landing.extension.popup.description")}
                 </p>
               </div>
-              <div className="lp-ext-popup self-center">
+              <div className="lp-ext-popup self-center" aria-hidden="true">
                 <div className="head">
                   <span className="live">{t("landing.mock.sprint42")}</span>
                   <span>0:32:48 {t("landing.mock.left")}</span>
@@ -856,9 +880,13 @@ function ExtensionSection() {
                   {t("landing.mock.steps.bridge")}
                 </div>
                 <div className="footer">
-                  <button>{t("landing.mock.actions.addFiveShort")}</button>
-                  <button>{t("landing.mock.actions.pause")}</button>
-                  <button className="primary">
+                  <button tabIndex={-1}>
+                    {t("landing.mock.actions.addFiveShort")}
+                  </button>
+                  <button tabIndex={-1}>
+                    {t("landing.mock.actions.pause")}
+                  </button>
+                  <button className="primary" tabIndex={-1}>
                     {t("landing.mock.actions.endSprint")}
                   </button>
                 </div>
@@ -867,8 +895,8 @@ function ExtensionSection() {
           </motion.div>
 
           <motion.div
-            className="lp-card col-span-2"
-            style={{ "--rd": "100ms", padding: 40 } as React.CSSProperties}
+            className="lp-card p-6 sm:p-10 lg:col-span-2"
+            style={{ "--rd": "100ms" } as React.CSSProperties}
             {...revealUp(0.1)}
           >
             <div className="body">
@@ -883,46 +911,15 @@ function ExtensionSection() {
                 </span>
               </h3>
               <p>{t("landing.extension.pairing.description")}</p>
-              <div style={{ marginTop: "auto", paddingTop: 24 }}>
-                <div
-                  style={{
-                    background: "var(--yellow-50)",
-                    border: "1px solid var(--yellow-soft)",
-                    borderRadius: 12,
-                    padding: 22,
-                    textAlign: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontFamily: "var(--font-ibm-mono)",
-                      fontSize: 11,
-                      color: "var(--muted-foreground)",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.12em",
-                    }}
-                  >
+              <div className="mt-auto pt-6" aria-hidden="true">
+                <div className="rounded-xl border border-primary/40 bg-primary/10 p-5.5 text-center">
+                  <div className="font-[family-name:var(--font-ibm-mono)] text-[11px] tracking-widest text-muted-foreground uppercase">
                     {t("landing.extension.pairing.confirm")}
                   </div>
-                  <div
-                    style={{
-                      fontFamily: "var(--font-funnel)",
-                      fontWeight: 300,
-                      fontSize: 48,
-                      letterSpacing: "-0.04em",
-                      color: "var(--ink)",
-                      fontFeatureSettings: "'tnum' 1",
-                    }}
-                  >
+                  <div className="text-[clamp(32px,4vw,48px)] font-light tracking-[-0.04em] text-foreground tabular-nums">
                     BR8 — 9KF
                   </div>
-                  <div
-                    style={{
-                      fontFamily: "var(--font-ibm-mono)",
-                      fontSize: 11,
-                      color: "var(--muted-foreground)",
-                    }}
-                  >
+                  <div className="font-[family-name:var(--font-ibm-mono)] text-[11px] text-muted-foreground">
                     {t("landing.extension.pairing.expires")}
                   </div>
                 </div>
@@ -931,7 +928,7 @@ function ExtensionSection() {
           </motion.div>
 
           <motion.div
-            className="lp-card col-span-2"
+            className="lp-card lg:col-span-2"
             style={{ "--rd": "0ms" } as React.CSSProperties}
             {...revealUp(0)}
           >
@@ -948,19 +945,13 @@ function ExtensionSection() {
               </h3>
               <p>{t("landing.extension.ambient.description")}</p>
               <div
-                style={{
-                  marginTop: "auto",
-                  paddingTop: 24,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 10,
-                  alignItems: "flex-start",
-                }}
+                className="mt-auto flex flex-col items-start gap-2.5 pt-6"
+                aria-hidden="true"
               >
                 <div className="lp-hud">
                   <span className="live" />
                   <span className="t">12:48</span>
-                  <span className="ring" />
+                  <span className="progress-ring" />
                 </div>
                 <div className="lp-hud">
                   <span className="live" />
@@ -976,7 +967,7 @@ function ExtensionSection() {
           <DistractionCard />
 
           <motion.div
-            className="lp-card col-span-2"
+            className="lp-card lg:col-span-2"
             style={{ "--rd": "160ms" } as React.CSSProperties}
             {...revealUp(0.16)}
           >
@@ -993,52 +984,29 @@ function ExtensionSection() {
               </h3>
               <p>{t("landing.extension.slip.description")}</p>
               <div
-                style={{
-                  marginTop: "auto",
-                  paddingTop: 16,
-                  background: "var(--fog)",
-                  borderRadius: 10,
-                  padding: 14,
-                }}
+                className="mt-auto rounded-[10px] bg-muted p-3.5"
+                aria-hidden="true"
               >
-                <div
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 500,
-                    letterSpacing: "-0.01em",
-                  }}
-                >
+                <div className="text-[13px] font-medium tracking-tight">
                   {t("landing.extension.slip.prompt")}
                 </div>
-                <div
-                  style={{
-                    color: "var(--cool)",
-                    fontSize: 12.5,
-                    marginTop: 4,
-                    letterSpacing: "-0.01em",
-                  }}
-                >
+                <div className="mt-1 text-[12.5px] tracking-tight text-muted-foreground">
                   {t("landing.extension.slip.costPrefix")}{" "}
-                  <b style={{ color: "var(--ink)" }}>
+                  <b className="text-foreground">
                     {t("landing.extension.slip.costStrong")}
                   </b>{" "}
                   {t("landing.extension.slip.costSuffix")}
                 </div>
-                <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
+                <div className="mt-2.5 flex gap-1.5">
                   <button
-                    className="lp-btn yellow"
-                    style={{
-                      height: 32,
-                      fontSize: 12,
-                      flex: 1,
-                      padding: "0 10px",
-                    }}
+                    className="inline-flex h-8 flex-1 items-center justify-center rounded-md bg-primary px-2.5 text-xs font-semibold whitespace-nowrap text-primary-foreground"
+                    tabIndex={-1}
                   >
                     {t("landing.extension.slip.back")}
                   </button>
                   <button
-                    className="lp-btn"
-                    style={{ height: 32, fontSize: 12, padding: "0 10px" }}
+                    className="inline-flex h-8 items-center justify-center rounded-md border bg-background px-2.5 text-xs font-medium whitespace-nowrap"
+                    tabIndex={-1}
                   >
                     {t("landing.extension.slip.fiveMin")}
                   </button>
@@ -1048,32 +1016,27 @@ function ExtensionSection() {
           </motion.div>
 
           <motion.div
-            className="lp-card with-gradient tl col-span-3"
-            style={{ "--rd": "0ms", minHeight: 320 } as React.CSSProperties}
+            className="lp-card with-gradient tl min-h-80 lg:col-span-3"
+            style={{ "--rd": "0ms" } as React.CSSProperties}
             {...revealUp(0)}
           >
             <div className="body">
-              <div
-                className="lp-card-label"
-                style={{ color: "rgba(255,255,255,0.85)" }}
-              >
+              <div className="lp-card-label">
                 {t("landing.extension.patterns.label")}
               </div>
-              <h3 style={{ color: "#fff" }}>
+              <h3>
                 {t("landing.extension.patterns.headingOne")}
                 <br />
                 <span className="light">
                   {t("landing.extension.patterns.headingTwo")}
                 </span>
               </h3>
-              <p style={{ color: "rgba(255,255,255,0.85)" }}>
-                {t("landing.extension.patterns.description")}
-              </p>
+              <p>{t("landing.extension.patterns.description")}</p>
             </div>
           </motion.div>
 
           <motion.div
-            className="lp-card col-span-3"
+            className="lp-card lg:col-span-3"
             style={{ "--rd": "100ms" } as React.CSSProperties}
             {...revealUp(0.1)}
           >
@@ -1089,16 +1052,7 @@ function ExtensionSection() {
                 </span>
               </h3>
               <Heatmap />
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginTop: 14,
-                  fontFamily: "var(--font-mono)",
-                  fontSize: 11,
-                  color: "var(--muted-foreground)",
-                }}
-              >
+              <div className="mt-3.5 flex justify-between font-mono text-[11px] text-muted-foreground">
                 <span>{t("landing.extension.heatmap.ago")}</span>
                 <span>{t("landing.extension.heatmap.today")}</span>
               </div>
@@ -1145,26 +1099,22 @@ function PricingSection() {
   const pricingTiers = t("landing.pricing.tiers", {
     returnObjects: true,
   }) as PricingTier[]
-  const tierDelays = ["0ms", "100ms", "200ms"]
 
   return (
-    <section className="lp-pricing lp-section" id="pricing">
-      <div className="lp-wrap">
-        <motion.div className="lp-section-head" {...revealUp(0)}>
-          <span className="lp-eyebrow-pill">
-            {t("landing.pricing.eyebrow")}
-          </span>
-          <h2>
-            <span className="light">{t("landing.pricing.headingOne")}</span>
-            <br />
-            {t("landing.pricing.headingTwo")}
-          </h2>
-          <p>{t("landing.pricing.description")}</p>
+    <section className="border-t py-16 md:py-24" id="pricing">
+      <div className="relative z-1 mx-auto max-w-330 px-4 sm:px-6 lg:px-10">
+        <SectionHead
+          eyebrow={t("landing.pricing.eyebrow")}
+          headingLight={t("landing.pricing.headingOne")}
+          heading={t("landing.pricing.headingTwo")}
+          description={t("landing.pricing.description")}
+        >
           <div className="lp-billing-toggle">
-            <span ref={pillRef} className="lp-bt-pill" />
+            <span ref={pillRef} className="lp-bt-pill" aria-hidden="true" />
             <button
               ref={monthlyRef}
               className={!annual ? "active" : ""}
+              aria-pressed={!annual}
               onClick={() => setAnnual(false)}
             >
               {t("landing.pricing.monthly")}
@@ -1172,16 +1122,17 @@ function PricingSection() {
             <button
               ref={annualRef}
               className={annual ? "active" : ""}
+              aria-pressed={annual}
               onClick={() => setAnnual(true)}
             >
               {t("landing.pricing.annually")} <span className="save">−20%</span>
             </button>
           </div>
-        </motion.div>
+        </SectionHead>
 
-        <div className="lp-tier-row">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {pricingTiers.map((tier, index) => {
-            const delay = tierDelays[index] ?? "0ms"
+            const delay = index * 0.1
             const isFeatured = tier.name === "Pro"
             const price = annual
               ? (tier.priceAnnual ?? tier.price)
@@ -1197,13 +1148,9 @@ function PricingSection() {
 
             if (isFeatured) {
               return (
-                <motion.div
-                  key={tier.name}
-                  {...revealScale(Number.parseInt(delay, 10) / 1000)}
-                >
+                <motion.div key={tier.name} {...revealScale(delay)}>
                   <BorderGlow
-                    className="lp-tier-pro"
-                    style={{ "--rd": delay } as React.CSSProperties}
+                    className="lp-tier-pro h-full"
                     backgroundColor="var(--card)"
                     glowColor="var(--primary)"
                     colors={["var(--primary)"]}
@@ -1215,38 +1162,15 @@ function PricingSection() {
                     continuous
                     continuousSpeed={0.35}
                   >
-                    <div className="lp-tier-pro-inner">
-                      {tier.tag && (
-                        <div className="lp-tier-tag">{tier.tag}</div>
-                      )}
-                      <div className="lp-tier-name">{tier.name}</div>
-                      <div className="lp-tier-desc">{tier.desc}</div>
-                      <div className="lp-price-row">
-                        <span
-                          key={price}
-                          className="lp-price-amt lp-price-flip"
-                        >
-                          {price}
-                        </span>
-                        <span className="lp-price-per">{per}</span>
-                      </div>
-                      <div className="lp-billed">{billed}</div>
-                      <ul className="lp-features">
-                        {tier.features.map((f, i) => (
-                          <li key={i}>{f}</li>
-                        ))}
-                      </ul>
-                      <Link
-                        className="lp-btn yellow"
-                        href={ctaHref}
-                        style={{
-                          marginTop: "auto",
-                          width: "100%",
-                          justifyContent: "center",
-                        }}
-                      >
-                        {tier.cta} <span className="arr">→</span>
-                      </Link>
+                    <div className="relative flex h-full flex-col p-7 sm:p-9">
+                      <TierContent
+                        tier={tier}
+                        price={price}
+                        per={per}
+                        billed={billed}
+                        ctaHref={ctaHref}
+                        featured
+                      />
                     </div>
                   </BorderGlow>
                 </motion.div>
@@ -1255,40 +1179,86 @@ function PricingSection() {
             return (
               <motion.div
                 key={tier.name}
-                className="lp-tier"
-                style={{ "--rd": delay } as React.CSSProperties}
-                {...revealScale(Number.parseInt(delay, 10) / 1000)}
+                className="relative flex flex-col overflow-visible rounded-2xl border bg-background p-7 shadow-xs transition-[translate,box-shadow] duration-200 ease-out hover:shadow-lg sm:p-9"
+                {...revealScale(delay)}
               >
-                <div className="lp-tier-name">{tier.name}</div>
-                <div className="lp-tier-desc">{tier.desc}</div>
-                <div className="lp-price-row">
-                  <span className="lp-price-amt">{price}</span>
-                  <span className="lp-price-per">{per}</span>
-                </div>
-                <div className="lp-billed">{billed}</div>
-                <ul className="lp-features">
-                  {tier.features.map((f, i) => (
-                    <li key={i}>{f}</li>
-                  ))}
-                </ul>
-                <Link
-                  className="lp-btn"
-                  href={ctaHref}
-                  style={{
-                    marginTop: "auto",
-                    width: "100%",
-                    justifyContent: "center",
-                  }}
-                >
-                  {tier.cta}
-                  {tier.name === "Team" && <span className="arr">→</span>}
-                </Link>
+                <TierContent
+                  tier={tier}
+                  price={price}
+                  per={per}
+                  billed={billed}
+                  ctaHref={ctaHref}
+                />
               </motion.div>
             )
           })}
         </div>
       </div>
     </section>
+  )
+}
+
+/* ---- Pricing tier body (shared by featured + regular tiers) ---- */
+function TierContent({
+  tier,
+  price,
+  per,
+  billed,
+  ctaHref,
+  featured = false,
+}: {
+  tier: PricingTier
+  price: string
+  per: string
+  billed: string
+  ctaHref: string
+  featured?: boolean
+}) {
+  return (
+    <>
+      <div className="text-xl font-semibold tracking-tight">{tier.name}</div>
+      {featured && tier.tag && (
+        <div className="my-2 w-fit rounded bg-primary px-2.5 py-1 font-mono text-xs font-semibold tracking-wider text-primary-foreground uppercase">
+          {tier.tag}
+        </div>
+      )}
+      <div className="mt-1.5 mb-5 min-h-10 text-[13.5px] tracking-tight text-muted-foreground">
+        {tier.desc}
+      </div>
+      <div className="flex items-baseline gap-2">
+        <span
+          key={featured ? price : undefined}
+          className={`text-5xl leading-none font-medium tracking-[-0.04em] ${
+            featured ? "lp-price-flip" : ""
+          }`}
+        >
+          {price}
+        </span>
+        <span className="text-base tracking-tight text-muted-foreground">
+          {per}
+        </span>
+      </div>
+      <div className="mt-2 text-[13px] text-muted-foreground">{billed}</div>
+      <ul className="lp-features">
+        {tier.features.map((f, i) => (
+          <li key={i}>{f}</li>
+        ))}
+      </ul>
+      <Button
+        variant={featured ? "default" : "outline"}
+        size="lg"
+        className="mt-auto w-full"
+      >
+        <Link href={ctaHref} className="text-sm font-medium">
+          {tier.cta}
+          {(featured || tier.name === "Team") && (
+            <span className="ml-1 font-mono font-normal" aria-hidden="true">
+              →
+            </span>
+          )}
+        </Link>
+      </Button>
+    </>
   )
 }
 
@@ -1303,24 +1273,38 @@ function FaqItem({
   defaultOpen?: boolean
 }) {
   const [open, setOpen] = useState(defaultOpen)
+  const bodyId = useId()
 
   return (
-    <motion.div
-      className={`lp-faq-item ${open ? "open" : ""}`}
-      {...revealUp(0)}
-    >
+    <motion.div className="border-t last:border-b" {...revealUp(0)}>
+      <h3 className="m-0">
+        <button
+          type="button"
+          className="flex w-full cursor-pointer items-center justify-between gap-6 px-1 py-6 text-left text-base font-medium tracking-tight transition-colors hover:text-muted-foreground"
+          aria-expanded={open}
+          aria-controls={bodyId}
+          onClick={() => setOpen(!open)}
+        >
+          {question}
+          <Plus
+            className={`size-4 shrink-0 transition-transform duration-300 ${
+              open ? "rotate-45" : ""
+            }`}
+            aria-hidden="true"
+          />
+        </button>
+      </h3>
       <div
-        className="lp-faq-summary"
-        onClick={() => setOpen(!open)}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => e.key === "Enter" && setOpen(!open)}
+        id={bodyId}
+        className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
       >
-        {question}
-        <span className="lp-faq-icon" />
-      </div>
-      <div className="lp-faq-body">
-        <div>{answer}</div>
+        <div className="overflow-hidden">
+          <div className="max-w-165 px-1 pb-6 text-[15px] tracking-tight text-muted-foreground">
+            {answer}
+          </div>
+        </div>
       </div>
     </motion.div>
   )
@@ -1331,15 +1315,22 @@ function FaqSection() {
   const faqs = t("landing.faq.items", { returnObjects: true }) as FaqEntry[]
 
   return (
-    <section className="lp-faq lp-section" id="faq">
-      <div className="lp-wrap lp-faq-wrap">
-        <h2>
-          <span className="light">{t("landing.faq.headingLight")}</span>{" "}
+    <section className="border-t bg-muted py-16 md:py-24" id="faq">
+      <div className="relative z-1 mx-auto max-w-200 px-4 sm:px-6 lg:px-10">
+        <h2 className="mb-3 text-center font-sans-tight text-3xl leading-none font-[550] sm:text-4xl md:text-5xl">
+          <span className="text-muted-foreground">
+            {t("landing.faq.headingLight")}
+          </span>{" "}
           {t("landing.faq.headingRest")}
         </h2>
-        <p className="sub">
+        <p className="mx-auto mb-12 max-w-125 text-center text-base text-muted-foreground">
           {t("landing.faq.subPrefix")}{" "}
-          <a href="mailto:hi@lockin.app">hi@lockin.app</a>{" "}
+          <a
+            className="border-b border-border text-foreground"
+            href="mailto:hi@lockin.app"
+          >
+            hi@lockin.app
+          </a>{" "}
           {t("landing.faq.subSuffix")}
         </p>
 
@@ -1370,13 +1361,20 @@ function SiteFooter() {
     }, 0)
   }
 
+  const footColClass =
+    "[&>a]:block [&>a]:py-1.25 [&>a]:text-sm [&>a]:tracking-tight [&>a]:text-muted-foreground [&>a:hover]:text-foreground"
+  const footHeadClass =
+    "mb-4 font-mono text-[13px] font-medium tracking-widest text-muted-foreground uppercase"
+
   return (
-    <footer className="lp-footer">
-      <div className="lp-wrap">
-        <div className="lp-foot-grid">
-          <div>
+    <footer className="border-t bg-background pt-16 pb-8">
+      <div className="relative z-1 mx-auto max-w-330 px-4 sm:px-6 lg:px-10">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-3 lg:grid-cols-[1.5fr_repeat(3,1fr)]">
+          <div className="sm:col-span-3 lg:col-span-1">
             <LogoAccent className="-ml-1 h-10" />
-            <p className="lp-foot-tagline">{t("landing.footer.tagline")}</p>
+            <p className="mt-3.5 mb-4.5 max-w-70 text-sm tracking-tight text-muted-foreground">
+              {t("landing.footer.tagline")}
+            </p>
             <DropdownMenu>
               <DropdownMenuTrigger
                 render={
@@ -1408,35 +1406,35 @@ function SiteFooter() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <div className="lp-foot-col">
-            <h4>{t("landing.footer.product")}</h4>
+          <div className={footColClass}>
+            <h4 className={footHeadClass}>{t("landing.footer.product")}</h4>
             <a href="#">{t("landing.footer.webApp")}</a>
             <a href="#">{t("landing.footer.browserExtension")}</a>
             <a href="#pricing">{t("landing.nav.pricing")}</a>
             <a href="#">{t("landing.footer.changelog")}</a>
             <a href="#">{t("landing.footer.roadmap")}</a>
           </div>
-          <div className="lp-foot-col">
-            <h4>{t("landing.footer.compare")}</h4>
+          {/* <div className={footColClass}>
+            <h4 className={footHeadClass}>{t("landing.footer.compare")}</h4>
             <a href="#">Todoist</a>
             <a href="#">Motion</a>
             <a href="#">Sunsama</a>
             <a href="#">Cold Turkey</a>
           </div>
-          <div className="lp-foot-col">
-            <h4>{t("landing.footer.company")}</h4>
+          <div className={footColClass}>
+            <h4 className={footHeadClass}>{t("landing.footer.company")}</h4>
             <a href="#">{t("landing.nav.manifesto")}</a>
             <a href="#">{t("landing.footer.blog")}</a>
             <a href="#">{t("landing.footer.brand")}</a>
             <a href="#">{t("landing.footer.pressKit")}</a>
-          </div>
+          </div> */}
         </div>
-        <div className="lp-foot-meta">
+        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t pt-6 text-[13px] text-muted-foreground sm:flex-row sm:items-center">
           <div className="flex items-center gap-2">
             <LogoLab className="h-3 opacity-70" />
             <span className="h-3.75">©2026</span>
           </div>
-          <span className="links">
+          <span className="flex gap-5 [&>a:hover]:text-foreground">
             <a href="#">{t("landing.footer.privacy")}</a>
             <a href="#">{t("landing.footer.terms")}</a>
             <a href="#">{t("landing.footer.security")}</a>

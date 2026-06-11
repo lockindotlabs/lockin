@@ -58,19 +58,20 @@ settings ban đầu (HUD style, blocklist, block tone...).
    │                         │   thành PlanStep (title, estimatedMinutes, order)
    │                         │
    │                         ▼
-   │                  Auto-save cục bộ (IndexedDB / plan-repository)
-   │                         │  debounce → createPlanOnServer / updatePlanOnServer
-   │                         │  (guard isCreatingOnServerRef chống tạo trùng)
+   │                  Auto-save qua plan-repository
+   │                         │  debounce → same-origin /api/plans
+   │                         │  (Plan.id chính là ID canonical trong DB)
    │                         ▼
-   │                  POST/PATCH /api/plans  →  lưu Plan + PlanStep[] trong DB
+   │                  POST /api/plans  →  upsert Plan + replace PlanStep[] atomically
    │                         │
    │                         ▼
-   │                  serverId gắn vào plan cục bộ (đồng bộ 2 chiều)
+   │                  Một user action chỉ tạo/cập nhật 1 Plan row
    │
    └─▶ Sidebar "Recent plans" cập nhật danh sách kế hoạch gần đây
 ```
-**Kết quả**: Có 1 `Plan` với danh sách `PlanStep` đã ước lượng thời gian, lưu cả
-local (offline-first) lẫn server (qua `serverId`).
+**Kết quả**: Có 1 `Plan` canonical với danh sách `PlanStep` đã ước lượng thời gian.
+Web app không còn ghi thêm bản sao qua Express `/api/plans`; Express vẫn phục vụ
+focus sessions, settings, và extension-token flows.
 
 ---
 
@@ -219,7 +220,7 @@ local (offline-first) lẫn server (qua `serverId`).
 | Phần | Trạng thái |
 |---|---|
 | Auth + sync user | ✅ Hoạt động (Clerk JWT + extension Bearer token) |
-| Plan + AI breakdown + Tiptap save | ✅ Hoạt động, đã fix race condition tạo trùng plan |
+| Plan + AI breakdown + Tiptap save | ✅ Hoạt động theo invariant 1 action → 1 canonical `Plan`; same-origin `/api/plans` là đường ghi duy nhất của web editor/Ask AI |
 | Settings sync 2 chiều | ✅ Đã khôi phục (migration Phase 2 vừa được apply lại) |
 | Focus Hub (`/app/focus`) | ✅ MVP hoàn chỉnh — Queue, Setup Modal, Effort Today, Recent Sprints |
 | Focus Session screen | ✅ MVP hoàn chỉnh — timer ring, checklist, pause/resume, end sprint |

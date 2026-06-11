@@ -17,6 +17,8 @@ import {
   saveChatMessages,
 } from "@/lib/server/chat-store"
 import { getCurrentDbUser } from "@/lib/server/current-db-user"
+import { resolveMentionContext } from "@/lib/server/mention-context"
+import type { MentionRef } from "@/lib/mentions/mention-types"
 import prisma from "@workspace/db"
 
 export const maxDuration = 30
@@ -129,6 +131,7 @@ However, before creating a structured plan object through createPlan, you must e
 Use createPlan only when the user clearly wants the plan saved, started, scheduled, or added to their workspace.
 
 If the user says “make me a plan,” draft the plan in chat first unless the product flow explicitly requires saving it.
+After drafting a structured, Sprint-ready plan in plain text, call askChoice to ask whether the user wants to save that exact plan. Do not call createPlan until the user chooses to save.
 
 Do not create persistent plans too early.
 
@@ -404,6 +407,7 @@ Before sending any plan, verify:
 - Is there a recommended first Sprint?
 - Is the first action obvious?
 - Is the plan short enough to actually use?
+- If I drafted a structured plan that is not saved yet, did I call askChoice to ask whether to save it?
 - Does the response fit the user’s likely mental state?
 `
 
@@ -416,7 +420,8 @@ Do not use tools just because the user mentioned planning. First decide whether 
 
 1. A normal text response
 2. A planning intake
-3. A saved, scheduled, started, or updated plan
+3. A plain-text plan draft with a post-draft save confirmation
+4. A saved, scheduled, started, or updated plan
 
 ### Tools are product actions
 
@@ -468,11 +473,35 @@ Do not call askChoicesBatch when:
 - The user is editing an existing plan and the requested change is obvious
 - Asking would create more friction than value
 
-Prefer askChoicesBatch over askChoice for new planning intake, including when only one question is needed. The older askChoice tool exists only for compatibility with existing conversations.
+Prefer askChoicesBatch over askChoice for new planning intake, including when only one question is needed. Use askChoice specifically for the post-draft save confirmation described below.
+
+### askChoice as post-draft save confirmation
+
+After you draft a structured, Sprint-ready plan in plain text, call askChoice to ask whether the user wants to save that exact plan.
+
+Use askChoice for this save confirmation even though askChoicesBatch is preferred for planning intake.
+
+The save confirmation should:
+
+- Come after the visible plain-text plan, not before it
+- Be the final action in that assistant turn
+- Ask one clear yes/no-style question
+- Use two options:
+  - "Save plan" - create it as an editable LockIn plan
+  - "Not now" - keep it only in the chat
+- Set allowOther to false
+- Set allowSkip to false
+
+Do not ask to save when the response is only advice, critique, examples, a rough brainstorm, a partial planning idea, or a product discussion.
+
+Do not ask to save after createPlan or rewriteActivePlan has already persisted the plan.
+
+When the user chooses "Save plan", call createPlan using the same plan you just drafted. When the user chooses "Not now", acknowledge briefly and do not call createPlan. If the user asks for edits instead, revise the plan in plain text and askChoice again after the revised plan.
 
 ### createPlan as persistence
 
 Use createPlan only when the user clearly wants a plan saved, scheduled, started, or added to their workspace.
+For a newly drafted plan, this usually means the user selected "Save plan" in the post-draft askChoice confirmation.
 
 Before calling createPlan, ensure:
 
@@ -494,7 +523,7 @@ Do not call createPlan when:
 - The user is discussing product behavior
 - The user is asking how planning should work
 
-If the user says "make me a plan," draft the plan in chat first. If the user says "save this," "start this," "add this to my workspace," or "schedule this," then use createPlan.
+If the user says "make me a plan," draft the plan in chat first, then askChoice whether to save it. If the user says "save this," "start this," "add this to my workspace," or "schedule this" about an already drafted plan, then use createPlan.
 
 After createPlan succeeds, always send a text message. If the tool result includes confirmation, use that confirmation text exactly and do not add a longer summary. If the tool returns ok: false, explain the reason and ask for the next needed step.
 
@@ -518,12 +547,13 @@ After rewriteActivePlan succeeds, always send a text message. If the tool result
    - Call askChoicesBatch.
    - Wait for the user's answers.
    - Then draft the plan in chat.
+   - Then call askChoice to ask whether to save it.
 
 3. If the user asks for a plan and enough context is already available:
    - Draft the plan in chat.
-   - Do not call createPlan unless the user clearly wants it saved, scheduled, started, or added to the workspace.
+   - Then call askChoice to ask whether to save it.
 
-4. If the user confirms they want to save, schedule, start, or add the plan to the workspace:
+4. If the user confirms they want to save, schedule, start, or add the plan to the workspace, including by choosing "Save plan" in askChoice:
    - Call createPlan.
 
 5. If the user wants to revise an existing plan:
@@ -534,6 +564,7 @@ After rewriteActivePlan succeeds, always send a text message. If the tool result
 type ChatConfig = {
   modelName?: string
   capabilities?: string[]
+  mentions?: MentionRef[]
 }
 
 const DEFAULT_MODEL_NAME = "gemini-3.1-flash-lite-preview"
@@ -703,6 +734,11 @@ export async function POST(req: Request) {
   const validatedMessages = await validateUIMessages({
     messages: removePendingToolCalls(submittedMessages),
   })
+  const mentionContext = await resolveMentionContext({
+    userId: user.id,
+    requestChatId: id,
+    mentions: config?.mentions,
+  })
 
   try {
     await prisma.chat.update({
@@ -727,6 +763,7 @@ export async function POST(req: Request) {
 Use webSearch for current information, source-sensitive claims, external factual questions, or anything that may have changed recently.
 When using webSearch, ground the answer in the search results and include relevant source links when available.`
           : undefined,
+        mentionContext,
         TOOL_BEHAVIOR_INSTRUCTIONS,
       ]
         .filter(Boolean)

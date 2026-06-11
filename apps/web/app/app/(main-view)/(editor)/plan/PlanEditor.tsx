@@ -2,12 +2,7 @@
 
 import * as React from "react"
 import { format } from "date-fns"
-import {
-  ArrowUpIcon,
-  ListTodoIcon,
-  PlusIcon,
-  SlidersHorizontalIcon,
-} from "lucide-react"
+import { CloudCheckIcon, ListTodoIcon, Loader2 } from "lucide-react"
 import { NavActions } from "@/components/nav-actions"
 import {
   Breadcrumb,
@@ -18,25 +13,33 @@ import {
   BreadcrumbSeparator,
 } from "@workspace/ui/components/breadcrumb"
 import { Button } from "@workspace/ui/components/button"
-import { Input } from "@workspace/ui/components/input"
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar"
 import PlanDetails from "./PlanDetails"
 import TaskList from "./TaskList"
 import { ScrollArea } from "@workspace/ui/components/scroll-area"
-import { BorderBeam } from "border-beam"
 import { AiPlannerIcon } from "@/components/icons"
 import {
+  deletePlan,
   getPlan,
   savePlan,
   type SavedPlan,
   type SavedPlanTask,
 } from "@/lib/plans/plan-repository"
 import { markPlanOpened } from "@/lib/plans/recently-opened-plans"
-import { createPlanOnServer, updatePlanOnServer } from "@/lib/plans/plan-api"
 import { AI_PLAN_REWRITE_EVENT } from "@/lib/plans/ai-plan-tools"
-import { RedirectToSignIn, Show, UserButton, useAuth } from "@clerk/nextjs"
-import { Separator } from "@workspace/ui/components/separator"
+import { RedirectToSignIn, Show } from "@clerk/nextjs"
+import { useRouter, useSearchParams } from "next/navigation"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@workspace/ui/components/popover"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip"
 
 type PlanEditorProps = {
   planId: string
@@ -109,17 +112,6 @@ function isMeaningfulDraft(plan: EditorPlan, tasks: EditorTask[]) {
   )
 }
 
-// Module-level guards shared across every PlanEditor instance for a given plan.
-// React Strict Mode double-mounts components in dev — each mount used to get its
-// own `useRef`, so two parallel instances could each see "no server id yet, not
-// currently creating" and both fire createPlanOnServer, producing duplicate Plan
-// rows server-side (the F1 race condition). Module scope persists across mount/
-// unmount cycles and is shared by every instance rendering the same planId,
-// which closes that race window. Keyed by planId so concurrent edits of
-// different plans (e.g. multiple tabs) don't interfere with each other.
-const serverIdByPlanId = new Map<string, string | null>()
-const creatingOnServerByPlanId = new Map<string, boolean>()
-
 function PlanEditorLoadingState({ state }: { state: string }) {
   return (
     <div className="flex h-screen" data-plan-id="loading">
@@ -168,8 +160,9 @@ function PlanEditorLoadingState({ state }: { state: string }) {
 }
 
 export default function PlanEditor({ planId }: PlanEditorProps) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const { state } = useSidebar()
-  const { getToken } = useAuth()
   const [persisted, setPersisted] = React.useState<EditorTask[]>([])
   const [persistedPlan, setPersistedPlan] =
     React.useState<EditorPlan>(createEmptyPlan)
@@ -181,29 +174,25 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
   const [isHydrated, setIsHydrated] = React.useState(false)
   const [isPlanLoaded, setIsPlanLoaded] = React.useState(false)
   const [saveRevision, setSaveRevision] = React.useState(0)
-  const [quickPrompt, setQuickPrompt] = React.useState("")
+  // Blocks the debounced autosave once deletion starts — an in-flight save
+  // would otherwise recreate the plan (upsert clears deletedAt).
+  const isDeletingPlanRef = React.useRef(false)
 
-  const applySavedPlan = React.useCallback(
-    (savedPlan: SavedPlan | null) => {
-      if (!savedPlan) {
-        return
-      }
+  const applySavedPlan = React.useCallback((savedPlan: SavedPlan | null) => {
+    if (!savedPlan) {
+      return
+    }
 
-      // Server-side plan ID lives in module-level state (see comment above),
-      // shared by every instance rendering this planId.
-      serverIdByPlanId.set(planId, savedPlan.serverId ?? null)
-      setPersistedPlan({
-        savedTitle: savedPlan.title,
-        savedDescription: savedPlan.description,
-        savedCompletion: savedPlan.completion,
-      })
-      setPersisted(savedPlan.tasks.map(toEditorTask))
-      setCreatedAt(savedPlan.createdAt)
-      setLastSavedAt(new Date(savedPlan.updatedAt))
-      setHasSavedPlan(true)
-    },
-    [planId]
-  )
+    setPersistedPlan({
+      savedTitle: savedPlan.title,
+      savedDescription: savedPlan.description,
+      savedCompletion: savedPlan.completion,
+    })
+    setPersisted(savedPlan.tasks.map(toEditorTask))
+    setCreatedAt(savedPlan.createdAt)
+    setLastSavedAt(new Date(savedPlan.updatedAt))
+    setHasSavedPlan(true)
+  }, [])
 
   React.useEffect(() => {
     let isActive = true
@@ -269,6 +258,10 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
     }
 
     const timeoutId = window.setTimeout(() => {
+      if (isDeletingPlanRef.current) {
+        return
+      }
+
       const updatedAt = new Date().toISOString()
       const plan: SavedPlan = {
         id: planId,
@@ -292,23 +285,6 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
         .then(() => {
           setLastSavedAt(new Date(updatedAt))
           setHasSavedPlan(true)
-          // Fire-and-forget: sync to API after local save.
-          // Guards read/write module-level state (keyed by planId) rather than
-          // per-instance refs, so React Strict Mode's double-mounted sibling
-          // instance observes the same "currently creating" flag and can't
-          // race past it to create a duplicate Plan server-side.
-          const currentServerId = serverIdByPlanId.get(planId) ?? null
-          if (currentServerId) {
-            updatePlanOnServer(plan, currentServerId, getToken)
-          } else if (!creatingOnServerByPlanId.get(planId)) {
-            creatingOnServerByPlanId.set(planId, true)
-            createPlanOnServer(plan, getToken).then(async (serverId) => {
-              creatingOnServerByPlanId.set(planId, false)
-              if (!serverId) return
-              serverIdByPlanId.set(planId, serverId)
-              await savePlan({ ...plan, serverId })
-            })
-          }
         })
         .catch(() => {})
     }, 500)
@@ -436,17 +412,45 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
     }
   }, [persisted])
 
-  const handleQuickPromptSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const isAiPanelOpen = searchParams.get("ai") === "1"
+  const searchParamsString = searchParams.toString()
 
-    const trimmedPrompt = quickPrompt.trim()
-    if (!trimmedPrompt) {
+  const toggleAiPlanner = React.useCallback(() => {
+    const nextParams = new URLSearchParams(searchParamsString)
+
+    nextParams.set("id", planId)
+
+    if (isAiPanelOpen) {
+      nextParams.delete("ai")
+    } else {
+      nextParams.set("ai", "1")
+    }
+
+    router.push(`/app/plan?${nextParams.toString()}`)
+  }, [isAiPanelOpen, planId, router, searchParamsString])
+
+  const handleDeletePlan = React.useCallback(async () => {
+    const planTitle = persistedPlan.savedTitle.trim() || "Untitled Plan"
+    const action = hasSavedPlan ? "Delete" : "Discard"
+    const shouldDelete = window.confirm(`${action} "${planTitle}"?`)
+
+    if (!shouldDelete) {
       return
     }
 
-    handleAddTask(trimmedPrompt, "")
-    setQuickPrompt("")
-  }
+    isDeletingPlanRef.current = true
+
+    try {
+      if (hasSavedPlan) {
+        await deletePlan(planId)
+      }
+
+      router.push("/app/plans")
+    } catch {
+      isDeletingPlanRef.current = false
+      window.alert("Could not delete this plan. Try again in a moment.")
+    }
+  }, [hasSavedPlan, persistedPlan.savedTitle, planId, router])
 
   if (!isPlanLoaded) {
     return <PlanEditorLoadingState state={state} />
@@ -480,13 +484,33 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
             </div>
             <div className="ml-auto flex items-center gap-4 px-3">
               {isHydrated && (
-                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                  {lastSavedAt
-                    ? `Saved at ${format(lastSavedAt, "HH:mm:ss")}`
-                    : "Not saved yet"}
-                </div>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <CloudCheckIcon className="size-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <span>
+                      {lastSavedAt
+                        ? `Saved at ${format(lastSavedAt, "HH:mm:ss")}`
+                        : "Not saved yet"}
+                    </span>
+                  </TooltipContent>
+                </Tooltip>
               )}
-              <NavActions />
+
+              <Button
+                variant={isAiPanelOpen ? "secondary" : "default"}
+                aria-pressed={isAiPanelOpen}
+                size="sm"
+                onClick={toggleAiPlanner}
+              >
+                <AiPlannerIcon data-icon="align-start" /> AI Planner
+              </Button>
+
+              <NavActions
+                copyUrl={`/app/plan?id=${encodeURIComponent(planId)}`}
+                onDelete={handleDeletePlan}
+              />
 
               <Show when="signed-out">
                 <RedirectToSignIn />
@@ -537,17 +561,20 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
               )}
             />
 
-            <section className="absolute bottom-8 left-1/2 mx-auto flex w-full max-w-3xl flex-1 -translate-x-1/2 flex-col items-start justify-center gap-4">
-              <div className="flex flex-col gap-1">
-                <p className="mb-1 text-xs text-muted-foreground">
-                  Get started with
-                </p>
-                <Button variant="secondary" onClick={() => {}}>
-                  <AiPlannerIcon />
-                  AI Planner
-                </Button>
-              </div>
-            </section>
+            {(isPlanLoaded && !persistedPlan.savedTitle) ||
+            !persistedPlan.savedDescription ? (
+              <section className="absolute bottom-8 left-1/2 mx-auto flex w-full max-w-3xl flex-1 -translate-x-1/2 flex-col items-start justify-center gap-4">
+                <div className="flex flex-col gap-1">
+                  <p className="mb-1 text-xs text-muted-foreground">
+                    Get started with
+                  </p>
+                  <Button variant="secondary" onClick={toggleAiPlanner}>
+                    <AiPlannerIcon />
+                    AI Planner
+                  </Button>
+                </div>
+              </section>
+            ) : null}
 
             {/* <div className="pointer-events-none absolute bottom-4 left-1/2 flex -translate-x-1/2 justify-center">
               <form

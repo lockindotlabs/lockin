@@ -11,11 +11,14 @@ import {
   SignUp,
 } from "@clerk/nextjs"
 import { LogoAccent } from "@workspace/ui/components/logo-accent"
+import Link from "next/link"
 
 export default function SignUpPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-between bg-background p-12">
-      <LogoAccent className="h-9" />
+    <div className="flex min-h-screen flex-col items-center justify-between bg-background py-12">
+      <Link href="/">
+        <LogoAccent className="h-9" />
+      </Link>
       <div className="mx-auto">
         <ClerkLoading>
           <LoadingState />

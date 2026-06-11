@@ -15,7 +15,6 @@ import { errorBoundary } from "./middleware/errorBoundary.js"
 import { setupSwagger } from "./config/swagger.js"
 
 export const app: Express = express()
-export const app: Express = express()
 
 // CORS — in production, restrict to known origins via ALLOWED_ORIGINS env var
 const rawOrigins = process.env.ALLOWED_ORIGINS

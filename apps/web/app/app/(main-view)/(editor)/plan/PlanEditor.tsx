@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { format } from "date-fns"
-import { ListTodoIcon } from "lucide-react"
+import { CloudCheckIcon, ListTodoIcon, Loader2 } from "lucide-react"
 import { NavActions } from "@/components/nav-actions"
 import {
   Breadcrumb,
@@ -20,6 +20,7 @@ import TaskList from "./TaskList"
 import { ScrollArea } from "@workspace/ui/components/scroll-area"
 import { AiPlannerIcon } from "@/components/icons"
 import {
+  deletePlan,
   getPlan,
   savePlan,
   type SavedPlan,
@@ -28,8 +29,17 @@ import {
 import { markPlanOpened } from "@/lib/plans/recently-opened-plans"
 import { AI_PLAN_REWRITE_EVENT } from "@/lib/plans/ai-plan-tools"
 import { RedirectToSignIn, Show } from "@clerk/nextjs"
-import { buildAskHref } from "@/lib/routing/ask-url"
-import { useRouter } from "next/router"
+import { useRouter, useSearchParams } from "next/navigation"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@workspace/ui/components/popover"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip"
 
 type PlanEditorProps = {
   planId: string
@@ -150,8 +160,9 @@ function PlanEditorLoadingState({ state }: { state: string }) {
 }
 
 export default function PlanEditor({ planId }: PlanEditorProps) {
-  const { state } = useSidebar()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const { state } = useSidebar()
   const [persisted, setPersisted] = React.useState<EditorTask[]>([])
   const [persistedPlan, setPersistedPlan] =
     React.useState<EditorPlan>(createEmptyPlan)
@@ -163,6 +174,9 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
   const [isHydrated, setIsHydrated] = React.useState(false)
   const [isPlanLoaded, setIsPlanLoaded] = React.useState(false)
   const [saveRevision, setSaveRevision] = React.useState(0)
+  // Blocks the debounced autosave once deletion starts — an in-flight save
+  // would otherwise recreate the plan (upsert clears deletedAt).
+  const isDeletingPlanRef = React.useRef(false)
 
   const applySavedPlan = React.useCallback((savedPlan: SavedPlan | null) => {
     if (!savedPlan) {
@@ -244,6 +258,10 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
     }
 
     const timeoutId = window.setTimeout(() => {
+      if (isDeletingPlanRef.current) {
+        return
+      }
+
       const updatedAt = new Date().toISOString()
       const plan: SavedPlan = {
         id: planId,
@@ -394,6 +412,46 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
     }
   }, [persisted])
 
+  const isAiPanelOpen = searchParams.get("ai") === "1"
+  const searchParamsString = searchParams.toString()
+
+  const toggleAiPlanner = React.useCallback(() => {
+    const nextParams = new URLSearchParams(searchParamsString)
+
+    nextParams.set("id", planId)
+
+    if (isAiPanelOpen) {
+      nextParams.delete("ai")
+    } else {
+      nextParams.set("ai", "1")
+    }
+
+    router.push(`/app/plan?${nextParams.toString()}`)
+  }, [isAiPanelOpen, planId, router, searchParamsString])
+
+  const handleDeletePlan = React.useCallback(async () => {
+    const planTitle = persistedPlan.savedTitle.trim() || "Untitled Plan"
+    const action = hasSavedPlan ? "Delete" : "Discard"
+    const shouldDelete = window.confirm(`${action} "${planTitle}"?`)
+
+    if (!shouldDelete) {
+      return
+    }
+
+    isDeletingPlanRef.current = true
+
+    try {
+      if (hasSavedPlan) {
+        await deletePlan(planId)
+      }
+
+      router.push("/app/plans")
+    } catch {
+      isDeletingPlanRef.current = false
+      window.alert("Could not delete this plan. Try again in a moment.")
+    }
+  }, [hasSavedPlan, persistedPlan.savedTitle, planId, router])
+
   if (!isPlanLoaded) {
     return <PlanEditorLoadingState state={state} />
   }
@@ -426,18 +484,33 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
             </div>
             <div className="ml-auto flex items-center gap-4 px-3">
               {isHydrated && (
-                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                  {lastSavedAt
-                    ? `Saved at ${format(lastSavedAt, "HH:mm:ss")}`
-                    : "Not saved yet"}
-                </div>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <CloudCheckIcon className="size-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <span>
+                      {lastSavedAt
+                        ? `Saved at ${format(lastSavedAt, "HH:mm:ss")}`
+                        : "Not saved yet"}
+                    </span>
+                  </TooltipContent>
+                </Tooltip>
               )}
 
-              <Button>
+              <Button
+                variant={isAiPanelOpen ? "secondary" : "default"}
+                aria-pressed={isAiPanelOpen}
+                size="sm"
+                onClick={toggleAiPlanner}
+              >
                 <AiPlannerIcon data-icon="align-start" /> AI Planner
               </Button>
 
-              <NavActions />
+              <NavActions
+                copyUrl={`/app/plan?id=${encodeURIComponent(planId)}`}
+                onDelete={handleDeletePlan}
+              />
 
               <Show when="signed-out">
                 <RedirectToSignIn />
@@ -495,7 +568,7 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
                   <p className="mb-1 text-xs text-muted-foreground">
                     Get started with
                   </p>
-                  <Button variant="secondary" onClick={() => {}}>
+                  <Button variant="secondary" onClick={toggleAiPlanner}>
                     <AiPlannerIcon />
                     AI Planner
                   </Button>

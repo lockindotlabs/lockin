@@ -13,7 +13,7 @@ import {
   Loader2Icon,
 } from "lucide-react"
 import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 import { buttonVariants } from "@workspace/ui/components/button"
 import { cn } from "@workspace/ui/lib/utils"
@@ -395,9 +395,15 @@ export function PlanAssistantTools({
   ensureChatId?: () => Promise<string>
 } = {}) {
   const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
-  const activePlanId = searchParams.get("p")
-  const urlChatSessionId = searchParams.get("id") ?? searchParams.get("t")
+  const activePlanId =
+    searchParams.get("p") ??
+    (pathname === "/app/plan" ? searchParams.get("id") : null)
+  const urlChatSessionId =
+    pathname === "/app/ask"
+      ? searchParams.get("id") ?? searchParams.get("t")
+      : searchParams.get("chatSessionId") ?? searchParams.get("t")
   const chatSessionId = propChatSessionId ?? urlChatSessionId
 
   const createPlanTool = React.useMemo(

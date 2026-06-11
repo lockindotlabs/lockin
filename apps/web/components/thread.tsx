@@ -5,6 +5,11 @@ import {
 } from "@/components/attachment"
 import { MarkdownText } from "@/components/markdown-text"
 import {
+  MentionChips,
+  MentionComposerRoot,
+  MentionTextPart,
+} from "@/components/mention-composer"
+import {
   Reasoning,
   ReasoningContent,
   ReasoningRoot,
@@ -47,14 +52,18 @@ import {
   MoreHorizontalIcon,
   PencilIcon,
   RefreshCwIcon,
+  SearchIcon,
   SparkleIcon,
   SquareIcon,
 } from "lucide-react"
-import { useState, type FC } from "react"
+import { useEffect, useMemo, useState, type FC } from "react"
 import { ModelSelector, type ModelOption } from "./model-selector"
 import GeminiLogo from "./logo-gemini"
 import { ContextDisplay } from "./context-display"
 import { CapabilitiesSelector } from "./capabilities-selector"
+import { getMentionKey, type MentionRef } from "@/lib/mentions/mention-types"
+import { motion } from "motion/react"
+import { AiPlannerIcon } from "./icons"
 
 type ThreadModelOption = ModelOption & {
   contextWindow: number
@@ -95,9 +104,10 @@ const ToolsDropdown = () => {
   return <></>
 }
 
-export const Thread: FC<{ mode?: "onboarding" | "plan" }> = ({
-  mode = "onboarding",
-}) => {
+export const Thread: FC<{
+  mode?: "onboarding" | "plan"
+  initialMentions?: MentionRef[]
+}> = ({ mode = "onboarding", initialMentions }) => {
   const [selectedModelId, setSelectedModelId] = useState(DEFAULT_MODEL_ID)
   const [selectedCapabilityId, setSelectedCapabilityId] = useState<
     string | undefined
@@ -127,12 +137,20 @@ export const Thread: FC<{ mode?: "onboarding" | "plan" }> = ({
       >
         <div
           className={cn(
-            "mx-auto my-auto flex w-full max-w-(--thread-max-width) flex-col px-4 md:px-6",
-            !isEmpty && "flex-1"
+            "mx-auto flex w-full max-w-(--thread-max-width) flex-col px-4 md:px-6",
+            !isEmpty && "flex-1",
+            mode === "plan" ? "mt-auto" : "my-auto"
           )}
         >
           <AuiIf condition={(s) => s.thread.isEmpty}>
-            <ThreadWelcome />
+            {mode === "plan" ? (
+              <>
+                <ThreadPlanWelcome />
+                <ThreadSuggestions mode={mode} />
+              </>
+            ) : (
+              <ThreadWelcome />
+            )}
           </AuiIf>
 
           <div
@@ -148,6 +166,7 @@ export const Thread: FC<{ mode?: "onboarding" | "plan" }> = ({
             <ThreadScrollToBottom />
             <Composer
               mode={mode}
+              initialMentions={initialMentions}
               selectedModelId={selectedModelId}
               onSelectedModelChange={setSelectedModelId}
               selectedCapabilityId={selectedCapabilityId}
@@ -155,7 +174,7 @@ export const Thread: FC<{ mode?: "onboarding" | "plan" }> = ({
             />
           </ThreadPrimitive.ViewportFooter>
           <AuiIf condition={(s) => s.thread.isEmpty}>
-            <ThreadSuggestions />
+            {mode === "onboarding" && <ThreadSuggestions />}
           </AuiIf>
         </div>
       </ThreadPrimitive.Viewport>
@@ -206,9 +225,34 @@ const ThreadWelcome: FC = () => {
   )
 }
 
-const ThreadSuggestions: FC = () => {
+const ThreadPlanWelcome: FC = () => {
   return (
-    <div className="aui-thread-welcome-suggestions grid w-full gap-2 pb-4 @md:flex @md:flex-wrap @md:justify-center">
+    <div className="aui-thread-plan-welcome-root mx-auto my-auto flex w-full grow flex-col justify-center">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.3, ease: "easeOut" }}
+        className="aui-thread-plan-welcome-icon mb-4"
+      >
+        <AiPlannerIcon />
+      </motion.div>
+      <h1 className="aui-thread-plan-welcome-title mb-4 font-medium tracking-normal text-foreground">
+        How can I help with your plan?
+      </h1>
+    </div>
+  )
+}
+
+const ThreadSuggestions: FC<{
+  mode?: "onboarding" | "plan"
+}> = ({ mode = "onboarding" }) => {
+  return (
+    <div
+      className={cn(
+        "aui-thread-welcome-suggestions w-full gap-2 pb-4",
+        mode === "plan" ? "grid" : "flex flex-wrap justify-center"
+      )}
+    >
       <ThreadPrimitive.Suggestions>
         {() => <ThreadSuggestionItem />}
       </ThreadPrimitive.Suggestions>
@@ -237,47 +281,110 @@ const ThreadSuggestionItem: FC = () => {
 
 const Composer: FC<{
   mode?: "onboarding" | "plan"
+  initialMentions?: MentionRef[]
   selectedModelId: string
   onSelectedModelChange: (value: string) => void
   selectedCapabilityId: string | undefined
   onSelectedCapabilityChange: (value: string | undefined) => void
 }> = ({
   mode = "onboarding",
+  initialMentions = [],
   selectedModelId,
   onSelectedModelChange,
   selectedCapabilityId,
   onSelectedCapabilityChange,
 }) => {
-  return (
-    <ComposerPrimitive.Root className="aui-composer-root relative flex w-full flex-col">
-      <ComposerPrimitive.AttachmentDropzone
-        render={
-          <div
-            data-slot="aui_composer-shell"
-            className="flex w-full flex-col gap-2 rounded-(--composer-radius) border bg-background p-(--composer-padding) transition-shadow focus-within:border-ring/75 focus-within:ring-2 focus-within:ring-ring/20 data-[dragging=true]:border-dashed data-[dragging=true]:border-ring data-[dragging=true]:bg-accent/50"
-          />
+  const [mentions, setMentions] = useState<MentionRef[]>(initialMentions)
+  const initialMentionSignature = useMemo(
+    () =>
+      initialMentions
+        .map((mention) => `${getMentionKey(mention)}:${mention.label}`)
+        .join("|"),
+    [initialMentions]
+  )
+
+  useEffect(() => {
+    if (initialMentions.length === 0) {
+      return
+    }
+
+    setMentions((currentMentions) => {
+      const initialMentionsByKey = new Map(
+        initialMentions.map((mention) => [getMentionKey(mention), mention])
+      )
+      const existingKeys = new Set(currentMentions.map(getMentionKey))
+      let didChange = false
+      const nextMentions = currentMentions.map((currentMention) => {
+        const initialMention = initialMentionsByKey.get(
+          getMentionKey(currentMention)
+        )
+
+        if (!initialMention || initialMention.label === currentMention.label) {
+          return currentMention
         }
-      >
-        <ComposerAttachments />
-        <ComposerPrimitive.Input
-          placeholder={
-            mode === "plan"
-              ? "Adjust this plan with AI..."
-              : "What do you need to get done?"
+
+        didChange = true
+        return initialMention
+      })
+
+      for (const mention of initialMentions) {
+        if (!existingKeys.has(getMentionKey(mention))) {
+          nextMentions.push(mention)
+          didChange = true
+        }
+      }
+
+      return didChange ? nextMentions : currentMentions
+    })
+  }, [initialMentionSignature, initialMentions])
+
+  const removeMention = (mention: MentionRef) => {
+    setMentions((currentMentions) =>
+      currentMentions.filter(
+        (currentMention) =>
+          currentMention.type !== mention.type ||
+          currentMention.id !== mention.id
+      )
+    )
+  }
+
+  return (
+    <MentionComposerRoot
+      mentions={mentions}
+      resetMentions={initialMentions}
+      setMentions={setMentions}
+    >
+      <ComposerPrimitive.Root className="aui-composer-root relative flex w-full flex-col">
+        <ComposerPrimitive.AttachmentDropzone
+          render={
+            <div
+              data-slot="aui_composer-shell"
+              className="flex w-full flex-col gap-2 rounded-(--composer-radius) border bg-background p-(--composer-padding) transition-shadow focus-within:border-ring/75 focus-within:ring-2 focus-within:ring-ring/20 data-[dragging=true]:border-dashed data-[dragging=true]:border-ring data-[dragging=true]:bg-accent/50"
+            />
           }
-          className="aui-composer-input max-h-32 min-h-10 w-full resize-none bg-transparent px-1.75 py-1 text-sm outline-none placeholder:text-muted-foreground/80"
-          rows={1}
-          autoFocus
-          aria-label="Message input"
-        />
-        <ComposerAction
-          selectedModelId={selectedModelId}
-          onSelectedModelChange={onSelectedModelChange}
-          selectedCapabilityId={selectedCapabilityId}
-          onSelectedCapabilityChange={onSelectedCapabilityChange}
-        />
-      </ComposerPrimitive.AttachmentDropzone>
-    </ComposerPrimitive.Root>
+        >
+          <ComposerAttachments />
+          <MentionChips mentions={mentions} onRemove={removeMention} />
+          <ComposerPrimitive.Input
+            placeholder={
+              mode === "plan"
+                ? "Adjust this plan with AI..."
+                : "What do you need to get done?"
+            }
+            className="aui-composer-input max-h-32 min-h-10 w-full resize-none bg-transparent px-1.75 py-1 text-sm outline-none placeholder:text-muted-foreground/80"
+            rows={1}
+            autoFocus
+            aria-label="Message input"
+          />
+          <ComposerAction
+            selectedModelId={selectedModelId}
+            onSelectedModelChange={onSelectedModelChange}
+            selectedCapabilityId={selectedCapabilityId}
+            onSelectedCapabilityChange={onSelectedCapabilityChange}
+          />
+        </ComposerPrimitive.AttachmentDropzone>
+      </ComposerPrimitive.Root>
+    </MentionComposerRoot>
   )
 }
 
@@ -398,7 +505,7 @@ const AssistantMessage: FC = () => {
                 const running = part.status.type === "running"
                 return (
                   <ReasoningRoot defaultOpen={running} variant="ghost">
-                    <ReasoningTrigger active={running} />
+                    <ReasoningTrigger />
                     <ReasoningContent aria-busy={running}>
                       <ReasoningText>{children}</ReasoningText>
                     </ReasoningContent>
@@ -521,7 +628,7 @@ const UserMessage: FC = () => {
 
       <div className="aui-user-message-content-wrapper relative col-start-2 min-w-0">
         <div className="aui-user-message-content peer rounded-2xl bg-muted px-3 py-2 wrap-break-word text-foreground empty:hidden">
-          <MessagePrimitive.Parts />
+          <MessagePrimitive.Parts components={{ Text: MentionTextPart }} />
         </div>
         <div className="aui-user-action-bar-wrapper absolute start-0 top-1/2 -translate-x-full -translate-y-1/2 pe-2 peer-empty:hidden rtl:translate-x-full">
           <UserActionBar />

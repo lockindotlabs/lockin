@@ -17,6 +17,8 @@ import {
   saveChatMessages,
 } from "@/lib/server/chat-store"
 import { getCurrentDbUser } from "@/lib/server/current-db-user"
+import { resolveMentionContext } from "@/lib/server/mention-context"
+import type { MentionRef } from "@/lib/mentions/mention-types"
 import prisma from "@workspace/db"
 
 export const maxDuration = 30
@@ -562,6 +564,7 @@ After rewriteActivePlan succeeds, always send a text message. If the tool result
 type ChatConfig = {
   modelName?: string
   capabilities?: string[]
+  mentions?: MentionRef[]
 }
 
 const DEFAULT_MODEL_NAME = "gemini-3.1-flash-lite-preview"
@@ -731,6 +734,11 @@ export async function POST(req: Request) {
   const validatedMessages = await validateUIMessages({
     messages: removePendingToolCalls(submittedMessages),
   })
+  const mentionContext = await resolveMentionContext({
+    userId: user.id,
+    requestChatId: id,
+    mentions: config?.mentions,
+  })
 
   try {
     await prisma.chat.update({
@@ -755,6 +763,7 @@ export async function POST(req: Request) {
 Use webSearch for current information, source-sensitive claims, external factual questions, or anything that may have changed recently.
 When using webSearch, ground the answer in the search results and include relevant source links when available.`
           : undefined,
+        mentionContext,
         TOOL_BEHAVIOR_INSTRUCTIONS,
       ]
         .filter(Boolean)

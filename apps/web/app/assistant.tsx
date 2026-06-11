@@ -22,6 +22,7 @@ import {
 } from "@/lib/chat/local-chat-persistence"
 import { PlanAssistantTools } from "@/lib/plans/ai-plan-tools"
 import { DevToolsFrame } from "@assistant-ui/react-devtools"
+import type { MentionRef } from "@/lib/mentions/mention-types"
 
 export function Assistant({
   mode = "onboarding",
@@ -30,6 +31,7 @@ export function Assistant({
   ensureChatId,
   initialMessages: persistedMessages,
   initialPrompt,
+  initialMentions,
 }: {
   mode?: "onboarding" | "plan"
   sessionKey: string
@@ -37,6 +39,7 @@ export function Assistant({
   ensureChatId?: () => Promise<string>
   initialMessages?: UIMessage[]
   initialPrompt?: string
+  initialMentions?: MentionRef[]
 }) {
   const chatIdRef = useRef(chatId)
   const ensureChatIdRef = useRef(ensureChatId)
@@ -125,7 +128,7 @@ export function Assistant({
       />
       <AskChoiceTool />
       <WebSearchAssistantToolUI />
-      <Thread mode={mode} />
+      <Thread mode={mode} initialMentions={initialMentions} />
       {/* <DevToolsFrame className="min-h-200 w-full" /> */}
     </AssistantRuntimeProvider>
   )

@@ -27,7 +27,13 @@ export async function getAdminAccess() {
 }
 
 export async function assertAdminPageAccess() {
-  const { isAdmin } = await getAdminAccess()
+  const { userId, redirectToSignIn } = await auth()
+
+  if (!userId) {
+    redirectToSignIn()
+  }
+
+  const isAdmin = isAdminUserId(userId)
 
   if (!isAdmin) {
     redirect("/app")

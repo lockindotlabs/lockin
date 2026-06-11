@@ -63,6 +63,15 @@ function sumEstimatedMinutes(steps: PlanStepInput[]) {
   return steps.reduce((total, step) => total + step.durationMinutes, 0)
 }
 
+function isUniqueConstraintError(error: unknown) {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: unknown }).code === "P2002"
+  )
+}
+
 export function serializePlan(plan: StoredPlan) {
   return {
     id: plan.id,
@@ -122,15 +131,6 @@ export async function listOwnedPlans(userId: string) {
 }
 
 export async function upsertOwnedPlan(userId: string, input: PlanInput) {
-  const existing = await prisma.plan.findUnique({
-    where: { id: input.id },
-    select: { userId: true },
-  })
-
-  if (existing && existing.userId !== userId) {
-    return null
-  }
-
   const totalEstimatedMinutes = sumEstimatedMinutes(input.tasks)
   const steps = input.tasks.map((step, order) => ({
     id: step.id,
@@ -143,50 +143,72 @@ export async function upsertOwnedPlan(userId: string, input: PlanInput) {
     order,
   }))
 
-  return prisma.$transaction(async (tx) => {
-    const plan = existing
-      ? await tx.plan.update({
-          where: { id: input.id },
-          data: {
-            name: input.title,
-            description: input.description || null,
-            completion: input.completion || null,
-            totalEstimatedMinutes,
-            ...(input.source ? { source: input.source } : {}),
-            ...(input.aiMode ? { aiMode: input.aiMode } : {}),
-            ...(input.breakdownIntensity
-              ? { breakdownIntensity: input.breakdownIntensity }
-              : {}),
-            deletedAt: null,
-          },
-        })
-      : await tx.plan.create({
-          data: {
-            id: input.id,
-            userId,
-            name: input.title,
-            description: input.description || null,
-            completion: input.completion || null,
-            totalEstimatedMinutes,
-            source: input.source ?? "MANUAL",
-            aiMode: input.aiMode ?? "MANUAL",
-            breakdownIntensity: input.breakdownIntensity ?? "NORMAL",
-          },
-        })
-
-    await tx.planStep.deleteMany({ where: { planId: plan.id } })
-
-    if (steps.length > 0) {
-      await tx.planStep.createMany({
-        data: steps.map((step) => ({ ...step, planId: plan.id })),
+  const writePlan = () =>
+    prisma.$transaction(async (tx) => {
+      const existing = await tx.plan.findUnique({
+        where: { id: input.id },
+        select: { userId: true },
       })
+
+      if (existing && existing.userId !== userId) {
+        return null
+      }
+
+      const plan = await tx.plan.upsert({
+        where: { id: input.id },
+        update: {
+          name: input.title,
+          description: input.description || null,
+          completion: input.completion || null,
+          totalEstimatedMinutes,
+          ...(input.source ? { source: input.source } : {}),
+          ...(input.aiMode ? { aiMode: input.aiMode } : {}),
+          ...(input.breakdownIntensity
+            ? { breakdownIntensity: input.breakdownIntensity }
+            : {}),
+          deletedAt: null,
+        },
+        create: {
+          id: input.id,
+          userId,
+          name: input.title,
+          description: input.description || null,
+          completion: input.completion || null,
+          totalEstimatedMinutes,
+          source: input.source ?? "MANUAL",
+          aiMode: input.aiMode ?? "MANUAL",
+          breakdownIntensity: input.breakdownIntensity ?? "NORMAL",
+        },
+      })
+
+      if (plan.userId !== userId) {
+        return null
+      }
+
+      await tx.planStep.deleteMany({ where: { planId: plan.id } })
+
+      if (steps.length > 0) {
+        await tx.planStep.createMany({
+          data: steps.map((step) => ({ ...step, planId: plan.id })),
+          skipDuplicates: true,
+        })
+      }
+
+      return tx.plan.findFirstOrThrow({
+        where: { id: plan.id, userId, deletedAt: null },
+        include: { steps: { orderBy: { order: "asc" } } },
+      })
+    })
+
+  try {
+    return await writePlan()
+  } catch (error) {
+    if (isUniqueConstraintError(error)) {
+      return writePlan()
     }
 
-    return tx.plan.findFirstOrThrow({
-      where: { id: plan.id, userId, deletedAt: null },
-      include: { steps: { orderBy: { order: "asc" } } },
-    })
-  })
+    throw error
+  }
 }
 
 export async function updateOwnedPlan(

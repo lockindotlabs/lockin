@@ -53,11 +53,11 @@ F0 Đăng nhập & kết nối extension
 |---|------|------------------|---------------------------|
 | 1 | Sidebar → "New Plan" | Điều hướng tới `/app/plan`, editor Tiptap trống hiện ra | — |
 | 2 | Gõ tiêu đề + nội dung kế hoạch | Nội dung hiện đúng, không giật/mất ký tự | — |
-| 3 | Đợi ~1-2s sau khi gõ (debounce auto-save) | Mở Network tab → thấy **đúng 1 lần** `POST /api/plans` (KHÔNG bị gọi 2 lần) | 🔴 **Race condition đã từng gặp**: gọi `POST` 2 lần tạo 2 plan trùng. Guard `isCreatingOnServerRef` phải chặn được — nếu thấy 2 request POST gần như đồng thời → regression! |
-| 4 | Reload trang `/app/plan/<id>` | Nội dung load lại đúng từ server (qua `serverId`), không mất dữ liệu | Đây chính là luồng "Tiptap → API save" từng bị nghi ngờ mất dữ liệu — kiểm kỹ |
+| 3 | Đợi ~1-2s sau khi gõ (debounce auto-save) | Same-origin `POST /api/plans` upsert thành **đúng 1** `Plan` row canonical cho `plan.id` | 🔴 **Race condition đã từng gặp**: web editor từng ghi thêm bản sao qua Express `/api/plans`. Nếu DB có 2 non-deleted `Plan` rows cho 1 user action → regression! |
+| 4 | Reload trang `/app/plan/<id>` | Nội dung load lại đúng từ same-origin `/api/plans/<id>`, không mất dữ liệu | `plan.id` là DB `Plan.id`; không còn `serverId` local/server mapping |
 | 5 | Bấm "Ask AI" / nhờ AI chia nhỏ kế hoạch | AI trả về danh sách bước (PlanStep) với `estimatedMinutes`, hiện trong editor | Nếu lỗi → kiểm tra `ai-plan-tools.tsx` (vừa có thay đổi `chatSessionId`/`ensureChatId` chưa commit) |
 | 6 | Sidebar → "Recent plans" | Plan vừa tạo xuất hiện đầu danh sách, tên đúng | — |
-| 7 | Sửa nội dung → đợi auto-save → reload lại | `PATCH /api/plans/:id` được gọi, nội dung mới persist đúng | — |
+| 7 | Sửa nội dung → đợi auto-save → reload lại | `POST /api/plans` upsert cùng `plan.id`, nội dung mới persist đúng | — |
 
 ✅ Pass khi: tạo/sửa plan không tạo trùng, reload không mất dữ liệu, AI breakdown sinh step đúng.
 
@@ -150,7 +150,7 @@ Phần thủ công (Extension ↔ Web): xem mục B & C trong `SETTINGS_SYNC_BLA
 
 Dựa trên các lỗi đã từng phát sinh trong dự án — ưu tiên test kỹ các điểm này trước:
 
-1. **Race condition tạo Plan trùng** (F1.3) — đã có guard `isCreatingOnServerRef`, nhưng cần verify lại bằng Network tab, gõ nhanh liên tục để thử "đánh sập" guard.
+1. **Plan trùng do dual-write** (F1.3) — verify same-origin `/api/plans` là đường ghi duy nhất của web editor/Ask AI; không được có request web nào gọi Express `/api/plans` để tạo bản sao.
 2. **`overtimeDuration` trong FocusSession** (F3.6c) — field này từng bị rớt khỏi DB do team đổi database; migration đã re-apply, **cần xác nhận lại bằng test thực tế** chứ không chỉ nhìn schema.
 3. **Cột UserSettings extension fields** (F5) — tương tự, vừa bị mất rồi khôi phục — chạy `settings-sync.blackbox.sh` để xác nhận chắc chắn.
 4. **Tiptap save → API** (F1.4) — từng được đánh giá là "critical, có nguy cơ mất dữ liệu" — test kỹ flow reload trang giữa chừng khi đang gõ.
@@ -163,7 +163,7 @@ Dựa trên các lỗi đã từng phát sinh trong dự án — ưu tiên test 
 | Luồng | Kết quả | Ghi chú |
 |---|---|---|
 | F0 — Đăng nhập & kết nối | ✅ PASS | Login Clerk OK, `syncUser` 200, `/api/plans` `/api/chats` trả 200. |
-| F1 — Tạo/sửa Plan | ✅ **FIXED** (đã sửa code, sẵn sàng re-verify live) | **Nguyên nhân (đã xác nhận)**: React Strict Mode double-invoke effect → 2 instance `PlanEditor` song song, mỗi instance có `useRef` guard (`serverIdRef`, `isCreatingOnServerRef`) **riêng**, không chặn được race xuyên-instance → tạo Plan trùng/Plan ma. **Đã sửa** trong `PlanEditor.tsx`: chuyển 2 guard từ per-instance `useRef` sang `Map` ở **module-level** (`serverIdByPlanId`, `creatingOnServerByPlanId`), keyed theo `planId`, khai báo ngoài component nên persist xuyên mount/unmount và **chia sẻ chung** giữa mọi instance cùng `planId` — đóng cửa sổ race. Pure client-side, zero DB risk, không cần migration. Đã dọn dữ liệu test cũ (xoá 2 plan trùng/ma), còn lại 1 plan sạch. **Cần làm tiếp**: re-verify live qua Network tab (gõ nhanh liên tục, kỳ vọng chỉ **đúng 1 lần** `POST /api/plans`). |
+| F1 — Tạo/sửa Plan | ✅ **FIXED** (cần re-verify live sau deploy) | **Root cause mới nhất**: web editor/Ask AI đã lưu qua same-origin `/api/plans`, sau đó helper `plan-api.ts` lại fire-and-forget sang Express `/api/plans`, tạo `Plan` row thứ hai với ID khác và không có `PlanStep`. **Fix**: xóa đường sync Express khỏi web plan flow, bỏ `serverId`, dùng `plan.id` làm DB ID canonical, và harden `upsertOwnedPlan` cho duplicate POST cùng ID. Cleanup dữ liệu cũ chạy bằng `corepack pnpm --filter api cleanup:duplicate-plans` để dry-run, thêm `-- --apply` sau khi review candidate IDs. |
 | F2 — Focus Hub setup | ✅ PASS | Hiện đúng "Due Today", chọn step + 15m → `POST /api/focus-sessions => 201` (đúng 1 lần, không trùng), điều hướng mượt sang session screen. |
 | F3 — Focus Session | ✅ PASS | Timer chạy đúng, Pause giữ nguyên elapsed (14:42→14:38 paused→Resume tiếp tục đúng không nhảy số), tick step chuyển "All done — End Sprint", `PATCH .../end` trả `completionType:"NORMAL"`. **Xác nhận `overtimeDuration` round-trip đúng** (request gửi `overtimeDuration:0`, lưu thành công — field đã được khôi phục đúng sau migration). `tasksSnapshot` đúng format `{id,done,status,title,durationMinutes}`. |
 | F4 — Hậu kỳ | ✅ **FIXED & VERIFIED** | **Nguyên nhân (đã xác nhận)**: `PATCH /api/focus-sessions/:id/end` gọi `prisma.task.updateMany({ where: { id: t.id! }, ... })` — nhưng `tasksSnapshot[].id` chứa **PlanStep ID** (model `Task` thuộc tính năng Sprint/Pomodoro riêng biệt, không liên quan `Plan`/Focus). Update khớp 0 dòng (silent no-op, không throw lỗi) ⇒ `PlanStep.status` luôn kẹt ở `"TODO"`. **Đã sửa** trong `focus-session.controller.ts`: đổi sang `prisma.planStep.updateMany({ where: { id: t.id!, planId }, data: { status } })`, bọc trong `$transaction`, có comment giải thích rõ nguyên nhân để tránh tái phạm. Pure code fix, không cần migration, đã deploy cùng restart API. |
@@ -176,6 +176,6 @@ Theo chỉ đạo "fix toàn bộ theo trình tự an toàn nhất" — thứ t�
 
 1. **[MEDIUM → ✅ FIXED] PlanStep không cập nhật `DONE` sau khi kết thúc Sprint** (F4) — sửa `prisma.task.updateMany` → `prisma.planStep.updateMany` trong `focus-session.controller.ts`. Pure code fix, zero DB risk, không cần migration.
 2. **[HIGH → ✅ FIXED, 9/9 PASS] Settings sync 500 error** (F5) — thêm 8 field Phase-2 vào `apps/api/prisma/schema.prisma`, đồng bộ lại `packages/db/src/generated/prisma` (người dùng tự thực hiện thao tác ghi đè thư mục git-committed dùng chung qua PowerShell), restart API. Re-test live xác nhận 9/9 test case PASS.
-3. **[CRITICAL → ✅ FIXED, sẵn sàng re-verify] Race condition tạo Plan trùng** (F1) — chuyển guard `serverIdRef`/`isCreatingOnServerRef` từ per-instance `useRef` sang `Map` module-level (`serverIdByPlanId`, `creatingOnServerByPlanId`) keyed theo `planId`, chia sẻ xuyên React Strict Mode double-mount. Pure client-side fix, zero DB risk.
+3. **[CRITICAL → ✅ FIXED, cần re-verify] Dual-write tạo Plan trùng** (F1) — remove Express plan sync from web, remove `serverId`, and make same-origin `/api/plans` the only writer for manual and AI plan persistence.
 
 **Trạng thái tổng thể**: 6/6 luồng (F0–F5) đã PASS hoặc đã fix xong; F6 (Extension) chưa test live (cần Chrome thủ công, ngoài phạm vi Playwright headless). Không còn lỗi mở (open bug) nào trong phạm vi đã test.

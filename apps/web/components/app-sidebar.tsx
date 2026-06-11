@@ -2,6 +2,10 @@
 
 import * as React from "react"
 
+import {
+  AppSidebarSearchCommand,
+  type AppSidebarSearchNavItem,
+} from "@/components/app-sidebar-search-command"
 import { NavFavorites } from "@/components/nav-favorites"
 import { NavMain } from "@/components/nav-main"
 import {
@@ -10,28 +14,15 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
   SidebarTrigger,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
 import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@workspace/ui/components/command"
-import {
-  SearchIcon,
   HomeIcon,
   PlusIcon,
   ListCheckIcon,
-  MessageCircleIcon,
-  ListFilterIcon,
   GoalIcon,
   BarChart3Icon,
 } from "lucide-react"
@@ -47,15 +38,9 @@ import { LogoAccent } from "@workspace/ui/components/logo-accent"
 import { AiPlannerIcon } from "./icons"
 import { NavUser } from "./nav-user"
 import { Button } from "@workspace/ui/components/button"
-import { Kbd } from "@workspace/ui/components/kbd"
 import { useAdminAccess } from "@/lib/admin/use-admin-access"
 
-type NavItem = {
-  title: string
-  url: string
-  icon: React.ReactNode
-  isActive?: boolean
-}
+type NavItem = AppSidebarSearchNavItem
 
 function getPlanIdFromPath(pathname: string) {
   const match = pathname.match(/^\/app\/plan\/(.+)$/)
@@ -166,8 +151,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     }
   }
 
-  const [open, setOpen] = React.useState(false)
-
   return (
     <>
       {" "}
@@ -199,51 +182,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </Button>
           </SidebarMenuItem>
           <SidebarMenu>
-            <SidebarMenuButton onClick={() => setOpen(!open)}>
-              <SearchIcon data-icon="inline-start" />
-              Search
-            </SidebarMenuButton>
-            <CommandDialog open={open} onOpenChange={setOpen}>
-              <Command>
-                <CommandInput
-                  placeholder="Type a command or search..."
-                  sideButtons={
-                    <Button variant="ghost" size="icon-sm">
-                      <ListFilterIcon />
-                      <span className="sr-only">Filter</span>
-                    </Button>
-                  }
-                />
-                <CommandList>
-                  <CommandEmpty>No results found.</CommandEmpty>
-                  <CommandGroup className="mt-1">
-                    <div className="flex gap-2">
-                      <Button variant={"ghost"} size={"sm"}>
-                        <MessageCircleIcon />
-                        Chats
-                      </Button>
-                      <Button variant={"ghost"} size={"sm"}>
-                        <ListCheckIcon />
-                        Plan
-                      </Button>
-                    </div>
-                  </CommandGroup>
-                  <CommandGroup heading="Recommended">
-                    <CommandItem>Calendar1</CommandItem>
-                  </CommandGroup>
-                  <CommandGroup heading="Recent">
-                    <CommandItem>Calendar</CommandItem>
-                    <CommandItem>Search Emoji</CommandItem>
-                    <CommandItem>Calculator</CommandItem>
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-              <div className="px-3 py-2 text-xs text-muted-foreground">
-                <p className="text-xs text-muted-foreground">
-                  Use <Kbd>Ctrl + K</Kbd> to open the command palette
-                </p>
-              </div>
-            </CommandDialog>
+            <AppSidebarSearchCommand
+              navItems={navMain}
+              chats={chats}
+              areChatsLoaded={areChatsLoaded}
+              plans={plans}
+              arePlansLoaded={arePlansLoaded}
+              onCreatePlan={handleCreatePlan}
+            />
             <NavMain items={navMain} />
           </SidebarMenu>
         </SidebarHeader>

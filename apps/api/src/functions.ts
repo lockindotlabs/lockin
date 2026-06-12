@@ -1,15 +1,20 @@
 import { onRequest } from 'firebase-functions/v2/https'
 import { app } from './app.js'
 
-// Firebase CLI (Functions Gen 2) loads .env files from the deploy SOURCE directory
-// (firebase.json -> functions[0].source = "apps/api/dist"), not from apps/api/ itself.
-// The `build` script copies apps/api/.env -> dist/.env so these vars (Clerk keys,
-// DATABASE_URL, etc.) are uploaded as the function's environment at deploy time.
-export const api = onRequest(
-  {
-    region: 'asia-southeast1', // Singapore — closest to Vietnam
-    memory: '512MiB',
-    timeoutSeconds: 60,
-  },
-  app,
-)
+// Three named exports — one per environment. Each is deployed independently:
+//   master  → firebase deploy --only functions:api
+//   staging → firebase deploy --only functions:apiStaging
+//   dev     → firebase deploy --only functions:apiDev
+//
+// The build script (build / build:staging / build:dev) copies the matching
+// .env / .env.staging / .env.dev into dist/.env so each function gets its
+// own DB credentials, Clerk keys, and ALLOWED_ORIGINS at deploy time.
+const opts = {
+  region: 'asia-southeast1' as const,
+  memory: '512MiB' as const,
+  timeoutSeconds: 60,
+}
+
+export const api        = onRequest(opts, app)
+export const apiStaging = onRequest(opts, app)
+export const apiDev     = onRequest(opts, app)

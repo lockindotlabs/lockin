@@ -43,24 +43,29 @@ app.use(cookieParser())
 // Must be before express.json() — Clerk webhook needs raw body for signature verification
 app.use("/webhooks", webhookRouter)
 
-app.use(express.json())
+// clerkMiddleware only reads headers — safe to apply globally
 app.use(clerkMiddleware())
 
 setupSwagger(app)
+
+// express.json() is scoped to Express-owned routes only.
+// Applying it globally would consume the request body stream, preventing
+// Next.js route handlers (e.g. /api/chat streaming POST) from reading it.
+const jsonBody = express.json()
 
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true, service: "lockin-api" })
 })
 
-app.get("/api/me", requireAuth(), syncUser, (req, res) => {
+app.get("/api/me", jsonBody, requireAuth(), syncUser, (req, res) => {
   res.json(req.dbUser)
 })
 
-app.use("/api/auth/extension-tokens", authRouter)
-app.use("/api/settings", settingsRouter)
-app.use("/api/projects", projectRouter)
-app.use("/api/tasks", taskRouter)
-app.use("/api/focus-sessions", focusSessionRouter)
+app.use("/api/auth/extension-tokens", jsonBody, authRouter)
+app.use("/api/settings", jsonBody, settingsRouter)
+app.use("/api/projects", jsonBody, projectRouter)
+app.use("/api/tasks", jsonBody, taskRouter)
+app.use("/api/focus-sessions", jsonBody, focusSessionRouter)
 // /api/plans is intentionally omitted — handled by Next.js app/api/plans/route.ts
 
 app.use(errorBoundary)

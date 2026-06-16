@@ -5,7 +5,6 @@ import { clerkMiddleware } from "@clerk/express"
 import webhookRouter from "./modules/webhook/webhook.router.js"
 import authRouter from "./modules/auth/auth.router.js"
 import settingsRouter from "./modules/settings/settings.router.js"
-import planRouter from "./modules/plan/plan.router.js"
 import taskRouter from "./modules/task/task.router.js"
 import projectRouter from "./modules/project/project.router.js"
 import focusSessionRouter from "./modules/focus-session/focus-session.router.js"
@@ -60,8 +59,8 @@ app.get("/api/me", requireAuth(), syncUser, (req, res) => {
 app.use("/api/auth/extension-tokens", authRouter)
 app.use("/api/settings", settingsRouter)
 app.use("/api/projects", projectRouter)
-app.use("/api/plans", planRouter)
 app.use("/api/tasks", taskRouter)
 app.use("/api/focus-sessions", focusSessionRouter)
+// /api/plans is intentionally omitted — handled by Next.js app/api/plans/route.ts
 
 app.use(errorBoundary)

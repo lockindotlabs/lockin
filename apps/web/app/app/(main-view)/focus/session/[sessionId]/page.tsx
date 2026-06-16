@@ -437,6 +437,21 @@ export default function SessionPage() {
     setLastCompletedCount(count)
   }, [completedIds.size, lastCompletedCount, triggerFireworks])
 
+  // Sync tasks and remaining time to extension when completedIds changes
+  React.useEffect(() => {
+    if (!steps.length || loading) return
+    notifyExtensionTasksUpdated(
+      steps.map((step) => ({
+        id: step.id,
+        label: step.title,
+        done: completedIds.has(step.id),
+        durationMinutes: step.estimatedMinutes,
+      })),
+      remaining
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [completedIds])
+
   // Trigger overtime when timer hits 0
   React.useEffect(() => {
     if (remaining <= 0 && !overtime && session) {
@@ -525,18 +540,6 @@ export default function SessionPage() {
         [id]: elapsed,
       }))
     }
-
-    // Push updated task list + adjusted remaining to extension immediately
-    // remaining is computed from adjustedDuration so extension timer stays in sync
-    notifyExtensionTasksUpdated(
-      steps.map((step) => ({
-        id: step.id,
-        label: step.title,
-        done: newCompletedIds.has(step.id),
-        durationMinutes: step.estimatedMinutes,
-      })),
-      remaining
-    )
   }
 
   const handleEnd = async (

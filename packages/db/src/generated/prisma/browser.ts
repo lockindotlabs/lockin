@@ -72,3 +72,8 @@ export type PaymentOrder = Prisma.PaymentOrderModel
  * 
  */
 export type Sprint = Prisma.SprintModel
+/**
+ * Model AiUsage
+ * 
+ */
+export type AiUsage = Prisma.AiUsageModel

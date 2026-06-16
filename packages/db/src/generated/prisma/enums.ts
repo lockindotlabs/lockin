@@ -120,3 +120,13 @@ export const SprintStatus = {
 } as const
 
 export type SprintStatus = (typeof SprintStatus)[keyof typeof SprintStatus]
+
+
+export const AiUsageStatus = {
+  STARTED: 'STARTED',
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR',
+  BLOCKED: 'BLOCKED'
+} as const
+
+export type AiUsageStatus = (typeof AiUsageStatus)[keyof typeof AiUsageStatus]

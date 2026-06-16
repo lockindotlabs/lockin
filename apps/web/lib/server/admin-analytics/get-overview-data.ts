@@ -26,6 +26,10 @@ function createOverviewMetrics(input: {
   sessionCompletionRate: number
   successfulPayments: number
   totalUsers: number
+  aiRequests: number
+  aiCreditsUsed: number
+  quotaBlocks: number
+  failedGenerations: number
   rangeLabel: string
 }): MetricCardData[] {
   return [
@@ -76,6 +80,30 @@ function createOverviewMetrics(input: {
       value: formatMetricNumber(input.successfulPayments),
       description: "all-time paid orders",
       icon: "successfulPayments",
+    },
+    {
+      label: "AI Requests",
+      value: formatMetricNumber(input.aiRequests),
+      description: input.rangeLabel,
+      icon: "aiRequests",
+    },
+    {
+      label: "AI Credits Used",
+      value: formatMetricNumber(input.aiCreditsUsed),
+      description: input.rangeLabel,
+      icon: "aiPlans",
+    },
+    {
+      label: "Quota Blocks",
+      value: formatMetricNumber(input.quotaBlocks),
+      description: input.rangeLabel,
+      icon: "quota",
+    },
+    {
+      label: "Failed Generations",
+      value: formatMetricNumber(input.failedGenerations),
+      description: input.rangeLabel,
+      icon: "failedGenerations",
     },
   ]
 }
@@ -194,6 +222,10 @@ export async function getOverviewData(
     recentAiPlans,
     recentSprints,
     recentCompletedSteps,
+    aiRequests,
+    aiCreditsAggregate,
+    quotaBlocks,
+    failedGenerations,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.user.findMany({
@@ -360,6 +392,44 @@ export async function getOverviewData(
       },
       select: { updatedAt: true },
     }),
+    prisma.aiUsage.count({
+      where: {
+        createdAt: {
+          gte: range.start,
+          lte: range.end,
+        },
+      },
+    }),
+    prisma.aiUsage.aggregate({
+      where: {
+        status: "SUCCESS",
+        createdAt: {
+          gte: range.start,
+          lte: range.end,
+        },
+      },
+      _sum: {
+        creditsCharged: true,
+      },
+    }),
+    prisma.aiUsage.count({
+      where: {
+        status: "BLOCKED",
+        createdAt: {
+          gte: range.start,
+          lte: range.end,
+        },
+      },
+    }),
+    prisma.aiUsage.count({
+      where: {
+        status: "ERROR",
+        createdAt: {
+          gte: range.start,
+          lte: range.end,
+        },
+      },
+    }),
   ])
 
   const paidUsers = currentUsers.filter(
@@ -397,6 +467,10 @@ export async function getOverviewData(
       averageFocusDurationSeconds: averageFocusDuration._avg.duration ?? null,
       paidUsers,
       successfulPayments,
+      aiRequests,
+      aiCreditsUsed: aiCreditsAggregate._sum.creditsCharged ?? 0,
+      quotaBlocks,
+      failedGenerations,
       rangeLabel: range.label,
     }),
     funnelData: createFunnelSteps({

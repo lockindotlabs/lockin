@@ -61,7 +61,8 @@ export const ModelName = {
   Task: 'Task',
   FocusSession: 'FocusSession',
   PaymentOrder: 'PaymentOrder',
-  Sprint: 'Sprint'
+  Sprint: 'Sprint',
+  AiUsage: 'AiUsage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -261,6 +262,26 @@ export const SprintScalarFieldEnum = {
 } as const
 
 export type SprintScalarFieldEnum = (typeof SprintScalarFieldEnum)[keyof typeof SprintScalarFieldEnum]
+
+
+export const AiUsageScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  chatId: 'chatId',
+  requestId: 'requestId',
+  status: 'status',
+  modelName: 'modelName',
+  capabilities: 'capabilities',
+  promptTokens: 'promptTokens',
+  completionTokens: 'completionTokens',
+  totalTokens: 'totalTokens',
+  creditMultiplier: 'creditMultiplier',
+  creditsCharged: 'creditsCharged',
+  reason: 'reason',
+  createdAt: 'createdAt'
+} as const
+
+export type AiUsageScalarFieldEnum = (typeof AiUsageScalarFieldEnum)[keyof typeof AiUsageScalarFieldEnum]
 
 
 export const SortOrder = {

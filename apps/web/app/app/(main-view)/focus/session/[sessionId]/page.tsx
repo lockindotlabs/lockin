@@ -275,11 +275,24 @@ function EndSprintSummaryModal({
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 
-function useTimer(plannedDuration: number, paused: boolean, overtime: boolean) {
+function useTimer(
+  plannedDuration: number,
+  paused: boolean,
+  overtime: boolean,
+  startedAt: string | null
+) {
   const [elapsed, setElapsed] = React.useState(0)
   const startRef = React.useRef<number>(Date.now())
   const pausedSecsRef = React.useRef<number>(0)
   const pausedAtRef = React.useRef<number | null>(null)
+
+  // Sync startRef to server startedAt when session loads (persists across reloads)
+  React.useEffect(() => {
+    if (!startedAt) return
+    const ms = new Date(startedAt).getTime()
+    startRef.current = ms
+    setElapsed(Math.max(0, Math.floor((Date.now() - ms) / 1000) - pausedSecsRef.current))
+  }, [startedAt])
 
   React.useEffect(() => {
     if (paused) {
@@ -379,7 +392,8 @@ export default function SessionPage() {
   const { elapsed, remaining, isOvertime, pct } = useTimer(
     adjustedDuration,
     paused,
-    overtime
+    overtime,
+    session?.startedAt ?? null
   )
 
   const [lastCompletedCount, setLastCompletedCount] = React.useState(0)

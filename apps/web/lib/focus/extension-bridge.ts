@@ -94,3 +94,10 @@ export function notifyExtensionSessionPaused(sessionId: string) {
 export function notifyExtensionSessionResumed(sessionId: string) {
   notifyExtension({ type: "lockin-session-resume", sessionId })
 }
+
+/** Push updated task list to extension when user checks/unchecks a step. */
+export function notifyExtensionTasksUpdated(
+  tasks: Array<{ id?: string; label: string; done: boolean; durationMinutes?: number }>
+) {
+  notifyExtension({ type: "lockin-tasks-update", tasks })
+}

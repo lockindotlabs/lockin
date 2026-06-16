@@ -27,6 +27,7 @@ import {
   notifyExtensionSessionEnded,
   notifyExtensionSessionPaused,
   notifyExtensionSessionResumed,
+  notifyExtensionTasksUpdated,
 } from "@/lib/focus/extension-bridge"
 import Aurora from "@/components/Aurora"
 
@@ -505,31 +506,35 @@ export default function SessionPage() {
     const s = steps.find((step) => step.id === id)
     if (!s) return
 
-    const done = completedIds.has(id)
-    if (done) {
-      setCompletedIds((prev) => {
-        const next = new Set(prev)
-        next.delete(id)
-        return next
-      })
+    const wasDone = completedIds.has(id)
+    const newCompletedIds = new Set(completedIds)
 
+    if (wasDone) {
+      newCompletedIds.delete(id)
+      setCompletedIds(newCompletedIds)
       setTaskCheckTimes((prevTimes) => {
         const nextTimes = { ...prevTimes }
         delete nextTimes[id]
         return nextTimes
       })
     } else {
-      setCompletedIds((prev) => {
-        const next = new Set(prev)
-        next.add(id)
-        return next
-      })
-
+      newCompletedIds.add(id)
+      setCompletedIds(newCompletedIds)
       setTaskCheckTimes((prevTimes) => ({
         ...prevTimes,
         [id]: elapsed,
       }))
     }
+
+    // Push updated task list to extension immediately
+    notifyExtensionTasksUpdated(
+      steps.map((step) => ({
+        id: step.id,
+        label: step.title,
+        done: newCompletedIds.has(step.id),
+        durationMinutes: step.estimatedMinutes,
+      }))
+    )
   }
 
   const handleEnd = async (

@@ -95,9 +95,10 @@ export function notifyExtensionSessionResumed(sessionId: string) {
   notifyExtension({ type: "lockin-session-resume", sessionId })
 }
 
-/** Push updated task list to extension when user checks/unchecks a step. */
+/** Push updated task list + adjusted remaining time to extension when a step is toggled. */
 export function notifyExtensionTasksUpdated(
-  tasks: Array<{ id?: string; label: string; done: boolean; durationMinutes?: number }>
+  tasks: Array<{ id?: string; label: string; done: boolean; durationMinutes?: number }>,
+  remainingSeconds: number
 ) {
-  notifyExtension({ type: "lockin-tasks-update", tasks })
+  notifyExtension({ type: "lockin-tasks-update", tasks, remainingSeconds })
 }

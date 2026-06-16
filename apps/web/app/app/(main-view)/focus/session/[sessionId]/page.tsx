@@ -526,14 +526,16 @@ export default function SessionPage() {
       }))
     }
 
-    // Push updated task list to extension immediately
+    // Push updated task list + adjusted remaining to extension immediately
+    // remaining is computed from adjustedDuration so extension timer stays in sync
     notifyExtensionTasksUpdated(
       steps.map((step) => ({
         id: step.id,
         label: step.title,
         done: newCompletedIds.has(step.id),
         durationMinutes: step.estimatedMinutes,
-      }))
+      })),
+      remaining
     )
   }
 

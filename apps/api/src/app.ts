@@ -29,6 +29,8 @@ app.use(
     origin: (origin, callback) => {
       // Allow same-origin and no-origin requests (mobile, curl, server-to-server)
       if (!origin) return callback(null, true)
+      // Allow Chrome Extension origins
+      if (origin.startsWith("chrome-extension://")) return callback(null, true)
       // In dev or if no whitelist configured, allow all
       if (allowedOrigins.length === 0) return callback(null, true)
       if (allowedOrigins.includes(origin)) return callback(null, true)

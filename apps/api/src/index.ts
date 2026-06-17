@@ -13,7 +13,7 @@ const port = process.env.PORT || 3001
 // apps/api/src/ → ../../web = apps/web
 const webDir = join(__dirname, '../../web')
 
-const nextApp = next({ dev, dir: webDir })
+const nextApp = (next as any)({ dev, dir: webDir })
 const handle = nextApp.getRequestHandler()
 
 nextApp.prepare().then(() => {

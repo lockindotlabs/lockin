@@ -564,6 +564,64 @@ export default function SessionPage() {
     localStorage.setItem(`lockin:session:${sessionId}:paused`, String(paused))
   }, [paused, sessionId])
 
+  // Track elapsed in a ref so event listener doesn't need to re-bind
+  const elapsedRef = React.useRef(elapsed)
+  React.useEffect(() => {
+    elapsedRef.current = elapsed
+  }, [elapsed])
+
+  // Listen for task changes made inside the Chrome Extension
+  React.useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const handleExtensionSprintChanged = (e: Event) => {
+      const customEvent = e as CustomEvent
+      const extensionSprint = customEvent.detail?.sprint
+      if (!extensionSprint?.active) return
+
+      const extensionTasks = extensionSprint.tasks || []
+      const newCompletedIds = new Set<string>()
+
+      extensionTasks.forEach((t: { id?: string; done: boolean }) => {
+        if (t.id && t.done) {
+          newCompletedIds.add(t.id)
+        }
+      })
+
+      // Update completedIds with loop guard
+      setCompletedIds((prev) => {
+        const changed =
+          prev.size !== newCompletedIds.size ||
+          Array.from(prev).some((id) => !newCompletedIds.has(id))
+
+        if (changed) {
+          // Sync check times based on difference
+          setTaskCheckTimes((prevTimes) => {
+            const nextTimes = { ...prevTimes }
+            newCompletedIds.forEach((id) => {
+              if (!prev.has(id)) {
+                nextTimes[id] = elapsedRef.current
+              }
+            })
+            prev.forEach((id) => {
+              if (!newCompletedIds.has(id)) {
+                delete nextTimes[id]
+              }
+            })
+            return nextTimes
+          })
+          return newCompletedIds
+        }
+        return prev
+      })
+    }
+
+    window.addEventListener("lockin-extension-sprint-changed", handleExtensionSprintChanged)
+    return () => {
+      window.removeEventListener("lockin-extension-sprint-changed", handleExtensionSprintChanged)
+    }
+  }, [])
+
   // Add beforeunload exit warning when the sprint is active and loading is finished
   React.useEffect(() => {
     if (loading || ending) return

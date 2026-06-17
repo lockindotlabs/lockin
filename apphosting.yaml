@@ -1,9 +1,8 @@
 runConfig:
   runtime: nodejs22
-  entrypoint: node_modules/.bin/tsx apps/api/src/index.ts
 
 buildConfig:
-  buildCommand: pnpm run build:web && pnpm run build:backend
+  buildCommand: pnpm run build:web
 
 env:
   - variable: NODE_ENV

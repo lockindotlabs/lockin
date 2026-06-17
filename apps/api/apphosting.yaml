@@ -1,9 +1,0 @@
-runConfig:
-  runtime: nodejs22
-  entrypoint: node --import tsx/esm src/index.ts
-
-env:
-  - variable: NODE_ENV
-    value: production
-    availability:
-      - RUNTIME

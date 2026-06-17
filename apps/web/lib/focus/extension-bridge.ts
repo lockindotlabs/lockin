@@ -47,19 +47,9 @@ function getRememberedExtensionId(): string | null {
  * in background.js is the safety net for all of those cases.
  */
 function notifyExtension(message: Record<string, unknown>) {
-  const extId = getRememberedExtensionId()
-  const chromeApi = getChromeApi()
-  if (!extId || !chromeApi?.runtime?.sendMessage) return
-
-  try {
-    chromeApi.runtime.sendMessage(extId, message, () => {
-      // Reading lastError here prevents Chrome from logging an "unchecked
-      // runtime.lastError" warning when the extension isn't reachable.
-      void chromeApi.runtime?.lastError
-    })
-  } catch {
-    // sendMessage can throw synchronously if the extension ID is malformed.
-  }
+  if (typeof window === "undefined") return
+  const event = new CustomEvent("lockin-app-to-extension", { detail: message })
+  window.dispatchEvent(event)
 }
 
 /** Tell the extension a sprint just started in the app, so it can mirror it immediately. */

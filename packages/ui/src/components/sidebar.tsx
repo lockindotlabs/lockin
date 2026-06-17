@@ -10,6 +10,7 @@ import { cn } from "@workspace/ui/lib/utils"
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import { Separator } from "@workspace/ui/components/separator"
+import { LayoutLeft } from "@untitledui/icons"
 import {
   Sheet,
   SheetContent,
@@ -26,9 +27,11 @@ import {
 import {
   ArrowRightFromLineIcon,
   ChevronsLeftIcon,
+  LayoutPanelLeft,
   MenuIcon,
   PanelLeftCloseIcon,
   PanelLeftIcon,
+  SidebarIcon,
 } from "lucide-react"
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
@@ -270,18 +273,14 @@ function SidebarTrigger({
       data-slot="sidebar-trigger"
       variant="ghost"
       size="icon-sm"
-      className={cn(className, "size-7 [&_svg]:size-5!")}
+      className={cn(className)}
       onClick={(event) => {
         onClick?.(event)
         toggleSidebar()
       }}
       {...props}
     >
-      {state === "collapsed" || isMobile ? (
-        <MenuIcon strokeWidth={1.5} />
-      ) : (
-        <ChevronsLeftIcon strokeWidth={1.5} />
-      )}
+      <LayoutLeft className="cn-rtl-flip" />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
@@ -467,7 +466,7 @@ function SidebarMenu({ className, ...props }: React.ComponentProps<"ul">) {
     <ul
       data-slot="sidebar-menu"
       data-sidebar="menu"
-      className={cn("flex w-full min-w-0 flex-col gap-1", className)}
+      className={cn("flex w-full min-w-0 flex-col gap-0.5", className)}
       {...props}
     />
   )

@@ -30,6 +30,7 @@ import {
 } from "@workspace/ui/components/command"
 import { Kbd } from "@workspace/ui/components/kbd"
 import { SidebarMenuButton } from "@workspace/ui/components/sidebar"
+import { SearchMd } from "@untitledui/icons"
 
 export type AppSidebarSearchNavItem = {
   title: string
@@ -98,11 +99,7 @@ function getSearchText(...parts: Array<string | undefined>) {
 }
 
 function getTerms(query: string) {
-  return query
-    .trim()
-    .toLowerCase()
-    .split(/\s+/)
-    .filter(Boolean)
+  return query.trim().toLowerCase().split(/\s+/).filter(Boolean)
 }
 
 function matchesQuery(result: SearchResult, query: string) {
@@ -362,19 +359,14 @@ export function AppSidebarSearchCommand({
   const filteredResults = React.useMemo(
     () =>
       results.filter(
-        (result) =>
-          matchesFilter(result, filter) && matchesQuery(result, query)
+        (result) => matchesFilter(result, filter) && matchesQuery(result, query)
       ),
     [filter, query, results]
   )
 
   const quickResults = filteredResults.filter(isQuickAction)
-  const chatResults = filteredResults.filter(
-    (result) => result.kind === "chat"
-  )
-  const planResults = filteredResults.filter(
-    (result) => result.kind === "plan"
-  )
+  const chatResults = filteredResults.filter((result) => result.kind === "chat")
+  const planResults = filteredResults.filter((result) => result.kind === "plan")
   const shouldShowChats = filter === "all" || filter === "chats"
   const shouldShowPlans = filter === "all" || filter === "plans"
   const isAwaitingBackendResults =
@@ -406,10 +398,15 @@ export function AppSidebarSearchCommand({
 
   return (
     <>
-      <SidebarMenuButton onClick={() => handleOpenChange(true)}>
-        <SearchIcon data-icon="inline-start" />
-        Search
-      </SidebarMenuButton>
+      <Button
+        variant={"outline"}
+        className="border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+        size={"sm"}
+        onClick={() => handleOpenChange(true)}
+      >
+        <SearchMd data-icon="inline-start" />
+        <Kbd>Ctrl K</Kbd>
+      </Button>
       <CommandDialog open={open} onOpenChange={handleOpenChange}>
         <Command shouldFilter={false}>
           <CommandInput

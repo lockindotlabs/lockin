@@ -49,6 +49,7 @@ import {
   CopyIcon,
   DownloadIcon,
   GlobeIcon,
+  InboxIcon,
   MoreHorizontalIcon,
   PencilIcon,
   RefreshCwIcon,
@@ -64,6 +65,11 @@ import { CapabilitiesSelector } from "./capabilities-selector"
 import { getMentionKey, type MentionRef } from "@/lib/mentions/mention-types"
 import { motion } from "motion/react"
 import { AiPlannerIcon } from "./icons"
+import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
+import { useRecentlyOpenedPlans } from "@/lib/plans/recently-opened-plans"
+import Link from "next/link"
+import { PlanGrid } from "./plan-grid"
+import { Asterisk01, Asterisk02 } from "@untitledui/icons"
 
 type ThreadModelOption = ModelOption & {
   contextWindow: number
@@ -108,6 +114,10 @@ export const Thread: FC<{
   mode?: "onboarding" | "plan"
   initialMentions?: MentionRef[]
 }> = ({ mode = "onboarding", initialMentions }) => {
+  const { plans } = usePlanSummaries()
+  const recentlyOpenedPlans = useRecentlyOpenedPlans(plans)
+  const homePlans = recentlyOpenedPlans.slice(0, 3)
+
   const [selectedModelId, setSelectedModelId] = useState(DEFAULT_MODEL_ID)
   const [selectedCapabilityId, setSelectedCapabilityId] = useState<
     string | undefined
@@ -119,10 +129,10 @@ export const Thread: FC<{
 
   return (
     <ThreadPrimitive.Root
-      className="aui-root aui-thread-root @container flex h-[calc(100vh-3rem)] flex-col bg-background"
+      className="aui-root aui-thread-root @container flex h-[calc(100vh-(3rem+1px))] flex-col bg-background"
       style={{
         ["--thread-max-width" as string]: "44rem",
-        ["--composer-radius" as string]: "24px",
+        ["--composer-radius" as string]: "var(--radius-2xl)",
         ["--composer-padding" as string]: "10px",
       }}
     >
@@ -162,7 +172,7 @@ export const Thread: FC<{
             </ThreadPrimitive.Messages>
           </div>
 
-          <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mt-auto flex flex-col gap-4 overflow-visible rounded-t-(--composer-radius) bg-background py-4 md:pb-6">
+          <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mt-auto flex flex-col gap-4 overflow-visible rounded-t-(--composer-radius) bg-background py-4">
             <ThreadScrollToBottom />
             <Composer
               mode={mode}
@@ -175,6 +185,37 @@ export const Thread: FC<{
           </ThreadPrimitive.ViewportFooter>
           <AuiIf condition={(s) => s.thread.isEmpty}>
             {mode === "onboarding" && <ThreadSuggestions />}
+          </AuiIf>
+          <AuiIf condition={(s) => s.thread.isEmpty && mode === "onboarding"}>
+            {plans.length > 0 ? (
+              <section className="mx-auto w-full max-w-3xl px-4 pt-20">
+                <div className="mb-5 flex items-center justify-between gap-4">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <h2 className="truncate text-sm text-muted-foreground">
+                      Recently opened plans
+                    </h2>
+                  </div>
+                  <Link
+                    href="/app/plans"
+                    className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    View all
+                    <ChevronRightIcon className="size-4" aria-hidden="true" />
+                  </Link>
+                </div>
+                <PlanGrid plans={homePlans} />
+              </section>
+            ) : (
+              <section className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center gap-2 px-4 py-10 text-center text-sm text-muted-foreground">
+                <InboxIcon className="size-10" strokeWidth={1.25} />
+                <div>
+                  <h2 className="font-medium">
+                    You don't have any saved plans yet
+                  </h2>
+                  <p className="">Create a plan to see it here.</p>
+                </div>
+              </section>
+            )}
           </AuiIf>
         </div>
       </ThreadPrimitive.Viewport>
@@ -211,8 +252,8 @@ const ThreadWelcome: FC = () => {
   return (
     <div className="aui-thread-welcome-root my-auto flex grow flex-col space-y-12">
       <div className="aui-thread-welcome-center flex w-full grow flex-col items-center justify-center">
-        <div className="aui-thread-welcome-message flex size-full flex-col justify-center px-4">
-          <h1 className="aui-thread-welcome-message-inner mb-1 animate-in text-3xl tracking-tight duration-200 fill-mode-both fade-in slide-in-from-bottom-1">
+        <div className="aui-thread-welcome-message flex size-full flex-col justify-center px-4 text-center">
+          <h1 className="aui-thread-welcome-message-inner mb-1 animate-in text-2xl font-medium tracking-tight delay-200 duration-200 fill-mode-both fade-in slide-in-from-bottom-1">
             What do you need to get done?
           </h1>
           <p className="aui-thread-welcome-message-inner animate-in text-muted-foreground delay-75 duration-200 fill-mode-both fade-in slide-in-from-bottom-1">
@@ -232,9 +273,9 @@ const ThreadPlanWelcome: FC = () => {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.3, ease: "easeOut" }}
-        className="aui-thread-plan-welcome-icon mb-4"
+        className="aui-thread-plan-welcome-icon mb-2"
       >
-        <AiPlannerIcon />
+        <Asterisk01 />
       </motion.div>
       <h1 className="aui-thread-plan-welcome-title mb-4 font-medium tracking-normal text-foreground">
         How can I help with your plan?
@@ -268,7 +309,7 @@ const ThreadSuggestionItem: FC = () => {
         render={
           <Button
             variant="ghost"
-            className="aui-thread-welcome-suggestion h-auto flex-wrap items-start justify-center gap-1 rounded-3xl border border-border bg-background px-3 py-1.5 text-start text-sm text-muted-foreground transition-colors hover:bg-muted @md:flex-col"
+            className="aui-thread-welcome-suggestion h-auto flex-wrap items-start justify-center gap-1 border border-border bg-background px-3 py-1.5 text-start text-sm text-muted-foreground transition-colors hover:bg-muted @md:flex-col"
           />
         }
       >
@@ -359,7 +400,7 @@ const Composer: FC<{
           render={
             <div
               data-slot="aui_composer-shell"
-              className="flex w-full flex-col gap-2 rounded-(--composer-radius) border bg-background p-(--composer-padding) transition-shadow focus-within:border-ring/75 focus-within:ring-2 focus-within:ring-ring/20 data-[dragging=true]:border-dashed data-[dragging=true]:border-ring data-[dragging=true]:bg-accent/50"
+              className="box-border flex w-full flex-col gap-2 rounded-(--composer-radius) border bg-background p-(--composer-padding) transition-shadow focus-within:border-ring/75 focus-within:ring-4 focus-within:ring-ring/20 data-[dragging=true]:bg-accent/50 data-[dragging=true]:outline-2 data-[dragging=true]:outline-dashed"
             />
           }
         >
@@ -430,7 +471,7 @@ const ComposerAction: FC<{
                 type="button"
                 variant="default"
                 size="icon"
-                className="aui-composer-send size-8 rounded-full"
+                className="aui-composer-send size-8"
                 aria-label="Send message"
               />
             }
@@ -445,7 +486,7 @@ const ComposerAction: FC<{
                 type="button"
                 variant="default"
                 size="icon"
-                className="aui-composer-cancel size-8 rounded-full"
+                className="aui-composer-cancel size-8"
                 aria-label="Stop generating"
               />
             }

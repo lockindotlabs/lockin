@@ -1,8 +1,8 @@
-import { Suspense } from "react"
 import { auth } from "@clerk/nextjs/server"
 
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarInset, SidebarProvider } from "@workspace/ui/components/sidebar"
+import GlobalHeader from "@/components/global-header"
 
 export default async function RootLayout({
   children,
@@ -13,9 +13,7 @@ export default async function RootLayout({
 
   return (
     <SidebarProvider>
-      <Suspense fallback={null}>
-        <AppSidebar />
-      </Suspense>
+      <AppSidebar />
       <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
   )

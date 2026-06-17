@@ -117,7 +117,7 @@ export default function PlanDetails({
   ])
 
   return (
-    <section className="mx-auto w-full max-w-3xl pb-4">
+    <section className="mx-auto w-full max-w-3xl pt-20 pb-4">
       <div className="flex-1">
         <textarea
           value={editableTitle}

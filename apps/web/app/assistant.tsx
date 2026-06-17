@@ -122,10 +122,7 @@ export function Assistant({
   return (
     <AssistantRuntimeProvider key={sessionKey} runtime={runtime} aui={aui}>
       <InitialPromptSender prompt={initialPrompt} sessionKey={sessionKey} />
-      <PlanAssistantTools
-        chatSessionId={chatId}
-        ensureChatId={ensureChatId}
-      />
+      <PlanAssistantTools chatSessionId={chatId} ensureChatId={ensureChatId} />
       <AskChoiceTool />
       <WebSearchAssistantToolUI />
       <Thread mode={mode} initialMentions={initialMentions} />

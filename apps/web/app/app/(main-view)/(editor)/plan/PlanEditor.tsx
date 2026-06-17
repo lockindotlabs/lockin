@@ -40,6 +40,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip"
+import GlobalHeader from "@/components/global-header"
 
 type PlanEditorProps = {
   planId: string
@@ -458,125 +459,122 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
 
   return (
     <>
-      <div className="flex h-screen" data-plan-id={planId}>
-        <div className="flex-1">
-          <header className="flex h-12 shrink-0 items-center gap-2">
-            <div className="flex flex-1 items-center gap-4 px-3">
-              <SidebarTrigger
-                className={`${state == "expanded" && "pointer-events-none opacity-0"} transition-all`}
-              />
+      <div data-plan-id={planId}>
+        {/* <GlobalHeader page="plan" /> */}
+        <header className="absolute z-1 flex h-12 w-full shrink-0 items-center gap-2 border-b bg-background/80 backdrop-blur-md">
+          <div className="flex flex-1 items-center gap-4 px-3">
+            <SidebarTrigger
+              className={`${state === "collapsed" ? "" : "pointer-events-none opacity-0"} transition-opacity`}
+            />
+            <Breadcrumb
+              className={`${state === "collapsed" ? "" : "-translate-x-11"} text-sm font-medium transition-all`}
+            >
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/app/plans">Plans</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="line-clamp-1">
+                    {persistedPlan.savedTitle.trim().length === 0
+                      ? "New Plan"
+                      : persistedPlan.savedTitle || "Untitled Plan"}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+          <div className="ml-auto flex items-center gap-4 px-3">
+            {isHydrated && (
+              <Tooltip>
+                <TooltipTrigger>
+                  <CloudCheckIcon className="size-4 text-muted-foreground" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span>
+                    {lastSavedAt
+                      ? `Saved at ${format(lastSavedAt, "HH:mm:ss")}`
+                      : "Not saved yet"}
+                  </span>
+                </TooltipContent>
+              </Tooltip>
+            )}
 
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href="/app/plans">Plans</BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage className="line-clamp-1">
-                      {persistedPlan.savedTitle.trim().length === 0
-                        ? "New Plan"
-                        : persistedPlan.savedTitle || "Untitled Plan"}
-                    </BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            </div>
-            <div className="ml-auto flex items-center gap-4 px-3">
-              {isHydrated && (
-                <Tooltip>
-                  <TooltipTrigger>
-                    <CloudCheckIcon className="size-4 text-muted-foreground" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <span>
-                      {lastSavedAt
-                        ? `Saved at ${format(lastSavedAt, "HH:mm:ss")}`
-                        : "Not saved yet"}
-                    </span>
-                  </TooltipContent>
-                </Tooltip>
-              )}
+            <Button
+              variant={isAiPanelOpen ? "secondary" : "default"}
+              aria-pressed={isAiPanelOpen}
+              size="sm"
+              onClick={toggleAiPlanner}
+            >
+              <AiPlannerIcon data-icon="align-start" /> AI Planner
+            </Button>
 
-              <Button
-                variant={isAiPanelOpen ? "secondary" : "default"}
-                aria-pressed={isAiPanelOpen}
-                size="sm"
-                onClick={toggleAiPlanner}
-              >
-                <AiPlannerIcon data-icon="align-start" /> AI Planner
-              </Button>
-
-              <NavActions
-                copyUrl={`/app/plan?id=${encodeURIComponent(planId)}`}
-                onDelete={handleDeletePlan}
-              />
-
-              <Show when="signed-out">
-                <RedirectToSignIn />
-              </Show>
-            </div>
-          </header>
-
-          <ScrollArea
-            className={
-              "relative flex h-[calc(100vh-3.5rem)] flex-col px-8 pt-6"
-            }
-          >
-            <PlanDetails
-              title={persistedPlan.savedTitle}
-              description={persistedPlan.savedDescription}
-              startDate={planSummary.startDate}
-              date={planSummary.dueDate}
-              steps={planSummary.steps}
-              completion={persistedPlan.savedCompletion}
-              onTitleChange={updatePlanTitle}
-              onDescriptionChange={updatePlanDescription}
-              onCompletionChange={updatePlanCompletion}
+            <NavActions
+              copyUrl={`/app/plan?id=${encodeURIComponent(planId)}`}
+              onDelete={handleDeletePlan}
             />
 
-            <TaskList
-              persisted={persisted}
-              onReorder={reorderTasks}
-              onTitleChange={updateTaskTitle}
-              onDescriptionChange={updateTaskDescription}
-              onDateChange={updateTaskDate}
-              onDurationChange={updateTaskDuration}
-              onCompletedChange={updateTaskCompletion}
-              onDeleteTask={deleteTask}
-              onAddTask={handleAddTask}
-              emptyState={() => (
-                <section className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-start justify-center gap-4 pt-8">
-                  <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
-                    <ListTodoIcon aria-hidden="true" />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <h2 className="text-base font-medium">No steps yet</h2>
-                    <p className="text-sm text-muted-foreground">
-                      Start with one clear step, then add dates and durations as
-                      the plan takes shape.
-                    </p>
-                  </div>
-                </section>
-              )}
-            />
+            <Show when="signed-out">
+              <RedirectToSignIn />
+            </Show>
+          </div>
+        </header>
 
-            {(isPlanLoaded && !persistedPlan.savedTitle) ||
-            !persistedPlan.savedDescription ? (
-              <section className="absolute bottom-8 left-1/2 mx-auto flex w-full max-w-3xl flex-1 -translate-x-1/2 flex-col items-start justify-center gap-4">
+        <ScrollArea className={"relative flex h-screen flex-col px-8"}>
+          <PlanDetails
+            title={persistedPlan.savedTitle}
+            description={persistedPlan.savedDescription}
+            startDate={planSummary.startDate}
+            date={planSummary.dueDate}
+            steps={planSummary.steps}
+            completion={persistedPlan.savedCompletion}
+            onTitleChange={updatePlanTitle}
+            onDescriptionChange={updatePlanDescription}
+            onCompletionChange={updatePlanCompletion}
+          />
+
+          <TaskList
+            persisted={persisted}
+            onReorder={reorderTasks}
+            onTitleChange={updateTaskTitle}
+            onDescriptionChange={updateTaskDescription}
+            onDateChange={updateTaskDate}
+            onDurationChange={updateTaskDuration}
+            onCompletedChange={updateTaskCompletion}
+            onDeleteTask={deleteTask}
+            onAddTask={handleAddTask}
+            emptyState={() => (
+              <section className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-start justify-center gap-4 pt-8">
+                <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                  <ListTodoIcon aria-hidden="true" />
+                </div>
                 <div className="flex flex-col gap-1">
-                  <p className="mb-1 text-xs text-muted-foreground">
-                    Get started with
+                  <h2 className="text-base font-medium">No steps yet</h2>
+                  <p className="text-sm text-muted-foreground">
+                    Start with one clear step, then add dates and durations as
+                    the plan takes shape.
                   </p>
-                  <Button variant="secondary" onClick={toggleAiPlanner}>
-                    <AiPlannerIcon />
-                    AI Planner
-                  </Button>
                 </div>
               </section>
-            ) : null}
+            )}
+          />
 
-            {/* <div className="pointer-events-none absolute bottom-4 left-1/2 flex -translate-x-1/2 justify-center">
+          {(isPlanLoaded && !persistedPlan.savedTitle) ||
+          !persistedPlan.savedDescription ? (
+            <section className="absolute bottom-8 left-1/2 mx-auto flex w-full max-w-3xl flex-1 -translate-x-1/2 flex-col items-start justify-center gap-4">
+              <div className="flex flex-col gap-1">
+                <p className="mb-1 text-xs text-muted-foreground">
+                  Get started with
+                </p>
+                <Button variant="secondary" onClick={toggleAiPlanner}>
+                  <AiPlannerIcon />
+                  AI Planner
+                </Button>
+              </div>
+            </section>
+          ) : null}
+
+          {/* <div className="pointer-events-none absolute bottom-4 left-1/2 flex -translate-x-1/2 justify-center">
               <form
                 onSubmit={handleQuickPromptSubmit}
                 className="group transition-[height, width,border-color,box-shadow,transform] pointer-events-auto relative flex h-8 w-20 max-w-[min(48rem,calc(100vw-3.5rem))] items-center justify-center overflow-hidden rounded-full bg-yellow-500/30 backdrop-blur duration-300 ease-out focus-within:h-14 focus-within:w-[min(40rem,calc(100vw-3.5rem))] focus-within:border focus-within:bg-card focus-within:shadow-lg hover:h-14 hover:w-[min(40rem,calc(100vw-3.5rem))] hover:border hover:shadow-lg"
@@ -683,8 +681,7 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
                 </div>
               </form>
             </div> */}
-          </ScrollArea>
-        </div>
+        </ScrollArea>
       </div>
     </>
   )

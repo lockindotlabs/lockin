@@ -40,6 +40,7 @@ import {
 } from "@workspace/ui/components/dropdown-menu"
 import { ChevronDown, MoreHorizontalIcon, XIcon } from "lucide-react"
 import type { UIMessage } from "ai"
+import GlobalHeader from "@/components/global-header"
 
 export function AskPageClient() {
   const router = useRouter()
@@ -220,8 +221,9 @@ export function AskPageClient() {
 
   return (
     <div className="flex flex-col">
+      <GlobalHeader page="ask" />
       {/* Sidebar */}
-      <div className="flex h-12 shrink-0 items-center gap-2">
+      {/* <div className="flex h-12 shrink-0 items-center gap-2">
         <div className="flex flex-1 items-center justify-between px-2 transition-transform duration-150 ease-in-out">
           <div className="flex items-center gap-2">
             <SidebarTrigger
@@ -320,7 +322,7 @@ export function AskPageClient() {
         <Show when="signed-out">
           <RedirectToSignIn />
         </Show>
-      </div>
+      </div> */}
       <Assistant
         key={chatSessionId ?? "draft"}
         mode="onboarding"

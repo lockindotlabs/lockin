@@ -15,6 +15,7 @@ import "@workspace/ui/styles/globals.css"
 import { AppRouterI18nProvider } from "@workspace/i18n/provider"
 import { I18N_COOKIE_NAME } from "@workspace/i18n"
 import { loadTranslations } from "@workspace/i18n/server"
+import { Toaster } from "@workspace/ui/components/sonner"
 
 const inter = Inter({
   subsets: ["vietnamese"],
@@ -84,6 +85,7 @@ export default async function RootLayout({
         >
           <Providers>{children}</Providers>
         </AppRouterI18nProvider>
+        <Toaster position="top-center" />
       </body>
     </html>
   )

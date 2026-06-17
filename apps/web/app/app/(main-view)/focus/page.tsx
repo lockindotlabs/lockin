@@ -404,6 +404,13 @@ export default function FocusPage() {
     ]).then(async ([rawPlans, rawSessions]) => {
       if (!active) return
 
+      const activeSession = rawSessions.find((s) => s.endedAt === null)
+      if (activeSession) {
+        localStorage.setItem("lockin:active_session_id", activeSession.id)
+        router.push(`/app/focus/session/${activeSession.id}`)
+        return
+      }
+
       const withSteps = await Promise.all(
         rawPlans.map((p) =>
           fetchPlanWithSteps(p.id, getToken).then((full) => full ?? p)
@@ -453,6 +460,10 @@ export default function FocusPage() {
         `lockin:session:${session.id}:steps`,
         JSON.stringify(selectedSteps)
       )
+
+      // Backup steps and session ID in localStorage for tab-recovery
+      localStorage.setItem("lockin:active_session_id", session.id)
+      localStorage.setItem(`lockin:session:${session.id}:steps`, JSON.stringify(selectedSteps))
 
       // Push the start event straight to the extension so its HUD/blocking/
       // popup mirror this sprint immediately, instead of only discovering it

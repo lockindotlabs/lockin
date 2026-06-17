@@ -3,7 +3,7 @@ runConfig:
   entrypoint: node_modules/.bin/tsx apps/api/src/index.ts
 
 buildConfig:
-  buildCommand: pnpm run build:backend
+  buildCommand: pnpm run build:web && pnpm run build:backend
 
 env:
   - variable: NODE_ENV

@@ -27,6 +27,7 @@ import {
   notifyExtensionSessionEnded,
   notifyExtensionSessionPaused,
   notifyExtensionSessionResumed,
+  notifyExtensionTasksUpdated,
 } from "@/lib/focus/extension-bridge"
 import Aurora from "@/components/Aurora"
 
@@ -275,22 +276,55 @@ function EndSprintSummaryModal({
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 
-function useTimer(plannedDuration: number, paused: boolean, overtime: boolean) {
+function useTimer(
+  sessionId: string,
+  plannedDuration: number,
+  paused: boolean,
+  overtime: boolean,
+  startedAt: string | null
+) {
   const [elapsed, setElapsed] = React.useState(0)
   const startRef = React.useRef<number>(Date.now())
   const pausedSecsRef = React.useRef<number>(0)
   const pausedAtRef = React.useRef<number | null>(null)
 
+  // Sync startRef to server startedAt when session loads (persists across reloads)
+  React.useEffect(() => {
+    if (!startedAt) return
+    const ms = new Date(startedAt).getTime()
+    startRef.current = ms
+
+    const storedPausedSecs = localStorage.getItem(`lockin:session:${sessionId}:pausedSecs`)
+    const parsedPausedSecs = storedPausedSecs ? parseInt(storedPausedSecs, 10) : 0
+    pausedSecsRef.current = parsedPausedSecs
+
+    const storedPausedAt = localStorage.getItem(`lockin:session:${sessionId}:pausedAt`)
+    const parsedPausedAt = storedPausedAt ? parseInt(storedPausedAt, 10) : null
+    pausedAtRef.current = parsedPausedAt
+
+    let currentPausedSecs = parsedPausedSecs
+    if (parsedPausedAt !== null) {
+      currentPausedSecs += Math.floor((Date.now() - parsedPausedAt) / 1000)
+    }
+
+    setElapsed(Math.max(0, Math.floor((Date.now() - ms) / 1000) - currentPausedSecs))
+  }, [startedAt, sessionId])
+
   React.useEffect(() => {
     if (paused) {
-      if (pausedAtRef.current === null) pausedAtRef.current = Date.now()
+      if (pausedAtRef.current === null) {
+        pausedAtRef.current = Date.now()
+        localStorage.setItem(`lockin:session:${sessionId}:pausedAt`, String(pausedAtRef.current))
+      }
       return
     }
     if (pausedAtRef.current !== null) {
       pausedSecsRef.current += Math.floor(
         (Date.now() - pausedAtRef.current) / 1000
       )
+      localStorage.setItem(`lockin:session:${sessionId}:pausedSecs`, String(pausedSecsRef.current))
       pausedAtRef.current = null
+      localStorage.removeItem(`lockin:session:${sessionId}:pausedAt`)
     }
 
     const id = setInterval(() => {
@@ -301,7 +335,7 @@ function useTimer(plannedDuration: number, paused: boolean, overtime: boolean) {
     }, 500)
 
     return () => clearInterval(id)
-  }, [paused])
+  }, [paused, sessionId])
 
   const remaining = Math.max(0, plannedDuration - elapsed)
   const isOvertime = overtime || remaining <= 0
@@ -327,21 +361,64 @@ export default function SessionPage() {
   const [session, setSession] = React.useState<FocusSession | null>(null)
   const [plan, setPlan] = React.useState<FocusPlan | null>(null)
   const [steps, setSteps] = React.useState<PlanStep[]>([])
-  const [completedIds, setCompletedIds] = React.useState<Set<string>>(new Set())
+
+  const [completedIds, setCompletedIds] = React.useState<Set<string>>(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem(`lockin:session:${sessionId}:completedIds`)
+      if (stored) {
+        try {
+          return new Set(JSON.parse(stored))
+        } catch {}
+      }
+    }
+    return new Set()
+  })
+
   const [taskCheckTimes, setTaskCheckTimes] = React.useState<
     Record<string, number>
-  >({})
+  >(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem(`lockin:session:${sessionId}:taskCheckTimes`)
+      if (stored) {
+        try {
+          return JSON.parse(stored)
+        } catch {}
+      }
+    }
+    return {}
+  })
+
   const [taskSavedSeconds, setTaskSavedSeconds] = React.useState<
     Record<string, number>
   >({})
   const [loading, setLoading] = React.useState(true)
-  const [paused, setPaused] = React.useState(false)
+
+  const [paused, setPaused] = React.useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem(`lockin:session:${sessionId}:paused`)
+      return stored === "true"
+    }
+    return false
+  })
+
   const [overtime, setOvertime] = React.useState(false)
   const [ending, setEnding] = React.useState(false)
   const [showEndSprintSummary, setShowEndSprintSummary] = React.useState(false)
   const [showOvertimePicker, setShowOvertimePicker] = React.useState(false)
   const [overtimeCount, setOvertimeCount] = React.useState(0)
-  const [addedSeconds, setAddedSeconds] = React.useState(0)
+
+  const [addedSeconds, setAddedSeconds] = React.useState<number>(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem(`lockin:session:${sessionId}:addedSeconds`)
+      if (stored) {
+        try {
+          return parseInt(stored, 10) || 0
+        } catch {}
+      }
+    }
+    return 0
+  })
+
   const [particles, setParticles] = React.useState<
     {
       id: number
@@ -377,9 +454,11 @@ export default function SessionPage() {
     plannedDuration + addedSeconds - totalSavedSeconds
   )
   const { elapsed, remaining, isOvertime, pct } = useTimer(
+    sessionId,
     adjustedDuration,
     paused,
-    overtime
+    overtime,
+    session?.startedAt ?? null
   )
 
   const [lastCompletedCount, setLastCompletedCount] = React.useState(0)
@@ -422,6 +501,21 @@ export default function SessionPage() {
     setLastCompletedCount(count)
   }, [completedIds.size, lastCompletedCount, triggerFireworks])
 
+  // Sync tasks and remaining time to extension when completedIds changes
+  React.useEffect(() => {
+    if (!steps.length || loading) return
+    notifyExtensionTasksUpdated(
+      steps.map((step) => ({
+        id: step.id,
+        label: step.title,
+        done: completedIds.has(step.id),
+        durationMinutes: step.estimatedMinutes,
+      })),
+      remaining
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [completedIds])
+
   // Trigger overtime when timer hits 0
   React.useEffect(() => {
     if (remaining <= 0 && !overtime && session) {
@@ -449,6 +543,101 @@ export default function SessionPage() {
     setShowOvertimePicker(false)
   }
 
+  // Sync state to localStorage
+  React.useEffect(() => {
+    if (!sessionId) return
+    localStorage.setItem(`lockin:session:${sessionId}:completedIds`, JSON.stringify(Array.from(completedIds)))
+  }, [completedIds, sessionId])
+
+  React.useEffect(() => {
+    if (!sessionId) return
+    localStorage.setItem(`lockin:session:${sessionId}:taskCheckTimes`, JSON.stringify(taskCheckTimes))
+  }, [taskCheckTimes, sessionId])
+
+  React.useEffect(() => {
+    if (!sessionId) return
+    localStorage.setItem(`lockin:session:${sessionId}:addedSeconds`, String(addedSeconds))
+  }, [addedSeconds, sessionId])
+
+  React.useEffect(() => {
+    if (!sessionId) return
+    localStorage.setItem(`lockin:session:${sessionId}:paused`, String(paused))
+  }, [paused, sessionId])
+
+  // Track elapsed in a ref so event listener doesn't need to re-bind
+  const elapsedRef = React.useRef(elapsed)
+  React.useEffect(() => {
+    elapsedRef.current = elapsed
+  }, [elapsed])
+
+  // Listen for task changes made inside the Chrome Extension
+  React.useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const handleExtensionSprintChanged = (e: Event) => {
+      const customEvent = e as CustomEvent
+      const extensionSprint = customEvent.detail?.sprint
+      if (!extensionSprint?.active) return
+
+      const extensionTasks = extensionSprint.tasks || []
+      const newCompletedIds = new Set<string>()
+
+      extensionTasks.forEach((t: { id?: string; done: boolean }) => {
+        if (t.id && t.done) {
+          newCompletedIds.add(t.id)
+        }
+      })
+
+      // Update completedIds with loop guard
+      setCompletedIds((prev) => {
+        const changed =
+          prev.size !== newCompletedIds.size ||
+          Array.from(prev).some((id) => !newCompletedIds.has(id))
+
+        if (changed) {
+          // Sync check times based on difference
+          setTaskCheckTimes((prevTimes) => {
+            const nextTimes = { ...prevTimes }
+            newCompletedIds.forEach((id) => {
+              if (!prev.has(id)) {
+                nextTimes[id] = elapsedRef.current
+              }
+            })
+            prev.forEach((id) => {
+              if (!newCompletedIds.has(id)) {
+                delete nextTimes[id]
+              }
+            })
+            return nextTimes
+          })
+          return newCompletedIds
+        }
+        return prev
+      })
+    }
+
+    window.addEventListener("lockin-extension-sprint-changed", handleExtensionSprintChanged)
+    return () => {
+      window.removeEventListener("lockin-extension-sprint-changed", handleExtensionSprintChanged)
+    }
+  }, [])
+
+  // Add beforeunload exit warning when the sprint is active and loading is finished
+  React.useEffect(() => {
+    if (loading || ending) return
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = "Are you sure you want to leave? Your active sprint is in progress."
+      return e.returnValue
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload)
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload)
+    }
+  }, [loading, ending])
+
   // Load session + plan data
   React.useEffect(() => {
     if (!sessionId) return
@@ -457,14 +646,34 @@ export default function SessionPage() {
     const load = async () => {
       const s = await fetchFocusSession(sessionId, getToken)
       if (!active || !s) return
+      if (s.endedAt) {
+        // Clean up any stale localStorage keys for this session
+        localStorage.removeItem(`lockin:session:${sessionId}:completedIds`)
+        localStorage.removeItem(`lockin:session:${sessionId}:taskCheckTimes`)
+        localStorage.removeItem(`lockin:session:${sessionId}:addedSeconds`)
+        localStorage.removeItem(`lockin:session:${sessionId}:paused`)
+        localStorage.removeItem(`lockin:session:${sessionId}:pausedSecs`)
+        localStorage.removeItem(`lockin:session:${sessionId}:pausedAt`)
+        localStorage.removeItem(`lockin:session:${sessionId}:steps`)
+        if (localStorage.getItem("lockin:active_session_id") === sessionId) {
+          localStorage.removeItem("lockin:active_session_id")
+        }
+        router.push("/app/focus")
+        return
+      }
       setSession(s)
 
-      // Try sessionStorage first (set by hub when creating session)
-      const stored = sessionStorage.getItem(`lockin:session:${sessionId}:steps`)
+      // Try sessionStorage first, then fallback to localStorage
+      const storedSession = sessionStorage.getItem(`lockin:session:${sessionId}:steps`)
+      const storedLocal = localStorage.getItem(`lockin:session:${sessionId}:steps`)
+      const stored = storedSession || storedLocal
       if (stored) {
         try {
           const parsed: PlanStep[] = JSON.parse(stored)
           setSteps(parsed)
+          if (!storedLocal) {
+            localStorage.setItem(`lockin:session:${sessionId}:steps`, stored)
+          }
           setLoading(false)
           return
         } catch {}
@@ -475,7 +684,9 @@ export default function SessionPage() {
         const p = await fetchPlanWithSteps(s.planId, getToken)
         if (!active) return
         setPlan(p)
-        setSteps(incompleteSteps(p?.steps ?? []))
+        const activeSteps = incompleteSteps(p?.steps ?? [])
+        setSteps(activeSteps)
+        localStorage.setItem(`lockin:session:${sessionId}:steps`, JSON.stringify(activeSteps))
       }
 
       if (active) setLoading(false)
@@ -485,32 +696,26 @@ export default function SessionPage() {
     return () => {
       active = false
     }
-  }, [sessionId, getToken])
+  }, [sessionId, getToken, router])
 
   const toggleStep = (id: string) => {
     const s = steps.find((step) => step.id === id)
     if (!s) return
 
-    const done = completedIds.has(id)
-    if (done) {
-      setCompletedIds((prev) => {
-        const next = new Set(prev)
-        next.delete(id)
-        return next
-      })
+    const wasDone = completedIds.has(id)
+    const newCompletedIds = new Set(completedIds)
 
+    if (wasDone) {
+      newCompletedIds.delete(id)
+      setCompletedIds(newCompletedIds)
       setTaskCheckTimes((prevTimes) => {
         const nextTimes = { ...prevTimes }
         delete nextTimes[id]
         return nextTimes
       })
     } else {
-      setCompletedIds((prev) => {
-        const next = new Set(prev)
-        next.add(id)
-        return next
-      })
-
+      newCompletedIds.add(id)
+      setCompletedIds(newCompletedIds)
       setTaskCheckTimes((prevTimes) => ({
         ...prevTimes,
         [id]: elapsed,
@@ -558,6 +763,18 @@ export default function SessionPage() {
     )
 
     notifyExtensionSessionEnded({ sessionId, completionType })
+
+    // Clean up local storage
+    localStorage.removeItem(`lockin:session:${sessionId}:completedIds`)
+    localStorage.removeItem(`lockin:session:${sessionId}:taskCheckTimes`)
+    localStorage.removeItem(`lockin:session:${sessionId}:addedSeconds`)
+    localStorage.removeItem(`lockin:session:${sessionId}:paused`)
+    localStorage.removeItem(`lockin:session:${sessionId}:pausedSecs`)
+    localStorage.removeItem(`lockin:session:${sessionId}:pausedAt`)
+    localStorage.removeItem(`lockin:session:${sessionId}:steps`)
+    if (localStorage.getItem("lockin:active_session_id") === sessionId) {
+      localStorage.removeItem("lockin:active_session_id")
+    }
 
     sessionStorage.removeItem(`lockin:session:${sessionId}:steps`)
     router.push("/app/focus")

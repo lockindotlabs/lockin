@@ -1,3 +1,6 @@
 
 # clerk configuration (can include secrets)
 /.clerk/
+/apps/api/.env
+/apps/api/.env.staging
+/apps/api/.env.dev

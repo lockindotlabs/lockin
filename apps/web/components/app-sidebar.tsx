@@ -57,6 +57,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { state } = useSidebar()
   const { isAdmin } = useAdminAccess()
 
+  const [activeSessionId, setActiveSessionId] = React.useState<string | null>(null)
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("lockin:active_session_id")
+      setActiveSessionId(stored)
+    }
+  }, [pathname])
+
   const currentChatId = searchParams.get("id") ?? searchParams.get("t")
   const currentPlanId = searchParams.get("p") ?? searchParams.get("id")
   const pathnamePlanId = getPlanIdFromPath(pathname)
@@ -76,7 +85,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     },
     {
       title: "Focus",
-      url: "/app/focus",
+      url: activeSessionId ? `/app/focus/session/${activeSessionId}` : "/app/focus",
       icon: <GoalIcon />,
       isActive: pathname.startsWith("/app/focus"),
     },

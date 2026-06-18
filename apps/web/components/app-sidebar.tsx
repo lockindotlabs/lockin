@@ -157,11 +157,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <>
       <Sidebar
-        className="border-r-0 font-medium"
+        className="z-1000 border-r-0 font-medium"
         {...props}
         collapsible="offcanvas"
       >
-        <div className="flex h-12 items-center justify-between gap-2 border-b px-2">
+        <div className="flex h-12 items-center justify-between gap-2 px-2">
           <LogoAccent
             className="h-7.5 cursor-pointer"
             onClick={() => {
@@ -173,7 +173,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             className={`${state === "collapsed" ? "pointer-events-none opacity-0" : ""} transition-opacity`}
           />
         </div>
-        <SidebarHeader>
+        <SidebarHeader className="pt-0">
           <SidebarMenuItem className="flex flex-row gap-1">
             <Button
               variant={"outline"}

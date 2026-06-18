@@ -45,7 +45,7 @@ export function FeedbackPopover() {
             className="max-h-60 resize-none"
           />
           <div className="flex items-center justify-between gap-2">
-            <div className="text-xs text-muted-foreground">
+            <div className="text-2xs text-muted-foreground">
               We don't response to submissions, but we read all of them
               carefully
             </div>

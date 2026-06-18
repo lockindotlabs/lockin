@@ -7,7 +7,6 @@ import { useState, type FormEvent } from "react"
 import { createDbChat } from "@/lib/chat/db-chat-client"
 import { savePendingAskPrompt } from "@/lib/chat/pending-ask-prompt"
 import { buildAskHref } from "@/lib/routing/ask-url"
-import GlobalHeader from "@/components/global-header"
 
 export default function Page() {
   const router = useRouter()
@@ -35,10 +34,8 @@ export default function Page() {
   }
 
   return (
-    <main className="flex min-h-svh flex-col bg-background text-foreground">
-      <GlobalHeader page="plan" />
-
-      <section className="mx-auto flex w-full max-w-2xl flex-col justify-center px-4 py-10 md:py-20">
+    <main className="flex h-full flex-col bg-background text-foreground">
+      <section className="mx-auto my-auto flex w-full max-w-2xl flex-col justify-center px-4 py-10 md:py-20">
         <div className="mb-5 px-1 text-center">
           <h1 className="text-2xl font-medium tracking-tight">
             What do you need to get done?

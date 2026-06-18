@@ -15,7 +15,7 @@ import Link from "next/link"
 
 export default function SignInPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-between bg-background py-12">
+    <div className="flex h-full flex-col items-center justify-between bg-background py-12">
       <Link href="/">
         <LogoAccent className="h-9" />
       </Link>

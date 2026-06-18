@@ -70,6 +70,7 @@ import { useRecentlyOpenedPlans } from "@/lib/plans/recently-opened-plans"
 import Link from "next/link"
 import { PlanGrid } from "./plan-grid"
 import { Asterisk01, Asterisk02 } from "@untitledui/icons"
+import { ScrollArea } from "@workspace/ui/components/scroll-area"
 
 type ThreadModelOption = ModelOption & {
   contextWindow: number
@@ -129,7 +130,7 @@ export const Thread: FC<{
 
   return (
     <ThreadPrimitive.Root
-      className="aui-root aui-thread-root @container flex h-[calc(100vh-(3rem+1px))] flex-col bg-background"
+      className="aui-root aui-thread-root @container flex h-full flex-col"
       style={{
         ["--thread-max-width" as string]: "44rem",
         ["--composer-radius" as string]: "var(--radius-2xl)",
@@ -147,7 +148,7 @@ export const Thread: FC<{
       >
         <div
           className={cn(
-            "mx-auto flex w-full max-w-(--thread-max-width) flex-col px-4 md:px-6",
+            "mx-auto flex w-full max-w-(--thread-max-width) flex-col px-2",
             !isEmpty && "flex-1",
             mode === "plan" ? "mt-auto" : "my-auto"
           )}
@@ -165,14 +166,14 @@ export const Thread: FC<{
 
           <div
             data-slot="aui_message-group"
-            className="mb-16 flex flex-col gap-y-8 empty:hidden"
+            className="mt-12 mb-16 flex flex-col gap-y-8 empty:hidden"
           >
             <ThreadPrimitive.Messages>
               {() => <ThreadMessage />}
             </ThreadPrimitive.Messages>
           </div>
 
-          <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mt-auto flex flex-col gap-4 overflow-visible rounded-t-(--composer-radius) bg-background py-4">
+          <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mt-auto flex flex-col gap-4 overflow-visible rounded-t-(--composer-radius) py-2">
             <ThreadScrollToBottom />
             <Composer
               mode={mode}

@@ -40,7 +40,7 @@ import {
 } from "@workspace/ui/components/dropdown-menu"
 import { ChevronDown, MoreHorizontalIcon, XIcon } from "lucide-react"
 import type { UIMessage } from "ai"
-import GlobalHeader from "@/components/global-header"
+import { HeaderLeft, HeaderRight } from "@/components/header-context"
 
 export function AskPageClient() {
   const router = useRouter()
@@ -203,7 +203,7 @@ export function AskPageClient() {
 
   if (planId) {
     return (
-      <div className="relative h-screen">
+      <div className="relative h-full">
         <Button
           type="button"
           variant="ghost"
@@ -220,8 +220,93 @@ export function AskPageClient() {
   }
 
   return (
-    <div className="flex flex-col">
-      <GlobalHeader page="ask" />
+    <>
+      {effectiveChatId && (
+        <>
+          <HeaderLeft>
+            <Breadcrumb className="-translate-x-2">
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink
+                    render={
+                      <Button
+                        variant={"ghost"}
+                        size={"sm"}
+                        className={"h-8 px-2 font-normal"}
+                        onClick={() => {
+                          router.push("/app")
+                        }}
+                      />
+                    }
+                  >
+                    Home
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink
+                    render={
+                      <Button
+                        variant={"ghost"}
+                        size={"sm"}
+                        className={"h-8 px-2 font-normal"}
+                        onClick={() => {
+                          router.push("/app/ask")
+                        }}
+                      />
+                    }
+                  >
+                    Ask
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="line-clamp-1">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger
+                        render={
+                          <Button
+                            variant={"ghost"}
+                            size={"sm"}
+                            className={"h-8 px-2 font-normal"}
+                          >
+                            {chatTitle}
+                            <ChevronDown className="ml-1 size-3.5 opacity-70" />
+                          </Button>
+                        }
+                      />
+                      <DropdownMenuContent align="start" className="max-w-80">
+                        <DropdownMenuGroup>
+                          <DropdownMenuLabel>Current Chat</DropdownMenuLabel>
+                          <DropdownMenuItem>{chatTitle}</DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => router.push("/app/ask")}
+                          >
+                            Create a new chat
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={<Button variant="ghost" size="icon-xs" />}
+              >
+                <MoreHorizontalIcon className="size-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={renameChat}>Rename</DropdownMenuItem>
+                <DropdownMenuItem variant="destructive" onClick={deleteChat}>
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </HeaderLeft>
+        </>
+      )}
       {/* Sidebar */}
       {/* <div className="flex h-12 shrink-0 items-center gap-2">
         <div className="flex flex-1 items-center justify-between px-2 transition-transform duration-150 ease-in-out">
@@ -332,6 +417,6 @@ export function AskPageClient() {
         initialMessages={initialMessages}
         initialPrompt={initialPrompt}
       />
-    </div>
+    </>
   )
 }

@@ -6,11 +6,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 import { Assistant } from "@/app/assistant"
 import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@workspace/ui/components/resizable"
-import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -18,7 +13,13 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@workspace/ui/components/breadcrumb"
-import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar"
+import {
+  SidebarTrigger,
+  useSidebar,
+  SidebarHeader,
+  SidebarContent,
+} from "@workspace/ui/components/sidebar"
+import { RightSidebarContent } from "@/components/right-sidebar-context"
 import {
   clearChatMessages,
   getChatTitle,
@@ -44,6 +45,7 @@ import {
 } from "@workspace/ui/components/dropdown-menu"
 import type { MentionRef } from "@/lib/mentions/mention-types"
 import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
+import { ClockRewind } from "@untitledui/icons"
 
 type AssistantSidebarProps = PropsWithChildren<{
   activePlanId?: string
@@ -180,100 +182,84 @@ export function AssistantSidebar({
   }, [dbChatSessionId, sessionKey])
 
   return (
-    <ResizablePanelGroup className="h-full w-full" orientation="horizontal">
-      <ResizablePanel defaultSize={40} minSize={"35%"}>
-        <div className="relative w-full">
-          <div className="flex h-12 shrink-0 items-center gap-2">
-            <div className="flex flex-1 items-center justify-between px-2 transition-transform duration-150 ease-in-out">
-              <div className="flex items-center gap-2">
-                <SidebarTrigger
-                  className={`${state == "expanded" && "pointer-events-none hidden opacity-0"} transition-all`}
-                />
-                <Breadcrumb>
-                  <BreadcrumbList>
-                    <BreadcrumbItem>
-                      <BreadcrumbLink
-                        render={
-                          <Button
-                            variant={"ghost"}
-                            size={"sm"}
-                            className={"font-normal"}
-                            onClick={() => {
-                              router.push("/app/ask")
-                            }}
-                          />
-                        }
-                      >
-                        Ask
-                      </BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage className="line-clamp-1">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger
-                            render={
-                              <Button
-                                variant={"ghost"}
-                                size={"sm"}
-                                className={"font-normal"}
-                              >
-                                {chatTitle}
-                                <ChevronDown data-icon="inline-end" />
-                              </Button>
-                            }
-                          />
-                          <DropdownMenuContent
-                            align="start"
-                            className="max-w-80"
-                          >
-                            <DropdownMenuGroup>
-                              <DropdownMenuLabel>
-                                Previous 7 days
-                              </DropdownMenuLabel>
-                              <DropdownMenuItem>{chatTitle}</DropdownMenuItem>
-                              <DropdownMenuItem>
-                                Create a new page
-                              </DropdownMenuItem>
-                            </DropdownMenuGroup>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuGroup>
-                              <DropdownMenuLabel>Older</DropdownMenuLabel>
-                              <DropdownMenuItem>
-                                Capabilities overview
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>Previous chat</DropdownMenuItem>
-                            </DropdownMenuGroup>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </BreadcrumbList>
-                </Breadcrumb>
-              </div>
-            </div>
-          </div>
+    <>
+      <RightSidebarContent width="400px">
+        <div className="b flex h-full w-full flex-col text-sidebar-foreground">
+          <SidebarHeader className="flex h-12 shrink-0 flex-row items-center justify-between pl-0">
+            <div className="flex items-center">
+              <SidebarTrigger side="right" />
 
-          {initialMessages !== null ? (
-            <Assistant
-              key={sessionKey}
-              mode="plan"
-              sessionKey={sessionKey}
-              chatId={
-                readyDbChatId === dbChatSessionId ? dbChatSessionId : undefined
-              }
-              ensureChatId={ensureChatId}
-              initialMessages={initialMessages}
-              initialMentions={initialMentions}
-            />
-          ) : null}
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbPage className="line-clamp-1">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger
+                          render={
+                            <Button
+                              variant={"ghost"}
+                              size={"sm"}
+                              className={"font-normal"}
+                            >
+                              {chatTitle}
+                              <ChevronDown data-icon="inline-end" />
+                            </Button>
+                          }
+                        />
+                        <DropdownMenuContent align="start" className="max-w-80">
+                          <DropdownMenuGroup>
+                            <DropdownMenuLabel>
+                              Previous 7 days
+                            </DropdownMenuLabel>
+                            <DropdownMenuItem>{chatTitle}</DropdownMenuItem>
+                            <DropdownMenuItem>
+                              Create a new page
+                            </DropdownMenuItem>
+                          </DropdownMenuGroup>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuGroup>
+                            <DropdownMenuLabel>Older</DropdownMenuLabel>
+                            <DropdownMenuItem>
+                              Capabilities overview
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>Previous chat</DropdownMenuItem>
+                          </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
+
+            <Button size={"icon-sm"} variant={"ghost"}>
+              <ClockRewind />
+            </Button>
+          </SidebarHeader>
+
+          <SidebarContent className="flex flex-1 flex-col overflow-hidden p-0">
+            <div className="relative flex h-full w-full flex-1 flex-col overflow-hidden">
+              {initialMessages !== null ? (
+                <Assistant
+                  key={sessionKey}
+                  mode="plan"
+                  sessionKey={sessionKey}
+                  chatId={
+                    readyDbChatId === dbChatSessionId
+                      ? dbChatSessionId
+                      : undefined
+                  }
+                  ensureChatId={ensureChatId}
+                  initialMessages={initialMessages}
+                  initialMentions={initialMentions}
+                />
+              ) : null}
+            </div>
+          </SidebarContent>
         </div>
-      </ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel defaultSize={60} minSize={"50%"}>
-        <div className="relative">{children}</div>
-      </ResizablePanel>
-    </ResizablePanelGroup>
+      </RightSidebarContent>
+      {children}
+    </>
   )
 }
 

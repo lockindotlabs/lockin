@@ -33,9 +33,11 @@ import {
   PanelLeftIcon,
   SidebarIcon,
 } from "lucide-react"
+import { ReactNode } from "react"
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
+const SIDEBAR_RIGHT_COOKIE_NAME = "sidebar_state_right"
 const SIDEBAR_WIDTH = "16rem"
 const SIDEBAR_WIDTH_MOBILE = "18rem"
 const SIDEBAR_WIDTH_ICON = "3rem"
@@ -49,6 +51,12 @@ type SidebarContextProps = {
   setOpenMobile: (open: boolean) => void
   isMobile: boolean
   toggleSidebar: () => void
+  stateRight: "expanded" | "collapsed"
+  openRight: boolean
+  setOpenRight: (open: boolean) => void
+  openMobileRight: boolean
+  setOpenMobileRight: (open: boolean) => void
+  toggleSidebarRight: () => void
 }
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
@@ -66,6 +74,9 @@ function SidebarProvider({
   defaultOpen = true,
   open: openProp,
   onOpenChange: setOpenProp,
+  defaultOpenRight = true,
+  openRight: openRightProp,
+  onOpenChangeRight: setOpenRightProp,
   className,
   style,
   children,
@@ -74,12 +85,15 @@ function SidebarProvider({
   defaultOpen?: boolean
   open?: boolean
   onOpenChange?: (open: boolean) => void
+  defaultOpenRight?: boolean
+  openRight?: boolean
+  onOpenChangeRight?: (open: boolean) => void
 }) {
   const isMobile = useIsMobile()
   const [openMobile, setOpenMobile] = React.useState(false)
+  const [openMobileRight, setOpenMobileRight] = React.useState(false)
 
-  // This is the internal state of the sidebar.
-  // We use openProp and setOpenProp for control from outside the component.
+  // Left sidebar state
   const [_open, _setOpen] = React.useState(defaultOpen)
   const open = openProp ?? _open
   const setOpen = React.useCallback(
@@ -91,18 +105,45 @@ function SidebarProvider({
         _setOpen(openState)
       }
 
-      // This sets the cookie to keep the sidebar state.
       document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
     },
     [setOpenProp, open]
   )
 
-  // Helper to toggle the sidebar.
+  // Right sidebar state
+  const [_openRight, _setOpenRight] = React.useState(defaultOpenRight)
+  const openRight = openRightProp ?? _openRight
+  const setOpenRight = React.useCallback(
+    (value: boolean | ((value: boolean) => boolean)) => {
+      const openState = typeof value === "function" ? value(openRight) : value
+      console.log("[SidebarProvider] setOpenRight:", openState)
+      if (setOpenRightProp) {
+        setOpenRightProp(openState)
+      } else {
+        _setOpenRight(openState)
+      }
+
+      document.cookie = `${SIDEBAR_RIGHT_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+    },
+    [setOpenRightProp, openRight]
+  )
+
+  // Helpers to toggle sidebars
   const toggleSidebar = React.useCallback(() => {
     return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open)
   }, [isMobile, setOpen, setOpenMobile])
 
-  // Adds a keyboard shortcut to toggle the sidebar.
+  const toggleSidebarRight = React.useCallback(() => {
+    console.log(
+      "[SidebarProvider] toggleSidebarRight called, isMobile:",
+      isMobile
+    )
+    return isMobile
+      ? setOpenMobileRight((open) => !open)
+      : setOpenRight((open) => !open)
+  }, [isMobile, setOpenRight, setOpenMobileRight])
+
+  // Adds a keyboard shortcut to toggle the left sidebar.
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
@@ -118,9 +159,8 @@ function SidebarProvider({
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [toggleSidebar])
 
-  // We add a state so that we can do data-state="expanded" or "collapsed".
-  // This makes it easier to style the sidebar with Tailwind classes.
   const state = open ? "expanded" : "collapsed"
+  const stateRight = openRight ? "expanded" : "collapsed"
 
   const contextValue = React.useMemo<SidebarContextProps>(
     () => ({
@@ -131,8 +171,28 @@ function SidebarProvider({
       openMobile,
       setOpenMobile,
       toggleSidebar,
+      stateRight,
+      openRight,
+      setOpenRight,
+      openMobileRight,
+      setOpenMobileRight,
+      toggleSidebarRight,
     }),
-    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+    [
+      state,
+      open,
+      setOpen,
+      isMobile,
+      openMobile,
+      setOpenMobile,
+      toggleSidebar,
+      stateRight,
+      openRight,
+      setOpenRight,
+      openMobileRight,
+      setOpenMobileRight,
+      toggleSidebarRight,
+    ]
   )
 
   return (
@@ -158,7 +218,19 @@ function SidebarProvider({
   )
 }
 
+const SidebarVariantContext = React.createContext<{
+  side: "left" | "right"
+  variant: "sidebar" | "floating" | "inset"
+  width?: string
+} | null>(null)
+
+function useSidebarVariant() {
+  const context = React.useContext(SidebarVariantContext)
+  return context ?? { side: "left" as const, variant: "sidebar" as const }
+}
+
 function Sidebar({
+  width,
   side = "left",
   variant = "sidebar",
   collapsible = "offcanvas",
@@ -167,54 +239,76 @@ function Sidebar({
   dir,
   ...props
 }: React.ComponentProps<"div"> & {
+  width?: string
   side?: "left" | "right"
   variant?: "sidebar" | "floating" | "inset"
   collapsible?: "offcanvas" | "icon" | "none"
 }) {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+  const {
+    isMobile,
+    state: stateLeft,
+    openMobile: openMobileLeft,
+    setOpenMobile: setOpenMobileLeft,
+    stateRight,
+    openMobileRight,
+    setOpenMobileRight,
+  } = useSidebar()
+
+  const openMobile = side === "left" ? openMobileLeft : openMobileRight
+  const setOpenMobile = side === "left" ? setOpenMobileLeft : setOpenMobileRight
+  const state = side === "left" ? stateLeft : stateRight
+
+  console.log(
+    "[Sidebar] Render - side:",
+    side,
+    "state:",
+    state,
+    "openMobile:",
+    openMobile
+  )
 
   if (collapsible === "none") {
     return (
-      <div
-        data-slot="sidebar"
-        className={cn(
-          "flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground",
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </div>
-    )
-  }
-
-  if (isMobile) {
-    return (
-      <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
-        <SheetContent
-          dir={dir}
-          data-sidebar="sidebar"
+      <SidebarVariantContext.Provider value={{ side, variant, width }}>
+        <div
           data-slot="sidebar"
-          data-mobile="true"
-          className="w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
-          style={
-            {
-              "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
-            } as React.CSSProperties
-          }
-          side={side}
+          className={cn(
+            "flex h-full flex-col bg-sidebar text-sidebar-foreground",
+            width ? `w-[${width}]` : "w-(--sidebar-width)",
+            className
+          )}
+          {...props}
         >
-          <SheetHeader className="sr-only">
-            <SheetTitle>Sidebar</SheetTitle>
-            <SheetDescription>Displays the mobile sidebar.</SheetDescription>
-          </SheetHeader>
-          <div className="flex h-full w-full flex-col">{children}</div>
-        </SheetContent>
-      </Sheet>
+          {children}
+        </div>
+      </SidebarVariantContext.Provider>
     )
   }
 
-  return (
+  const element = isMobile ? (
+    <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+      <SheetContent
+        dir={dir}
+        data-sidebar="sidebar"
+        data-slot="sidebar"
+        data-mobile="true"
+        className="w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+        style={
+          {
+            "--sidebar-width": width ?? SIDEBAR_WIDTH_MOBILE,
+            ...props.style,
+          } as React.CSSProperties
+        }
+        side={side}
+      >
+        <SheetHeader className="sr-only">
+          <SheetTitle>Sidebar</SheetTitle>
+          <SheetDescription>Displays the mobile sidebar.</SheetDescription>
+        </SheetHeader>
+        <div className="flex h-full w-full flex-col">{children}</div>
+      </SheetContent>
+    </Sheet>
+  ) : (
     <div
       className="group peer hidden text-sidebar-foreground/70 md:block"
       data-state={state}
@@ -222,6 +316,12 @@ function Sidebar({
       data-variant={variant}
       data-side={side}
       data-slot="sidebar"
+      style={
+        {
+          ...(width ? { "--sidebar-width": width } : {}),
+          ...props.style,
+        } as React.CSSProperties
+      }
     >
       {/* This is what handles the sidebar gap on desktop */}
       <div
@@ -258,36 +358,52 @@ function Sidebar({
       </div>
     </div>
   )
+
+  return (
+    <SidebarVariantContext.Provider value={{ side, variant }}>
+      {element}
+    </SidebarVariantContext.Provider>
+  )
 }
 
 function SidebarTrigger({
+  side = "left",
   className,
   onClick,
   ...props
-}: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar, state, isMobile } = useSidebar()
+}: React.ComponentProps<typeof Button> & {
+  side?: "left" | "right"
+}) {
+  const { toggleSidebar, toggleSidebarRight } = useSidebar()
+  const toggle = side === "left" ? toggleSidebar : toggleSidebarRight
 
   return (
     <Button
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
-      variant="ghost"
-      size="icon-sm"
+      variant={"ghost"}
+      size={"icon-sm"}
       className={cn(className)}
       onClick={(event) => {
         onClick?.(event)
-        toggleSidebar()
+        toggle()
       }}
       {...props}
     >
-      <LayoutLeft className="cn-rtl-flip" />
-      <span className="sr-only">Toggle Sidebar</span>
+      <LayoutLeft
+        className={cn("cn-rtl-flip", side === "right" && "rotate-180")}
+      />
+      <span className="sr-only">
+        Toggle {side === "left" ? "Left" : "Right"} Sidebar
+      </span>
     </Button>
   )
 }
 
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
-  const { toggleSidebar } = useSidebar()
+  const { side } = useSidebarVariant()
+  const { toggleSidebar, toggleSidebarRight } = useSidebar()
+  const toggle = side === "left" ? toggleSidebar : toggleSidebarRight
 
   return (
     <button
@@ -295,7 +411,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
       data-slot="sidebar-rail"
       aria-label="Toggle Sidebar"
       tabIndex={-1}
-      onClick={toggleSidebar}
+      onClick={toggle}
       title="Toggle Sidebar"
       className={cn(
         "absolute inset-y-0 z-20 hidden w-4 transition-all ease-in-out group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:start-1/2 after:w-[2px] hover:after:bg-sidebar-border sm:flex ltr:-translate-x-1/2 rtl:-translate-x-1/2",
@@ -316,7 +432,15 @@ function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
     <main
       data-slot="sidebar-inset"
       className={cn(
-        "relative flex w-full flex-1 flex-col bg-background md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2",
+        "relative flex w-full flex-1 flex-col bg-background",
+        "md:group-has-data-[variant=inset]/sidebar-wrapper:m-2",
+        "md:group-has-data-[variant=inset]/sidebar-wrapper:rounded-xl",
+        "md:group-has-data-[variant=inset]/sidebar-wrapper:shadow-sm",
+        "md:group-has-[[data-side=left][data-variant=inset]]/sidebar-wrapper:ml-0",
+        "md:group-has-[[data-side=left][data-variant=inset][data-state=collapsed]]/sidebar-wrapper:ml-2",
+        "md:group-has-[[data-side=right][data-variant=inset]]/sidebar-wrapper:mr-0",
+        "md:group-has-[[data-side=right][data-variant=inset][data-state=collapsed]]/sidebar-wrapper:mr-2",
+        "transition-all duration-300 ease-in-out",
         className
       )}
       {...props}

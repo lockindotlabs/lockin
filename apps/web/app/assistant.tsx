@@ -66,6 +66,9 @@ export function Assistant({
       if (!chatIdRef.current && !ensureChatIdRef.current) {
         saveChatMessages(sessionKey, messages)
       }
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("lockin:ai-usage-summary-changed"))
+      }
     },
     transport: new AssistantChatTransport({
       api: "/api/chat",

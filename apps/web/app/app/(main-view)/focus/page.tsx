@@ -109,7 +109,9 @@ function SprintSetupModal({
   const [selected, setSelected] = React.useState<Set<string>>(
     () => new Set(steps.map((s) => s.id))
   )
-  const [durationSeconds, setDurationSeconds] = React.useState<number | null>(null)
+  const [durationSeconds, setDurationSeconds] = React.useState<number | null>(
+    null
+  )
 
   const toggleStep = (id: string) => {
     setSelected((prev) => {
@@ -140,16 +142,19 @@ function SprintSetupModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
       <div className="relative w-full max-w-md rounded-2xl border border-border bg-background shadow-2xl">
         {/* Header */}
         <div className="border-b border-border px-5 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <p className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
                 Sprint setup
               </p>
               <h2 className="mt-0.5 text-base font-semibold tracking-tight">
@@ -165,21 +170,23 @@ function SprintSetupModal({
           </div>
         </div>
 
-        <div className="px-5 py-4 space-y-5 max-h-[60vh] overflow-y-auto">
+        <div className="max-h-[60vh] space-y-5 overflow-y-auto px-5 py-4">
           {/* Steps */}
           <div>
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <p className="mb-2 text-xs font-medium tracking-wider text-muted-foreground uppercase">
               Steps to include
             </p>
             {steps.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No incomplete steps.</p>
+              <p className="text-sm text-muted-foreground">
+                No incomplete steps.
+              </p>
             ) : (
               <div className="space-y-1">
                 {steps.map((step) => (
                   <button
                     key={step.id}
                     onClick={() => toggleStep(step.id)}
-                    className="flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-muted/50 transition-colors"
+                    className="flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/50"
                   >
                     <span className="mt-0.5 shrink-0 text-primary">
                       {selected.has(step.id) ? (
@@ -202,7 +209,7 @@ function SprintSetupModal({
 
           {/* Duration */}
           <div>
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <p className="mb-2 text-xs font-medium tracking-wider text-muted-foreground uppercase">
               Duration
             </p>
             {estimatedTotal > 0 && (
@@ -210,7 +217,7 @@ function SprintSetupModal({
                 onClick={() => setDurationSeconds(null)}
                 className={`mb-2 flex w-full items-center justify-between rounded-lg border px-3 py-2.5 text-sm transition-colors ${
                   durationSeconds === null
-                    ? "border-primary bg-primary/5 text-primary font-medium"
+                    ? "border-primary bg-primary/5 font-medium text-primary"
                     : "border-border hover:bg-muted/50"
                 }`}
               >
@@ -252,7 +259,7 @@ function SprintSetupModal({
         </div>
 
         {/* Footer */}
-        <div className="border-t border-border px-5 py-4 flex gap-3">
+        <div className="flex gap-3 border-t border-border px-5 py-4">
           <Button
             variant="outline"
             size="sm"
@@ -302,7 +309,7 @@ function PlanQueueCard({
             </span>
           )}
           {isCompleted && (
-            <span className="shrink-0 rounded-full bg-emerald-100 dark:bg-emerald-950/40 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700 dark:text-emerald-400">
+            <span className="shrink-0 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
               Completed
             </span>
           )}
@@ -319,12 +326,12 @@ function PlanQueueCard({
         <div className="mt-1 flex items-center gap-3 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
             <CheckCircle2Icon className="size-3 text-emerald-500" />
-            {isCompleted ? (plan.steps?.length ?? 0) : incomplete.length} step{isCompleted || incomplete.length !== 1 ? "s" : ""}
+            {isCompleted ? (plan.steps?.length ?? 0) : incomplete.length} step
+            {isCompleted || incomplete.length !== 1 ? "s" : ""}
           </span>
           {!isCompleted && totalMin > 0 && (
             <span className="flex items-center gap-1">
-              <ClockIcon className="size-3" />
-              ~{formatMinutes(totalMin)}
+              <ClockIcon className="size-3" />~{formatMinutes(totalMin)}
             </span>
           )}
         </div>
@@ -370,8 +377,14 @@ function RecentSprintRow({ session }: { session: FocusSession }) {
       </span>
       <span className="shrink-0 text-xs text-muted-foreground">
         {isToday(session.startedAt)
-          ? startedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-          : startedAt.toLocaleDateString([], { month: "short", day: "numeric" })}
+          ? startedAt.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          : startedAt.toLocaleDateString([], {
+              month: "short",
+              day: "numeric",
+            })}
       </span>
       <span className="shrink-0 font-medium tabular-nums">{duration}</span>
     </div>
@@ -398,30 +411,33 @@ export default function FocusPage() {
     let active = true
     setLoading(true)
 
-    Promise.all([
-      fetchPlans(getToken),
-      fetchFocusSessions(getToken),
-    ]).then(async ([rawPlans, rawSessions]) => {
-      if (!active) return
+    Promise.all([fetchPlans(getToken), fetchFocusSessions(getToken)]).then(
+      async ([rawPlans, rawSessions]) => {
+        if (!active) return
 
-      const withSteps = await Promise.all(
-        rawPlans.map((p) =>
-          fetchPlanWithSteps(p.id, getToken).then((full) => full ?? p)
+        const withSteps = await Promise.all(
+          rawPlans.map((p) =>
+            fetchPlanWithSteps(p.id, getToken).then((full) => full ?? p)
+          )
         )
-      )
 
-      if (!active) return
+        if (!active) return
 
-      const sorted = withSteps.sort((a, b) => {
-        return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-      })
+        const sorted = withSteps.sort((a, b) => {
+          return (
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+          )
+        })
 
-      setPlans(sorted)
-      setSessions(rawSessions)
-      setLoading(false)
-    })
+        setPlans(sorted)
+        setSessions(rawSessions)
+        setLoading(false)
+      }
+    )
 
-    return () => { active = false }
+    return () => {
+      active = false
+    }
   }, [getToken])
 
   // Open sprint setup for a plan
@@ -435,7 +451,10 @@ export default function FocusPage() {
   }
 
   // Create session and navigate
-  const handleConfirmSprint = async (selectedSteps: PlanStep[], durationSeconds: number) => {
+  const handleConfirmSprint = async (
+    selectedSteps: PlanStep[],
+    durationSeconds: number
+  ) => {
     if (!setupPlan) return
     setStarting(true)
 
@@ -488,184 +507,170 @@ export default function FocusPage() {
   const completedPlans = plans.filter((p) => getPlanCategory(p) === "COMPLETED")
 
   return (
-    <main className="flex min-h-svh flex-col bg-background text-foreground">
-      {/* Header */}
-      <header className="flex h-12 shrink-0 items-center justify-between px-3">
-        <div className="flex items-center gap-2">
-          <SidebarTrigger
-            className={`${state === "expanded" ? "pointer-events-none hidden opacity-0" : ""} transition-all`}
-          />
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <GoalIcon className="size-4 text-primary" strokeWidth={1.75} />
-            Focus
+    <>
+      <main className="flex h-full flex-col overflow-y-scroll bg-background pt-12 text-foreground">
+        <div className="mx-auto w-full max-w-2xl px-4 pt-8 pb-16">
+          {/* Effort Today pill */}
+          {effortSeconds > 0 && (
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-400">
+              <TimerIcon className="size-3.5" />
+              {formatDuration(effortSeconds)} focused today
+            </div>
+          )}
+
+          {/* Page title */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-semibold tracking-tight">Focus</h1>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              {dueTodayPlans.length > 0
+                ? `${dueTodayPlans.length} plan${dueTodayPlans.length !== 1 ? "s" : ""} with steps due today.`
+                : "Pick a plan and start a sprint."}
+            </p>
           </div>
-        </div>
 
-        <Show when="signed-out">
-          <RedirectToSignIn />
-        </Show>
-      </header>
-
-      <div className="mx-auto w-full max-w-2xl px-4 pb-16 pt-8">
-
-        {/* Effort Today pill */}
-        {effortSeconds > 0 && (
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-400">
-            <TimerIcon className="size-3.5" />
-            {formatDuration(effortSeconds)} focused today
-          </div>
-        )}
-
-        {/* Page title */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-semibold tracking-tight">Focus</h1>
-          <p className="mt-1.5 text-sm text-muted-foreground">
-            {dueTodayPlans.length > 0
-              ? `${dueTodayPlans.length} plan${dueTodayPlans.length !== 1 ? "s" : ""} with steps due today.`
-              : "Pick a plan and start a sprint."}
-          </p>
-        </div>
-
-        {/* Categorized Plans sections */}
-        <div className="mb-10 space-y-8">
-          {loading ? (
-            <div className="space-y-4">
-              <Skeleton className="h-6 w-32" />
-              <div className="space-y-2">
-                {[1, 2, 3].map((i) => (
-                  <Skeleton key={i} className="h-[72px] rounded-xl" />
-                ))}
+          {/* Categorized Plans sections */}
+          <div className="mb-10 space-y-8">
+            {loading ? (
+              <div className="space-y-4">
+                <Skeleton className="h-6 w-32" />
+                <div className="space-y-2">
+                  {[1, 2, 3].map((i) => (
+                    <Skeleton key={i} className="h-[72px] rounded-xl" />
+                  ))}
+                </div>
               </div>
-            </div>
-          ) : plans.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-border px-6 py-10 text-center">
-              <CheckCircle2Icon className="mx-auto mb-3 size-8 text-muted-foreground/50" />
-              <p className="text-sm font-medium">Nothing ready to sprint on</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Create a plan to get started.
-              </p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-4"
-                onClick={() => router.push("/app/plan")}
-              >
-                Create a plan
-              </Button>
-            </div>
-          ) : (
-            <>
-              {overduePlans.length > 0 && (
-                <section>
-                  <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-rose-500 dark:text-rose-400 flex items-center gap-1.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
-                    Overdue ({overduePlans.length})
-                  </h2>
-                  <div className="space-y-2">
-                    {overduePlans.map((plan) => (
-                      <PlanQueueCard
-                        key={plan.id}
-                        plan={plan}
-                        onStartSprint={handleStartSprint}
-                      />
-                    ))}
-                  </div>
-                </section>
-              )}
+            ) : plans.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-border px-6 py-10 text-center">
+                <CheckCircle2Icon className="mx-auto mb-3 size-8 text-muted-foreground/50" />
+                <p className="text-sm font-medium">
+                  Nothing ready to sprint on
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Create a plan to get started.
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-4"
+                  onClick={() => router.push("/app/plan")}
+                >
+                  Create a plan
+                </Button>
+              </div>
+            ) : (
+              <>
+                {overduePlans.length > 0 && (
+                  <section>
+                    <h2 className="mb-3 flex items-center gap-1.5 text-xs font-semibold tracking-wider text-rose-500 uppercase dark:text-rose-400">
+                      <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
+                      Overdue ({overduePlans.length})
+                    </h2>
+                    <div className="space-y-2">
+                      {overduePlans.map((plan) => (
+                        <PlanQueueCard
+                          key={plan.id}
+                          plan={plan}
+                          onStartSprint={handleStartSprint}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                )}
 
-              {dueTodayPlans.length > 0 && (
-                <section>
-                  <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-amber-500 dark:text-amber-400 flex items-center gap-1.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-                    Due Today ({dueTodayPlans.length})
-                  </h2>
-                  <div className="space-y-2">
-                    {dueTodayPlans.map((plan) => (
-                      <PlanQueueCard
-                        key={plan.id}
-                        plan={plan}
-                        onStartSprint={handleStartSprint}
-                      />
-                    ))}
-                  </div>
-                </section>
-              )}
+                {dueTodayPlans.length > 0 && (
+                  <section>
+                    <h2 className="mb-3 flex items-center gap-1.5 text-xs font-semibold tracking-wider text-amber-500 uppercase dark:text-amber-400">
+                      <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                      Due Today ({dueTodayPlans.length})
+                    </h2>
+                    <div className="space-y-2">
+                      {dueTodayPlans.map((plan) => (
+                        <PlanQueueCard
+                          key={plan.id}
+                          plan={plan}
+                          onStartSprint={handleStartSprint}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                )}
 
-              {onTrackPlans.length > 0 && (
-                <section>
-                  <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-primary flex items-center gap-1.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                    On Track ({onTrackPlans.length})
-                  </h2>
-                  <div className="space-y-2">
-                    {onTrackPlans.map((plan) => (
-                      <PlanQueueCard
-                        key={plan.id}
-                        plan={plan}
-                        onStartSprint={handleStartSprint}
-                      />
-                    ))}
-                  </div>
-                </section>
-              )}
+                {onTrackPlans.length > 0 && (
+                  <section>
+                    <h2 className="mb-3 flex items-center gap-1.5 text-xs font-semibold tracking-wider text-primary uppercase">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      On Track ({onTrackPlans.length})
+                    </h2>
+                    <div className="space-y-2">
+                      {onTrackPlans.map((plan) => (
+                        <PlanQueueCard
+                          key={plan.id}
+                          plan={plan}
+                          onStartSprint={handleStartSprint}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                )}
 
-              {completedPlans.length > 0 && (
-                <section>
-                  <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-emerald-500 dark:text-emerald-400 flex items-center gap-1.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    Completed ({completedPlans.length})
-                  </h2>
-                  <div className="space-y-2">
-                    {completedPlans.map((plan) => (
-                      <PlanQueueCard
-                        key={plan.id}
-                        plan={plan}
-                        onStartSprint={handleStartSprint}
-                      />
-                    ))}
-                  </div>
-                </section>
+                {completedPlans.length > 0 && (
+                  <section>
+                    <h2 className="mb-3 flex items-center gap-1.5 text-xs font-semibold tracking-wider text-emerald-500 uppercase dark:text-emerald-400">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                      Completed ({completedPlans.length})
+                    </h2>
+                    <div className="space-y-2">
+                      {completedPlans.map((plan) => (
+                        <PlanQueueCard
+                          key={plan.id}
+                          plan={plan}
+                          onStartSprint={handleStartSprint}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* Recent Sprints */}
+          {(recentSessions.length > 0 || !loading) && (
+            <section>
+              <h2 className="mb-3 text-xs font-medium tracking-wider text-muted-foreground uppercase">
+                Recent Sprints
+              </h2>
+
+              {loading ? (
+                <div className="space-y-2">
+                  {[1, 2].map((i) => (
+                    <Skeleton key={i} className="h-10 rounded-lg" />
+                  ))}
+                </div>
+              ) : recentSessions.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No sprints yet.</p>
+              ) : (
+                <div className="divide-y divide-border/60 rounded-xl border border-border/70 bg-background px-4">
+                  {recentSessions.map((s) => (
+                    <RecentSprintRow key={s.id} session={s} />
+                  ))}
+                </div>
               )}
-            </>
+            </section>
           )}
         </div>
 
-        {/* Recent Sprints */}
-        {(recentSessions.length > 0 || !loading) && (
-          <section>
-            <h2 className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Recent Sprints
-            </h2>
-
-            {loading ? (
-              <div className="space-y-2">
-                {[1, 2].map((i) => (
-                  <Skeleton key={i} className="h-10 rounded-lg" />
-                ))}
-              </div>
-            ) : recentSessions.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No sprints yet.</p>
-            ) : (
-              <div className="divide-y divide-border/60 rounded-xl border border-border/70 bg-background px-4">
-                {recentSessions.map((s) => (
-                  <RecentSprintRow key={s.id} session={s} />
-                ))}
-              </div>
-            )}
-          </section>
+        {/* Sprint Setup Modal */}
+        {setupPlan && !loadingSteps && (
+          <SprintSetupModal
+            plan={setupPlan}
+            steps={setupSteps}
+            onStart={handleConfirmSprint}
+            onClose={() => setSetupPlan(null)}
+            loading={starting}
+          />
         )}
-      </div>
-
-      {/* Sprint Setup Modal */}
-      {setupPlan && !loadingSteps && (
-        <SprintSetupModal
-          plan={setupPlan}
-          steps={setupSteps}
-          onStart={handleConfirmSprint}
-          onClose={() => setSetupPlan(null)}
-          loading={starting}
-        />
-      )}
-    </main>
+      </main>
+    </>
   )
 }

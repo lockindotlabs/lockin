@@ -33,6 +33,17 @@ import {
 } from "@/lib/focus/focus-api"
 import { notifyExtensionSessionStarted } from "@/lib/focus/extension-bridge"
 import DurationMismatchNotice from "./DurationMismatchNotice"
+import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
+import { Badge } from "@workspace/ui/components/badge"
+import { LayoutGrid01, List } from "@untitledui/icons"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@workspace/ui/components/table"
 
 function getPlanCategory(plan: FocusPlan) {
   const steps = plan.steps || []
@@ -80,6 +91,42 @@ function getPlanCategory(plan: FocusPlan) {
     return "DUE_TODAY"
   }
   return "ON_TRACK"
+}
+
+function CategoryBadge({ category }: { category: string }) {
+  switch (category) {
+    case "OVERDUE":
+      return <Badge variant="destructive">Overdue</Badge>
+    case "DUE_TODAY":
+      return (
+        <Badge
+          variant="secondary"
+          className="bg-amber-100 font-semibold text-amber-800 dark:bg-amber-950/40 dark:text-amber-300"
+        >
+          Due Today
+        </Badge>
+      )
+    case "ON_TRACK":
+      return (
+        <Badge
+          variant="secondary"
+          className="bg-emerald-100 font-semibold text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
+        >
+          On Track
+        </Badge>
+      )
+    case "COMPLETED":
+      return (
+        <Badge
+          variant="secondary"
+          className="bg-blue-100 font-semibold text-blue-800 dark:bg-blue-950/40 dark:text-blue-300"
+        >
+          Completed
+        </Badge>
+      )
+    default:
+      return <Badge variant="outline">On Track</Badge>
+  }
 }
 
 // ─── Duration presets ─────────────────────────────────────────────────────────
@@ -405,6 +452,10 @@ export default function FocusPage() {
   const [setupSteps, setSetupSteps] = React.useState<PlanStep[]>([])
   const [loadingSteps, setLoadingSteps] = React.useState(false)
   const [starting, setStarting] = React.useState(false)
+  const [activeTab, setActiveTab] = React.useState<
+    "ALL" | "OVERDUE" | "DUE_TODAY" | "ON_TRACK" | "COMPLETED"
+  >("ALL")
+  const [viewMode, setViewMode] = React.useState<"CARD" | "LIST">("CARD")
 
   // Load hub data
   React.useEffect(() => {
@@ -501,15 +552,39 @@ export default function FocusPage() {
   const effortSeconds = effortTodaySeconds(sessions)
   const recentSessions = sessions.slice(0, 5)
 
-  const overduePlans = plans.filter((p) => getPlanCategory(p) === "OVERDUE")
+  const countAll = plans.length
+  const countOverdue = plans.filter(
+    (p) => getPlanCategory(p) === "OVERDUE"
+  ).length
+  const countDueToday = plans.filter(
+    (p) => getPlanCategory(p) === "DUE_TODAY"
+  ).length
+  const countOnTrack = plans.filter(
+    (p) => getPlanCategory(p) === "ON_TRACK"
+  ).length
+  const countCompleted = plans.filter(
+    (p) => getPlanCategory(p) === "COMPLETED"
+  ).length
+
+  const filteredPlans = plans.filter((p) => {
+    if (activeTab === "ALL") return true
+    return getPlanCategory(p) === activeTab
+  })
+
+  const tabs = [
+    { id: "ALL", label: "All Plans", count: countAll },
+    { id: "OVERDUE", label: "Overdue", count: countOverdue },
+    { id: "DUE_TODAY", label: "Due Today", count: countDueToday },
+    { id: "ON_TRACK", label: "On Track", count: countOnTrack },
+    { id: "COMPLETED", label: "Completed", count: countCompleted },
+  ]
+
   const dueTodayPlans = plans.filter((p) => getPlanCategory(p) === "DUE_TODAY")
-  const onTrackPlans = plans.filter((p) => getPlanCategory(p) === "ON_TRACK")
-  const completedPlans = plans.filter((p) => getPlanCategory(p) === "COMPLETED")
 
   return (
     <>
-      <main className="flex h-full flex-col overflow-y-scroll bg-background pt-12 text-foreground">
-        <div className="mx-auto w-full max-w-2xl px-4 pt-8 pb-16">
+      <main className="flex h-full flex-col overflow-y-auto bg-background pt-12 text-foreground">
+        <div className="mx-auto w-full max-w-6xl px-4 py-12 lg:py-24">
           {/* Effort Today pill */}
           {effortSeconds > 0 && (
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-400">
@@ -519,20 +594,72 @@ export default function FocusPage() {
           )}
 
           {/* Page title */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-semibold tracking-tight">Focus</h1>
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              {dueTodayPlans.length > 0
-                ? `${dueTodayPlans.length} plan${dueTodayPlans.length !== 1 ? "s" : ""} with steps due today.`
-                : "Pick a plan and start a sprint."}
-            </p>
+          <div className="mb-5 flex items-center gap-3">
+            <div className="min-w-0">
+              <h1 className="truncate text-2xl font-medium tracking-tight">Focus</h1>
+              <p className="mt-1.5 text-sm text-muted-foreground">
+                {dueTodayPlans.length > 0
+                  ? `${dueTodayPlans.length} plan${dueTodayPlans.length !== 1 ? "s" : ""} with steps due today.`
+                  : "Pick a plan and start a sprint."}
+              </p>
+            </div>
           </div>
 
-          {/* Categorized Plans sections */}
-          <div className="mb-10 space-y-8">
+          {/* Tabs and layout control */}
+          {!loading && plans.length > 0 && (
+            <div className="flex justify-between">
+              <Tabs
+                value={activeTab}
+                onValueChange={(val) => {
+                  if (val) {
+                    setActiveTab(val as any)
+                  }
+                }}
+                className="mb-6"
+              >
+                <TabsList aria-label="Filter plans by status">
+                  {tabs.map((tab) => (
+                    <TabsTrigger
+                      key={tab.id}
+                      value={tab.id}
+                      className="gap-1.5"
+                    >
+                      <span>{tab.label}</span>
+                      <Badge
+                        variant="secondary"
+                        className="h-4.5 rounded-full px-1.5 text-[10px] font-semibold"
+                      >
+                        {tab.count}
+                      </Badge>
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+
+              <Tabs
+                value={viewMode}
+                onValueChange={(val) => {
+                  if (val) {
+                    setViewMode(val as any)
+                  }
+                }}
+              >
+                <TabsList aria-label="Toggle layout view">
+                  <TabsTrigger value="CARD">
+                    <LayoutGrid01 />
+                  </TabsTrigger>
+                  <TabsTrigger value="LIST">
+                    <List />
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
+          )}
+
+          {/* Main content grid/list */}
+          <div className="mb-12">
             {loading ? (
               <div className="space-y-4">
-                <Skeleton className="h-6 w-32" />
                 <div className="space-y-2">
                   {[1, 2, 3].map((i) => (
                     <Skeleton key={i} className="h-[72px] rounded-xl" />
@@ -557,87 +684,114 @@ export default function FocusPage() {
                   Create a plan
                 </Button>
               </div>
+            ) : filteredPlans.length > 0 ? (
+              viewMode === "CARD" ? (
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {filteredPlans.map((plan) => (
+                    <PlanQueueCard
+                      key={plan.id}
+                      plan={plan}
+                      onStartSprint={handleStartSprint}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow className="*:text-muted-foreground hover:bg-background">
+                      <TableHead className="w-[50%]">Plan Title</TableHead>
+                      <TableHead className="w-[20%]">Status</TableHead>
+                      <TableHead className="w-[15%]">Tasks</TableHead>
+                      <TableHead className="w-[15%] text-right"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredPlans.map((plan) => {
+                      const incomplete = incompleteSteps(plan.steps ?? [])
+                      const nextStep = incomplete[0]
+                      const totalMin = incomplete.reduce(
+                        (s, t) => s + (t.estimatedMinutes ?? 0),
+                        0
+                      )
+                      const category = getPlanCategory(plan)
+                      const isCompleted = category === "COMPLETED"
+
+                      return (
+                        <TableRow
+                          key={plan.id}
+                          className="group/row transition-none!"
+                        >
+                          <TableCell className="font-medium">
+                            <div className="truncate text-sm font-medium">
+                              {plan.name}
+                            </div>
+                            {nextStep ? (
+                              <div className="mt-0.5 truncate text-xs text-muted-foreground">
+                                Next: {nextStep.title}
+                              </div>
+                            ) : (
+                              <div className="mt-0.5 truncate text-xs text-muted-foreground/75 italic">
+                                All steps completed
+                              </div>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <CategoryBadge category={category} />
+                          </TableCell>
+                          <TableCell className="text-xs text-muted-foreground">
+                            <div className="flex flex-col gap-1">
+                              <span className="flex items-center gap-1">
+                                <CheckCircle2Icon className="size-3.5 text-emerald-500" />
+                                {isCompleted
+                                  ? (plan.steps?.length ?? 0)
+                                  : incomplete.length}{" "}
+                                step
+                                {isCompleted || incomplete.length !== 1
+                                  ? "s"
+                                  : ""}
+                              </span>
+                              {!isCompleted && totalMin > 0 && (
+                                <span className="flex items-center gap-1">
+                                  <ClockIcon className="size-3.5" />~
+                                  {formatMinutes(totalMin)}
+                                </span>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {!isCompleted && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleStartSprint(plan)}
+                              >
+                                <PlayIcon className="size-3.5" />
+                                Sprint
+                              </Button>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })}
+                  </TableBody>
+                </Table>
+              )
             ) : (
-              <>
-                {overduePlans.length > 0 && (
-                  <section>
-                    <h2 className="mb-3 flex items-center gap-1.5 text-xs font-semibold tracking-wider text-rose-500 uppercase dark:text-rose-400">
-                      <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
-                      Overdue ({overduePlans.length})
-                    </h2>
-                    <div className="space-y-2">
-                      {overduePlans.map((plan) => (
-                        <PlanQueueCard
-                          key={plan.id}
-                          plan={plan}
-                          onStartSprint={handleStartSprint}
-                        />
-                      ))}
-                    </div>
-                  </section>
-                )}
-
-                {dueTodayPlans.length > 0 && (
-                  <section>
-                    <h2 className="mb-3 flex items-center gap-1.5 text-xs font-semibold tracking-wider text-amber-500 uppercase dark:text-amber-400">
-                      <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-                      Due Today ({dueTodayPlans.length})
-                    </h2>
-                    <div className="space-y-2">
-                      {dueTodayPlans.map((plan) => (
-                        <PlanQueueCard
-                          key={plan.id}
-                          plan={plan}
-                          onStartSprint={handleStartSprint}
-                        />
-                      ))}
-                    </div>
-                  </section>
-                )}
-
-                {onTrackPlans.length > 0 && (
-                  <section>
-                    <h2 className="mb-3 flex items-center gap-1.5 text-xs font-semibold tracking-wider text-primary uppercase">
-                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                      On Track ({onTrackPlans.length})
-                    </h2>
-                    <div className="space-y-2">
-                      {onTrackPlans.map((plan) => (
-                        <PlanQueueCard
-                          key={plan.id}
-                          plan={plan}
-                          onStartSprint={handleStartSprint}
-                        />
-                      ))}
-                    </div>
-                  </section>
-                )}
-
-                {completedPlans.length > 0 && (
-                  <section>
-                    <h2 className="mb-3 flex items-center gap-1.5 text-xs font-semibold tracking-wider text-emerald-500 uppercase dark:text-emerald-400">
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                      Completed ({completedPlans.length})
-                    </h2>
-                    <div className="space-y-2">
-                      {completedPlans.map((plan) => (
-                        <PlanQueueCard
-                          key={plan.id}
-                          plan={plan}
-                          onStartSprint={handleStartSprint}
-                        />
-                      ))}
-                    </div>
-                  </section>
-                )}
-              </>
+              <div className="rounded-xl border border-dashed border-border px-6 py-12 text-center text-muted-foreground">
+                <CheckCircle2Icon className="mx-auto mb-3 size-8 text-muted-foreground/50" />
+                <p className="text-sm font-medium">No plans found</p>
+                <p className="mt-1 text-xs">
+                  There are no plans categorized under "
+                  {tabs.find((t) => t.id === activeTab)?.label}".
+                </p>
+              </div>
             )}
           </div>
 
           {/* Recent Sprints */}
           {(recentSessions.length > 0 || !loading) && (
-            <section>
-              <h2 className="mb-3 text-xs font-medium tracking-wider text-muted-foreground uppercase">
+            <section className="mt-16">
+              <h2 className="mb-4 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                 Recent Sprints
               </h2>
 

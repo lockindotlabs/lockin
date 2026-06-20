@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
 
 import { Assistant } from "@/app/assistant"
 import {
@@ -32,7 +32,6 @@ import {
   loadDbChat,
 } from "@/lib/chat/db-chat-client"
 import { Button } from "@workspace/ui/components/button"
-import { ChevronDown } from "lucide-react"
 import type { UIMessage } from "ai"
 import {
   DropdownMenu,
@@ -45,7 +44,9 @@ import {
 } from "@workspace/ui/components/dropdown-menu"
 import type { MentionRef } from "@/lib/mentions/mention-types"
 import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
-import { ClockRewind } from "@untitledui/icons"
+import { ClockRewind, Plus } from "@untitledui/icons"
+import { useChatSummaries } from "@/lib/chat/use-chat-summaries"
+
 
 type AssistantSidebarProps = PropsWithChildren<{
   activePlanId?: string
@@ -61,15 +62,68 @@ export function AssistantSidebar({
 }: AssistantSidebarProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const router = useRouter()
   const { state } = useSidebar()
   const urlChatSessionId = searchParams.get("id") ?? searchParams.get("t")
+  const { chats } = useChatSummaries()
+
+  const { todayChats, yesterdayChats, previousSevenDaysChats, olderChats } =
+    useMemo(() => {
+      const now = new Date()
+      const todayStart = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+      ).getTime()
+      const yesterdayStart = todayStart - 24 * 60 * 60 * 1000
+      const sevenDaysAgoStart = todayStart - 7 * 24 * 60 * 60 * 1000
+
+      const today: typeof chats = []
+      const yesterday: typeof chats = []
+      const sevenDays: typeof chats = []
+      const older: typeof chats = []
+
+      chats.forEach((chat) => {
+        const time = chat.updatedAt ? new Date(chat.updatedAt).getTime() : 0
+        if (!time) {
+          older.push(chat)
+        } else if (time >= todayStart) {
+          today.push(chat)
+        } else if (time >= yesterdayStart) {
+          yesterday.push(chat)
+        } else if (time >= sevenDaysAgoStart) {
+          sevenDays.push(chat)
+        } else {
+          older.push(chat)
+        }
+      })
+
+      return {
+        todayChats: today,
+        yesterdayChats: yesterday,
+        previousSevenDaysChats: sevenDays,
+        olderChats: older,
+      }
+    }, [chats])
+  const [sidebarChatSessionId, setSidebarChatSessionId] = useState<
+    string | null
+  >(null)
+
+  const handleChatSelect = (chatId: string) => {
+    setSidebarChatSessionId(chatId)
+  }
+
+  useEffect(() => {
+    setSidebarChatSessionId(null)
+  }, [activePlanId, urlChatSessionId])
+
   const isAskChat = pathname === "/app/ask" && Boolean(urlChatSessionId)
-  const dbChatSessionId = isAskChat
-    ? (urlChatSessionId ?? undefined)
-    : activePlanId
-      ? getPlanChatId(activePlanId)
-      : undefined
+  const dbChatSessionId =
+    sidebarChatSessionId ||
+    (isAskChat
+      ? (urlChatSessionId ?? undefined)
+      : activePlanId
+        ? getPlanChatId(activePlanId)
+        : undefined)
   const sessionKey = useMemo(() => {
     if (dbChatSessionId) {
       return `chat:${dbChatSessionId}`
@@ -184,57 +238,125 @@ export function AssistantSidebar({
   return (
     <>
       <RightSidebarContent width="400px">
-        <div className="b flex h-full w-full flex-col text-sidebar-foreground">
-          <SidebarHeader className="flex h-12 shrink-0 flex-row items-center justify-between pl-0">
+        <div className="flex h-full w-full flex-col text-sidebar-foreground">
+          <SidebarHeader className="absolute top-2 right-0 left-2 z-10 flex h-12 shrink-0 flex-row items-center justify-between bg-sidebar pl-0">
             <div className="flex items-center">
               <SidebarTrigger side="right" />
 
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
-                    <BreadcrumbPage className="line-clamp-1">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger
-                          render={
-                            <Button
-                              variant={"ghost"}
-                              size={"sm"}
-                              className={"font-normal"}
-                            >
-                              {chatTitle}
-                              <ChevronDown data-icon="inline-end" />
-                            </Button>
-                          }
-                        />
-                        <DropdownMenuContent align="start" className="max-w-80">
-                          <DropdownMenuGroup>
-                            <DropdownMenuLabel>
-                              Previous 7 days
-                            </DropdownMenuLabel>
-                            <DropdownMenuItem>{chatTitle}</DropdownMenuItem>
-                            <DropdownMenuItem>
-                              Create a new page
-                            </DropdownMenuItem>
-                          </DropdownMenuGroup>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuGroup>
-                            <DropdownMenuLabel>Older</DropdownMenuLabel>
-                            <DropdownMenuItem>
-                              Capabilities overview
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>Previous chat</DropdownMenuItem>
-                          </DropdownMenuGroup>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                    <BreadcrumbPage className="line-clamp-1 px-2 text-sm font-medium">
+                      {chatTitle}
                     </BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
 
-            <Button size={"icon-sm"} variant={"ghost"}>
-              <ClockRewind />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button size={"icon-sm"} variant={"ghost"}>
+                    <ClockRewind />
+                  </Button>
+                }
+              />
+              <DropdownMenuContent align="end" className="w-64 max-w-80">
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    onClick={() => setSidebarChatSessionId(crypto.randomUUID())}
+                    className="flex items-center gap-2 font-medium"
+                  >
+                    <Plus className="size-4" />
+                    New chat
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+
+                {chats.length === 0 ? (
+                  <>
+                    <DropdownMenuSeparator />
+                    <div className="px-3 py-2 text-center text-xs text-muted-foreground">
+                      No recent chats
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {todayChats.length > 0 && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                          <DropdownMenuLabel>Today</DropdownMenuLabel>
+                          {todayChats.map((chat) => (
+                            <DropdownMenuItem
+                              key={chat.id}
+                              onClick={() => handleChatSelect(chat.id)}
+                              className="truncate"
+                            >
+                              {chat.title || "New chat"}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuGroup>
+                      </>
+                    )}
+
+                    {yesterdayChats.length > 0 && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                          <DropdownMenuLabel>Yesterday</DropdownMenuLabel>
+                          {yesterdayChats.map((chat) => (
+                            <DropdownMenuItem
+                              key={chat.id}
+                              onClick={() => handleChatSelect(chat.id)}
+                              className="truncate"
+                            >
+                              {chat.title || "New chat"}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuGroup>
+                      </>
+                    )}
+
+                    {previousSevenDaysChats.length > 0 && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                          <DropdownMenuLabel>Previous 7 days</DropdownMenuLabel>
+                          {previousSevenDaysChats.map((chat) => (
+                            <DropdownMenuItem
+                              key={chat.id}
+                              onClick={() => handleChatSelect(chat.id)}
+                              className="truncate"
+                            >
+                              {chat.title || "New chat"}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuGroup>
+                      </>
+                    )}
+
+                    {olderChats.length > 0 && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                          <DropdownMenuLabel>Older</DropdownMenuLabel>
+                          {olderChats.map((chat) => (
+                            <DropdownMenuItem
+                              key={chat.id}
+                              onClick={() => handleChatSelect(chat.id)}
+                              className="truncate"
+                            >
+                              {chat.title || "New chat"}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuGroup>
+                      </>
+                    )}
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </SidebarHeader>
 
           <SidebarContent className="flex flex-1 flex-col overflow-hidden p-0">

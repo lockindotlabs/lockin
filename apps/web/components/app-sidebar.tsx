@@ -157,7 +157,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <>
       <Sidebar
-        className="z-1000 border-r-0 font-medium"
+        className="z-1000 border-r-0 px-1 py-2 font-medium"
         {...props}
         collapsible="offcanvas"
       >
@@ -199,13 +199,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
-          <NavFavorites
+          {/* <NavFavorites
             label="Recent chats"
             emptyLabel="No recent chats yet"
             favorites={recentChats}
             isLoading={!areChatsLoaded}
             onDelete={handleDeleteChat}
-          />
+          /> */}
           <NavFavorites
             label="Recent plans"
             emptyLabel="No saved plans yet"

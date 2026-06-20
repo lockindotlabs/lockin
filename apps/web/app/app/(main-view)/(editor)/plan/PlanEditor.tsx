@@ -117,7 +117,7 @@ function isMeaningfulDraft(plan: EditorPlan, tasks: EditorTask[]) {
 
 function PlanEditorLoadingState({ state }: { state: string }) {
   return (
-    <div className="flex h-full" data-plan-id="loading">
+    <div className="flex h-[calc(100vh-1rem)]" data-plan-id="loading">
       <div className="flex-1">
         <header className="flex h-12 shrink-0 items-center gap-2">
           <div className="flex flex-1 items-center gap-2 px-3">

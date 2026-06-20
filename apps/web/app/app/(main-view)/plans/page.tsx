@@ -133,9 +133,8 @@ function CategoryBadge({ category }: { category: string }) {
 }
 
 export default function PlansPage() {
-  const { plans } = usePlanSummaries()
+  const { plans, isLoaded } = usePlanSummaries()
   const recentlyOpenedPlans = useRecentlyOpenedPlans(plans)
-  const { state } = useSidebar()
   const [activeTab, setActiveTab] = React.useState<
     "ALL" | "OVERDUE" | "DUE_TODAY" | "ON_TRACK" | "COMPLETED"
   >("ALL")
@@ -182,7 +181,42 @@ export default function PlansPage() {
   return (
     <>
       <main className="flex h-full flex-col overflow-y-auto bg-background pt-12 text-foreground">
-        {plans.length > 0 ? (
+        {!isLoaded ? (
+          <section className="mx-auto w-full max-w-6xl px-4 py-12 lg:py-24">
+            <div className="mb-5 flex items-center gap-3">
+              <div className="min-w-0">
+                <h1 className="truncate text-2xl font-medium tracking-tight">
+                  Plans
+                </h1>
+              </div>
+            </div>
+
+            <div className="mb-6 flex justify-between">
+              <div className="h-9 w-64 animate-pulse rounded bg-muted" />
+              <div className="h-9 w-20 animate-pulse rounded bg-muted" />
+            </div>
+
+            {viewMode === "CARD" ? (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div
+                    key={i}
+                    className="h-40 animate-pulse rounded-xl bg-muted"
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div
+                    key={i}
+                    className="h-12 animate-pulse rounded-lg bg-muted"
+                  />
+                ))}
+              </div>
+            )}
+          </section>
+        ) : plans.length > 0 ? (
           <section className="mx-auto w-full max-w-6xl px-4 py-12 lg:py-24">
             <div className="mb-5 flex items-center gap-3">
               <div className="min-w-0">

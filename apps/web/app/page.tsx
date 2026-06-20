@@ -111,7 +111,7 @@ function SectionHead({
 }
 
 /* ---- Header with scroll shadow ---- TAILWIND CONVERTED*/
-function SiteHeader() {
+export function SiteHeader() {
   const { t } = useTranslation()
 
   return (
@@ -1349,7 +1349,7 @@ function FaqSection() {
 
 /* ---- Big CTA section ---- */
 /* ---- Footer ---- */
-function SiteFooter() {
+export function SiteFooter() {
   const router = useRouter()
   const { i18n, t } = useTranslation()
   const currentLocale = i18n.language as AppLocale
@@ -1435,9 +1435,13 @@ function SiteFooter() {
             <span className="h-3.75">©2026</span>
           </div>
           <span className="flex gap-5 [&>a:hover]:text-foreground">
-            <a href="#">{t("landing.footer.privacy")}</a>
-            <a href="#">{t("landing.footer.terms")}</a>
-            <a href="#">{t("landing.footer.security")}</a>
+            <Link href="/trust/privacy-policy">
+              {t("landing.footer.privacy")}
+            </Link>
+            <Link href="/trust/terms-of-service">
+              {t("landing.footer.terms")}
+            </Link>
+            {/* <Link href="/trust/security">{t("landing.footer.security")}</Link> */}
           </span>
         </div>
       </div>

@@ -13,7 +13,7 @@ import {
 } from "@workspace/ui/components/breadcrumb"
 import { RedirectToSignIn, Show } from "@clerk/nextjs"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar"
 import {
   clearChatMessages,
@@ -21,6 +21,8 @@ import {
   subscribeToChatChanges,
 } from "@/lib/chat/local-chat-persistence"
 import { consumePendingAskPrompt } from "@/lib/chat/pending-ask-prompt"
+import { useChatSummaries } from "@/lib/chat/use-chat-summaries"
+import { buildAskHref } from "@/lib/routing/ask-url"
 import {
   createDbChat,
   importDbChat,
@@ -38,9 +40,10 @@ import {
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from "@workspace/ui/components/dropdown-menu"
-import { ChevronDown, MoreHorizontalIcon, XIcon } from "lucide-react"
+import { ChevronDown, MoreHorizontalIcon, Plus, XIcon } from "lucide-react"
 import type { UIMessage } from "ai"
 import { HeaderLeft, HeaderRight } from "@/components/header-context"
+import { ClockRewind } from "@untitledui/icons"
 
 export function AskPageClient() {
   const router = useRouter()
@@ -56,6 +59,51 @@ export function AskPageClient() {
   const [initialPrompt, setInitialPrompt] = useState<string>()
   const createDraftChatPromiseRef = useRef<Promise<string> | null>(null)
   const effectiveChatId = chatSessionId ?? createdDraftChatId
+
+  const { chats } = useChatSummaries()
+
+  const handleChatSelect = (chatId: string) => {
+    router.push(buildAskHref({ chatSessionId: chatId }))
+  }
+
+  const { todayChats, yesterdayChats, previousSevenDaysChats, olderChats } =
+    useMemo(() => {
+      const now = new Date()
+      const todayStart = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+      ).getTime()
+      const yesterdayStart = todayStart - 24 * 60 * 60 * 1000
+      const sevenDaysAgoStart = todayStart - 7 * 24 * 60 * 60 * 1000
+
+      const today: typeof chats = []
+      const yesterday: typeof chats = []
+      const sevenDays: typeof chats = []
+      const older: typeof chats = []
+
+      chats.forEach((chat) => {
+        const time = chat.updatedAt ? new Date(chat.updatedAt).getTime() : 0
+        if (!time) {
+          older.push(chat)
+        } else if (time >= todayStart) {
+          today.push(chat)
+        } else if (time >= yesterdayStart) {
+          yesterday.push(chat)
+        } else if (time >= sevenDaysAgoStart) {
+          sevenDays.push(chat)
+        } else {
+          older.push(chat)
+        }
+      })
+
+      return {
+        todayChats: today,
+        yesterdayChats: yesterday,
+        previousSevenDaysChats: sevenDays,
+        olderChats: older,
+      }
+    }, [chats])
 
   useEffect(() => {
     if (!chatSessionId) {
@@ -275,16 +323,106 @@ export function AskPageClient() {
                           </Button>
                         }
                       />
-                      <DropdownMenuContent align="start" className="max-w-80">
+                      <DropdownMenuContent
+                        align="start"
+                        className="w-64 max-w-90"
+                      >
                         <DropdownMenuGroup>
-                          <DropdownMenuLabel>Current Chat</DropdownMenuLabel>
-                          <DropdownMenuItem>{chatTitle}</DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => router.push("/app/ask")}
+                            onClick={() => router.push(buildAskHref())}
+                            className="flex items-center gap-2 font-medium"
                           >
-                            Create a new chat
+                            <Plus className="size-4" />
+                            New chat
                           </DropdownMenuItem>
                         </DropdownMenuGroup>
+
+                        {chats.length === 0 ? (
+                          <>
+                            <DropdownMenuSeparator />
+                            <div className="px-3 py-2 text-center text-xs text-muted-foreground">
+                              No recent chats
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            {todayChats.length > 0 && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                  <DropdownMenuLabel>Today</DropdownMenuLabel>
+                                  {todayChats.map((chat) => (
+                                    <DropdownMenuItem
+                                      key={chat.id}
+                                      onClick={() => handleChatSelect(chat.id)}
+                                      className="truncate"
+                                    >
+                                      {chat.title || "New chat"}
+                                    </DropdownMenuItem>
+                                  ))}
+                                </DropdownMenuGroup>
+                              </>
+                            )}
+
+                            {yesterdayChats.length > 0 && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                  <DropdownMenuLabel>
+                                    Yesterday
+                                  </DropdownMenuLabel>
+                                  {yesterdayChats.map((chat) => (
+                                    <DropdownMenuItem
+                                      key={chat.id}
+                                      onClick={() => handleChatSelect(chat.id)}
+                                      className="truncate"
+                                    >
+                                      {chat.title || "New chat"}
+                                    </DropdownMenuItem>
+                                  ))}
+                                </DropdownMenuGroup>
+                              </>
+                            )}
+
+                            {previousSevenDaysChats.length > 0 && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                  <DropdownMenuLabel>
+                                    Previous 7 days
+                                  </DropdownMenuLabel>
+                                  {previousSevenDaysChats.map((chat) => (
+                                    <DropdownMenuItem
+                                      key={chat.id}
+                                      onClick={() => handleChatSelect(chat.id)}
+                                      className="truncate"
+                                    >
+                                      {chat.title || "New chat"}
+                                    </DropdownMenuItem>
+                                  ))}
+                                </DropdownMenuGroup>
+                              </>
+                            )}
+
+                            {olderChats.length > 0 && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                  <DropdownMenuLabel>Older</DropdownMenuLabel>
+                                  {olderChats.map((chat) => (
+                                    <DropdownMenuItem
+                                      key={chat.id}
+                                      onClick={() => handleChatSelect(chat.id)}
+                                      className="truncate"
+                                    >
+                                      {chat.title || "New chat"}
+                                    </DropdownMenuItem>
+                                  ))}
+                                </DropdownMenuGroup>
+                              </>
+                            )}
+                          </>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </BreadcrumbPage>

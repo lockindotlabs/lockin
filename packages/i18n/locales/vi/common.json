@@ -289,5 +289,375 @@
       "terms": "Điều khoản",
       "security": "Bảo mật"
     }
+  },
+  "trust": {
+    "title": "Trung tâm Tin cậy",
+    "policies": "Chính sách của LockIn",
+    "lastUpdated": "Cập nhật lần cuối: Ngày 19 tháng 6 năm 2026",
+    "privacy": {
+      "title": "Chính sách Bảo mật",
+      "intro1": "LockIn (\"chúng tôi\", \"của chúng tôi\") là ứng dụng web hỗ trợ năng suất giúp người dùng chia nhỏ tác vụ, quản lý công việc và thực hiện các phiên tập trung.",
+      "intro2": "Chính sách Bảo mật này giải thích thông tin chúng tôi thu thập, cách chúng tôi sử dụng và những lựa chọn của bạn.",
+      "sections": {
+        "s1": {
+          "title": "Thông tin chúng tôi thu thập",
+          "subtitle": "Chúng tôi có thể thu thập các loại thông tin sau:",
+          "account": {
+            "title": "Thông tin tài khoản",
+            "subtitle": "Khi bạn tạo tài khoản, chúng tôi có thể thu thập thông tin như:",
+            "items": [
+              "Tên",
+              "Địa chỉ email",
+              "Thông tin hồ sơ được cung cấp thông qua các nhà cung cấp xác thực",
+              "ID tài khoản hoặc ID người dùng"
+            ]
+          },
+          "task": {
+            "title": "Dữ liệu nhiệm vụ và năng suất",
+            "subtitle": "Khi bạn sử dụng LockIn, chúng tôi có thể thu thập và lưu trữ:",
+            "items": [
+              "Nhiệm vụ, nhiệm vụ con, dự án và mục tiêu bạn tạo",
+              "Bản phân tích nhiệm vụ do AI tạo",
+              "Dữ liệu phiên tập trung/sprint",
+              "Trạng thái hoàn thành nhiệm vụ",
+              "Thời lượng tập trung ước tính và thực tế",
+              "Hạn chót, mức độ ưu tiên và thông tin lập lịch"
+            ]
+          },
+          "ai": {
+            "title": "Dữ liệu đầu vào và đầu ra của AI",
+            "subtitle": "Khi bạn sử dụng các tính năng được hỗ trợ bởi AI, chúng tôi có thể xử lý:",
+            "items": [
+              "Nhiệm vụ hoặc lời nhắc bạn nhập",
+              "Bối cảnh cần thiết để tạo kế hoạch",
+              "Nhiệm vụ con, thời lượng và đề xuất do AI tạo"
+            ],
+            "note": "Không nhập thông tin cá nhân nhạy cảm vào các tính năng lập kế hoạch bằng AI trừ khi cần thiết."
+          },
+          "blocking": {
+            "title": "Dữ liệu chặn trang web",
+            "subtitle": "Nếu bạn sử dụng tính năng chặn trang web hoặc bảo vệ tập trung, chúng tôi có thể lưu trữ:",
+            "items": [
+              "URL hoặc miền bạn chọn chặn",
+              "Tùy chọn chặn",
+              "Cài đặt bảo vệ tập trung"
+            ]
+          },
+          "usage": {
+            "title": "Dữ liệu sử dụng và phân tích",
+            "subtitle": "Chúng tôi có thể thu thập dữ liệu sử dụng để hiểu và cải thiện sản phẩm, như:",
+            "items": [
+              "Các trang đã truy cập",
+              "Tính năng đã sử dụng",
+              "Hoạt động trong phiên",
+              "Nhật ký lỗi",
+              "Thông tin thiết bị và trình duyệt",
+              "Vị trí gần đúng dựa trên địa chỉ IP"
+            ]
+          },
+          "payment": {
+            "title": "Dữ liệu thanh toán và đăng ký",
+            "p1": "Nếu bạn mua gói trả phí, việc xử lý thanh toán có thể được xử lý bởi nhà cung cấp thanh toán bên thứ ba. Chúng tôi không lưu trữ thông tin chi tiết về thẻ thanh toán đầy đủ. Chúng tôi có thể lưu trữ trạng thái đăng ký, loại gói, trạng thái gia hạn và số nhận dạng liên quan đến thanh toán."
+          }
+        },
+        "s2": {
+          "title": "Cách chúng tôi sử dụng thông tin",
+          "subtitle": "Chúng tôi sử dụng thông tin của bạn để:",
+          "items": [
+            "Cung cấp và vận hành LockIn",
+            "Lưu các nhiệm vụ, kế hoạch và tiến trình Sprint của bạn",
+            "Tạo bản phân tích nhiệm vụ bằng AI",
+            "Cá nhân hóa việc lập kế hoạch nhiệm vụ và đề xuất tập trung",
+            "Quản lý tài khoản và xác thực",
+            "Xử lý các đăng ký và thực thi giới hạn gói",
+            "Cải thiện hiệu suất và độ tin cậy của sản phẩm",
+            "Phân tích việc sử dụng tính năng",
+            "Phát hiện hành vi lạm dụng, gian lận hoặc các sự cố kỹ thuật",
+            "Truyền thông các cập nhật quan trọng về sản phẩm hoặc tài khoản"
+          ]
+        },
+        "s3": {
+          "title": "Xử lý bằng AI",
+          "p1": "LockIn sử dụng các tính năng AI để giúp tạo phân tích nhiệm vụ và đề xuất lập kế hoạch.",
+          "p2": "Các lời nhắc và dữ liệu nhiệm vụ liên quan của bạn có thể được gửi đến các nhà cung cấp AI bên thứ ba để tạo câu trả lời. Chúng tôi chỉ gửi thông tin cần thiết để cung cấp tính năng.",
+          "p3": "Nội dung do AI tạo có thể không chính xác hoặc không đầy đủ. Bạn có trách nhiệm xem xét và chỉnh sửa các kế hoạch do AI tạo trước khi sử dụng."
+        },
+        "s4": {
+          "title": "Dịch vụ của bên thứ ba",
+          "p1": "Chúng tôi có thể sử dụng dịch vụ của bên thứ ba để xác thực, lưu trữ cơ sở dữ liệu, tạo AI, phân tích, theo dõi lỗi, xử lý thanh toán, truyền thông qua email và cơ sở hạ tầng/lưu trữ.",
+          "p2": "Các nhà cung cấp này có thể xử lý thông tin thay mặt chúng tôi theo chính sách bảo mật và điều khoản xử lý dữ liệu của riêng họ. Ví dụ bao gồm:",
+          "services": [
+            "<strong>Clerk</strong> cho việc xác thực",
+            "<strong>Supabase</strong> cho việc lưu trữ cơ sở dữ liệu",
+            "<strong>Google Gemini</strong> cho các khả năng AI",
+            "<strong>PostHog</strong> cho phân tích",
+            "<strong>PayOS</strong> cho xử lý thanh toán",
+            "<strong>Firebase</strong> cho lưu trữ và cơ sở hạ tầng đám mây"
+          ]
+        },
+        "s5": {
+          "title": "Cookie và Theo dõi",
+          "subtitle": "Chúng tôi có thể sử dụng cookie hoặc các công nghệ tương tự để:",
+          "items": [
+            "Duy trì đăng nhập của người dùng",
+            "Ghi nhớ các tùy chọn",
+            "Cải thiện hiệu suất ứng dụng",
+            "Phân tích việc sử dụng sản phẩm",
+            "Ngăn chặn lạm dụng hoặc truy cập trái phép"
+          ],
+          "p1": "Bạn có thể kiểm soát cookie thông qua cài đặt trình duyệt của mình, nhưng một số tính năng có thể không hoạt động chính xác nếu cookie bị tắt."
+        },
+        "s6": {
+          "title": "Chia sẻ dữ liệu",
+          "p1": "Chúng tôi không bán thông tin cá nhân của bạn.",
+          "p2": "Chúng tôi có thể chia sẻ thông tin với:",
+          "items": [
+            "Các nhà cung cấp dịch vụ giúp chúng tôi vận hành ứng dụng",
+            "Các đơn vị xử lý thanh toán để xử lý đăng ký gói",
+            "Các nhà cung cấp AI cho các tính năng được hỗ trợ bởi AI",
+            "Các nhà cung cấp phân tích và cơ sở hạ tầng",
+            "Các cơ quan pháp luật nếu pháp luật yêu cầu",
+            "Một thực thể kế nhiệm trong trường hợp sáp nhập, mua lại hoặc chuyển nhượng doanh nghiệp"
+          ]
+        },
+        "s7": {
+          "title": "Lưu trữ dữ liệu",
+          "p1": "Chúng tôi chỉ giữ thông tin cá nhân trong thời gian cần thiết để cung cấp dịch vụ, tuân thủ các nghĩa vụ pháp lý, giải quyết tranh chấp và thực thi các thỏa thuận.",
+          "p2": "Bạn có thể yêu cầu xóa tài khoản và dữ liệu liên quan bằng cách liên hệ với chúng tôi tại {{email}}.",
+          "p3": "Một số thông tin có thể được giữ lại trong một thời gian hạn chế trong các bản sao lưu, nhật ký, hồ sơ thanh toán hoặc nơi pháp luật yêu cầu."
+        },
+        "s8": {
+          "title": "Bảo mật dữ liệu",
+          "p1": "Chúng tôi sử dụng các biện pháp kỹ thuật và tổ chức hợp lý để bảo vệ dữ liệu người dùng. Tuy nhiên, không có hệ thống nào bảo mật hoàn toàn và chúng tôi không thể đảm bảo an ninh tuyệt đối.",
+          "p2": "Bạn chịu trách nhiệm giữ an toàn cho thông tin đăng nhập tài khoản của mình."
+        },
+        "s9": {
+          "title": "Quyền và Lựa chọn của bạn",
+          "subtitle": "Tùy thuộc vào vị trí của bạn, bạn có thể có quyền:",
+          "items": [
+            "Truy cập thông tin cá nhân chúng tôi nắm giữ về bạn",
+            "Sửa đổi thông tin không chính xác",
+            "Xóa thông tin của bạn",
+            "Xuất thông tin của bạn",
+            "Phản đối hoặc hạn chế một số hoạt động xử lý nhất định",
+            "Rút lại sự đồng ý trong trường hợp việc xử lý dựa trên sự đồng ý",
+            "Từ chối nhận một số thông tin phân tích hoặc truyền thông tiếp thị"
+          ],
+          "p1": "Để gửi yêu cầu, hãy liên hệ với chúng tôi tại {{email}}."
+        },
+        "s10": {
+          "title": "Quyền riêng tư của trẻ em",
+          "p1": "LockIn không dành cho trẻ em dưới 16 tuổi. Chúng tôi không cố ý thu thập thông tin cá nhân từ trẻ em. Nếu chúng tôi biết rằng mình đã thu thập thông tin cá nhân từ trẻ em mà không có sự đồng ý phù hợp, chúng tôi sẽ xóa thông tin đó."
+        },
+        "s11": {
+          "title": "Người dùng Quốc tế",
+          "p1": "Thông tin của bạn có thể được xử lý ở các quốc gia khác ngoài quốc gia bạn cư trú. Các quốc gia này có thể có luật bảo vệ dữ liệu khác nhau.",
+          "p2": "Khi được yêu cầu, chúng tôi áp dụng các biện pháp bảo vệ thích hợp cho việc chuyển dữ liệu quốc tế."
+        },
+        "s12": {
+          "title": "Thay đổi đối với Chính sách này",
+          "p1": "Chúng tôi có thể cập nhật Chính sách Bảo mật này theo thời gian. Nếu chúng tôi thực hiện các thay đổi quan trọng, chúng tôi sẽ thông báo cho người dùng thông qua ứng dụng, qua email hoặc bằng cách cập nhật ngày ở đầu trang này."
+        },
+        "s13": {
+          "title": "Liên hệ với chúng tôi",
+          "subtitle": "Nếu bạn có câu hỏi về Chính sách Bảo mật này hoặc dữ liệu của bạn, hãy liên hệ với chúng tôi tại:",
+          "company": "LockIn Labs, Inc.",
+          "address": "Thành phố Hồ Chí Minh, Việt Nam"
+        }
+      }
+    },
+    "tos": {
+      "title": "Điều khoản và Điều kiện",
+      "welcome": "Chào mừng bạn đến với LockIn.",
+      "intro": "Các Điều khoản và Điều kiện (\"Điều khoản\") này điều chỉnh việc bạn truy cập và sử dụng LockIn, một ứng dụng năng suất giúp người dùng chia nhỏ tác vụ, quản lý công việc và hoàn thành các phiên tập trung. Bằng cách sử dụng LockIn, bạn đồng ý với các Điều khoản này. Nếu bạn không đồng ý, vui lòng không sử dụng dịch vụ.",
+      "sections": {
+        "s1": {
+          "title": "Dịch vụ",
+          "items": [
+            "LockIn cung cấp các công cụ quản lý tác vụ, chia nhỏ tác vụ được hỗ trợ bởi AI, các phiên tập trung/sprint, theo dõi năng suất và các tính năng liên quan.",
+            "Một số tính năng có thể miễn phí, trong khi những tính năng khác có thể yêu cầu gói đăng ký trả phí hoặc credit sử dụng.",
+            "Chúng tôi có thể cập nhật, sửa đổi, tạm dừng hoặc ngừng các phần của dịch vụ vào bất kỳ lúc nào."
+          ]
+        },
+        "s2": {
+          "title": "Tài khoản",
+          "p1": "Để sử dụng một số tính năng nhất định, bạn có thể cần tạo tài khoản.",
+          "subtitle": "Bạn đồng ý:",
+          "items": [
+            "Cung cấp thông tin tài khoản chính xác",
+            "Giữ an toàn cho thông tin đăng nhập của bạn",
+            "Chịu trách nhiệm về hoạt động dưới tài khoản của bạn",
+            "Thông báo cho chúng tôi nếu bạn nghi ngờ có sự truy cập trái phép"
+          ],
+          "p2": "Chúng tôi có thể tạm dừng hoặc chấm dứt các tài khoản vi phạm các Điều khoản này hoặc lạm dụng dịch vụ."
+        },
+        "s3": {
+          "title": "Nội dung của người dùng",
+          "items": [
+            "Bạn có thể tạo, gửi hoặc lưu trữ nội dung trong LockIn, bao gồm nhiệm vụ, nhiệm vụ con, mục tiêu, dự án, ghi chú phiên tập trung, URL bị chặn và lời nhắc AI.",
+            "Bạn giữ quyền sở hữu đối với nội dung của mình.",
+            "Bằng cách sử dụng LockIn, bạn cấp quyền cho chúng tôi lưu trữ, xử lý, hiển thị và sử dụng nội dung của bạn chỉ khi cần thiết để cung cấp, duy trì, bảo mật và cải thiện dịch vụ.",
+            "Bạn chịu trách nhiệm về nội dung mình gửi. Bạn đồng ý không gửi nội dung bất hợp pháp, có hại, lạm dụng, vi phạm hoặc xâm phạm quyền của người khác."
+          ]
+        },
+        "s4": {
+          "title": "Các tính năng AI",
+          "items": [
+            "LockIn có thể sử dụng AI để tạo bản phân tích nhiệm vụ, thời lượng ước tính, đề xuất kế hoạch và khuyến nghị về năng suất.",
+            "Đầu ra do AI tạo có thể không đầy đủ, không chính xác hoặc không phù hợp với tình huống của bạn. Bạn chịu trách nhiệm xem xét và chỉnh sửa các kế hoạch do AI tạo trước khi tin tưởng vào chúng.",
+            "LockIn không cung cấp lời khuyên về y tế, sức khỏe tâm thần, pháp lý, tài chính, học tập hoặc chuyên môn.",
+            "Bạn không nên dựa vào LockIn như nguồn hỗ trợ duy nhất cho việc lập kế hoạch, năng suất hoặc ra quyết định."
+          ]
+        },
+        "s5": {
+          "title": "Tính năng Năng suất và Tập trung",
+          "items": [
+            "LockIn có thể bao gồm các phiên sprint, bộ đếm giờ, lời nhắc, tóm tắt tiến trình và các tính năng chặn trang web hoặc bảo vệ tập trung.",
+            "Các tính năng này được cung cấp để hỗ trợ sự tập trung và năng suất, nhưng chúng tôi không đảm bảo rằng chúng sẽ ngăn chặn sự xao nhãng, cải thiện năng suất hoặc đảm bảo hoàn thành nhiệm vụ.",
+            "Bạn vẫn chịu trách nhiệm về công việc, hạn chót, thói quen và quyết định của chính mình."
+          ]
+        },
+        "s6": {
+          "title": "Gói trả phí, Credit và Thanh toán",
+          "p1": "Một số tính năng của LockIn có thể yêu cầu gói đăng ký trả phí, thanh toán một lần hoặc credit sử dụng.",
+          "subtitle": "Các tính năng trả phí có thể bao gồm, ví dụ:",
+          "items": [
+            "Giới hạn sử dụng AI cao hơn",
+            "Chế độ lập kế hoạch AI mở rộng",
+            "Chặn trang web cứng",
+            "Phân tích nâng cao",
+            "Tính năng cá nhân hóa"
+          ],
+          "p2": "Giá cả, hạn ngạch, giới hạn và các tính năng đi kèm sẽ được hiển thị trước khi mua.",
+          "p3": "Bằng cách mua gói trả phí, bạn ủy quyền cho nhà cung cấp thanh toán của chúng tôi tính các khoản phí áp dụng.",
+          "p4": "Trừ khi có quy định khác, các gói đăng ký sẽ tự động gia hạn cho đến khi bị hủy.",
+          "p5": "Bạn có thể hủy đăng ký của mình theo phương thức hủy được cung cấp trong ứng dụng hoặc bởi nhà cung cấp thanh toán.",
+          "p6": "Việc hủy đăng ký sẽ dừng các khoản gia hạn trong tương lai nhưng không tự động hoàn lại các khoản thanh toán trước đó trừ khi luật pháp yêu cầu hoặc được nêu trong chính sách hoàn tiền của chúng tôi."
+        },
+        "s7": {
+          "title": "Hoàn tiền",
+          "p1": "Khả năng đủ điều kiện hoàn tiền phụ thuộc vào phương thức thanh toán, loại đăng ký và luật pháp hiện hành.",
+          "p2": "Chính sách hoàn tiền của chúng tôi:",
+          "p3": "Các khoản thanh toán không được hoàn lại ngoại trừ trường hợp luật pháp yêu cầu."
+        },
+        "s8": {
+          "title": "Sử dụng được chấp nhận",
+          "subtitle": "Bạn đồng ý không:",
+          "items": [
+            "Sử dụng LockIn cho các mục đích bất hợp pháp, có hại hoặc lạm dụng",
+            "Cố gắng truy cập vào tài khoản hoặc dữ liệu của người dùng khác",
+            "Can thiệp vào bảo mật hoặc hoạt động của dịch vụ",
+            "Đảo ngược kỹ thuật, thu thập thông tin, sao chép hoặc khai thác dịch vụ",
+            "Vượt qua giới hạn sử dụng, hạn ngạch hoặc các hạn chế thanh toán",
+            "Gửi mã độc, thư rác hoặc nội dung có hại",
+            "Sử dụng các tính năng AI để tạo nội dung bất hợp pháp, có hại hoặc lạm dụng",
+            "Bán lại hoặc phân phối lại quyền truy cập vào LockIn mà không có sự cho phép"
+          ],
+          "p1": "Chúng tôi có thể giới hạn, tạm dừng hoặc chấm dứt quyền truy cập nếu chúng tôi tin rằng các quy tắc này bị vi phạm."
+        },
+        "s9": {
+          "title": "Dịch vụ của bên thứ ba",
+          "items": [
+            "LockIn có thể dựa vào các dịch vụ của bên thứ ba để xác thực, lưu trữ, cơ sở dữ liệu, tạo AI, phân tích, thanh toán, email và cơ sở hạ tầng khác.",
+            "Các dịch vụ này có thể có các điều khoản và chính sách riêng.",
+            "Chúng tôi không chịu trách nhiệm về các dịch vụ bên thứ ba nằm ngoài tầm kiểm soát của chúng tôi."
+          ]
+        },
+        "s10": {
+          "title": "Sự sẵn có của dịch vụ",
+          "items": [
+            "Chúng tôi mong muốn giữ cho LockIn hoạt động đáng tin cậy, nhưng chúng tôi không đảm bảo rằng dịch vụ sẽ luôn sẵn có, an toàn, không có lỗi hoặc không bị gián đoạn.",
+            "Các tính năng có thể thay đổi theo thời gian. Một số tính năng có thể là thử nghiệm, bị giới hạn hoặc bị loại bỏ."
+          ]
+        },
+        "s11": {
+          "title": "Các tính năng thử nghiệm hoặc bản Beta",
+          "items": [
+            "Một số tính năng có thể được phát hành dưới dạng tính năng thử nghiệm, xem trước hoặc beta.",
+            "Các tính năng này có thể không ổn định, không chính xác, không đầy đủ hoặc bị thay đổi mà không cần báo trước.",
+            "Sử dụng các tính năng beta này tự chịu rủi ro."
+          ]
+        },
+        "s12": {
+          "title": "Sở hữu Trí tuệ",
+          "items": [
+            "LockIn, bao gồm thiết kế, thương hiệu, phần mềm, giao diện và nội dung gốc, thuộc sở hữu của chúng tôi hoặc bên cấp phép của chúng tôi.",
+            "Bạn không được sao chép, sửa đổi, phân phối, bán hoặc tạo ra các tác phẩm phái sinh từ LockIn mà không có sự cho phép.",
+            "Bạn chỉ được phép sử dụng LockIn theo quy định của các Điều khoản này."
+          ]
+        },
+        "s13": {
+          "title": "Phản hồi",
+          "items": [
+            "If bạn gửi cho chúng tôi phản hồi, đề xuất, báo cáo lỗi hoặc ý tưởng tính năng, bạn cho phép chúng tôi sử dụng chúng mà không có bất kỳ hạn chế hoặc khoản bồi thường nào.",
+            "Điều này giúp chúng tôi cải thiện LockIn."
+          ]
+        },
+        "s14": {
+          "title": "Chấm dứt",
+          "p1": "Bạn có thể ngừng sử dụng LockIn bất cứ lúc nào.",
+          "subtitle": "Chúng tôi có thể tạm dừng hoặc chấm dứt quyền truy cập của bạn nếu:",
+          "items": [
+            "Bạn vi phạm các Điều khoản này",
+            "Bạn lạm dụng dịch vụ",
+            "Pháp luật yêu cầu",
+            "Việc tiếp tục cung cấp dịch vụ gây ra rủi ro cho chúng tôi hoặc người khác"
+          ],
+          "p2": "Sau khi chấm dứt, quyền truy cập dịch vụ của bạn có thể bị dừng. Một số dữ liệu có thể được giữ lại như mô tả trong Chính sách Bảo mật."
+        },
+        "s15": {
+          "title": "Tuyên bố từ chối trách nhiệm",
+          "p1": "LockIn được cung cấp trên cơ sở \"nguyên trạng\" và \"sẵn có\".",
+          "p2": "Trong phạm vi tối đa được pháp luật cho phép, chúng tôi từ chối mọi bảo đảm về khả năng thương mại, sự phù hợp cho một mục đích cụ thể, không vi phạm, độ chính xác, tính sẵn có và độ tin cậy.",
+          "subtitle": "Chúng tôi không đảm bảo rằng:",
+          "items": [
+            "Đầu ra của AI sẽ chính xác",
+            "Các nhiệm vụ sẽ được hoàn thành",
+            "Các phiên tập trung sẽ cải thiện năng suất",
+            "Việc chặn trang web sẽ hoạt động hoàn hảo",
+            "Dịch vụ sẽ không bị gián đoạn hoặc không có lỗi"
+          ]
+        },
+        "s16": {
+          "title": "Giới hạn Trách nhiệm pháp lý",
+          "items": [
+            "Trong phạm vi tối đa được pháp luật cho phép, LockIn và những người sáng lập sẽ không chịu trách nhiệm pháp lý đối với bất kỳ thiệt hại gián tiếp, ngẫu nhiên, đặc biệt, mang tính hệ quả hoặc trừng phạt nào, bao gồm cả việc mất năng suất, lỡ hạn chót, mất dữ liệu, mất lợi nhuận hoặc việc phụ thuộc vào đầu ra do AI tạo.",
+            "Tổng trách nhiệm của chúng tôi đối với bất kỳ khiếu nại nào sẽ không vượt quá số tiền bạn đã thanh toán cho LockIn trong 12 tháng qua hoặc 10 đô la Mỹ, tùy theo giá trị nào lớn hơn.",
+            "Một số khu vực tài phán không cho phép một số giới hạn nhất định, vì vậy một số giới hạn này có thể không áp dụng cho bạn."
+          ]
+        },
+        "s17": {
+          "title": "Bồi thường",
+          "subtitle": "Bạn đồng ý bảo vệ và miễn trừ trách nhiệm cho LockIn và những người sáng lập khỏi các khiếu nại, thiệt hại, tổn thất, trách nhiệm pháp lý và chi phí phát sinh từ:",
+          "items": [
+            "Việc sử dụng dịch vụ của bạn",
+            "Nội dung của bạn",
+            "Sự vi phạm của bạn đối với các Điều khoản này",
+            "Sự vi phạm của bạn đối với luật pháp hoặc quyền của bên thứ ba"
+          ]
+        },
+        "s18": {
+          "title": "Thay đổi đối với Điều khoản này",
+          "items": [
+            "Chúng tôi có thể cập nhật các Điều khoản này theo thời gian.",
+            "Nếu có các thay đổi quan trọng, chúng tôi có thể thông báo cho bạn thông qua ứng dụng, qua email hoặc bằng cách cập nhật ngày ở đầu trang này.",
+            "Việc tiếp tục sử dụng LockIn sau khi thay đổi có nghĩa là bạn chấp nhận Điều khoản đã được cập nhật."
+          ]
+        },
+        "s19": {
+          "title": "Luật áp dụng",
+          "items": [
+            "Các Điều khoản này được điều chỉnh bởi luật pháp Việt Nam, trừ khi có yêu cầu khác bởi luật bảo vệ người tiêu dùng hiện hành.",
+            "Mọi tranh chấp sẽ được giải quyết tại các tòa án ở Thành phố Hồ Chí Minh, Việt Nam, trừ khi luật hiện hành cho phép bạn đưa ra các khiếu nại ở nơi khác."
+          ]
+        },
+        "s20": {
+          "title": "Liên hệ",
+          "subtitle": "Nếu bạn có câu hỏi về các Điều khoản này, hãy liên hệ với chúng tôi tại:",
+          "company": "LockIn Labs, Inc.",
+          "address": "Thành phố Hồ Chí Minh, Việt Nam"
+        }
+      }
+    }
   }
 }

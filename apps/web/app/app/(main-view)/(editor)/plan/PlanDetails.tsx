@@ -3,6 +3,7 @@
 import * as React from "react"
 import { format } from "date-fns"
 import { ArrowRight } from "lucide-react"
+import { Clock } from "@untitledui/icons"
 
 export interface PlanDetailsProps {
   title?: string
@@ -136,14 +137,15 @@ export default function PlanDetails({
               ? "Describe what you want to accomplish"
               : "Plan description"
           }
-          className="w-full resize-none text-sm selection:bg-amber-200 focus-visible:outline-none active:outline-none"
-          rows={1}
+          className="leading-1.4 w-full resize-none text-sm selection:bg-amber-200 focus-visible:outline-none active:outline-none"
+          rows={2}
         />
       </div>
 
       <div className="mt-2 flex flex-col">
         <div className="flex items-center gap-4 py-2">
-          <div className="w-40 text-sm font-medium text-muted-foreground">
+          <div className="flex w-40 items-center gap-1.5 text-sm font-medium text-muted-foreground">
+            <Clock className="size-4" />
             Timeline
           </div>
           <div className="flex items-center gap-1">

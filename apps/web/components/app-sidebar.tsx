@@ -1,4 +1,5 @@
 "use client"
+import * as React from "react"
 import { toast } from "sonner"
 import {
   AppSidebarSearchCommand,
@@ -93,7 +94,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       url: activeSessionId
         ? `/app/focus/session/${activeSessionId}`
         : "/app/focus",
-      icon: <GoalIcon />,
+      icon: <Target05 />,
       isActive: pathname.startsWith("/app/focus"),
     },
     {

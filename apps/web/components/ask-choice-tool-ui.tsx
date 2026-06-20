@@ -406,7 +406,7 @@ function AskChoiceCard({
         className="w-full overflow-hidden rounded-2xl border bg-background shadow-[0_1px_2px_rgba(0,0,0,0.04),0_18px_40px_-28px_rgba(0,0,0,0.18)]"
       >
         {/* header */}
-        <div className="flex items-center gap-4 px-5 py-2">
+        <div className="flex items-center gap-4 px-4 py-2">
           <div className="min-w-0 flex-1">
             <h3 className="leading-snug font-medium text-balance text-foreground">
               {question || (isStreaming ? "Thinking of a question…" : "")}
@@ -451,7 +451,7 @@ function AskChoiceCard({
                 type="button"
                 onClick={() => choose(i)}
                 className={cn(
-                  "group flex w-full items-center gap-4 border-t border-border px-5 py-3.5 text-left transition-colors",
+                  "group flex w-full items-center gap-4 border-t border-border px-4 py-3.5 text-left transition-colors",
                   "hover:bg-muted active:translate-y-px",
                   isSel && "bg-primary/10"
                 )}
@@ -490,7 +490,7 @@ function AskChoiceCard({
           {allowOther && (
             <div
               className={cn(
-                "flex items-center gap-4 border-t border-border px-5 py-3 transition-colors",
+                "flex items-center gap-4 border-t border-border px-4 py-3 transition-colors",
                 customOpen && "bg-muted"
               )}
             >
@@ -676,7 +676,7 @@ function AskChoicesBatchCard({
     return (
       <section
         data-slot="ask-choices-batch-tool-ui"
-        className="w-full overflow-hidden rounded-2xl border bg-background"
+        className="w-full overflow-hidden rounded-xl border bg-background"
       >
         <div className="flex items-start gap-3 p-4">
           <span className="flex size-5 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground [&_svg]:size-3.5">
@@ -720,9 +720,9 @@ function AskChoicesBatchCard({
 
       <section
         aria-busy={isStreaming}
-        className="w-full overflow-hidden rounded-2xl border bg-background"
+        className="w-full overflow-hidden rounded-xl border bg-background"
       >
-        <div className="flex items-center justify-between gap-4 px-5 py-3">
+        <div className="flex items-center justify-between gap-4 px-4 py-3">
           <h3 className="text-sm leading-snug text-muted-foreground">
             {isStreaming
               ? "Thinking of questions..."
@@ -739,7 +739,7 @@ function AskChoicesBatchCard({
 
         {activeQuestion && (
           <div className="flex flex-col border-t border-border">
-            <div className="flex items-start justify-between gap-4 py-3 pr-3 pl-5">
+            <div className="flex items-start justify-between gap-4 py-3 pr-3 pl-4">
               <div className="min-w-0 flex-1">
                 {questions.length > 1 && (
                   <p className="mb-1 text-xs text-muted-foreground">
@@ -776,7 +776,7 @@ function AskChoicesBatchCard({
                     type="button"
                     onClick={() => choose(activeQuestion, optionIndex)}
                     className={cn(
-                      "group flex w-full items-center gap-4 border-t border-border px-5 py-3.5 text-left transition-colors",
+                      "group flex w-full items-center gap-4 border-t border-border px-4 py-3.5 text-left transition-colors",
                       "hover:bg-muted active:translate-y-px",
                       isSelected && "bg-primary/10"
                     )}
@@ -820,7 +820,7 @@ function AskChoicesBatchCard({
               {activeQuestion.allowOther && (
                 <div
                   className={cn(
-                    "flex items-center gap-4 border-t border-border px-5 py-3 transition-colors",
+                    "flex items-center gap-4 border-t border-border px-4 py-3 transition-colors",
                     isCustomOpen && "bg-muted"
                   )}
                 >
@@ -887,7 +887,7 @@ function AskChoicesBatchCard({
               )}
 
               {currentAnswer?.skipped && (
-                <div className="border-t border-border px-5 py-2 text-sm text-muted-foreground">
+                <div className="border-t border-border px-4 py-2 text-sm text-muted-foreground">
                   Skipped
                 </div>
               )}
@@ -896,7 +896,7 @@ function AskChoicesBatchCard({
         )}
 
         {questions.length > 1 && activeIndex > 0 && !answered && (
-          <div className="flex items-center justify-start border-t border-border px-5 py-3">
+          <div className="flex items-center justify-start border-t border-border px-4 py-3">
             <button
               type="button"
               onClick={() =>

@@ -1,7 +1,5 @@
 "use client"
-
-import * as React from "react"
-
+import { toast } from "sonner"
 import {
   AppSidebarSearchCommand,
   type AppSidebarSearchNavItem,
@@ -14,18 +12,12 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
   SidebarTrigger,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
-import {
-  HomeIcon,
-  PlusIcon,
-  ListCheckIcon,
-  GoalIcon,
-  BarChart3Icon,
-} from "lucide-react"
 import { deleteDbChat } from "@/lib/chat/db-chat-client"
 import { useChatSummaries } from "@/lib/chat/use-chat-summaries"
 import { deletePlan } from "@/lib/plans/plan-repository"
@@ -35,10 +27,21 @@ import { buildPlanHref } from "@/lib/routing/plan-url"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import type { FavoriteItem } from "@/components/nav-favorites"
 import { LogoAccent } from "@workspace/ui/components/logo-accent"
-import { AiPlannerIcon } from "./icons"
-import { NavUser } from "./nav-user"
 import { Button } from "@workspace/ui/components/button"
 import { useAdminAccess } from "@/lib/admin/use-admin-access"
+import {
+  Asterisk01,
+  BarChart07,
+  BookOpen02,
+  Home02,
+  List,
+  MessageChatSquare,
+  Plus,
+  SearchMd,
+  Target05,
+} from "@untitledui/icons"
+import { FeedbackPopover } from "./feedback-popover"
+import { Kbd } from "@workspace/ui/components/kbd"
 
 type NavItem = AppSidebarSearchNavItem
 
@@ -57,7 +60,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { state } = useSidebar()
   const { isAdmin } = useAdminAccess()
 
-  const [activeSessionId, setActiveSessionId] = React.useState<string | null>(null)
+  const [activeSessionId, setActiveSessionId] = React.useState<string | null>(
+    null
+  )
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
@@ -74,25 +79,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     {
       title: "Home",
       url: "/app",
-      icon: <HomeIcon />,
+      icon: <Home02 />,
       isActive: pathname === "/app",
     },
     {
       title: "Plans",
       url: "/app/plans",
-      icon: <ListCheckIcon />,
+      icon: <List />,
       isActive: pathname === "/app/plans",
     },
     {
       title: "Focus",
-      url: activeSessionId ? `/app/focus/session/${activeSessionId}` : "/app/focus",
+      url: activeSessionId
+        ? `/app/focus/session/${activeSessionId}`
+        : "/app/focus",
       icon: <GoalIcon />,
       isActive: pathname.startsWith("/app/focus"),
     },
     {
       title: "Ask AI",
       url: buildAskHref(),
-      icon: <AiPlannerIcon />,
+      icon: <Asterisk01 />,
       isActive: pathname === "/app/ask",
     },
   ]
@@ -101,7 +108,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     navMain.push({
       title: "Admin",
       url: "/app/admin/overview",
-      icon: <BarChart3Icon />,
+      icon: <BarChart07 />,
       isActive: pathname.startsWith("/app/admin"),
     })
   }
@@ -162,35 +169,35 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <>
-      {" "}
       <Sidebar
-        className="border-r-0 font-medium"
+        className="z-1000 border-r-0 px-1 py-2 font-medium"
         {...props}
         collapsible="offcanvas"
       >
-        <SidebarHeader>
-          <div className="flex items-center justify-between gap-2 pr-1">
-            <LogoAccent
-              className="h-8 cursor-pointer"
-              onClick={() => {
-                router.push("/app")
-              }}
-            />
-            <SidebarTrigger
-              className={`${state == "collapsed" && "pointer-events-none opacity-0"} transition-opacity`}
-            />
-          </div>
-          <SidebarMenuItem>
+        <div className="flex h-12 items-center justify-between gap-2 px-2">
+          <LogoAccent
+            className="h-7.5 cursor-pointer"
+            onClick={() => {
+              router.push("/app")
+            }}
+          />
+
+          <SidebarTrigger
+            className={`${state === "collapsed" ? "pointer-events-none opacity-0" : ""} transition-opacity`}
+          />
+        </div>
+        <SidebarHeader className="pt-0">
+          <SidebarMenuItem className="flex flex-row gap-1">
             <Button
               variant={"outline"}
-              className="w-full border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              className="flex-1 justify-start border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               onClick={handleCreatePlan}
+              size={"sm"}
             >
-              <PlusIcon data-icon="inline-start" />
-              New Plan
+              <Plus data-icon="inline-start" />
+              <span>New Plan</span>
             </Button>
-          </SidebarMenuItem>
-          <SidebarMenu>
+
             <AppSidebarSearchCommand
               navItems={navMain}
               chats={chats}
@@ -199,17 +206,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               arePlansLoaded={arePlansLoaded}
               onCreatePlan={handleCreatePlan}
             />
+          </SidebarMenuItem>
+          <SidebarMenu>
             <NavMain items={navMain} />
           </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
-          <NavFavorites
+          {/* <NavFavorites
             label="Recent chats"
             emptyLabel="No recent chats yet"
             favorites={recentChats}
             isLoading={!areChatsLoaded}
             onDelete={handleDeleteChat}
-          />
+          /> */}
           <NavFavorites
             label="Recent plans"
             emptyLabel="No saved plans yet"
@@ -220,7 +229,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           {/* <NavSecondary items={navSecondary} className="mt-auto" / */}
         </SidebarContent>
         <SidebarFooter>
-          <NavUser />
+          <SidebarMenu>
+            <div className="mb-2 flex w-full items-start justify-between rounded-lg border bg-card p-3">
+              <div>
+                <p className="text-sm">Welcome to LockIn!</p>
+                <p className="text-xs">Let us take you a round</p>
+              </div>
+            </div>
+            <SidebarMenuItem>
+              <FeedbackPopover />
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                onClick={() => {
+                  toast("Coming soon")
+                }}
+              >
+                <BookOpen02 data-icon="inline-start" />
+                Knowledge Hub
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>

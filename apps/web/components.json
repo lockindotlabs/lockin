@@ -6,7 +6,7 @@
   "tailwind": {
     "config": "",
     "css": "../../packages/ui/src/styles/globals.css",
-    "baseColor": "olive",
+    "baseColor": "neutral",
     "cssVariables": true
   },
   "iconLibrary": "lucide",

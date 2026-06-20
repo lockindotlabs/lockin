@@ -49,6 +49,7 @@ import {
   CopyIcon,
   DownloadIcon,
   GlobeIcon,
+  InboxIcon,
   MoreHorizontalIcon,
   PencilIcon,
   RefreshCwIcon,
@@ -64,6 +65,23 @@ import { CapabilitiesSelector } from "./capabilities-selector"
 import { getMentionKey, type MentionRef } from "@/lib/mentions/mention-types"
 import { motion } from "motion/react"
 import { AiPlannerIcon } from "./icons"
+import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
+import { useRecentlyOpenedPlans } from "@/lib/plans/recently-opened-plans"
+import Link from "next/link"
+import { PlanGrid } from "./plan-grid"
+import { Asterisk01, ClockRewind, Plus } from "@untitledui/icons"
+import { useChatSummaries } from "@/lib/chat/use-chat-summaries"
+import { useRouter } from "next/navigation"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+} from "@workspace/ui/components/dropdown-menu"
+import { buildAskHref } from "@/lib/routing/ask-url"
 
 type ThreadModelOption = ModelOption & {
   contextWindow: number
@@ -108,77 +126,281 @@ export const Thread: FC<{
   mode?: "onboarding" | "plan"
   initialMentions?: MentionRef[]
 }> = ({ mode = "onboarding", initialMentions }) => {
+  const { plans, isLoaded } = usePlanSummaries()
+  const recentlyOpenedPlans = useRecentlyOpenedPlans(plans)
+  const homePlans = recentlyOpenedPlans.slice(0, 3)
+
   const [selectedModelId, setSelectedModelId] = useState(DEFAULT_MODEL_ID)
   const [selectedCapabilityId, setSelectedCapabilityId] = useState<
     string | undefined
   >(undefined)
   const isEmpty = useAuiState((s) => s.thread.isEmpty)
+  const router = useRouter()
 
-  const selectedModel =
-    GEMINI_MODELS.find((model) => model.id === selectedModelId) ?? DEFAULT_MODEL
+  const { chats } = useChatSummaries()
+
+  const handleChatSelect = (chatId: string) => {
+    router.push(buildAskHref({ chatSessionId: chatId }))
+  }
+
+  const { todayChats, yesterdayChats, previousSevenDaysChats, olderChats } =
+    useMemo(() => {
+      const now = new Date()
+      const todayStart = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+      ).getTime()
+      const yesterdayStart = todayStart - 24 * 60 * 60 * 1000
+      const sevenDaysAgoStart = todayStart - 7 * 24 * 60 * 60 * 1000
+
+      const today: typeof chats = []
+      const yesterday: typeof chats = []
+      const sevenDays: typeof chats = []
+      const older: typeof chats = []
+
+      chats.forEach((chat) => {
+        const time = chat.updatedAt ? new Date(chat.updatedAt).getTime() : 0
+        if (!time) {
+          older.push(chat)
+        } else if (time >= todayStart) {
+          today.push(chat)
+        } else if (time >= yesterdayStart) {
+          yesterday.push(chat)
+        } else if (time >= sevenDaysAgoStart) {
+          sevenDays.push(chat)
+        } else {
+          older.push(chat)
+        }
+      })
+
+      return {
+        todayChats: today,
+        yesterdayChats: yesterday,
+        previousSevenDaysChats: sevenDays,
+        olderChats: older,
+      }
+    }, [chats])
 
   return (
-    <ThreadPrimitive.Root
-      className="aui-root aui-thread-root @container flex h-[calc(100vh-3rem)] flex-col bg-background"
-      style={{
-        ["--thread-max-width" as string]: "44rem",
-        ["--composer-radius" as string]: "24px",
-        ["--composer-padding" as string]: "10px",
-      }}
-    >
-      <ThreadPrimitive.Viewport
-        turnAnchor="bottom"
-        autoScroll={true}
-        scrollToBottomOnRunStart={true}
-        scrollToBottomOnInitialize={false}
-        scrollToBottomOnThreadSwitch={true}
-        data-slot="aui_thread-viewport"
-        className="relative my-auto flex flex-1 flex-col overflow-x-auto overflow-y-auto scroll-smooth"
-      >
-        <div
-          className={cn(
-            "mx-auto flex w-full max-w-(--thread-max-width) flex-col px-4 md:px-6",
-            !isEmpty && "flex-1",
-            mode === "plan" ? "mt-auto" : "my-auto"
-          )}
-        >
-          <AuiIf condition={(s) => s.thread.isEmpty}>
-            {mode === "plan" ? (
-              <>
-                <ThreadPlanWelcome />
-                <ThreadSuggestions mode={mode} />
-              </>
-            ) : (
-              <ThreadWelcome />
-            )}
-          </AuiIf>
-
-          <div
-            data-slot="aui_message-group"
-            className="mb-16 flex flex-col gap-y-8 empty:hidden"
-          >
-            <ThreadPrimitive.Messages>
-              {() => <ThreadMessage />}
-            </ThreadPrimitive.Messages>
-          </div>
-
-          <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mt-auto flex flex-col gap-4 overflow-visible rounded-t-(--composer-radius) bg-background py-4 md:pb-6">
-            <ThreadScrollToBottom />
-            <Composer
-              mode={mode}
-              initialMentions={initialMentions}
-              selectedModelId={selectedModelId}
-              onSelectedModelChange={setSelectedModelId}
-              selectedCapabilityId={selectedCapabilityId}
-              onSelectedCapabilityChange={setSelectedCapabilityId}
+    <>
+      <AuiIf condition={(s) => s.thread.isEmpty && mode == "onboarding"}>
+        <div className="absolute top-12 right-0 left-0 z-10 flex h-12 items-center border-b bg-background/80 px-3 backdrop-blur">
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button variant={"outline"} size={"sm"} className={"text-xs"}>
+                  <ClockRewind data-icon="inline-start" />
+                  Recent
+                </Button>
+              }
             />
-          </ThreadPrimitive.ViewportFooter>
-          <AuiIf condition={(s) => s.thread.isEmpty}>
-            {mode === "onboarding" && <ThreadSuggestions />}
-          </AuiIf>
+            <DropdownMenuContent align="start" className="w-64 max-w-90">
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onClick={() => router.push(buildAskHref())}
+                  className="flex items-center gap-2 font-medium"
+                >
+                  <Plus className="size-4" />
+                  New chat
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+
+              {chats.length === 0 ? (
+                <>
+                  <DropdownMenuSeparator />
+                  <div className="px-3 py-2 text-center text-xs text-muted-foreground">
+                    No recent chats
+                  </div>
+                </>
+              ) : (
+                <>
+                  {todayChats.length > 0 && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuLabel>Today</DropdownMenuLabel>
+                        {todayChats.map((chat) => (
+                          <DropdownMenuItem
+                            key={chat.id}
+                            onClick={() => handleChatSelect(chat.id)}
+                            className="truncate"
+                          >
+                            {chat.title || "New chat"}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuGroup>
+                    </>
+                  )}
+
+                  {yesterdayChats.length > 0 && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuLabel>Yesterday</DropdownMenuLabel>
+                        {yesterdayChats.map((chat) => (
+                          <DropdownMenuItem
+                            key={chat.id}
+                            onClick={() => handleChatSelect(chat.id)}
+                            className="truncate"
+                          >
+                            {chat.title || "New chat"}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuGroup>
+                    </>
+                  )}
+
+                  {previousSevenDaysChats.length > 0 && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuLabel>Previous 7 days</DropdownMenuLabel>
+                        {previousSevenDaysChats.map((chat) => (
+                          <DropdownMenuItem
+                            key={chat.id}
+                            onClick={() => handleChatSelect(chat.id)}
+                            className="truncate"
+                          >
+                            {chat.title || "New chat"}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuGroup>
+                    </>
+                  )}
+
+                  {olderChats.length > 0 && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuLabel>Older</DropdownMenuLabel>
+                        {olderChats.map((chat) => (
+                          <DropdownMenuItem
+                            key={chat.id}
+                            onClick={() => handleChatSelect(chat.id)}
+                            className="truncate"
+                          >
+                            {chat.title || "New chat"}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuGroup>
+                    </>
+                  )}
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-      </ThreadPrimitive.Viewport>
-    </ThreadPrimitive.Root>
+      </AuiIf>
+      <ThreadPrimitive.Root
+        className="aui-root aui-thread-root @container flex max-h-[calc(100vh-1rem)] flex-1 flex-col"
+        style={{
+          ["--thread-max-width" as string]: "44rem",
+          ["--composer-radius" as string]: "var(--radius-2xl)",
+          ["--composer-padding" as string]: "10px",
+        }}
+      >
+        <ThreadPrimitive.Viewport
+          turnAnchor="bottom"
+          autoScroll={true}
+          scrollToBottomOnRunStart={true}
+          scrollToBottomOnInitialize={false}
+          scrollToBottomOnThreadSwitch={true}
+          data-slot="aui_thread-viewport"
+          className="relative my-auto flex flex-1 flex-col overflow-x-auto overflow-y-auto scroll-smooth"
+        >
+          <div
+            className={cn(
+              "mx-auto flex w-full max-w-(--thread-max-width) flex-col px-2",
+              !isEmpty && "flex-1",
+              mode === "plan" ? "mt-auto" : "my-auto"
+            )}
+          >
+            <AuiIf condition={(s) => s.thread.isEmpty}>
+              {mode === "plan" ? (
+                <>
+                  <ThreadPlanWelcome />
+                  <ThreadSuggestions mode={mode} />
+                </>
+              ) : (
+                <ThreadWelcome />
+              )}
+            </AuiIf>
+
+            <div
+              data-slot="aui_message-group"
+              className="mt-12 mb-16 flex flex-col gap-y-8 empty:hidden"
+            >
+              <ThreadPrimitive.Messages>
+                {() => <ThreadMessage />}
+              </ThreadPrimitive.Messages>
+            </div>
+
+            <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mt-auto flex flex-col gap-4 overflow-visible rounded-t-(--composer-radius) py-2">
+              <ThreadScrollToBottom />
+              <Composer
+                mode={mode}
+                initialMentions={initialMentions}
+                selectedModelId={selectedModelId}
+                onSelectedModelChange={setSelectedModelId}
+                selectedCapabilityId={selectedCapabilityId}
+                onSelectedCapabilityChange={setSelectedCapabilityId}
+              />
+            </ThreadPrimitive.ViewportFooter>
+            <AuiIf condition={(s) => s.thread.isEmpty}>
+              {mode === "onboarding" && <ThreadSuggestions />}
+            </AuiIf>
+            <AuiIf condition={(s) => s.thread.isEmpty && mode === "onboarding"}>
+              {!isLoaded ? (
+                <section className="mx-auto w-full max-w-3xl px-4 pt-20">
+                  <div className="mb-5 flex items-center justify-between gap-4">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="h-5 w-40 animate-pulse rounded bg-muted" />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    {[1, 2, 3].map((i) => (
+                      <div
+                        key={i}
+                        className="h-40 animate-pulse rounded-xl bg-muted"
+                      />
+                    ))}
+                  </div>
+                </section>
+              ) : plans.length > 0 ? (
+                <section className="mx-auto w-full max-w-3xl px-4 pt-20">
+                  <div className="mb-5 flex items-center justify-between gap-4">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <h2 className="truncate text-sm text-muted-foreground">
+                        Recently opened plans
+                      </h2>
+                    </div>
+                    <Link
+                      href="/app/plans"
+                      className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      View all
+                      <ChevronRightIcon className="size-4" aria-hidden="true" />
+                    </Link>
+                  </div>
+                  <PlanGrid plans={homePlans} />
+                </section>
+              ) : (
+                <section className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center gap-2 px-4 py-10 text-center text-sm text-muted-foreground">
+                  <InboxIcon className="size-10" strokeWidth={1.25} />
+                  <div>
+                    <h2 className="font-medium">
+                      You don't have any saved plans yet
+                    </h2>
+                    <p className="">Create a plan to see it here.</p>
+                  </div>
+                </section>
+              )}
+            </AuiIf>
+          </div>
+        </ThreadPrimitive.Viewport>
+      </ThreadPrimitive.Root>
+    </>
   )
 }
 
@@ -198,7 +420,7 @@ const ThreadScrollToBottom: FC = () => {
         <TooltipIconButton
           tooltip="Scroll to bottom"
           variant="outline"
-          className="aui-thread-scroll-to-bottom absolute -top-12 z-10 self-center rounded-full p-4 disabled:invisible dark:border-border dark:bg-background dark:hover:bg-accent"
+          className="aui-thread-scroll-to-bottom absolute -top-12 z-100 self-center rounded-full p-4 disabled:invisible dark:border-border dark:bg-background dark:hover:bg-accent"
         />
       }
     >
@@ -211,8 +433,8 @@ const ThreadWelcome: FC = () => {
   return (
     <div className="aui-thread-welcome-root my-auto flex grow flex-col space-y-12">
       <div className="aui-thread-welcome-center flex w-full grow flex-col items-center justify-center">
-        <div className="aui-thread-welcome-message flex size-full flex-col justify-center px-4">
-          <h1 className="aui-thread-welcome-message-inner mb-1 animate-in text-3xl tracking-tight duration-200 fill-mode-both fade-in slide-in-from-bottom-1">
+        <div className="aui-thread-welcome-message flex size-full flex-col justify-center px-4 text-center">
+          <h1 className="aui-thread-welcome-message-inner mb-1 animate-in text-2xl font-medium tracking-tight delay-200 duration-200 fill-mode-both fade-in slide-in-from-bottom-1">
             What do you need to get done?
           </h1>
           <p className="aui-thread-welcome-message-inner animate-in text-muted-foreground delay-75 duration-200 fill-mode-both fade-in slide-in-from-bottom-1">
@@ -232,9 +454,9 @@ const ThreadPlanWelcome: FC = () => {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.3, ease: "easeOut" }}
-        className="aui-thread-plan-welcome-icon mb-4"
+        className="aui-thread-plan-welcome-icon mb-2"
       >
-        <AiPlannerIcon />
+        <Asterisk01 />
       </motion.div>
       <h1 className="aui-thread-plan-welcome-title mb-4 font-medium tracking-normal text-foreground">
         How can I help with your plan?
@@ -249,7 +471,7 @@ const ThreadSuggestions: FC<{
   return (
     <div
       className={cn(
-        "aui-thread-welcome-suggestions w-full gap-2 pb-4",
+        "aui-thread-welcome-suggestions w-full gap-2 py-4",
         mode === "plan" ? "grid" : "flex flex-wrap justify-center"
       )}
     >
@@ -268,7 +490,7 @@ const ThreadSuggestionItem: FC = () => {
         render={
           <Button
             variant="ghost"
-            className="aui-thread-welcome-suggestion h-auto flex-wrap items-start justify-center gap-1 rounded-3xl border border-border bg-background px-3 py-1.5 text-start text-sm text-muted-foreground transition-colors hover:bg-muted @md:flex-col"
+            className="aui-thread-welcome-suggestion h-auto flex-wrap items-start justify-center gap-1 border border-border bg-background px-3 py-1.5 text-start text-sm text-muted-foreground transition-colors hover:bg-muted @md:flex-col"
           />
         }
       >
@@ -359,7 +581,7 @@ const Composer: FC<{
           render={
             <div
               data-slot="aui_composer-shell"
-              className="flex w-full flex-col gap-2 rounded-(--composer-radius) border bg-background p-(--composer-padding) transition-shadow focus-within:border-ring/75 focus-within:ring-2 focus-within:ring-ring/20 data-[dragging=true]:border-dashed data-[dragging=true]:border-ring data-[dragging=true]:bg-accent/50"
+              className="box-border flex w-full flex-col gap-2 rounded-(--composer-radius) border bg-background p-(--composer-padding) transition-shadow focus-within:border-ring/75 focus-within:shadow-md focus-within:ring-4 focus-within:ring-ring/20 data-[dragging=true]:bg-accent/50 data-[dragging=true]:outline-2 data-[dragging=true]:outline-dashed"
             />
           }
         >
@@ -430,7 +652,7 @@ const ComposerAction: FC<{
                 type="button"
                 variant="default"
                 size="icon"
-                className="aui-composer-send size-8 rounded-full"
+                className="aui-composer-send size-8"
                 aria-label="Send message"
               />
             }
@@ -445,7 +667,7 @@ const ComposerAction: FC<{
                 type="button"
                 variant="default"
                 size="icon"
-                className="aui-composer-cancel size-8 rounded-full"
+                className="aui-composer-cancel size-8"
                 aria-label="Stop generating"
               />
             }
@@ -627,7 +849,7 @@ const UserMessage: FC = () => {
       <UserMessageAttachments />
 
       <div className="aui-user-message-content-wrapper relative col-start-2 min-w-0">
-        <div className="aui-user-message-content peer rounded-2xl bg-muted px-3 py-2 wrap-break-word text-foreground empty:hidden">
+        <div className="aui-user-message-content peer rounded-2xl bg-sidebar-accent px-3 py-2 wrap-break-word text-foreground empty:hidden">
           <MessagePrimitive.Parts components={{ Text: MentionTextPart }} />
         </div>
         <div className="aui-user-action-bar-wrapper absolute start-0 top-1/2 -translate-x-full -translate-y-1/2 pe-2 peer-empty:hidden rtl:translate-x-full">

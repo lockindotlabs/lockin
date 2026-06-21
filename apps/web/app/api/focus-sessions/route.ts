@@ -1,6 +1,7 @@
 import { z } from "zod"
 import prisma from "@workspace/db"
 import { getAuthenticatedUser } from "@/lib/server/auth"
+import { pushToUser } from "@/lib/server/sse-registry"
 
 const StartSessionSchema = z.object({
   planId: z.string().min(1).optional(),
@@ -24,7 +25,15 @@ export async function GET(req: Request) {
         ...(planId ? { planId: planId } : {}),
         ...(active === "true" ? { endedAt: null } : {}),
       },
-      include: { plan: { select: { id: true, name: true } } },
+      include: {
+        plan: {
+          select: {
+            id: true,
+            name: true,
+            steps: { orderBy: { order: "asc" } },
+          },
+        },
+      },
       orderBy: { startedAt: "desc" },
       ...(active === "true" ? { take: 1 } : {}),
     })
@@ -71,8 +80,18 @@ export async function POST(req: Request) {
         ...(planId ? { planId } : {}),
         ...(plannedDuration ? { plannedDuration } : {}),
       },
-      include: { plan: { select: { id: true, name: true } } },
+      include: {
+        plan: {
+          select: {
+            id: true,
+            name: true,
+            steps: { orderBy: { order: "asc" } },
+          },
+        },
+      },
     })
+
+    pushToUser(user.id, { type: "session-start", data: session })
 
     return Response.json({ success: true, message: "Focus session started", data: session }, { status: 201 })
   } catch (error) {

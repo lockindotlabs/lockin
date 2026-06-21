@@ -1,6 +1,7 @@
 import { z } from "zod"
 import prisma from "@workspace/db"
 import { getAuthenticatedUser } from "@/lib/server/auth"
+import { pushToUser } from "@/lib/server/sse-registry"
 
 const EndSessionSchema = z.object({
   completionType: z.enum(["EARLY", "NORMAL", "OVERTIME"]),
@@ -98,6 +99,8 @@ export async function PATCH(req: Request, context: RouteContext) {
         })
       if (updateOps.length) await prisma.$transaction(updateOps)
     }
+
+    pushToUser(user.id, { type: "session-end", data: { id: session.id, completionType: session.completionType } })
 
     return Response.json({
       success: true,

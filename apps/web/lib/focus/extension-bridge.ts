@@ -42,14 +42,30 @@ function getRememberedExtensionId(): string | null {
 
 /**
  * Best-effort push of a state-change message to the connected extension.
- * Silently no-ops if there's no remembered extension, the browser isn't
- * Chrome, or the extension isn't installed/running — the poll-based sync
- * in background.js is the safety net for all of those cases.
+ * Tries a direct `chrome.runtime.sendMessage(extId, ...)` first — this
+ * reaches background.js regardless of tab visibility/throttling. Falls back
+ * to the CustomEvent (relayed by content.js, only works while the lockin.app
+ * tab is active/foreground) when there's no remembered extension yet or the
+ * direct send fails. The SSE stream and 30s alarm poll in background.js are
+ * the safety net for when both of these miss (extension reloading, browser
+ * closed, message dropped, etc).
  */
 function notifyExtension(message: Record<string, unknown>) {
   if (typeof window === "undefined") return
-  const event = new CustomEvent("lockin-app-to-extension", { detail: message })
-  window.dispatchEvent(event)
+
+  const extId = getRememberedExtensionId()
+  const chromeApi = getChromeApi()
+
+  if (extId && chromeApi?.runtime?.sendMessage) {
+    chromeApi.runtime.sendMessage(extId, message, () => {
+      if (chromeApi.runtime?.lastError) {
+        window.dispatchEvent(new CustomEvent("lockin-app-to-extension", { detail: message }))
+      }
+    })
+    return
+  }
+
+  window.dispatchEvent(new CustomEvent("lockin-app-to-extension", { detail: message }))
 }
 
 /** Tell the extension a sprint just started in the app, so it can mirror it immediately. */

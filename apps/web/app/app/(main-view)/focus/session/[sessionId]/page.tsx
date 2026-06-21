@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation"
 import { useAuth } from "@clerk/nextjs"
 import { RedirectToSignIn, Show } from "@clerk/nextjs"
 import { Button } from "@workspace/ui/components/button"
+import { useSidebar } from "@workspace/ui/components/sidebar"
 import {
   CheckCircle2Icon,
   CircleIcon,
@@ -357,6 +358,19 @@ export default function SessionPage() {
   const router = useRouter()
   const { getToken } = useAuth()
   const sessionId = params.sessionId
+
+  // Auto-collapse the sidebar while focusing — restore whatever it was set
+  // to before, on the way out, rather than always forcing it back open
+  // (the user may have already had it closed).
+  const { open: sidebarOpen, setOpen: setSidebarOpen } = useSidebar()
+  const sidebarOpenBeforeFocusRef = React.useRef(sidebarOpen)
+  React.useEffect(() => {
+    setSidebarOpen(false)
+    return () => {
+      setSidebarOpen(sidebarOpenBeforeFocusRef.current)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const [session, setSession] = React.useState<FocusSession | null>(null)
   const [plan, setPlan] = React.useState<FocusPlan | null>(null)

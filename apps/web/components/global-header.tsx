@@ -2,25 +2,15 @@
 
 import * as React from "react"
 import { RedirectToSignIn, Show } from "@clerk/nextjs"
-import { Bell01, List, Coins04, Asterisk02 } from "@untitledui/icons"
-import { Button } from "@workspace/ui/components/button"
 import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar"
-import { ChevronDown, CoinsIcon, ArrowRight, GoalIcon } from "lucide-react"
 import { NavUser } from "./nav-user"
-import { useAiUsageSummary } from "@/lib/ai/use-ai-usage-summary"
-import { Skeleton } from "@workspace/ui/components/skeleton"
 import { usePathname } from "next/navigation"
 import { useHeaderContext } from "@/components/header-context"
-import { useRightSidebarContext } from "@/components/right-sidebar-context"
 
-import { AiPlansPopover } from "./ai-plans-popover"
 import { NotificationPopover } from "./notification-popover"
-import { CreditsPopover } from "./credits-popover"
 
 export default function GlobalHeader() {
-  const { state, stateRight } = useSidebar()
-  const { hasContent } = useRightSidebarContext()
-  const { summary, isLoaded } = useAiUsageSummary()
+  const { state } = useSidebar()
   const pathname = usePathname()
 
   const { setLeftContainer, setRightContainer, hasLeftContent, visible } =
@@ -61,6 +51,14 @@ export default function GlobalHeader() {
       )
     }
 
+    if (pathname.startsWith("/app/subscription")) {
+      return (
+        <div className="flex items-center gap-2 text-sm font-medium">
+          <span>Subscription</span>
+        </div>
+      )
+    }
+
     // Default to Ask
     return (
       <div className="flex items-center gap-2 text-sm font-medium">
@@ -94,10 +92,8 @@ export default function GlobalHeader() {
 
       <div className="flex items-center gap-2">
         <div ref={setRightContainer} className="flex items-center gap-2" />
-        <AiPlansPopover summary={summary} isLoaded={isLoaded} />
-        <CreditsPopover summary={summary} isLoaded={isLoaded} />
         <NotificationPopover />
-        <NavUser />
+        <NavUser side="bottom" align="end" sideOffset={16} />
       </div>
     </div>
   )

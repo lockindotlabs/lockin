@@ -195,17 +195,7 @@ export const Thread: FC<{
                 </Button>
               }
             />
-            <DropdownMenuContent align="start" className="w-64 max-w-90">
-              <DropdownMenuGroup>
-                <DropdownMenuItem
-                  onClick={() => router.push(buildAskHref())}
-                  className="flex items-center gap-2 font-medium"
-                >
-                  <Plus className="size-4" />
-                  New chat
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-
+            <DropdownMenuContent align="start" className="max-w-100 min-w-64">
               {chats.length === 0 ? (
                 <>
                   <DropdownMenuSeparator />

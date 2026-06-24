@@ -13,97 +13,111 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu"
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@workspace/ui/components/sidebar"
-import { useClerk, UserAvatar, useUser } from "@clerk/nextjs"
+import { useSidebar } from "@workspace/ui/components/sidebar"
+import { useClerk, UserAvatar } from "@clerk/nextjs"
+import { useRouter } from "next/navigation"
 import { BillingDialog } from "./billing-dialog"
 import React from "react"
-import { useBillingState } from "@/lib/billing/use-billing-state"
+import { useAiUsageSummary } from "@/lib/ai/use-ai-usage-summary"
 import { UpgradeDialog } from "./upgrade-dialog"
-import { AI_CATALOG } from "@/lib/ai/catalog"
-import { Atom01, Coins04 } from "@untitledui/icons"
+import { Button } from "@workspace/ui/components/button"
+import { Infinity } from "@untitledui/icons"
 
-export function NavUser() {
+export function NavUser({
+  side = "bottom",
+  align = "end",
+  sideOffset = 16,
+}: {
+  side?: "top" | "bottom" | "left" | "right"
+  align?: "start" | "center" | "end"
+  sideOffset?: number
+}) {
   const { isMobile } = useSidebar()
   const { openUserProfile, signOut } = useClerk()
+  const router = useRouter()
   const [billingOpen, setBillingOpen] = React.useState(false)
   const [upgradeOpen, setUpgradeOpen] = React.useState(false)
 
-  const { billing } = useBillingState()
+  const { summary } = useAiUsageSummary()
 
-  const userTier = React.useMemo(() => {
-    if (!billing) {
-      return "Loading..."
-    }
-    return billing.tier !== "FREE" ? billing.tier : "Free Tier"
-  }, [billing])
+  const tierName = React.useMemo(() => {
+    if (!summary) return "Free Tier"
+    if (summary.tier === "FREE") return "Free Tier"
+    return `${summary.tier.charAt(0) + summary.tier.slice(1).toLowerCase()} Tier`
+  }, [summary])
 
-  const displayTier = React.useMemo(() => {
-    if (!billing) return "Trial"
-    if (billing.tier === "FREE") return "Trial"
-    if (billing.tier === "PLUS") return "Plus"
-    if (billing.tier === "PRO") return "Pro"
-    return "Trial"
-  }, [billing])
-  const monthlyCredits = React.useMemo(() => {
-    const tier = billing?.tier ?? "FREE"
-    return AI_CATALOG[tier].creditsPerMonth
-  }, [billing])
+  const aiPlansText = React.useMemo(() => {
+    if (!summary) return "0 / 3"
+    const { created, limit } = summary.aiPlans
+    if (limit === null) return `${created} / Unlimited`
+    return `${created} / ${limit}`
+  }, [summary])
+
+  const totalCredits = React.useMemo(() => {
+    if (!summary) return 1000
+    return summary.credits.limit
+  }, [summary])
+
+  const remainingCredits = React.useMemo(() => {
+    if (!summary) return 867
+    return summary.credits.remaining
+  }, [summary])
 
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
-            <button className="size-8">
+            <button className="size-8 cursor-pointer outline-none">
               <UserAvatar />
             </button>
           }
         />
         <DropdownMenuContent
-          className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-          side={isMobile ? "bottom" : "top"}
-          align="end"
-          sideOffset={16}
+          className="w-64 rounded-xl p-1"
+          side={isMobile ? "bottom" : side}
+          align={isMobile ? "end" : align}
+          sideOffset={sideOffset}
         >
           <DropdownMenuGroup>
-            <div className="flex items-center gap-2 px-2 py-1.5 text-left text-sm">
-              <UserAvatar />
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">name</span>
-                <span className="truncate text-xs">name</span>
+            <div className="mb-1 flex flex-col rounded-lg border border-border bg-card p-3 select-none">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-sm font-medium">{tierName}</span>
+                <Button
+                  size={"xs"}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    router.push("/app/subscription")
+                  }}
+                >
+                  Upgrade
+                </Button>
               </div>
-            </div>
 
-            <div className="mx-1 my-1 flex flex-col gap-1 rounded-md border bg-background p-2 text-sm select-none">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 font-medium text-foreground">
-                  <Atom01 className="size-4 text-blue-500" strokeWidth={2} />
-                  <span className="text-xs">{displayTier}</span>
-                  <span className="text-2xs leading-5 text-muted-foreground">
-                    Valid untill Jan 12
+              {/* Credits Info */}
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Total</span>
+                  <span className="font-medium text-foreground">
+                    {totalCredits.toLocaleString()} credits
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Remaining</span>
+                  <span className="font-medium text-foreground">
+                    {remainingCredits.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">AI Plans</span>
+                  <span className="font-medium text-foreground">
+                    {aiPlansText}
                   </span>
                 </div>
               </div>
-              {/* Divider */}
-              <div className="my-1 border-t" />
-
-              {/* Row 2 */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 font-medium text-foreground">
-                  <Coins04 className="size-4" />
-                  <span className="text-xs">Credits</span>
-                </div>
-                <span className="text-2xs leading-5 text-muted-foreground">
-                  {monthlyCredits.toLocaleString()} monthly
-                </span>
-              </div>
             </div>
-            <DropdownMenuItem onClick={() => setUpgradeOpen(true)}>
+            <DropdownMenuItem onClick={() => router.push("/app/subscription")}>
               <CircleArrowUpIcon />
               Upgrade Plan
             </DropdownMenuItem>

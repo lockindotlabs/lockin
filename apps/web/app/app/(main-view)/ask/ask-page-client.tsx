@@ -325,7 +325,7 @@ export function AskPageClient() {
                       />
                       <DropdownMenuContent
                         align="start"
-                        className="w-64 max-w-90"
+                        className="max-w-100 min-w-64"
                       >
                         <DropdownMenuGroup>
                           <DropdownMenuItem

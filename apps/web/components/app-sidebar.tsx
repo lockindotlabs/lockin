@@ -35,6 +35,7 @@ import {
   BarChart07,
   BookOpen02,
   Home02,
+  LineChartUp03,
   List,
   MessageChatSquare,
   Plus,
@@ -102,6 +103,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       url: buildAskHref(),
       icon: <Asterisk01 />,
       isActive: pathname === "/app/ask",
+    },
+    {
+      title: "Insights",
+      url: "/app/insights",
+      icon: <LineChartUp03 />,
+      isActive: pathname.startsWith("/app/insights"),
     },
   ]
 

@@ -17,6 +17,22 @@ const EndSessionSchema = z.object({
         done: z.boolean().optional(),
         status: z.enum(["TODO", "IN_PROGRESS", "DONE", "CANCELLED"]).optional(),
         durationMinutes: z.number().optional(),
+        plannedMinutes: z.number().optional(),
+        actualSpentSeconds: z.number().optional(),
+        timingOutcome: z
+          .enum([
+            "EARLY",
+            "ON_TIME",
+            "OVERTIME_RESOLVED",
+            "OVERTIME_FAILED",
+            "GAVE_UP",
+          ])
+          .optional(),
+        completedAt: z.string().optional(),
+        extensionCount: z.number().int().nonnegative().optional(),
+        extensionSecondsTotal: z.number().int().nonnegative().optional(),
+        finalAction: z.enum(["DONE", "GAVE_UP"]).optional(),
+        procrastinationScore: z.number().min(0).max(1).optional(),
       })
     )
     .optional(),

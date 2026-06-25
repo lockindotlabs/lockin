@@ -44,12 +44,29 @@ export type FocusSession = {
   slipCount: number | null
 }
 
+export type TimingOutcome =
+  | "EARLY"
+  | "ON_TIME"
+  | "OVERTIME_RESOLVED"
+  | "OVERTIME_FAILED"
+  | "GAVE_UP"
+
+export type TaskFinalAction = "DONE" | "GAVE_UP"
+
 export type TaskSnapshot = {
   id: string
   done: boolean
   status: "TODO" | "IN_PROGRESS" | "DONE" | "CANCELLED"
   title?: string
   durationMinutes?: number
+  plannedMinutes?: number
+  actualSpentSeconds?: number
+  timingOutcome?: TimingOutcome
+  completedAt?: string
+  extensionCount?: number
+  extensionSecondsTotal?: number
+  finalAction?: TaskFinalAction
+  procrastinationScore?: number
 }
 
 type StoredPlanSummary = {

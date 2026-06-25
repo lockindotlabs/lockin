@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react"
 import type { ReactNode, HTMLAttributes } from "react"
-import "./PixelCard.css"
+import "./AmbientPixelCard.css"
 
 interface PixelInstance {
   width: number
@@ -26,7 +26,6 @@ interface PixelInstance {
   getRandomValue(min: number, max: number): number
   draw(): void
   appear(): void
-  disappear(): void
   shimmer(): void
 }
 
@@ -65,11 +64,11 @@ class Pixel implements PixelInstance {
     this.x = x
     this.y = y
     this.color = color
-    this.speed = this.getRandomValue(0.1, 0.9) * speed
+    this.speed = this.getRandomValue(0.1, 0.7) * speed
     this.size = 0
-    this.sizeStep = Math.random() * 0.4
-    this.minSize = 0.5
-    this.maxSizeInteger = 2
+    this.sizeStep = Math.random() * 0.3 + 0.1
+    this.minSize = 0.2
+    this.maxSizeInteger = 1.8
     this.maxSize = this.getRandomValue(this.minSize, this.maxSizeInteger)
     this.delay = delay
     this.counter = 0
@@ -106,18 +105,6 @@ class Pixel implements PixelInstance {
     this.draw()
   }
 
-  disappear() {
-    this.isShimmer = false
-    this.counter = 0
-    if (this.size <= 0) {
-      this.isIdle = true
-      return
-    } else {
-      this.size -= 0.1
-    }
-    this.draw()
-  }
-
   shimmer() {
     if (this.size >= this.maxSize) {
       this.isReverse = true
@@ -141,35 +128,33 @@ function getEffectiveSpeed(value: number, reducedMotion: boolean) {
   return value * throttle
 }
 
-const VARIANTS: Record<string, { activeColor: string | null; gap: number; speed: number; colors: string; noFocus: boolean }> = {
-  default: { activeColor: null, gap: 5, speed: 35, colors: "#f8fafc,#f1f5f9,#cbd5e1", noFocus: false },
-  blue:    { activeColor: "#e0f2fe", gap: 10, speed: 25, colors: "#e0f2fe,#7dd3fc,#0ea5e9", noFocus: false },
-  yellow:  { activeColor: "#fef08a", gap: 3, speed: 20, colors: "#fef08a,#fde047,#eab308", noFocus: false },
-  pink:    { activeColor: "#fecdd3", gap: 6, speed: 80, colors: "#fecdd3,#fda4af,#e11d48", noFocus: true },
+const VARIANTS: Record<string, { gap: number; speed: number; colors: string }> = {
+  default: { gap: 6, speed: 12, colors: "#cbd5e1,#e2e8f0,#f1f5f9,#fde68a,#ffedd5" },
+  blue:    { gap: 8, speed: 10, colors: "#e0f2fe,#bae6fd,#7dd3fc,#93c5fd" },
+  yellow:  { gap: 5, speed: 10, colors: "#fef3c7,#fde68a,#fef08a,#fed7aa" },
+  neutral: { gap: 6, speed: 10, colors: "#f8fafc,#f1f5f9,#e2e8f0,#cbd5e1" },
 }
 
-interface PixelCardOwnProps {
+interface AmbientPixelCardOwnProps {
   variant?: string
   gap?: number
   speed?: number
   colors?: string
-  noFocus?: boolean
   children?: ReactNode
 }
 
-type PixelCardProps = PixelCardOwnProps & Omit<HTMLAttributes<HTMLDivElement>, keyof PixelCardOwnProps>
+type AmbientPixelCardProps = AmbientPixelCardOwnProps & Omit<HTMLAttributes<HTMLDivElement>, keyof AmbientPixelCardOwnProps>
 
-export default function PixelCard({
+export default function AmbientPixelCard({
   variant = "default",
   gap,
   speed,
   colors,
-  noFocus,
   className = "",
   style,
   children,
   ...rest
-}: PixelCardProps) {
+}: AmbientPixelCardProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const pixelsRef = useRef<Pixel[]>([])
@@ -183,7 +168,6 @@ export default function PixelCard({
   const finalGap = gap ?? variantCfg.gap
   const finalSpeed = speed ?? variantCfg.speed
   const finalColors = colors ?? variantCfg.colors
-  const finalNoFocus = noFocus ?? variantCfg.noFocus
 
   const initPixels = () => {
     if (!containerRef.current || !canvasRef.current) return
@@ -200,7 +184,7 @@ export default function PixelCard({
     const pxs: Pixel[] = []
     for (let x = 0; x < width; x += finalGap) {
       for (let y = 0; y < height; y += finalGap) {
-        const color = colorsArray[Math.floor(Math.random() * colorsArray.length)] ?? "#f8fafc"
+        const color = colorsArray[Math.floor(Math.random() * colorsArray.length)] ?? "#e2e8f0"
         const dx = x - width / 2
         const dy = y - height / 2
         const distance = Math.sqrt(dx * dx + dy * dy)
@@ -211,8 +195,8 @@ export default function PixelCard({
     pixelsRef.current = pxs
   }
 
-  const doAnimate = (fnName: "appear" | "disappear") => {
-    animationRef.current = requestAnimationFrame(() => doAnimate(fnName))
+  const doAnimate = () => {
+    animationRef.current = requestAnimationFrame(doAnimate)
     const timeNow = performance.now()
     const timePassed = timeNow - timePreviousRef.current
     if (timePassed < 1000 / 60) return
@@ -222,43 +206,39 @@ export default function PixelCard({
     if (!ctx || !canvasRef.current) return
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
 
-    let allIdle = true
     for (const pixel of pixelsRef.current) {
-      pixel[fnName]()
-      if (!pixel.isIdle) allIdle = false
+      pixel.appear()
     }
-    if (allIdle) cancelAnimationFrame(animationRef.current)
   }
 
-  const handleAnimation = (name: "appear" | "disappear") => {
+  const startAnimation = () => {
     cancelAnimationFrame(animationRef.current)
-    animationRef.current = requestAnimationFrame(() => doAnimate(name))
+    animationRef.current = requestAnimationFrame(doAnimate)
   }
 
   useEffect(() => {
     initPixels()
-    const observer = new ResizeObserver(() => initPixels())
+    startAnimation()
+    const observer = new ResizeObserver(() => {
+      initPixels()
+      startAnimation()
+    })
     if (containerRef.current) observer.observe(containerRef.current)
     return () => {
       observer.disconnect()
       cancelAnimationFrame(animationRef.current)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [finalGap, finalSpeed, finalColors, finalNoFocus])
+  }, [finalGap, finalSpeed, finalColors])
 
   return (
     <div
       ref={containerRef}
-      className={`pixel-card ${className}`}
+      className={`ambient-pixel-card ${className}`}
       style={style}
-      onMouseEnter={() => handleAnimation("appear")}
-      onMouseLeave={() => handleAnimation("disappear")}
-      onFocus={finalNoFocus ? undefined : (e) => { if (!e.currentTarget.contains(e.relatedTarget)) handleAnimation("appear") }}
-      onBlur={finalNoFocus ? undefined : (e) => { if (!e.currentTarget.contains(e.relatedTarget)) handleAnimation("disappear") }}
-      tabIndex={finalNoFocus ? -1 : 0}
       {...rest}
     >
-      <canvas className="pixel-canvas" ref={canvasRef} />
+      <canvas className="ambient-pixel-canvas" ref={canvasRef} />
       {children}
     </div>
   )

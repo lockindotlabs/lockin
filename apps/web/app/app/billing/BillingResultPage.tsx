@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation"
 import { CheckCircle2Icon, ClockIcon, XCircleIcon } from "lucide-react"
 
 import { Button } from "@workspace/ui/components/button"
+import Image from "next/image"
 
 type BillingState = {
   tier: "FREE" | "PLUS" | "PRO"
@@ -104,25 +105,22 @@ export function BillingResultPage({ mode }: BillingResultPageProps) {
     mode === "cancel" ? XCircleIcon : isPaid ? CheckCircle2Icon : ClockIcon
 
   return (
-    <main className="mx-auto flex min-h-[70vh] w-full max-w-2xl flex-col justify-center px-6 py-16">
-      <div className="space-y-6 rounded-xl border bg-background p-8 shadow-sm">
-        <div className="flex items-start gap-4">
-          <Icon className="mt-1 size-7 text-primary" />
-          <div className="space-y-2">
-            <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-            <p className="text-muted-foreground">{description}</p>
+    <main className="mx-auto flex h-screen w-full max-w-2xl flex-col justify-center px-6 py-16">
+      <div className="flex w-full flex-col items-center space-y-6 rounded-2xl border bg-background p-6">
+        <div className="flex flex-col items-center gap-3">
+          <Icon className="size-12 text-primary" strokeWidth={1.5} />
+          <div className="space-y-1 text-center">
+            <h1 className="text-xl font-medium tracking-tight">{title}</h1>
+            <p className="text-sm text-muted-foreground">{description}</p>
           </div>
         </div>
 
-        <div className="rounded-lg bg-muted px-4 py-3 text-sm text-muted-foreground">
+        <div className="w-full rounded-lg bg-muted px-4 py-3 text-center font-mono text-sm font-medium text-muted-foreground">
           {isLoading ? (
             <span>Checking billing status...</span>
           ) : (
             <span>
-              Current plan:{" "}
-              <span className="font-medium text-foreground">
-                {billing?.tier ?? "FREE"}
-              </span>
+              Current plan: <span>{billing?.tier ?? "FREE"}</span>
               {orderCode ? ` · Order ${orderCode}` : ""}
             </span>
           )}
@@ -133,7 +131,7 @@ export function BillingResultPage({ mode }: BillingResultPageProps) {
             <Button>Back to app</Button>
           </Link>
 
-          <Link href="/app/plans">
+          <Link href="/app/subscription">
             <Button variant="outline">View plans</Button>
           </Link>
         </div>

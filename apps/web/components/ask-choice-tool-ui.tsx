@@ -478,7 +478,7 @@ function AskChoiceCard({
                 </span>
                 <CheckIcon
                   className={cn(
-                    "size-[18px] shrink-0 text-primary transition-all",
+                    "size-[18px] shrink-0 text-primary transition-[transform,opacity]",
                     isSel ? "scale-100 opacity-100" : "scale-50 opacity-0"
                   )}
                 />
@@ -807,7 +807,7 @@ function AskChoicesBatchCard({
                     </span>
                     <CheckIcon
                       className={cn(
-                        "size-[18px] shrink-0 text-primary transition-all",
+                        "size-[18px] shrink-0 text-primary transition-[transform,opacity]",
                         isSelected
                           ? "scale-100 opacity-100"
                           : "scale-50 opacity-0"

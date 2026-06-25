@@ -145,7 +145,6 @@ export default function PlanDetails({
       <div className="mt-2 flex flex-col">
         <div className="flex items-center gap-4 py-2">
           <div className="flex w-40 items-center gap-1.5 text-sm font-medium text-muted-foreground">
-            <Clock className="size-4" />
             Timeline
           </div>
           <div className="flex items-center gap-1">

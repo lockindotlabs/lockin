@@ -325,7 +325,7 @@ export function AskPageClient() {
                       />
                       <DropdownMenuContent
                         align="start"
-                        className="w-64 max-w-90"
+                        className="max-w-100 min-w-64"
                       >
                         <DropdownMenuGroup>
                           <DropdownMenuItem
@@ -450,7 +450,7 @@ export function AskPageClient() {
         <div className="flex flex-1 items-center justify-between px-2 transition-transform duration-150 ease-in-out">
           <div className="flex items-center gap-2">
             <SidebarTrigger
-              className={`${state == "expanded" && "pointer-events-none hidden opacity-0"} transition-all`}
+              className={`${state == "expanded" && "pointer-events-none hidden opacity-0"} transition-opacity`}
             />
             <Breadcrumb>
               <BreadcrumbList>

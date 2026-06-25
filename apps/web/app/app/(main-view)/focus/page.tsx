@@ -44,6 +44,7 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table"
+import { ScrollArea } from "@workspace/ui/components/scroll-area"
 
 function getPlanCategory(plan: FocusPlan) {
   const steps = plan.steps || []
@@ -597,8 +598,11 @@ export default function FocusPage() {
 
   return (
     <>
-      <main className="flex h-full flex-col overflow-y-auto bg-background pt-12 text-foreground">
-        <div className="mx-auto w-full max-w-6xl px-4 py-12 lg:py-24">
+      <ScrollArea className="flex h-[calc(100vh-1rem)] flex-col overflow-y-auto bg-background/50 text-foreground">
+        <div className="relative mt-12 max-h-[88px] min-h-[20px] w-full overflow-hidden">
+          <div className="relative w-full pb-0 xl:pb-[calc(50%-576px)]" />
+        </div>
+        <div className="mx-auto w-full max-w-6xl px-4 lg:py-0">
           {/* Effort Today pill */}
           {effortSeconds > 0 && (
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-400">
@@ -840,7 +844,7 @@ export default function FocusPage() {
             loading={starting}
           />
         )}
-      </main>
+      </ScrollArea>
     </>
   )
 }

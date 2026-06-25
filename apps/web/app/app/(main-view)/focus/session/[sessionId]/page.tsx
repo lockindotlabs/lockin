@@ -347,7 +347,7 @@ function EndSprintSummaryModal({
           <Button
             variant="outline"
             size="sm"
-            className={`flex-1 transition-all ${
+            className={`flex-1 transition-colors ${
               hasIncomplete
                 ? "border-amber-400 font-semibold text-amber-600 hover:bg-amber-50 hover:text-amber-700"
                 : ""
@@ -1180,7 +1180,7 @@ export default function SessionPage() {
         {/* Task Progress Bar */}
         {steps.length > 0 && (
           <div
-            className={`relative mb-6 w-full overflow-hidden rounded-xl border px-4 py-3.5 shadow-sm transition-all duration-500 ${
+            className={`relative mb-6 w-full overflow-hidden rounded-xl border px-4 py-3.5 shadow-sm transition-[border-color,background-color,box-shadow] duration-500 ${
               triggerAnimate
                 ? "border-amber-400/85 bg-amber-500/5 shadow-[0_0_15px_rgba(245,158,11,0.25)]"
                 : "border-border/50 bg-background/40 backdrop-blur-md"
@@ -1200,7 +1200,7 @@ export default function SessionPage() {
             <div className="relative h-2.5 w-full overflow-hidden rounded-full border border-border/40 bg-muted/30">
               {/* Progress fill */}
               <div
-                className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 shadow-[0_0_8px_rgba(245,158,11,0.5)] transition-all duration-500 ease-out"
+                className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 shadow-[0_0_8px_rgba(245,158,11,0.5)] transition-[width] duration-500 ease-out"
                 style={{ width: `${(doneCount / steps.length) * 100}%` }}
               />
               {/* Glowing completion beam */}

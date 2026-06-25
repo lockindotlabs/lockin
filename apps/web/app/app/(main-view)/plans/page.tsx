@@ -25,6 +25,7 @@ import {
 import { Trash2Icon } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 import { buildPlanHref } from "@/lib/routing/plan-url"
+import { ScrollArea } from "@workspace/ui/components/scroll-area"
 
 function getPlanCategory(plan: {
   steps?: {
@@ -180,9 +181,12 @@ export default function PlansPage() {
 
   return (
     <>
-      <main className="flex h-full flex-col overflow-y-auto bg-background pt-12 text-foreground">
+      <ScrollArea className="flex h-[calc(100vh-1rem)] flex-col overflow-y-auto bg-background/50 text-foreground">
+        <div className="relative mt-12 max-h-[88px] min-h-[20px] w-full overflow-hidden">
+          <div className="relative w-full pb-0 xl:pb-[calc(50%-576px)]" />
+        </div>
         {!isLoaded ? (
-          <section className="mx-auto w-full max-w-6xl px-4 py-12 lg:py-24">
+          <section className="mx-auto w-full max-w-6xl px-4 lg:py-0">
             <div className="mb-5 flex items-center gap-3">
               <div className="min-w-0">
                 <h1 className="truncate text-2xl font-medium tracking-tight">
@@ -217,7 +221,7 @@ export default function PlansPage() {
             )}
           </section>
         ) : plans.length > 0 ? (
-          <section className="mx-auto w-full max-w-6xl px-4 py-12 lg:py-24">
+          <section className="mx-auto w-full max-w-6xl px-4 lg:py-0">
             <div className="mb-5 flex items-center gap-3">
               <div className="min-w-0">
                 <h1 className="truncate text-2xl font-medium tracking-tight">
@@ -366,7 +370,7 @@ export default function PlansPage() {
             </div>
           </section>
         )}
-      </main>
+      </ScrollArea>
     </>
   )
 }

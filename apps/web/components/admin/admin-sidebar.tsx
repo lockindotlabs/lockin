@@ -109,7 +109,7 @@ export function AdminSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       <SidebarFooter>
-        <NavUser />
+        <NavUser side="top" align="start" />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

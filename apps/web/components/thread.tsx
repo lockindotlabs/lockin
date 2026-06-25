@@ -195,17 +195,7 @@ export const Thread: FC<{
                 </Button>
               }
             />
-            <DropdownMenuContent align="start" className="w-64 max-w-90">
-              <DropdownMenuGroup>
-                <DropdownMenuItem
-                  onClick={() => router.push(buildAskHref())}
-                  className="flex items-center gap-2 font-medium"
-                >
-                  <Plus className="size-4" />
-                  New chat
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-
+            <DropdownMenuContent align="start" className="max-w-100 min-w-64">
               {chats.length === 0 ? (
                 <>
                   <DropdownMenuSeparator />
@@ -458,7 +448,7 @@ const ThreadPlanWelcome: FC = () => {
       >
         <Asterisk01 />
       </motion.div>
-      <h1 className="aui-thread-plan-welcome-title mb-4 font-medium tracking-normal text-foreground">
+      <h1 className="aui-thread-plan-welcome-title mb-4 font-medium tracking-normal text-foreground text-balance">
         How can I help with your plan?
       </h1>
     </div>
@@ -484,7 +474,7 @@ const ThreadSuggestions: FC<{
 
 const ThreadSuggestionItem: FC = () => {
   return (
-    <div className="aui-thread-welcome-suggestion-display animate-in duration-200 fill-mode-both fade-in slide-in-from-bottom-2 nth-[n+3]:hidden @md:nth-[n+3]:block">
+    <div className="aui-thread-welcome-suggestion-display animate-in duration-200 fill-mode-both fade-in slide-in-from-bottom-2 nth-1:delay-75 nth-2:delay-150 nth-3:delay-225 nth-4:delay-300 nth-[n+3]:hidden @md:nth-[n+3]:block">
       <SuggestionPrimitive.Trigger
         send
         render={

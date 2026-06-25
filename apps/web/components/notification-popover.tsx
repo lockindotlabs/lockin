@@ -83,13 +83,13 @@ export function NotificationPopover() {
                     }}
                     transition={{ duration: 0.2 }}
                   >
-                    <div className="relative group flex flex-col gap-3 rounded-lg p-3 transition-colors hover:bg-muted">
+                    <div className="relative group flex flex-col gap-3 rounded-[20px] p-3 transition-colors hover:bg-muted">
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
                           dismissNotification("flows")
                         }}
-                        className="absolute right-2 top-2 rounded-md p-1 text-muted-foreground opacity-0 hover:bg-muted-foreground/10 hover:text-foreground group-hover:opacity-100 transition-opacity"
+                        className="absolute right-2 top-2 rounded-md p-1 text-muted-foreground opacity-0 hover:bg-muted-foreground/10 hover:text-foreground group-hover:opacity-100 transition-opacity after:absolute after:inset-[-8px] after:content-['']"
                         aria-label="Dismiss notification"
                       >
                         <X className="size-3.5" />
@@ -254,7 +254,7 @@ export function NotificationPopover() {
             <Button
               variant="outline"
               size="sm"
-              className="h-8 gap-2 text-xs font-medium border-dashed border-border hover:border-primary hover:bg-primary/5 transition-all duration-300"
+              className="h-8 gap-2 text-xs font-medium border-dashed border-border hover:border-primary hover:bg-primary/5 transition-colors duration-300"
               onClick={restoreNotifications}
             >
               <RotateCcw className="size-3.5" />

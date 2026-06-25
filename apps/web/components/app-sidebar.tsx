@@ -43,7 +43,9 @@ import {
   Target05,
 } from "@untitledui/icons"
 import { FeedbackPopover } from "./feedback-popover"
+import PixelCard from "@/components/PixelCard"
 import { Kbd } from "@workspace/ui/components/kbd"
+import { GettingStartedGuide } from "./getting-started-guide"
 
 type NavItem = AppSidebarSearchNavItem
 
@@ -55,6 +57,7 @@ function getPlanIdFromPath(pathname: string) {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter()
+
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const { plans, isLoaded: arePlansLoaded } = usePlanSummaries()
@@ -178,11 +181,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <>
       <Sidebar
-        className="z-1000 border-r-0 px-1 py-2 font-medium"
+        className="z-20 border-r-0 px-1 py-1 pt-1.5 font-medium"
         {...props}
         collapsible="offcanvas"
       >
-        <div className="flex h-12 items-center justify-between gap-2 px-2">
+        <div className="mb-0.5 flex h-12 items-center justify-between gap-2 px-2">
           <LogoAccent
             className="h-7.5 cursor-pointer"
             onClick={() => {
@@ -238,12 +241,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarContent>
         <SidebarFooter>
           <SidebarMenu>
-            <div className="mb-2 flex w-full items-start justify-between rounded-lg border bg-card p-3">
-              <div>
-                <p className="text-sm">Welcome to LockIn!</p>
-                <p className="text-xs">Let us take you a round</p>
-              </div>
-            </div>
+            <GettingStartedGuide />
             <SidebarMenuItem>
               <FeedbackPopover />
             </SidebarMenuItem>

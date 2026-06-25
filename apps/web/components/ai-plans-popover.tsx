@@ -67,7 +67,7 @@ export function AiPlansPopover({ summary, isLoaded }: AiPlansPopoverProps) {
           <Skeleton className="h-10 w-full" />
         )}
 
-        <div className="flex gap-3 rounded-xl border border-border bg-muted/40 p-3">
+        <div className="flex gap-3 rounded-lg border border-border bg-muted/40 p-3">
           <Asterisk02 className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
           <div className="flex flex-col gap-1">
             <span className="text-sm leading-snug font-medium text-foreground">

@@ -62,7 +62,7 @@ function PricingCard({
           )}
         </div>
         <div className="mt-1 flex items-baseline gap-1">
-          <span className="text-2xl font-medium tracking-tight text-foreground">
+          <span className="text-2xl font-medium tracking-tight text-foreground tabular-nums">
             {price}
           </span>
           <span className="text-sm font-medium text-muted-foreground">
@@ -77,7 +77,7 @@ function PricingCard({
       </div>
 
       <Button
-        className={`w-full font-medium transition-all duration-200 ${
+        className={`w-full font-medium transition-colors duration-200 ${
           isCurrent
             ? "cursor-default border-border bg-muted/50 text-muted-foreground hover:bg-muted/50"
             : isPopular
@@ -317,7 +317,7 @@ export default function SubscriptionPage() {
             <div className="flex w-fit items-center gap-1 rounded-xl border border-border/55 bg-muted/60 p-1">
               <button
                 onClick={() => setInterval("monthly")}
-                className={`cursor-pointer rounded-lg px-4 py-1.5 text-xs font-semibold transition-all ${
+                className={`cursor-pointer rounded-lg px-4 py-1.5 text-xs font-semibold transition-colors ${
                   interval === "monthly"
                     ? "bg-background text-foreground shadow-xs"
                     : "text-muted-foreground hover:text-foreground"
@@ -327,7 +327,7 @@ export default function SubscriptionPage() {
               </button>
               <button
                 onClick={() => setInterval("yearly")}
-                className={`cursor-pointer rounded-lg px-4 py-1.5 text-xs font-semibold transition-all ${
+                className={`cursor-pointer rounded-lg px-4 py-1.5 text-xs font-semibold transition-colors ${
                   interval === "yearly"
                     ? "bg-background text-foreground shadow-xs"
                     : "text-muted-foreground hover:text-foreground"
@@ -363,11 +363,12 @@ export default function SubscriptionPage() {
 
           {/* Pricing Grid */}
           <div className="relative">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={interval}
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.25, ease: "easeInOut" }}
                 className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
               >

@@ -76,7 +76,7 @@ export default function GlobalHeader() {
           className={`${state === "collapsed" ? "" : "pointer-events-none opacity-0"} text-sidebar-foreground transition-opacity`}
         />
         <div
-          className={`${state === "collapsed" ? "" : "-translate-x-8"} flex items-center pl-2 transition-all`}
+          className={`${state === "collapsed" ? "" : "-translate-x-8"} flex items-center pl-2 transition-transform`}
         >
           {/* Left portal container */}
           <div ref={setLeftContainer} className="flex items-center" />

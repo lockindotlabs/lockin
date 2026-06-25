@@ -14,8 +14,7 @@ export type SprintInsight = {
 }
 
 export type HeatmapCell = {
-  dayOfWeek: number // 0 = Sunday .. 6 = Saturday
-  hour: number // 0-23
+  date: string // yyyy-MM-dd, local to the server
   volume: number
   avgQuality: number // 0-1, see sprintQuality()
   onTimeCount: number
@@ -58,19 +57,25 @@ function sprintQuality(sprintOnTime: boolean, procrastinationIndex: number): num
     : 0.3 - procrastinationIndex * 0.3
 }
 
+function dateKey(d: Date): string {
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, "0")
+  const day = String(d.getDate()).padStart(2, "0")
+  return `${y}-${m}-${day}`
+}
+
+// One cell per calendar day (GitHub contributions style) instead of the
+// day-of-week × hour-of-day grid — easier to scan a year of activity at once.
 function buildHeatmap(
   sprints: Array<Pick<SprintInsight, "startedAt" | "sprintOnTime" | "procrastinationIndex">>
 ): { heatmap: HeatmapCell[]; maxHeatmapVolume: number } {
   const buckets = new Map<
     string,
-    { dayOfWeek: number; hour: number; qualitySum: number; volume: number; onTimeCount: number; lateCount: number }
+    { qualitySum: number; volume: number; onTimeCount: number; lateCount: number }
   >()
 
   for (const s of sprints) {
-    const d = new Date(s.startedAt)
-    const dayOfWeek = d.getDay()
-    const hour = d.getHours()
-    const key = `${dayOfWeek}-${hour}`
+    const key = dateKey(new Date(s.startedAt))
     const quality = sprintQuality(s.sprintOnTime, s.procrastinationIndex)
 
     const existing = buckets.get(key)
@@ -81,8 +86,6 @@ function buildHeatmap(
       else existing.lateCount++
     } else {
       buckets.set(key, {
-        dayOfWeek,
-        hour,
         qualitySum: quality,
         volume: 1,
         onTimeCount: s.sprintOnTime ? 1 : 0,
@@ -91,9 +94,8 @@ function buildHeatmap(
     }
   }
 
-  const heatmap: HeatmapCell[] = Array.from(buckets.values()).map((b) => ({
-    dayOfWeek: b.dayOfWeek,
-    hour: b.hour,
+  const heatmap: HeatmapCell[] = Array.from(buckets.entries()).map(([date, b]) => ({
+    date,
     volume: b.volume,
     avgQuality: b.qualitySum / b.volume,
     onTimeCount: b.onTimeCount,

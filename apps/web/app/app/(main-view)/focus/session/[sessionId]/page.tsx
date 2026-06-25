@@ -12,6 +12,7 @@ import {
   PauseIcon,
   PlayIcon,
   SquareIcon,
+  XCircleIcon,
 } from "lucide-react"
 import {
   fetchFocusSession,
@@ -23,6 +24,8 @@ import {
   type FocusPlan,
   type PlanStep,
   type TaskSnapshot,
+  type TimingOutcome,
+  type TaskFinalAction,
 } from "@/lib/focus/focus-api"
 import {
   notifyExtensionSessionEnded,
@@ -31,6 +34,7 @@ import {
   notifyExtensionTasksUpdated,
 } from "@/lib/focus/extension-bridge"
 import Aurora from "@/components/Aurora"
+import { TaskOvertimeModal } from "@/components/focus/TaskOvertimeModal"
 
 // ─── Timer display ────────────────────────────────────────────────────────────
 
@@ -45,100 +49,148 @@ function fmt(seconds: number): string {
   return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`
 }
 
+// Per-task timing/procrastination scoring for the heatmap. >2 "give me more
+// time" requests on a task fails that task's timing AND marks the whole
+// sprint not-on-time, regardless of whether the task eventually got done.
+function computeTimingOutcome(
+  estimatedMinutes: number,
+  actualSpentSeconds: number,
+  extensionCount: number,
+  finalAction: TaskFinalAction
+): TimingOutcome {
+  if (finalAction === "GAVE_UP") return "GAVE_UP"
+  if (extensionCount === 0) {
+    const estimatedSec = estimatedMinutes * 60
+    if (estimatedSec <= 0) return "ON_TIME"
+    const ratio = actualSpentSeconds / estimatedSec
+    if (ratio < 0.8) return "EARLY"
+    if (ratio <= 1.0) return "ON_TIME"
+    return "OVERTIME_RESOLVED" // went over but got done before asking for time
+  }
+  return extensionCount <= 2 ? "OVERTIME_RESOLVED" : "OVERTIME_FAILED"
+}
+
+// 0 = no procrastination, 1 = severe (gave up, or way over with many extensions).
+function computeProcrastinationScore(
+  estimatedMinutes: number,
+  actualSpentSeconds: number,
+  extensionCount: number,
+  finalAction: TaskFinalAction
+): number {
+  if (finalAction === "GAVE_UP") return 1
+  if (extensionCount === 0) return 0
+  const estimatedSec = estimatedMinutes * 60
+  const overtimeRatio =
+    estimatedSec > 0
+      ? Math.max(0, actualSpentSeconds - estimatedSec) / estimatedSec
+      : 0
+  const extensionFactor = Math.min(extensionCount / 3, 1) // hits 1.0 at the 3rd request — same threshold as OVERTIME_FAILED
+  return Math.min(1, extensionFactor * 0.6 + Math.min(overtimeRatio, 1) * 0.4)
+}
+
+function computeCompletionType(
+  allDone: boolean,
+  sprintOnTime: boolean
+): "EARLY" | "NORMAL" | "OVERTIME" {
+  if (allDone && sprintOnTime) return "NORMAL"
+  if (allDone && !sprintOnTime) return "OVERTIME"
+  return "EARLY"
+}
+
+// Shared by the end-sprint summary modal and the Scenario B end-of-timer
+// actions — derives spent/remaining time per step from when each was ticked.
+function computeStepDetails(
+  steps: PlanStep[],
+  completedIds: Set<string>,
+  taskCheckTimes: Record<string, number>,
+  elapsed: number
+): Record<string, { spentSeconds: number; remainingMinutes: number }> {
+  const res: Record<string, { spentSeconds: number; remainingMinutes: number }> = {}
+  let previousCompletionTime = 0
+
+  for (const s of steps) {
+    const done = completedIds.has(s.id)
+    const originalEstimateSeconds = (s.estimatedMinutes ?? 0) * 60
+
+    let spentSeconds = 0
+    if (done) {
+      const recordedTime = taskCheckTimes[s.id]
+      if (recordedTime !== undefined) {
+        spentSeconds = Math.max(0, recordedTime - previousCompletionTime)
+        previousCompletionTime = Math.max(previousCompletionTime, recordedTime)
+      } else {
+        const potentialSpent = Math.max(0, elapsed - previousCompletionTime)
+        spentSeconds = Math.min(originalEstimateSeconds, potentialSpent)
+        previousCompletionTime += spentSeconds
+      }
+    } else {
+      const remainingElapsed = Math.max(0, elapsed - previousCompletionTime)
+      spentSeconds = remainingElapsed
+      previousCompletionTime = elapsed
+    }
+
+    const remainingEstimateSeconds = Math.max(
+      0,
+      originalEstimateSeconds - spentSeconds
+    )
+    const remainingMinutes =
+      remainingEstimateSeconds > 0
+        ? Math.max(1, Math.round(remainingEstimateSeconds / 60))
+        : 0
+
+    res[s.id] = {
+      spentSeconds,
+      remainingMinutes: done ? s.estimatedMinutes : remainingMinutes,
+    }
+  }
+  return res
+}
+
 // ─── End Sprint Checklist Modal ──────────────────────────────────────────────
 
+// Ending while there's still time and/or unfinished steps is a deliberate
+// commitment break — every incomplete step must be explicitly resolved as
+// "I'm done" (trusted, no penalty) or "I haven't" (counts as given up,
+// scored as procrastination) before the End button unlocks. No silent
+// free-toggle escape hatch.
 function EndSprintSummaryModal({
   steps,
-  taskCheckTimes,
+  completedIds,
+  perTaskFinalAction,
+  perTaskExtensions,
+  stepDetails,
   elapsed,
   isOvertime,
   remaining,
-  initialCompletedIds,
   onClose,
-  onConfirm,
+  onMarkDone,
+  onGiveUp,
+  onConfirmEnd,
   ending,
 }: {
   steps: PlanStep[]
-  taskCheckTimes: Record<string, number>
+  completedIds: Set<string>
+  perTaskFinalAction: Record<string, TaskFinalAction>
+  perTaskExtensions: Record<string, { count: number; totalSeconds: number }>
+  stepDetails: Record<
+    string,
+    { spentSeconds: number; remainingMinutes: number }
+  >
   elapsed: number
   isOvertime: boolean
   remaining: number
-  initialCompletedIds: Set<string>
   onClose: () => void
-  onConfirm: (
-    completedIds: Set<string>,
-    stepDetails: Record<
-      string,
-      { spentSeconds: number; remainingMinutes: number }
-    >
-  ) => void
+  onMarkDone: (id: string) => void
+  onGiveUp: (id: string) => void
+  onConfirmEnd: () => void
   ending: boolean
 }) {
-  const [tempCompleted, setTempCompleted] = React.useState<Set<string>>(
-    () => new Set(initialCompletedIds)
-  )
-
-  const toggleTempStep = (id: string) => {
-    setTempCompleted((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
-  }
-
-  // Calculate spent times and remaining estimates dynamically based on tempCompleted
-  const details = React.useMemo(() => {
-    const res: Record<
-      string,
-      { spentSeconds: number; remainingMinutes: number }
-    > = {}
-    let previousCompletionTime = 0
-
-    for (let i = 0; i < steps.length; i++) {
-      const s = steps[i]
-      if (!s) continue
-      const done = tempCompleted.has(s.id)
-      const originalEstimateSeconds = (s.estimatedMinutes ?? 0) * 60
-
-      let spentSeconds = 0
-      if (done) {
-        const recordedTime = taskCheckTimes[s.id]
-        if (recordedTime !== undefined) {
-          spentSeconds = Math.max(0, recordedTime - previousCompletionTime)
-          previousCompletionTime = Math.max(
-            previousCompletionTime,
-            recordedTime
-          )
-        } else {
-          const potentialSpent = Math.max(0, elapsed - previousCompletionTime)
-          spentSeconds = Math.min(originalEstimateSeconds, potentialSpent)
-          previousCompletionTime += spentSeconds
-        }
-      } else {
-        const remainingElapsed = Math.max(0, elapsed - previousCompletionTime)
-        spentSeconds = remainingElapsed
-        previousCompletionTime = elapsed
-      }
-
-      const remainingEstimateSeconds = Math.max(
-        0,
-        originalEstimateSeconds - spentSeconds
-      )
-      const remainingMinutes =
-        remainingEstimateSeconds > 0
-          ? Math.max(1, Math.round(remainingEstimateSeconds / 60))
-          : 0
-
-      res[s.id] = {
-        spentSeconds,
-        remainingMinutes: done ? s.estimatedMinutes : remainingMinutes,
-      }
-    }
-    return res
-  }, [tempCompleted, steps, taskCheckTimes, elapsed])
-
-  const hasIncomplete = steps.some((s) => !tempCompleted.has(s.id))
+  const hasIncomplete = steps.some((s) => !completedIds.has(s.id))
+  const unresolvedCount = steps.filter(
+    (s) => !completedIds.has(s.id) && !perTaskFinalAction[s.id]
+  ).length
+  const canEnd = unresolvedCount === 0
+  const isTooEarly = remaining > 0 && hasIncomplete
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -151,19 +203,22 @@ function EndSprintSummaryModal({
           End Focus Sprint
         </h3>
         <p className="mt-1.5 text-xs text-muted-foreground">
-          Confirm completed steps. Incomplete steps will have their estimated
-          duration updated based on remaining time.
+          Resolve every unfinished step below before you can end.
         </p>
 
         {/* Warning if there are incomplete steps */}
         {hasIncomplete && (
           <div className="mt-3 space-y-1 rounded-lg border border-amber-200 bg-amber-50 p-3.5 text-xs text-amber-700 dark:border-amber-900/30 dark:bg-amber-950/20 dark:text-amber-300">
             <p className="flex items-center gap-1.5 font-semibold">
-              <span>⚠️</span> Bạn chưa hoàn thành tất cả nhiệm vụ!
+              <span>⚠️</span>{" "}
+              {isTooEarly
+                ? "You're ending this sprint too early!"
+                : "You haven't finished everything yet!"}
             </p>
             <p className="leading-relaxed">
-              Bạn chưa hoàn thành task này, xin hãy quay lại và tập trung nhắc
-              nhở sắp xong.
+              {isTooEarly
+                ? 'There\'s still time left and unfinished steps. Resolve each one below — "I\'m done" or "I haven\'t" — or continue the sprint.'
+                : "Resolve the remaining steps below before ending."}
             </p>
           </div>
         )}
@@ -171,60 +226,101 @@ function EndSprintSummaryModal({
         {/* Step checklist */}
         <div className="mt-4 max-h-[40vh] space-y-2 overflow-y-auto pr-1">
           {steps.map((step) => {
-            const done = tempCompleted.has(step.id)
-            const detail = details[step.id]
+            const done = completedIds.has(step.id)
+            const gaveUp = perTaskFinalAction[step.id] === "GAVE_UP"
+            const detail = stepDetails[step.id]
             const remainingMin = detail
               ? detail.remainingMinutes
               : step.estimatedMinutes
             const spentSec = detail ? detail.spentSeconds : 0
+            const extension = perTaskExtensions[step.id]
+
+            if (done) {
+              return (
+                <div
+                  key={step.id}
+                  className="flex items-start gap-3 rounded-lg border border-border/50 bg-muted/10 px-3 py-2.5"
+                >
+                  <CheckCircle2Icon className="mt-0.5 size-4 shrink-0 text-emerald-500" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-muted-foreground line-through">
+                      {step.title}
+                    </p>
+                    <p className="mt-0.5 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
+                      Completed
+                    </p>
+                  </div>
+                </div>
+              )
+            }
+
+            if (gaveUp) {
+              return (
+                <div
+                  key={step.id}
+                  className="flex items-start gap-3 rounded-lg border border-border/50 bg-muted/10 px-3 py-2.5 opacity-70"
+                >
+                  <XCircleIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-muted-foreground">
+                      {step.title}
+                    </p>
+                    <p className="mt-0.5 text-[10px] font-medium text-muted-foreground">
+                      Marked as not done
+                    </p>
+                  </div>
+                </div>
+              )
+            }
 
             return (
-              <button
+              <div
                 key={step.id}
-                onClick={() => toggleTempStep(step.id)}
-                className={`flex w-full items-start gap-3 rounded-lg border border-border/50 px-3 py-2.5 text-left transition-colors hover:bg-muted/30 ${
-                  done ? "bg-muted/10" : "bg-background"
-                }`}
+                className="rounded-lg border border-amber-300/60 bg-amber-50/50 px-3 py-2.5 dark:border-amber-900/40 dark:bg-amber-950/10"
               >
-                <span
-                  className={`mt-0.5 shrink-0 ${
-                    done ? "text-emerald-500" : "text-muted-foreground"
-                  }`}
-                >
-                  {done ? (
-                    <CheckCircle2Icon className="size-4" />
-                  ) : (
-                    <CircleIcon className="size-4" />
-                  )}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p
-                    className={`truncate text-sm font-medium ${
-                      done
-                        ? "text-muted-foreground line-through"
-                        : "text-foreground"
-                    }`}
-                  >
-                    {step.title}
-                  </p>
-                  <p className="mt-0.5 text-[10px] text-muted-foreground">
-                    {done ? (
-                      <span className="font-medium text-emerald-600 dark:text-emerald-400">
-                        Completed
-                      </span>
-                    ) : (
-                      <>
-                        Estimate:{" "}
-                        <strong className="text-foreground">
-                          {remainingMin}m
-                        </strong>
-                        {spentSec > 0 &&
-                          ` (spent ${Math.round(spentSec / 60)}m)`}
-                      </>
-                    )}
-                  </p>
+                <div className="flex items-start gap-3">
+                  <CircleIcon className="mt-0.5 size-4 shrink-0 text-amber-500" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-foreground">
+                      {step.title}
+                    </p>
+                    <p className="mt-0.5 text-[10px] text-muted-foreground">
+                      Estimate:{" "}
+                      <strong className="text-foreground">
+                        {remainingMin}m
+                      </strong>
+                      {spentSec > 0 &&
+                        ` (spent ${Math.round(spentSec / 60)}m)`}
+                      {extension && extension.count > 0 && (
+                        <span className="ml-1 text-amber-600 dark:text-amber-400">
+                          · asked for +{Math.round(extension.totalSeconds / 60)}
+                          m more ({extension.count}x)
+                        </span>
+                      )}
+                    </p>
+                  </div>
                 </div>
-              </button>
+                <div className="mt-2 flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 text-xs"
+                    onClick={() => onGiveUp(step.id)}
+                  >
+                    I haven't
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="flex-1 bg-emerald-600 text-xs text-white hover:bg-emerald-700"
+                    onClick={() => onMarkDone(step.id)}
+                  >
+                    I'm done
+                  </Button>
+                </div>
+                <p className="mt-1.5 text-[10px] text-muted-foreground/80">
+                  You're responsible for your own actions — be honest about what's actually done.
+                </p>
+              </div>
             )
           })}
         </div>
@@ -259,15 +355,24 @@ function EndSprintSummaryModal({
             onClick={onClose}
             disabled={ending}
           >
-            {hasIncomplete ? "Quay lại & Tập trung" : "Cancel"}
+            {hasIncomplete ? "Continue Sprint" : "Cancel"}
           </Button>
           <Button
             size="sm"
             className="flex-1 bg-emerald-600 text-white hover:bg-emerald-700"
-            onClick={() => onConfirm(tempCompleted, details)}
-            disabled={ending}
+            onClick={onConfirmEnd}
+            disabled={ending || !canEnd}
+            title={
+              !canEnd
+                ? `Resolve ${unresolvedCount} more step(s) first`
+                : undefined
+            }
           >
-            {ending ? "Ending..." : "Save & End"}
+            {ending
+              ? "Ending..."
+              : canEnd
+                ? "Save & End"
+                : `Resolve ${unresolvedCount} more`}
           </Button>
         </div>
       </div>
@@ -405,6 +510,25 @@ export default function SessionPage() {
   const [taskSavedSeconds, setTaskSavedSeconds] = React.useState<
     Record<string, number>
   >({})
+  // Completion/give-up timestamp per task, used for the heatmap.
+  const [taskCompletedAt, setTaskCompletedAt] = React.useState<
+    Record<string, string>
+  >({})
+  // "Give me more time" usage per task — drives both the timing outcome and
+  // whether the whole sprint counts as on-time (>2 requests on any one task
+  // fails the sprint, per the commitment rule).
+  const [perTaskExtensions, setPerTaskExtensions] = React.useState<
+    Record<string, { count: number; totalSeconds: number }>
+  >({})
+  // How a task's overtime modal was resolved — DONE or GAVE_UP. Once set to
+  // GAVE_UP a task can't be reopened via the checklist.
+  const [perTaskFinalAction, setPerTaskFinalAction] = React.useState<
+    Record<string, TaskFinalAction>
+  >({})
+  // Which task's overtime modal is currently showing (mid-sprint mode).
+  const [activeOvertimeTaskId, setActiveOvertimeTaskId] = React.useState<
+    string | null
+  >(null)
   const [loading, setLoading] = React.useState(true)
 
   const [paused, setPaused] = React.useState<boolean>(() => {
@@ -418,8 +542,8 @@ export default function SessionPage() {
   const [overtime, setOvertime] = React.useState(false)
   const [ending, setEnding] = React.useState(false)
   const [showEndSprintSummary, setShowEndSprintSummary] = React.useState(false)
-  const [showOvertimePicker, setShowOvertimePicker] = React.useState(false)
-  const [overtimeCount, setOvertimeCount] = React.useState(0)
+  const [showSprintEndChecklist, setShowSprintEndChecklist] =
+    React.useState(false)
 
   const [addedSeconds, setAddedSeconds] = React.useState<number>(() => {
     if (typeof window !== "undefined") {
@@ -473,6 +597,18 @@ export default function SessionPage() {
     paused,
     overtime,
     session?.startedAt ?? null
+  )
+
+  // A task once given up can't be reopened via the checklist — skip it when
+  // picking the "current" (first pending) step.
+  const isStepPending = (s: PlanStep) =>
+    !completedIds.has(s.id) && perTaskFinalAction[s.id] !== "GAVE_UP"
+  const currentStepIndex = steps.findIndex(isStepPending)
+  const currentStep = steps[currentStepIndex]
+
+  const stepDetails = computeStepDetails(steps, completedIds, taskCheckTimes, elapsed)
+  const unresolvedSteps = steps.filter(
+    (s) => !completedIds.has(s.id) && !perTaskFinalAction[s.id]
   )
 
   const [lastCompletedCount, setLastCompletedCount] = React.useState(0)
@@ -537,24 +673,93 @@ export default function SessionPage() {
     }
   }, [remaining, overtime, session])
 
-  // Detect time up with incomplete tasks and open overtime picker
+  // Per-task overtime — fires while the CURRENT step alone runs past its own
+  // estimate (plus any extensions already granted), independent of the
+  // sprint's total remaining time. Suppressed once the sprint-end checklist
+  // takes over (total time is up) so only one modal is ever active.
   React.useEffect(() => {
-    const hasIncomplete = steps.some((s) => !completedIds.has(s.id))
+    if (loading || showSprintEndChecklist || remaining <= 0) return
+    if (!currentStep || currentStep.estimatedMinutes <= 0) return
+    if (perTaskFinalAction[currentStep.id]) return
+    if (activeOvertimeTaskId === currentStep.id) return
+
+    const spent = stepDetails[currentStep.id]?.spentSeconds ?? 0
+    const allowedSec =
+      currentStep.estimatedMinutes * 60 +
+      (perTaskExtensions[currentStep.id]?.totalSeconds ?? 0)
+
+    if (spent > allowedSec) {
+      setActiveOvertimeTaskId(currentStep.id)
+    }
+  }, [
+    loading,
+    showSprintEndChecklist,
+    remaining,
+    currentStep,
+    perTaskFinalAction,
+    perTaskExtensions,
+    activeOvertimeTaskId,
+    stepDetails,
+  ])
+
+  // Sprint's total time is up — switch from per-task popups to a checklist
+  // covering every step that's still neither done nor given up. No "just
+  // leave" exit: each one must be resolved via the same 3-action modal.
+  React.useEffect(() => {
     if (
       remaining <= 0 &&
-      hasIncomplete &&
       loading === false &&
-      !showOvertimePicker
+      unresolvedSteps.length > 0 &&
+      !showSprintEndChecklist
     ) {
-      setShowOvertimePicker(true)
+      setActiveOvertimeTaskId(null)
+      setShowSprintEndChecklist(true)
     }
-  }, [remaining, steps, completedIds, loading, showOvertimePicker])
+  }, [remaining, loading, unresolvedSteps.length, showSprintEndChecklist])
 
-  const handleAddTime = (minutes: number) => {
+  // Once every step in the sprint-end checklist has been resolved (done or
+  // given up), finalize and leave automatically — there's nothing left to ask.
+  React.useEffect(() => {
+    if (!showSprintEndChecklist || unresolvedSteps.length > 0) return
+    const sprintOnTime = steps.every(
+      (s) => (perTaskExtensions[s.id]?.count ?? 0) <= 2
+    )
+    const allDoneNow = steps.every((s) => completedIds.has(s.id))
+    const completionType = computeCompletionType(allDoneNow, sprintOnTime)
+    const details = computeStepDetails(steps, completedIds, taskCheckTimes, elapsed)
+    handleEnd(completionType, completedIds, details, "/app/focus")
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showSprintEndChecklist, unresolvedSteps.length])
+
+  const handleGiveUp = (stepId: string) => {
+    setPerTaskFinalAction((prev) => ({ ...prev, [stepId]: "GAVE_UP" }))
+    setTaskCompletedAt((prev) => ({ ...prev, [stepId]: new Date().toISOString() }))
+    setActiveOvertimeTaskId(null)
+  }
+
+  const handleGiveMoreTime = (stepId: string, minutes: number) => {
+    setPerTaskExtensions((prev) => ({
+      ...prev,
+      [stepId]: {
+        count: (prev[stepId]?.count ?? 0) + 1,
+        totalSeconds: (prev[stepId]?.totalSeconds ?? 0) + minutes * 60,
+      },
+    }))
+    // Extensions feed the main timer too — the sprint clock actually grows,
+    // while the per-task overtime sub-timer keeps tracking that one step.
     setAddedSeconds((prev) => prev + minutes * 60)
-    setOvertimeCount((prev) => prev + 1)
-    setOvertime(false)
-    setShowOvertimePicker(false)
+    setActiveOvertimeTaskId(null)
+    setShowSprintEndChecklist(false)
+  }
+
+  const handleMarkTaskDone = (stepId: string) => {
+    const step = steps.find((s) => s.id === stepId)
+    if (!step) return
+    setCompletedIds((prev) => new Set(prev).add(stepId))
+    setTaskCheckTimes((prev) => ({ ...prev, [stepId]: elapsed }))
+    setPerTaskFinalAction((prev) => ({ ...prev, [stepId]: "DONE" }))
+    setTaskCompletedAt((prev) => ({ ...prev, [stepId]: new Date().toISOString() }))
+    setActiveOvertimeTaskId(null)
   }
 
   // Sync state to localStorage
@@ -715,6 +920,8 @@ export default function SessionPage() {
   const toggleStep = (id: string) => {
     const s = steps.find((step) => step.id === id)
     if (!s) return
+    // A given-up task can't be reopened from the checklist — it's resolved.
+    if (perTaskFinalAction[id] === "GAVE_UP") return
 
     const wasDone = completedIds.has(id)
     const newCompletedIds = new Set(completedIds)
@@ -727,12 +934,26 @@ export default function SessionPage() {
         delete nextTimes[id]
         return nextTimes
       })
+      setTaskCompletedAt((prev) => {
+        const next = { ...prev }
+        delete next[id]
+        return next
+      })
+      setPerTaskFinalAction((prev) => {
+        const next = { ...prev }
+        delete next[id]
+        return next
+      })
     } else {
       newCompletedIds.add(id)
       setCompletedIds(newCompletedIds)
       setTaskCheckTimes((prevTimes) => ({
         ...prevTimes,
         [id]: elapsed,
+      }))
+      setTaskCompletedAt((prev) => ({
+        ...prev,
+        [id]: new Date().toISOString(),
       }))
     }
   }
@@ -743,7 +964,8 @@ export default function SessionPage() {
     finalStepDetails: Record<
       string,
       { spentSeconds: number; remainingMinutes: number }
-    >
+    >,
+    redirectTo: string = "/app/focus"
   ) => {
     if (ending) return
     setEnding(true)
@@ -751,6 +973,12 @@ export default function SessionPage() {
     const snapshot: TaskSnapshot[] = steps.map((s) => {
       const done = finalCompletedIds.has(s.id)
       const details = finalStepDetails[s.id]
+      const resolvedAction = perTaskFinalAction[s.id] ?? (done ? "DONE" : undefined)
+      const extension = perTaskExtensions[s.id]
+      const extensionCount = extension?.count ?? 0
+      const extensionSecondsTotal = extension?.totalSeconds ?? 0
+      const spentSeconds = details?.spentSeconds ?? 0
+
       return {
         id: s.id,
         done,
@@ -759,6 +987,18 @@ export default function SessionPage() {
         durationMinutes: details
           ? details.remainingMinutes
           : s.estimatedMinutes,
+        plannedMinutes: s.estimatedMinutes,
+        actualSpentSeconds: spentSeconds,
+        timingOutcome: resolvedAction
+          ? computeTimingOutcome(s.estimatedMinutes, spentSeconds, extensionCount, resolvedAction)
+          : undefined,
+        completedAt: taskCompletedAt[s.id],
+        extensionCount,
+        extensionSecondsTotal,
+        finalAction: resolvedAction,
+        procrastinationScore: resolvedAction
+          ? computeProcrastinationScore(s.estimatedMinutes, spentSeconds, extensionCount, resolvedAction)
+          : undefined,
       }
     })
 
@@ -791,32 +1031,28 @@ export default function SessionPage() {
     }
 
     sessionStorage.removeItem(`lockin:session:${sessionId}:steps`)
-    router.push("/app/focus")
+    router.push(redirectTo)
   }
 
-  const handleEndConfirm = (
-    finalCompletedIds: Set<string>,
-    finalStepDetails: Record<
-      string,
-      { spentSeconds: number; remainingMinutes: number }
-    >
-  ) => {
-    const isAllCompleted = steps.every((s) => finalCompletedIds.has(s.id))
-    const completionType = isOvertime
-      ? "OVERTIME"
-      : isAllCompleted
-        ? "NORMAL"
-        : "EARLY"
+  // Manual early-end path (EndSprintSummaryModal). Reads live state directly
+  // — every incomplete step must already be resolved (DONE or GAVE_UP) via
+  // the modal's per-task buttons before this can be invoked (gated by
+  // `canEnd` in the modal itself).
+  const handleManualEnd = () => {
+    const isAllCompleted = steps.every((s) => completedIds.has(s.id))
+    const sprintOnTime = steps.every(
+      (s) => (perTaskExtensions[s.id]?.count ?? 0) <= 2
+    )
+    const completionType = computeCompletionType(isAllCompleted, sprintOnTime)
+    const details = computeStepDetails(steps, completedIds, taskCheckTimes, elapsed)
 
-    handleEnd(completionType, finalCompletedIds, finalStepDetails)
+    handleEnd(completionType, completedIds, details)
   }
 
   // All steps done?
   const allDone = steps.length > 0 && steps.every((s) => completedIds.has(s.id))
   const doneCount = completedIds.size
   const planName = plan?.name ?? session?.plan?.name ?? "Sprint"
-  const currentStepIndex = steps.findIndex((s) => !completedIds.has(s.id))
-  const currentStep = steps[currentStepIndex]
 
   if (loading) {
     return (
@@ -987,6 +1223,18 @@ export default function SessionPage() {
                 ~{formatMinutes(currentStep.estimatedMinutes)}
               </p>
             )}
+            {(() => {
+              const allowedSec =
+                currentStep.estimatedMinutes * 60 +
+                (perTaskExtensions[currentStep.id]?.totalSeconds ?? 0)
+              const spent = stepDetails[currentStep.id]?.spentSeconds ?? 0
+              const taskOvertimeSeconds = Math.max(0, spent - allowedSec)
+              return taskOvertimeSeconds > 0 ? (
+                <p className="mt-0.5 font-mono text-xs font-semibold text-rose-500">
+                  +{fmt(taskOvertimeSeconds)} over
+                </p>
+              ) : null
+            })()}
           </div>
         )}
 
@@ -1101,87 +1349,61 @@ export default function SessionPage() {
       {showEndSprintSummary && (
         <EndSprintSummaryModal
           steps={steps}
-          taskCheckTimes={taskCheckTimes}
+          completedIds={completedIds}
+          perTaskFinalAction={perTaskFinalAction}
+          perTaskExtensions={perTaskExtensions}
+          stepDetails={stepDetails}
           elapsed={elapsed}
           isOvertime={isOvertime}
           remaining={remaining}
-          initialCompletedIds={completedIds}
           onClose={() => setShowEndSprintSummary(false)}
-          onConfirm={handleEndConfirm}
+          onMarkDone={handleMarkTaskDone}
+          onGiveUp={handleGiveUp}
+          onConfirmEnd={handleManualEnd}
           ending={ending}
         />
       )}
 
-      {/* Overtime picker modal */}
-      {showOvertimePicker && currentStep && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-md"
-            onClick={() => setShowOvertimePicker(false)}
-          />
-          <div className="relative z-10 w-full max-w-sm rounded-2xl border border-border/70 bg-background/95 p-6 text-foreground shadow-2xl backdrop-blur-lg">
-            <h3 className="text-lg font-semibold tracking-tight text-foreground">
-              End Focus Time!
-            </h3>
-            <p className="mt-1.5 text-xs text-muted-foreground">
-              Some tasks are not completed:{" "}
-              <strong className="text-foreground">{currentStep.title}</strong>
-            </p>
+      {/* Mid-sprint: the current task alone has run past its own estimate */}
+      {!showSprintEndChecklist && activeOvertimeTaskId && currentStep && (
+        <TaskOvertimeModal
+          mode="task"
+          tasks={[
+            {
+              step: currentStep,
+              extensionCount: perTaskExtensions[currentStep.id]?.count ?? 0,
+              overtimeSeconds: Math.max(
+                0,
+                (stepDetails[currentStep.id]?.spentSeconds ?? 0) -
+                  (currentStep.estimatedMinutes * 60 +
+                    (perTaskExtensions[currentStep.id]?.totalSeconds ?? 0))
+              ),
+            },
+          ]}
+          onGiveUp={handleGiveUp}
+          onGiveMoreTime={handleGiveMoreTime}
+          onMarkDone={handleMarkTaskDone}
+        />
+      )}
 
-            {/* Overtime count warning */}
-            {overtimeCount >= 1 && (
-              <div className="mt-4 space-y-1 rounded-lg border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-600 dark:border-rose-950/30 dark:bg-rose-950/20 dark:text-rose-400">
-                <p className="flex items-center gap-1.5 font-semibold">
-                  <span>⚠️</span> Warning: Overtime for the {overtimeCount + 1}{" "}
-                  time!
-                </p>
-                <p className="leading-relaxed">
-                  You have exceeded the time limit for this task for the{" "}
-                  {overtimeCount + 1} time. Consider breaking down the task or
-                  taking a short break.
-                </p>
-              </div>
-            )}
-
-            <p className="mt-4 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-              Add Focus Time:
-            </p>
-            <div className="mt-2 grid grid-cols-4 gap-2">
-              {[5, 10, 20, 30].map((mins) => (
-                <Button
-                  key={mins}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleAddTime(mins)}
-                  className="font-semibold"
-                >
-                  +{mins}m
-                </Button>
-              ))}
-            </div>
-
-            <div className="mt-6 flex gap-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="flex-1 text-muted-foreground hover:bg-muted"
-                onClick={() => {
-                  setShowOvertimePicker(false)
-                  setShowEndSprintSummary(true)
-                }}
-              >
-                End Sprint
-              </Button>
-              <Button
-                size="sm"
-                className="flex-1 bg-amber-500 font-semibold text-white shadow-[0_0_10px_rgba(245,158,11,0.3)] hover:bg-amber-600"
-                onClick={() => handleAddTime(5)}
-              >
-                Continue (+5m)
-              </Button>
-            </div>
-          </div>
-        </div>
+      {/* Sprint's total time is up — resolve every step still pending */}
+      {showSprintEndChecklist && unresolvedSteps.length > 0 && (
+        <TaskOvertimeModal
+          mode="sprint-end"
+          tasks={unresolvedSteps.map((step) => ({
+            step,
+            extensionCount: perTaskExtensions[step.id]?.count ?? 0,
+            overtimeSeconds: Math.max(
+              0,
+              (stepDetails[step.id]?.spentSeconds ?? 0) -
+                (step.estimatedMinutes * 60 +
+                  (perTaskExtensions[step.id]?.totalSeconds ?? 0))
+            ),
+          }))}
+          onGiveUp={handleGiveUp}
+          onGiveMoreTime={handleGiveMoreTime}
+          onMarkDone={handleMarkTaskDone}
+        />
       )}
 
       {/* Fireworks Explosion overlay */}

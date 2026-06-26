@@ -195,8 +195,6 @@ export default function PixelCard({
 
     canvasRef.current.width = width
     canvasRef.current.height = height
-    canvasRef.current.style.width = `${width}px`
-    canvasRef.current.style.height = `${height}px`
 
     const colorsArray = finalColors.split(",")
     const pxs: Pixel[] = []

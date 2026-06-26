@@ -24,6 +24,7 @@ model User {
   extensionTokens ExtensionToken[]
   paymentOrders   PaymentOrder[]
   Sprint          Sprint[]
+  aiUsages        AiUsage[]
 }
 
 model Chat {
@@ -276,4 +277,34 @@ enum SprintStatus {
   ACTIVE
   COMPLETED
   CANCELLED
+}
+
+enum AiUsageStatus {
+  STARTED
+  SUCCESS
+  ERROR
+  BLOCKED
+}
+
+model AiUsage {
+  id               String        @id @default(cuid())
+  userId           String
+  chatId           String?
+  requestId        String
+  status           AiUsageStatus
+  modelName        String
+  capabilities     String[]      @default([])
+  promptTokens     Int?
+  completionTokens Int?
+  totalTokens      Int?
+  creditMultiplier Int
+  creditsCharged   Int
+  reason           String?
+  createdAt        DateTime      @default(now())
+
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@index([chatId, createdAt])
 }

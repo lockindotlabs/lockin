@@ -97,12 +97,12 @@ function SectionHead({
       <span className="mb-6 inline-flex items-center gap-2 rounded-full border bg-background px-3 py-1.5 font-mono text-[13px] font-medium tracking-widest text-muted-foreground uppercase before:size-1.5 before:rounded-full before:bg-primary before:content-['']">
         {eyebrow}
       </span>
-      <h2 className="font-sans-tight text-3xl leading-none font-[550] sm:text-4xl md:text-5xl">
+      <h2 className="font-sans-tight text-3xl leading-none font-[550] sm:text-4xl md:text-5xl text-balance">
         <span className="text-muted-foreground">{headingLight}</span>
         <br />
         {heading}
       </h2>
-      <p className="mx-auto mt-6 max-w-120 text-base leading-relaxed tracking-tight text-muted-foreground">
+      <p className="mx-auto mt-6 max-w-120 text-base leading-relaxed tracking-tight text-muted-foreground text-pretty">
         {description}
       </p>
       {children}
@@ -111,7 +111,7 @@ function SectionHead({
 }
 
 /* ---- Header with scroll shadow ---- TAILWIND CONVERTED*/
-function SiteHeader() {
+export function SiteHeader() {
   const { t } = useTranslation()
 
   return (
@@ -293,7 +293,7 @@ function HeroSection() {
         </motion.h1>
 
         <motion.p
-          className="mt-6 max-w-140 text-base text-muted-foreground"
+          className="mt-6 max-w-140 text-base text-muted-foreground text-pretty"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, delay: 0.32, ease: revealEase }}
@@ -432,7 +432,7 @@ function HeroSection() {
             initial={{ opacity: 0, y: 8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.75, delay: 0.9, ease: revealEase }}
-            className="absolute top-1/2 left-12 w-260 -translate-y-1/2 overflow-hidden rounded-md shadow-lg ring ring-foreground/10 lg:left-1/2 lg:-translate-x-1/2"
+            className="absolute top-1/2 left-12 w-260 -translate-y-1/2 overflow-hidden rounded-md shadow-lg ring-1 ring-black/10 dark:ring-white/10 lg:left-1/2 lg:-translate-x-1/2"
           >
             <Image
               src="/product-demo.png"
@@ -444,7 +444,7 @@ function HeroSection() {
 
           <Image
             src="/lockin-gradient.png"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover ring-1 ring-black/10 dark:ring-white/10 ring-inset"
             alt="LockIn app demo"
             width={800}
             height={600}
@@ -691,12 +691,12 @@ function BentoSection() {
           <span className="mb-4 inline-flex items-center gap-2 rounded-full border bg-background px-2 py-1 font-mono text-xs font-medium tracking-wider text-muted-foreground uppercase">
             {t("landing.product.eyebrow")}
           </span>
-          <h2 className="font-sans-tight text-3xl font-[550] md:text-4xl">
+          <h2 className="font-sans-tight text-3xl font-[550] md:text-4xl text-balance">
             <span className="light">{t("landing.product.headingOne")}</span>
             <br />
             {t("landing.product.headingTwo")}
           </h2>
-          <p className="mt-3 max-w-140 text-base text-muted-foreground">
+          <p className="mt-3 max-w-140 text-base text-muted-foreground text-pretty">
             {t("landing.product.description")}
           </p>
         </motion.div>
@@ -1317,13 +1317,13 @@ function FaqSection() {
   return (
     <section className="border-t bg-muted py-16 md:py-24" id="faq">
       <div className="relative z-1 mx-auto max-w-200 px-4 sm:px-6 lg:px-10">
-        <h2 className="mb-3 text-center font-sans-tight text-3xl leading-none font-[550] sm:text-4xl md:text-5xl">
+        <h2 className="mb-3 text-center font-sans-tight text-3xl leading-none font-[550] sm:text-4xl md:text-5xl text-balance">
           <span className="text-muted-foreground">
             {t("landing.faq.headingLight")}
           </span>{" "}
           {t("landing.faq.headingRest")}
         </h2>
-        <p className="mx-auto mb-12 max-w-125 text-center text-base text-muted-foreground">
+        <p className="mx-auto mb-12 max-w-125 text-center text-base text-muted-foreground text-pretty">
           {t("landing.faq.subPrefix")}{" "}
           <a
             className="border-b border-border text-foreground"
@@ -1349,7 +1349,7 @@ function FaqSection() {
 
 /* ---- Big CTA section ---- */
 /* ---- Footer ---- */
-function SiteFooter() {
+export function SiteFooter() {
   const router = useRouter()
   const { i18n, t } = useTranslation()
   const currentLocale = i18n.language as AppLocale
@@ -1435,9 +1435,13 @@ function SiteFooter() {
             <span className="h-3.75">©2026</span>
           </div>
           <span className="flex gap-5 [&>a:hover]:text-foreground">
-            <a href="#">{t("landing.footer.privacy")}</a>
-            <a href="#">{t("landing.footer.terms")}</a>
-            <a href="#">{t("landing.footer.security")}</a>
+            <Link href="/trust/privacy-policy">
+              {t("landing.footer.privacy")}
+            </Link>
+            <Link href="/trust/terms-of-service">
+              {t("landing.footer.terms")}
+            </Link>
+            {/* <Link href="/trust/security">{t("landing.footer.security")}</Link> */}
           </span>
         </div>
       </div>

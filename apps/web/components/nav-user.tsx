@@ -1,130 +1,148 @@
 import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
   CircleArrowUpIcon,
   CreditCard,
   LifeBuoyIcon,
   LogOut,
-  Settings2Icon,
-  SparkleIcon,
-  Sparkles,
-  UserIcon,
   UserRoundIcon,
 } from "lucide-react"
-
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@workspace/ui/components/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu"
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@workspace/ui/components/sidebar"
-import { useClerk, useUser } from "@clerk/nextjs"
+import { useSidebar } from "@workspace/ui/components/sidebar"
+import { useClerk, UserAvatar } from "@clerk/nextjs"
+import { useRouter } from "next/navigation"
 import { BillingDialog } from "./billing-dialog"
 import React from "react"
-import { useBillingState } from "@/lib/billing/use-billing-state"
+import { useAiUsageSummary } from "@/lib/ai/use-ai-usage-summary"
 import { UpgradeDialog } from "./upgrade-dialog"
+import { Button } from "@workspace/ui/components/button"
+import { Infinity } from "@untitledui/icons"
 
-export function NavUser() {
+export function NavUser({
+  side = "bottom",
+  align = "end",
+  sideOffset = 16,
+}: {
+  side?: "top" | "bottom" | "left" | "right"
+  align?: "start" | "center" | "end"
+  sideOffset?: number
+}) {
   const { isMobile } = useSidebar()
-  const { user } = useUser()
   const { openUserProfile, signOut } = useClerk()
+  const router = useRouter()
   const [billingOpen, setBillingOpen] = React.useState(false)
   const [upgradeOpen, setUpgradeOpen] = React.useState(false)
 
-  const { billing } = useBillingState()
+  const { summary } = useAiUsageSummary()
 
-  const userTier = React.useMemo(() => {
-    if (!billing) {
-      return "Loading..."
-    }
-    return billing.tier !== "FREE" ? billing.tier : "Free Tier"
-  }, [billing])
+  const tierName = React.useMemo(() => {
+    if (!summary) return "Free Tier"
+    if (summary.tier === "FREE") return "Free Tier"
+    return `${summary.tier.charAt(0) + summary.tier.slice(1).toLowerCase()} Tier`
+  }, [summary])
+
+  const aiPlansText = React.useMemo(() => {
+    if (!summary) return "0 / 3"
+    const { created, limit } = summary.aiPlans
+    if (limit === null) return `${created} / Unlimited`
+    return `${created} / ${limit}`
+  }, [summary])
+
+  const totalCredits = React.useMemo(() => {
+    if (!summary) return 1000
+    return summary.credits.limit
+  }, [summary])
+
+  const remainingCredits = React.useMemo(() => {
+    if (!summary) return 867
+    return summary.credits.remaining
+  }, [summary])
 
   return (
     <>
-      <SidebarMenu>
-        <SidebarMenuItem>
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              render={
-                <SidebarMenuButton
-                  size="lg"
-                  className="hover:bg-accent hover:text-accent-foreground data-pressed:bg-accent data-pressed:text-accent-foreground"
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          render={
+            <button className="size-8 cursor-pointer outline-none">
+              <UserAvatar />
+            </button>
+          }
+        />
+        <DropdownMenuContent
+          className="w-64 rounded-xl p-1"
+          side={isMobile ? "bottom" : side}
+          align={isMobile ? "end" : align}
+          sideOffset={sideOffset}
+        >
+          <DropdownMenuGroup>
+            <div className="mb-1 flex flex-col rounded-lg border border-border bg-card p-3 select-none">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-sm font-medium">{tierName}</span>
+                <Button
+                  size={"xs"}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    router.push("/app/subscription")
+                  }}
                 >
-                  <Avatar className="h-8 w-8 rounded-full">
-                    <AvatarImage
-                      src={user?.imageUrl}
-                      alt={
-                        user?.fullName || user?.emailAddresses[0]?.emailAddress
-                      }
-                    />
-                    <AvatarFallback className="rounded-full">
-                      <UserIcon />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">
-                      {user?.fullName}
-                    </span>
-                    <span className="truncate text-xs">{userTier}</span>
-                  </div>
-                  <ChevronsUpDown className="ml-auto size-4" />
-                </SidebarMenuButton>
-              }
-            ></DropdownMenuTrigger>
-            <DropdownMenuContent
-              className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-              side={isMobile ? "bottom" : "top"}
-              align="end"
-              sideOffset={12}
-            >
-              <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => setUpgradeOpen(true)}>
-                  <CircleArrowUpIcon />
-                  Upgrade Plan
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => openUserProfile()}>
-                  <UserRoundIcon />
-                  Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setBillingOpen(true)}>
-                  <CreditCard />
-                  Billing
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <LifeBuoyIcon />
-                  Support
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  variant="destructive"
-                  onClick={() => signOut()}
-                >
-                  <LogOut />
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </SidebarMenuItem>
-      </SidebarMenu>
+                  Upgrade
+                </Button>
+              </div>
+
+              {/* Credits Info */}
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Total</span>
+                  <span className="font-medium text-foreground">
+                    {totalCredits.toLocaleString()} credits
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Remaining</span>
+                  <span className="font-medium text-foreground">
+                    {remainingCredits.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">AI Plans</span>
+                  <span className="font-medium text-foreground">
+                    {aiPlansText}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <DropdownMenuItem onClick={() => router.push("/app/subscription")}>
+              <CircleArrowUpIcon />
+              Upgrade Plan
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => openUserProfile()}>
+              <UserRoundIcon />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setBillingOpen(true)}>
+              <CreditCard />
+              Billing
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <LifeBuoyIcon />
+              Support
+            </DropdownMenuItem>
+            <DropdownMenuItem variant="destructive" onClick={() => signOut()}>
+              <LogOut />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <BillingDialog open={billingOpen} onOpenChange={setBillingOpen} />
       <UpgradeDialog open={upgradeOpen} onOpenChange={setUpgradeOpen} />
     </>

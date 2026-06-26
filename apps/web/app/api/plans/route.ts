@@ -8,6 +8,10 @@ import {
   upsertOwnedPlan,
 } from "@/lib/server/plan-store"
 
+import prisma from "@workspace/db"
+import { getEffectiveTier } from "@/lib/billing/catalog"
+import { checkPlanCap } from "@/lib/ai/enforcement"
+
 const PlanStepSchema = z.object({
   id: z.string().min(1),
   title: z.string(),
@@ -58,6 +62,20 @@ export async function POST(req: Request) {
 
   if (!parsed.success) {
     return Response.json({ error: parsed.error.message }, { status: 400 })
+  }
+
+  const tier = getEffectiveTier(user.planTier, user.planExpiresAt)
+
+  const planCapCheck = await checkPlanCap({
+    prisma,
+    userId: user.id,
+    tier,
+    source: parsed.data.source,
+    planId: parsed.data.id,
+  })
+
+  if (!planCapCheck.allowed) {
+    return Response.json(planCapCheck.error, { status: 403 })
   }
 
   const plan = await upsertOwnedPlan(user.id, parsed.data)

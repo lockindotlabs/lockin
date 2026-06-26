@@ -262,11 +262,7 @@ const ModelSelectorImpl = ({
       onValueChange={onValueChange}
       {...forwardedProps}
     >
-      <ModelSelectorTrigger
-        variant={variant}
-        size={size}
-        className="rounded-full"
-      />
+      <ModelSelectorTrigger variant={variant} size={size} />
       <ModelSelectorContent className={contentClassName} />
     </ModelSelectorRoot>
   )

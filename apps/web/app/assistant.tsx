@@ -66,6 +66,9 @@ export function Assistant({
       if (!chatIdRef.current && !ensureChatIdRef.current) {
         saveChatMessages(sessionKey, messages)
       }
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("lockin:ai-usage-summary-changed"))
+      }
     },
     transport: new AssistantChatTransport({
       api: "/api/chat",
@@ -122,10 +125,7 @@ export function Assistant({
   return (
     <AssistantRuntimeProvider key={sessionKey} runtime={runtime} aui={aui}>
       <InitialPromptSender prompt={initialPrompt} sessionKey={sessionKey} />
-      <PlanAssistantTools
-        chatSessionId={chatId}
-        ensureChatId={ensureChatId}
-      />
+      <PlanAssistantTools chatSessionId={chatId} ensureChatId={ensureChatId} />
       <AskChoiceTool />
       <WebSearchAssistantToolUI />
       <Thread mode={mode} initialMentions={initialMentions} />

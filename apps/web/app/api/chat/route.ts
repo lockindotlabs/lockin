@@ -20,6 +20,9 @@ import { getCurrentDbUser } from "@/lib/server/current-db-user"
 import { resolveMentionContext } from "@/lib/server/mention-context"
 import type { MentionRef } from "@/lib/mentions/mention-types"
 import prisma from "@workspace/db"
+import { getEffectiveTier } from "@/lib/billing/catalog"
+import { AI_CATALOG, calculateCredits } from "@/lib/ai/catalog"
+import { validateAiRequest, checkQuotaAndRecordStarted } from "@/lib/ai/enforcement"
 
 export const maxDuration = 30
 
@@ -568,10 +571,6 @@ type ChatConfig = {
 }
 
 const DEFAULT_MODEL_NAME = "gemini-3.1-flash-lite-preview"
-const ALLOWED_MODEL_NAMES = new Set([
-  DEFAULT_MODEL_NAME,
-  "gemini-3.1-flash-preview",
-])
 const ALLOWED_FRONTEND_TOOLS = new Set([
   "createPlan",
   "rewriteActivePlan",
@@ -579,10 +578,8 @@ const ALLOWED_FRONTEND_TOOLS = new Set([
   "askChoice",
 ])
 
-function getAllowedModelName(modelName: string | undefined) {
-  return modelName && ALLOWED_MODEL_NAMES.has(modelName)
-    ? modelName
-    : DEFAULT_MODEL_NAME
+function getModelName(modelName: string | undefined) {
+  return modelName || DEFAULT_MODEL_NAME
 }
 
 function getRequestedCapabilities(config: ChatConfig | undefined) {
@@ -679,15 +676,22 @@ export async function POST(req: Request) {
   }
 
   const requestedCapabilities = getRequestedCapabilities(config)
-  const authorizedCapabilities = getAuthorizedChatCapabilities(user.id)
+  const modelName = getModelName(config?.modelName)
+  const tier = getEffectiveTier(user.planTier, user.planExpiresAt)
+
+  const validation = validateAiRequest({ tier, modelName, requestedCapabilities })
+  if (!validation.valid) {
+    return Response.json(validation.error, { status: validation.status })
+  }
+
+  const tierConfig = AI_CATALOG[tier]
   const hasWebSearch =
-    authorizedCapabilities.has("web-search") &&
-    requestedCapabilities.includes("web-search")
+    requestedCapabilities.includes("web-search") &&
+    tierConfig.allowedCapabilities.includes("web-search")
   const hasComplexReasoning =
-    authorizedCapabilities.has("complex-reasoning") &&
-    requestedCapabilities.includes("complex-reasoning")
+    requestedCapabilities.includes("complex-reasoning") &&
+    tierConfig.allowedCapabilities.includes("complex-reasoning")
   const isDev = env["NODE_ENV"] === "development"
-  const modelName = getAllowedModelName(config?.modelName)
 
   const tavilyApiKey = env["TAVILY_API_KEY"]
 
@@ -740,6 +744,47 @@ export async function POST(req: Request) {
     mentions: config?.mentions,
   })
 
+  const requestId = "req_" + Math.random().toString(36).substring(2, 15)
+
+  try {
+    const checkResult = await prisma.$transaction(async (tx) => {
+      return checkQuotaAndRecordStarted({
+        tx,
+        userId: user.id,
+        chatId: id,
+        requestId,
+        modelName,
+        capabilities: requestedCapabilities,
+        tier,
+      })
+    })
+
+    if (!checkResult.allowed) {
+      const now = new Date()
+      const isMonthly = checkResult.reason === "MONTHLY_CREDITS_EXCEEDED"
+      const resetAt = isMonthly
+        ? new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1))
+        : new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1))
+
+      return Response.json(
+        {
+          code: "AI_QUOTA_EXCEEDED",
+          tier,
+          remainingCredits: checkResult.remainingCredits,
+          resetAt: resetAt.toISOString(),
+          upgradeUrl: "/app/billing",
+          message: isMonthly
+            ? `Monthly credit quota exceeded. Resetting on ${resetAt.toUTCString()}.`
+            : `Daily request quota exceeded. Resetting on ${resetAt.toUTCString()}.`,
+        },
+        { status: 429 }
+      )
+    }
+  } catch (err) {
+    console.error("Quota transaction check failed:", err)
+    return Response.json({ error: "Failed to verify AI quota." }, { status: 500 })
+  }
+
   try {
     await prisma.chat.update({
       where: { id },
@@ -774,10 +819,40 @@ When using webSearch, ground the answer in the search results and include releva
       }),
       tools: allTools,
       stopWhen: stepCountIs(5),
+      onFinish: async (event) => {
+        const usage = event.usage
+        const { creditsCharged } = calculateCredits({
+          totalTokens: usage?.totalTokens,
+          modelName,
+          capabilities: requestedCapabilities,
+        })
+
+        await prisma.aiUsage
+          .updateMany({
+            where: { requestId },
+            data: {
+              status: "SUCCESS",
+              promptTokens: usage?.inputTokens,
+              completionTokens: usage?.outputTokens,
+              totalTokens: usage?.totalTokens,
+              creditsCharged,
+            },
+          })
+          .catch((err) => {
+            console.error("Failed to update AiUsage to SUCCESS:", err)
+          })
+      },
     })
 
     result.consumeStream({
       onError: () => {
+        prisma.aiUsage
+          .updateMany({
+            where: { requestId },
+            data: { status: "ERROR", creditsCharged: 0 },
+          })
+          .catch(() => {})
+
         prisma.chat
           .update({
             where: { id },
@@ -819,7 +894,14 @@ When using webSearch, ground the answer in the search results and include releva
         return undefined
       },
     })
-  } catch {
+  } catch (err) {
+    await prisma.aiUsage
+      .updateMany({
+        where: { requestId },
+        data: { status: "ERROR", creditsCharged: 0 },
+      })
+      .catch(() => {})
+
     await prisma.chat
       .update({
         where: { id },

@@ -413,7 +413,11 @@ export function PlanAssistantTools({
         "Create and save a new LockIn plan, then open it in the plan editor.",
       parameters: planInputSchema,
       execute: async (input: PlanToolInput): Promise<PlanToolResult> => {
-        const plan = buildPlan(input)
+        const plan = {
+          ...buildPlan(input),
+          source: "AI" as const,
+          aiMode: "ASSISTED" as const,
+        }
 
         await savePlan(plan)
 
@@ -480,7 +484,11 @@ export function PlanAssistantTools({
           }
         }
 
-        const plan = buildPlan(input, existingPlan)
+        const plan = {
+          ...buildPlan(input, existingPlan),
+          source: existingPlan.source,
+          aiMode: "ASSISTED" as const,
+        }
         await savePlan(plan)
         window.dispatchEvent(
           new CustomEvent(AI_PLAN_REWRITE_EVENT, {

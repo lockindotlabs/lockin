@@ -476,7 +476,7 @@ export function MentionChips({
   }
 
   return (
-    <div className="flex flex-wrap gap-1.5 px-1">
+    <div className="flex flex-wrap gap-1.5">
       {mentions.map((mention) => (
         <span
           key={getMentionKey(mention)}

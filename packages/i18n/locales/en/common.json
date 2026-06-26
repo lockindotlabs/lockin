@@ -289,5 +289,375 @@
       "terms": "Terms",
       "security": "Security"
     }
+  },
+  "trust": {
+    "title": "Trust Center",
+    "policies": "LockIn Policies",
+    "lastUpdated": "Last updated: June 19, 2026",
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro1": "LockIn (\"we\", \"our\", or \"us\") is a productivity web application that helps users break down tasks, manage work, and complete focus sessions.",
+      "intro2": "This Privacy Policy explains what information we collect, how we use it, and what choices you have.",
+      "sections": {
+        "s1": {
+          "title": "Information We Collect",
+          "subtitle": "We may collect the following types of information:",
+          "account": {
+            "title": "Account Information",
+            "subtitle": "When you create an account, we may collect information such as:",
+            "items": [
+              "Name",
+              "Email address",
+              "Profile information provided through authentication providers",
+              "Account ID or user ID"
+            ]
+          },
+          "task": {
+            "title": "Task and Productivity Data",
+            "subtitle": "When you use LockIn, we may collect and store:",
+            "items": [
+              "Tasks, subtasks, projects, and goals you create",
+              "AI-generated task breakdowns",
+              "Sprint/focus session data",
+              "Task completion status",
+              "Estimated and actual focus durations",
+              "Due dates, priorities, and scheduling information"
+            ]
+          },
+          "ai": {
+            "title": "AI Input and Output Data",
+            "subtitle": "When you use AI-powered features, we may process:",
+            "items": [
+              "The task or prompt you enter",
+              "Context needed to generate a plan",
+              "AI-generated subtasks, durations, and recommendations"
+            ],
+            "note": "Do not enter highly sensitive personal information into AI planning features unless necessary."
+          },
+          "blocking": {
+            "title": "Website Blocking Data",
+            "subtitle": "If you use website blocking or focus protection features, we may store:",
+            "items": [
+              "URLs or domains you choose to block",
+              "Blocking preferences",
+              "Focus protection settings"
+            ]
+          },
+          "usage": {
+            "title": "Usage and Analytics Data",
+            "subtitle": "We may collect usage data to understand and improve the product, such as:",
+            "items": [
+              "Pages visited",
+              "Features used",
+              "Session activity",
+              "Error logs",
+              "Device and browser information",
+              "Approximate location based on IP address"
+            ]
+          },
+          "payment": {
+            "title": "Payment and Subscription Data",
+            "p1": "If you purchase a paid plan, payment processing may be handled by a third-party payment provider. We do not store full payment card details. We may store subscription status, plan type, renewal status, and payment-related identifiers."
+          }
+        },
+        "s2": {
+          "title": "How We Use Information",
+          "subtitle": "We use your information to:",
+          "items": [
+            "Provide and operate LockIn",
+            "Save your tasks, plans, and Sprint progress",
+            "Generate AI task breakdowns",
+            "Personalize task planning and focus recommendations",
+            "Manage accounts and authentication",
+            "Process subscriptions and enforce plan limits",
+            "Improve product performance and reliability",
+            "Analyze feature usage",
+            "Detect abuse, fraud, or technical issues",
+            "Communicate important product or account updates"
+          ]
+        },
+        "s3": {
+          "title": "AI Processing",
+          "p1": "LockIn uses AI features to help generate task breakdowns and planning suggestions.",
+          "p2": "Your prompts and related task data may be sent to third-party AI providers to generate responses. We only send the information needed to provide the feature.",
+          "p3": "AI-generated content may be inaccurate or incomplete. You are responsible for reviewing and editing AI-generated plans before using them."
+        },
+        "s4": {
+          "title": "Third-Party Services",
+          "p1": "We may use third-party services for authentication, database hosting, AI generation, analytics, error tracking, payment processing, email communication, and hosting/infrastructure.",
+          "p2": "These providers may process information on our behalf according to their own privacy policies and data processing terms. Examples include:",
+          "services": [
+            "<strong>Clerk</strong> for authentication",
+            "<strong>Supabase</strong> for database hosting",
+            "<strong>Google Gemini</strong> for AI capabilities",
+            "<strong>PostHog</strong> for analytics",
+            "<strong>PayOS</strong> for payment processing",
+            "<strong>Firebase</strong> for hosting and cloud infrastructure"
+          ]
+        },
+        "s5": {
+          "title": "Cookies and Tracking",
+          "subtitle": "We may use cookies or similar technologies to:",
+          "items": [
+            "Keep users signed in",
+            "Remember preferences",
+            "Improve app performance",
+            "Analyze product usage",
+            "Prevent abuse or unauthorized access"
+          ],
+          "p1": "You can control cookies through your browser settings, but some features may not work correctly if cookies are disabled."
+        },
+        "s6": {
+          "title": "Data Sharing",
+          "p1": "We do not sell your personal information.",
+          "p2": "We may share information with:",
+          "items": [
+            "Service providers who help us operate the app",
+            "Payment processors for subscription handling",
+            "AI providers for AI-powered features",
+            "Analytics and infrastructure providers",
+            "Legal authorities if required by law",
+            "A successor entity in case of merger, acquisition, or business transfer"
+          ]
+        },
+        "s7": {
+          "title": "Data Retention",
+          "p1": "We keep personal information only as long as necessary to provide the service, comply with legal obligations, resolve disputes, and enforce agreements.",
+          "p2": "You may request deletion of your account and associated data by contacting us at {{email}}.",
+          "p3": "Some information may be retained for a limited period in backups, logs, payment records, or where required by law."
+        },
+        "s8": {
+          "title": "Data Security",
+          "p1": "We use reasonable technical and organizational measures to protect user data. However, no system is completely secure, and we cannot guarantee absolute security.",
+          "p2": "You are responsible for keeping your account credentials safe."
+        },
+        "s9": {
+          "title": "Your Rights and Choices",
+          "subtitle": "Depending on your location, you may have rights to:",
+          "items": [
+            "Access the personal information we hold about you",
+            "Correct inaccurate information",
+            "Delete your information",
+            "Export your information",
+            "Object to or restrict certain processing",
+            "Withdraw consent where processing is based on consent",
+            "Opt out of certain analytics or marketing communications"
+          ],
+          "p1": "To make a request, contact us at {{email}}."
+        },
+        "s10": {
+          "title": "Children’s Privacy",
+          "p1": "LockIn is not intended for children under 16. We do not knowingly collect personal information from children. If we learn that we have collected personal information from a child without appropriate consent, we will delete it."
+        },
+        "s11": {
+          "title": "International Users",
+          "p1": "Your information may be processed in countries other than your country of residence. These countries may have different data protection laws.",
+          "p2": "Where required, we use appropriate safeguards for international data transfers."
+        },
+        "s12": {
+          "title": "Changes to This Policy",
+          "p1": "We may update this Privacy Policy from time to time. If we make material changes, we will notify users through the app, by email, or by updating the date at the top of this page."
+        },
+        "s13": {
+          "title": "Contact Us",
+          "subtitle": "If you have questions about this Privacy Policy or your data, contact us at:",
+          "company": "LockIn Labs, Inc.",
+          "address": "Ho Chi Minh City, Vietnam"
+        }
+      }
+    },
+    "tos": {
+      "title": "Terms and Conditions",
+      "welcome": "Welcome to LockIn.",
+      "intro": "These Terms and Conditions (\"Terms\") govern your access to and use of LockIn, a productivity application that helps users break down tasks, manage work, and complete focus sessions. By using LockIn, you agree to these Terms. If you do not agree, do not use the service.",
+      "sections": {
+        "s1": {
+          "title": "The Service",
+          "items": [
+            "LockIn provides tools for task management, AI-assisted task breakdown, Sprint/focus sessions, productivity tracking, and related features.",
+            "Some features may be free, while others may require a paid subscription or usage credits.",
+            "We may update, modify, suspend, or discontinue parts of the service at any time."
+          ]
+        },
+        "s2": {
+          "title": "Accounts",
+          "p1": "To use certain features, you may need to create an account.",
+          "subtitle": "You agree to:",
+          "items": [
+            "Provide accurate account information",
+            "Keep your login credentials secure",
+            "Be responsible for activity under your account",
+            "Notify us if you suspect unauthorized access"
+          ],
+          "p2": "We may suspend or terminate accounts that violate these Terms or misuse the service."
+        },
+        "s3": {
+          "title": "User Content",
+          "items": [
+            "You may create, submit, or store content in LockIn, including tasks, subtasks, goals, projects, Sprint notes, blocked URLs, and AI prompts.",
+            "You retain ownership of your content.",
+            "By using LockIn, you give us permission to store, process, display, and use your content only as needed to provide, maintain, secure, and improve the service.",
+            "You are responsible for the content you submit. You agree not to submit content that is illegal, harmful, abusive, infringing, or violates the rights of others."
+          ]
+        },
+        "s4": {
+          "title": "AI Features",
+          "items": [
+            "LockIn may use AI to generate task breakdowns, estimated durations, planning suggestions, and productivity recommendations.",
+            "AI-generated output may be incomplete, inaccurate, or unsuitable for your situation. You are responsible for reviewing and editing AI-generated plans before relying on them.",
+            "LockIn does not provide medical, mental health, legal, financial, academic, or professional advice.",
+            "You should not rely on LockIn as your only source of planning, productivity, or decision-making support."
+          ]
+        },
+        "s5": {
+          "title": "Productivity and Focus Features",
+          "items": [
+            "LockIn may include Sprint sessions, timers, reminders, progress summaries, and website blocking or focus protection features.",
+            "These features are provided to support focus and productivity, but we do not guarantee that they will prevent distraction, improve productivity, or ensure task completion.",
+            "You remain responsible for your own work, deadlines, habits, and decisions."
+          ]
+        },
+        "s6": {
+          "title": "Paid Plans, Credits, and Billing",
+          "p1": "Some LockIn features may require a paid subscription, one-time payment, or usage credits.",
+          "subtitle": "Paid features may include, for example:",
+          "items": [
+            "Higher AI usage limits",
+            "Extended AI planning modes",
+            "Hard website blocking",
+            "Advanced analytics",
+            "Personalization features"
+          ],
+          "p2": "Pricing, quotas, limits, and included features will be shown before purchase.",
+          "p3": "By purchasing a paid plan, you authorize our payment provider to charge the applicable fees.",
+          "p4": "Unless stated otherwise, subscriptions renew automatically until canceled.",
+          "p5": "You can cancel your subscription according to the cancellation method provided in the app or by the payment provider.",
+          "p6": "Cancellation stops future renewals but does not automatically refund past payments unless required by law or stated in our refund policy."
+        },
+        "s7": {
+          "title": "Refunds",
+          "p1": "Refund eligibility depends on the payment method, subscription type, and applicable law.",
+          "p2": "Our refund policy:",
+          "p3": "Payments are non-refundable except where required by law."
+        },
+        "s8": {
+          "title": "Acceptable Use",
+          "subtitle": "You agree not to:",
+          "items": [
+            "Use LockIn for illegal, harmful, or abusive purposes",
+            "Attempt to access another user's account or data",
+            "Interfere with the security or operation of the service",
+            "Reverse engineer, scrape, copy, or exploit the service",
+            "Bypass usage limits, quotas, or payment restrictions",
+            "Submit malicious code, spam, or harmful content",
+            "Use AI features to generate illegal, harmful, or abusive content",
+            "Resell or redistribute access to LockIn without permission"
+          ],
+          "p1": "We may limit, suspend, or terminate access if we believe these rules are violated."
+        },
+        "s9": {
+          "title": "Third-Party Services",
+          "items": [
+            "LockIn may rely on third-party services for authentication, hosting, databases, AI generation, analytics, payments, email, and other infrastructure.",
+            "These services may have their own terms and policies.",
+            "We are not responsible for third-party services outside our control."
+          ]
+        },
+        "s10": {
+          "title": "Service Availability",
+          "items": [
+            "We aim to keep LockIn reliable, but we do not guarantee that the service will always be available, secure, error-free, or uninterrupted.",
+            "Features may change over time. Some features may be experimental, limited, or removed."
+          ]
+        },
+        "s11": {
+          "title": "Beta or Experimental Features",
+          "items": [
+            "Some features may be released as beta, preview, or experimental features.",
+            "These features may be unstable, inaccurate, incomplete, or changed without notice.",
+            "Use beta features at your own risk."
+          ]
+        },
+        "s12": {
+          "title": "Intellectual Property",
+          "items": [
+            "LockIn, including its design, branding, software, interface, and original content, belongs to us or our licensors.",
+            "You may not copy, modify, distribute, sell, or create derivative works from LockIn without permission.",
+            "You may use LockIn only as allowed by these Terms."
+          ]
+        },
+        "s13": {
+          "title": "Feedback",
+          "items": [
+            "If you send us feedback, suggestions, bug reports, or feature ideas, you allow us to use them without restriction or compensation.",
+            "This helps us improve LockIn."
+          ]
+        },
+        "s14": {
+          "title": "Termination",
+          "p1": "You may stop using LockIn at any time.",
+          "subtitle": "We may suspend or terminate your access if:",
+          "items": [
+            "You violate these Terms",
+            "You misuse the service",
+            "Required by law",
+            "Continuing to provide the service creates risk for us or others"
+          ],
+          "p2": "After termination, your access to the service may stop. Some data may be retained as described in our Privacy Policy."
+        },
+        "s15": {
+          "title": "Disclaimers",
+          "p1": "LockIn is provided \"as is\" and \"as available.\"",
+          "p2": "To the maximum extent permitted by law, we disclaim warranties of merchantability, fitness for a particular purpose, non-infringement, accuracy, availability, and reliability.",
+          "subtitle": "We do not guarantee that:",
+          "items": [
+            "AI outputs will be correct",
+            "Tasks will be completed",
+            "Focus sessions will improve productivity",
+            "Website blocking will work perfectly",
+            "The service will be uninterrupted or error-free"
+          ]
+        },
+        "s16": {
+          "title": "Limitation of Liability",
+          "items": [
+            "To the maximum extent permitted by law, LockIn and its creators will not be liable for indirect, incidental, special, consequential, or punitive damages, including loss of productivity, missed deadlines, lost data, lost profits, or reliance on AI-generated output.",
+            "Our total liability for any claim will not exceed the amount you paid to LockIn in the past 12 months, or $10, whichever is greater.",
+            "Some jurisdictions do not allow certain limitations, so some of these limits may not apply to you."
+          ]
+        },
+        "s17": {
+          "title": "Indemnification",
+          "subtitle": "You agree to defend and hold harmless LockIn and its creators from claims, damages, losses, liabilities, and expenses arising from:",
+          "items": [
+            "Your use of the service",
+            "Your content",
+            "Your violation of these Terms",
+            "Your violation of laws or third-party rights"
+          ]
+        },
+        "s18": {
+          "title": "Changes to These Terms",
+          "items": [
+            "We may update these Terms from time to time.",
+            "If changes are material, we may notify you through the app, by email, or by updating the date at the top of this page.",
+            "Your continued use of LockIn after changes means you accept the updated Terms."
+          ]
+        },
+        "s19": {
+          "title": "Governing Law",
+          "items": [
+            "These Terms are governed by the laws of Vietnam, unless otherwise required by applicable consumer protection law.",
+            "Any disputes will be handled in the courts of Ho Chi Minh City, Vietnam, unless applicable law gives you the right to bring claims elsewhere."
+          ]
+        },
+        "s20": {
+          "title": "Contact",
+          "subtitle": "If you have questions about these Terms, contact us at:",
+          "company": "LockIn Labs, Inc.",
+          "address": "Ho Chi Minh City, Vietnam"
+        }
+      }
+    }
   }
 }

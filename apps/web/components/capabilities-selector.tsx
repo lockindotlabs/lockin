@@ -252,7 +252,7 @@ const CapabilitiesSelectorImpl = ({
       <CapabilitiesSelectorTrigger
         variant={variant}
         size={size}
-        className="rounded-full border border-border"
+        className="border border-border"
       />
       <CapabilitiesSelectorContent className={contentClassName} />
     </CapabilitiesSelectorRoot>

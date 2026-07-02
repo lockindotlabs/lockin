@@ -10,8 +10,8 @@
  */
 
 import type * as runtime from "@prisma/client/runtime/client"
-import * as $Enums from "./enums.ts"
-import type * as Prisma from "./internal/prismaNamespace.ts"
+import * as $Enums from "./enums.js"
+import type * as Prisma from "./internal/prismaNamespace.js"
 
 
 export type StringFilter<$PrismaModel = never> = {
@@ -260,6 +260,23 @@ export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedStringNullableFilter<$PrismaModel>
 }
 
+export type EnumWorkflowOutputTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkflowOutputType | Prisma.EnumWorkflowOutputTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkflowOutputType[] | Prisma.ListEnumWorkflowOutputTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkflowOutputType[] | Prisma.ListEnumWorkflowOutputTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkflowOutputTypeFilter<$PrismaModel> | $Enums.WorkflowOutputType
+}
+
+export type EnumWorkflowOutputTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkflowOutputType | Prisma.EnumWorkflowOutputTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkflowOutputType[] | Prisma.ListEnumWorkflowOutputTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkflowOutputType[] | Prisma.ListEnumWorkflowOutputTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkflowOutputTypeWithAggregatesFilter<$PrismaModel> | $Enums.WorkflowOutputType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWorkflowOutputTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWorkflowOutputTypeFilter<$PrismaModel>
+}
+
 export type EnumPlanStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.PlanStatus | Prisma.EnumPlanStatusFieldRefInput<$PrismaModel>
   in?: $Enums.PlanStatus[] | Prisma.ListEnumPlanStatusFieldRefInput<$PrismaModel>
@@ -286,6 +303,13 @@ export type EnumBreakdownIntensityFilter<$PrismaModel = never> = {
   in?: $Enums.BreakdownIntensity[] | Prisma.ListEnumBreakdownIntensityFieldRefInput<$PrismaModel>
   notIn?: $Enums.BreakdownIntensity[] | Prisma.ListEnumBreakdownIntensityFieldRefInput<$PrismaModel>
   not?: Prisma.NestedEnumBreakdownIntensityFilter<$PrismaModel> | $Enums.BreakdownIntensity
+}
+
+export type EnumExperienceLevelNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExperienceLevel | Prisma.EnumExperienceLevelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ExperienceLevel[] | Prisma.ListEnumExperienceLevelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ExperienceLevel[] | Prisma.ListEnumExperienceLevelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumExperienceLevelNullableFilter<$PrismaModel> | $Enums.ExperienceLevel | null
 }
 
 export type EnumPlanStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -326,6 +350,16 @@ export type EnumBreakdownIntensityWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumBreakdownIntensityFilter<$PrismaModel>
   _max?: Prisma.NestedEnumBreakdownIntensityFilter<$PrismaModel>
+}
+
+export type EnumExperienceLevelNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExperienceLevel | Prisma.EnumExperienceLevelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ExperienceLevel[] | Prisma.ListEnumExperienceLevelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ExperienceLevel[] | Prisma.ListEnumExperienceLevelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumExperienceLevelNullableWithAggregatesFilter<$PrismaModel> | $Enums.ExperienceLevel | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumExperienceLevelNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumExperienceLevelNullableFilter<$PrismaModel>
 }
 
 export type EnumPlanStepStatusFilter<$PrismaModel = never> = {
@@ -757,6 +791,23 @@ export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedStringNullableFilter<$PrismaModel>
 }
 
+export type NestedEnumWorkflowOutputTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkflowOutputType | Prisma.EnumWorkflowOutputTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkflowOutputType[] | Prisma.ListEnumWorkflowOutputTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkflowOutputType[] | Prisma.ListEnumWorkflowOutputTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkflowOutputTypeFilter<$PrismaModel> | $Enums.WorkflowOutputType
+}
+
+export type NestedEnumWorkflowOutputTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkflowOutputType | Prisma.EnumWorkflowOutputTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkflowOutputType[] | Prisma.ListEnumWorkflowOutputTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkflowOutputType[] | Prisma.ListEnumWorkflowOutputTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkflowOutputTypeWithAggregatesFilter<$PrismaModel> | $Enums.WorkflowOutputType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWorkflowOutputTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWorkflowOutputTypeFilter<$PrismaModel>
+}
+
 export type NestedEnumPlanStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.PlanStatus | Prisma.EnumPlanStatusFieldRefInput<$PrismaModel>
   in?: $Enums.PlanStatus[] | Prisma.ListEnumPlanStatusFieldRefInput<$PrismaModel>
@@ -783,6 +834,13 @@ export type NestedEnumBreakdownIntensityFilter<$PrismaModel = never> = {
   in?: $Enums.BreakdownIntensity[] | Prisma.ListEnumBreakdownIntensityFieldRefInput<$PrismaModel>
   notIn?: $Enums.BreakdownIntensity[] | Prisma.ListEnumBreakdownIntensityFieldRefInput<$PrismaModel>
   not?: Prisma.NestedEnumBreakdownIntensityFilter<$PrismaModel> | $Enums.BreakdownIntensity
+}
+
+export type NestedEnumExperienceLevelNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExperienceLevel | Prisma.EnumExperienceLevelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ExperienceLevel[] | Prisma.ListEnumExperienceLevelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ExperienceLevel[] | Prisma.ListEnumExperienceLevelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumExperienceLevelNullableFilter<$PrismaModel> | $Enums.ExperienceLevel | null
 }
 
 export type NestedEnumPlanStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -823,6 +881,16 @@ export type NestedEnumBreakdownIntensityWithAggregatesFilter<$PrismaModel = neve
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumBreakdownIntensityFilter<$PrismaModel>
   _max?: Prisma.NestedEnumBreakdownIntensityFilter<$PrismaModel>
+}
+
+export type NestedEnumExperienceLevelNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ExperienceLevel | Prisma.EnumExperienceLevelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ExperienceLevel[] | Prisma.ListEnumExperienceLevelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ExperienceLevel[] | Prisma.ListEnumExperienceLevelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumExperienceLevelNullableWithAggregatesFilter<$PrismaModel> | $Enums.ExperienceLevel | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumExperienceLevelNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumExperienceLevelNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumPlanStepStatusFilter<$PrismaModel = never> = {

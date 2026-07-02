@@ -13,6 +13,14 @@ import {
   BreadcrumbSeparator,
 } from "@workspace/ui/components/breadcrumb"
 import { Button } from "@workspace/ui/components/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@workspace/ui/components/dialog"
+import { Textarea } from "@workspace/ui/components/textarea"
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar"
 import PlanDetails from "./PlanDetails"
@@ -61,6 +69,7 @@ export type EditorTask = {
   dueDate: string
   durationMinutes: number
   isCompleted: boolean
+  guidance?: string | null
 }
 
 function createId() {
@@ -103,6 +112,7 @@ function toEditorTask(task: SavedPlanTask): EditorTask {
     dueDate: task.dueDate,
     durationMinutes: task.durationMinutes,
     isCompleted: task.isCompleted,
+    guidance: task.guidance ?? null,
   }
 }
 
@@ -167,6 +177,8 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
   const { toggleSidebarRight, openRight } = useSidebar()
   const { state } = useSidebar()
   const [persisted, setPersisted] = React.useState<EditorTask[]>([])
+  const [completionGate, setCompletionGate] = React.useState<{ index: number; stepId: string } | null>(null)
+  const [reflectionNote, setReflectionNote] = React.useState("")
   const [persistedPlan, setPersistedPlan] =
     React.useState<EditorPlan>(createEmptyPlan)
   const [createdAt, setCreatedAt] = React.useState(() =>
@@ -341,11 +353,40 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
     markChanged()
   }
 
-  const updateTaskCompletion = (index: number, isCompleted: boolean) => {
+  const applyCompletion = (index: number, isCompleted: boolean) => {
     setPersisted((p) =>
       p.map((item, i) => (i === index ? { ...item, isCompleted } : item))
     )
     markChanged()
+  }
+
+  const updateTaskCompletion = (index: number, isCompleted: boolean) => {
+    if (!isCompleted) {
+      applyCompletion(index, false)
+      return
+    }
+    const task = persisted[index]
+    if (!task) return
+    setReflectionNote("")
+    setCompletionGate({ index, stepId: task.id })
+  }
+
+  const handleReflectionSubmit = async (note: string) => {
+    if (!completionGate) return
+    applyCompletion(completionGate.index, true)
+    setCompletionGate(null)
+    setReflectionNote("")
+    if (note.trim()) {
+      try {
+        await fetch(`/api/plans/${planId}/steps/${completionGate.stepId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ completionNote: note.trim() }),
+        })
+      } catch {
+        // non-blocking — completion note is best-effort
+      }
+    }
   }
 
   const deleteTask = (index: number) => {
@@ -555,6 +596,34 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
           <Asterisk01 />
         </Button>
       </ScrollArea>
+
+      <Dialog open={!!completionGate} onOpenChange={(open) => { if (!open) setCompletionGate(null) }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Bước này bạn đã làm được gì?</DialogTitle>
+          </DialogHeader>
+          <Textarea
+            placeholder="Viết ngắn gọn điều bạn học được hoặc kết quả cụ thể — không cần dài, 1-2 câu là đủ."
+            value={reflectionNote}
+            onChange={(e) => setReflectionNote(e.target.value)}
+            className="min-h-[80px] resize-none"
+            autoFocus
+          />
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="ghost"
+              onClick={() => void handleReflectionSubmit("")}
+            >
+              Bỏ qua
+            </Button>
+            <Button
+              onClick={() => void handleReflectionSubmit(reflectionNote)}
+            >
+              Xác nhận hoàn thành
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

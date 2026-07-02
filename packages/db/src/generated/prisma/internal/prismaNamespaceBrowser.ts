@@ -17,8 +17,8 @@
 
 import * as runtime from "@prisma/client/runtime/index-browser"
 
-export type * from '../models.ts'
-export type * from './prismaNamespace.ts'
+export type * from '../models.js'
+export type * from './prismaNamespace.js'
 
 export const Decimal = runtime.Decimal
 
@@ -56,6 +56,9 @@ export const ModelName = {
   ExtensionToken: 'ExtensionToken',
   UserSettings: 'UserSettings',
   Project: 'Project',
+  WorkflowTemplate: 'WorkflowTemplate',
+  WorkflowTemplateStep: 'WorkflowTemplateStep',
+  WorkflowScaffoldQuestion: 'WorkflowScaffoldQuestion',
   Plan: 'Plan',
   PlanStep: 'PlanStep',
   Task: 'Task',
@@ -151,10 +154,51 @@ export const ProjectScalarFieldEnum = {
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
 
 
+export const WorkflowTemplateScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  title: 'title',
+  category: 'category',
+  isAcademic: 'isAcademic',
+  domainTags: 'domainTags',
+  outputType: 'outputType',
+  supportsGroupMode: 'supportsGroupMode',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorkflowTemplateScalarFieldEnum = (typeof WorkflowTemplateScalarFieldEnum)[keyof typeof WorkflowTemplateScalarFieldEnum]
+
+
+export const WorkflowTemplateStepScalarFieldEnum = {
+  id: 'id',
+  templateId: 'templateId',
+  order: 'order',
+  title: 'title',
+  guidance: 'guidance',
+  estimatedMinutes: 'estimatedMinutes'
+} as const
+
+export type WorkflowTemplateStepScalarFieldEnum = (typeof WorkflowTemplateStepScalarFieldEnum)[keyof typeof WorkflowTemplateStepScalarFieldEnum]
+
+
+export const WorkflowScaffoldQuestionScalarFieldEnum = {
+  id: 'id',
+  templateId: 'templateId',
+  order: 'order',
+  prompt: 'prompt',
+  helperText: 'helperText'
+} as const
+
+export type WorkflowScaffoldQuestionScalarFieldEnum = (typeof WorkflowScaffoldQuestionScalarFieldEnum)[keyof typeof WorkflowScaffoldQuestionScalarFieldEnum]
+
+
 export const PlanScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   projectId: 'projectId',
+  templateId: 'templateId',
   name: 'name',
   description: 'description',
   goal: 'goal',
@@ -167,6 +211,9 @@ export const PlanScalarFieldEnum = {
   startDate: 'startDate',
   endDate: 'endDate',
   deletedAt: 'deletedAt',
+  rubricNotes: 'rubricNotes',
+  draftReference: 'draftReference',
+  experienceLevel: 'experienceLevel',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -184,6 +231,8 @@ export const PlanStepScalarFieldEnum = {
   dueDate: 'dueDate',
   estimatedMinutes: 'estimatedMinutes',
   order: 'order',
+  guidance: 'guidance',
+  completionNote: 'completionNote',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.ts"
-import type * as Prisma from "../internal/prismaNamespace.ts"
+import type * as $Enums from "../enums.js"
+import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model Plan
@@ -38,6 +38,7 @@ export type PlanMinAggregateOutputType = {
   id: string | null
   userId: string | null
   projectId: string | null
+  templateId: string | null
   name: string | null
   description: string | null
   goal: string | null
@@ -50,6 +51,9 @@ export type PlanMinAggregateOutputType = {
   startDate: Date | null
   endDate: Date | null
   deletedAt: Date | null
+  rubricNotes: string | null
+  draftReference: string | null
+  experienceLevel: $Enums.ExperienceLevel | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -58,6 +62,7 @@ export type PlanMaxAggregateOutputType = {
   id: string | null
   userId: string | null
   projectId: string | null
+  templateId: string | null
   name: string | null
   description: string | null
   goal: string | null
@@ -70,6 +75,9 @@ export type PlanMaxAggregateOutputType = {
   startDate: Date | null
   endDate: Date | null
   deletedAt: Date | null
+  rubricNotes: string | null
+  draftReference: string | null
+  experienceLevel: $Enums.ExperienceLevel | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -78,6 +86,7 @@ export type PlanCountAggregateOutputType = {
   id: number
   userId: number
   projectId: number
+  templateId: number
   name: number
   description: number
   goal: number
@@ -90,6 +99,9 @@ export type PlanCountAggregateOutputType = {
   startDate: number
   endDate: number
   deletedAt: number
+  rubricNotes: number
+  draftReference: number
+  experienceLevel: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -108,6 +120,7 @@ export type PlanMinAggregateInputType = {
   id?: true
   userId?: true
   projectId?: true
+  templateId?: true
   name?: true
   description?: true
   goal?: true
@@ -120,6 +133,9 @@ export type PlanMinAggregateInputType = {
   startDate?: true
   endDate?: true
   deletedAt?: true
+  rubricNotes?: true
+  draftReference?: true
+  experienceLevel?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -128,6 +144,7 @@ export type PlanMaxAggregateInputType = {
   id?: true
   userId?: true
   projectId?: true
+  templateId?: true
   name?: true
   description?: true
   goal?: true
@@ -140,6 +157,9 @@ export type PlanMaxAggregateInputType = {
   startDate?: true
   endDate?: true
   deletedAt?: true
+  rubricNotes?: true
+  draftReference?: true
+  experienceLevel?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -148,6 +168,7 @@ export type PlanCountAggregateInputType = {
   id?: true
   userId?: true
   projectId?: true
+  templateId?: true
   name?: true
   description?: true
   goal?: true
@@ -160,6 +181,9 @@ export type PlanCountAggregateInputType = {
   startDate?: true
   endDate?: true
   deletedAt?: true
+  rubricNotes?: true
+  draftReference?: true
+  experienceLevel?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -255,6 +279,7 @@ export type PlanGroupByOutputType = {
   id: string
   userId: string
   projectId: string | null
+  templateId: string | null
   name: string
   description: string | null
   goal: string | null
@@ -267,6 +292,9 @@ export type PlanGroupByOutputType = {
   startDate: Date | null
   endDate: Date | null
   deletedAt: Date | null
+  rubricNotes: string | null
+  draftReference: string | null
+  experienceLevel: $Enums.ExperienceLevel | null
   createdAt: Date
   updatedAt: Date
   _count: PlanCountAggregateOutputType | null
@@ -298,6 +326,7 @@ export type PlanWhereInput = {
   id?: Prisma.StringFilter<"Plan"> | string
   userId?: Prisma.StringFilter<"Plan"> | string
   projectId?: Prisma.StringNullableFilter<"Plan"> | string | null
+  templateId?: Prisma.StringNullableFilter<"Plan"> | string | null
   name?: Prisma.StringFilter<"Plan"> | string
   description?: Prisma.StringNullableFilter<"Plan"> | string | null
   goal?: Prisma.StringNullableFilter<"Plan"> | string | null
@@ -310,10 +339,14 @@ export type PlanWhereInput = {
   startDate?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
+  rubricNotes?: Prisma.StringNullableFilter<"Plan"> | string | null
+  draftReference?: Prisma.StringNullableFilter<"Plan"> | string | null
+  experienceLevel?: Prisma.EnumExperienceLevelNullableFilter<"Plan"> | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  template?: Prisma.XOR<Prisma.WorkflowTemplateNullableScalarRelationFilter, Prisma.WorkflowTemplateWhereInput> | null
   steps?: Prisma.PlanStepListRelationFilter
   focusSessions?: Prisma.FocusSessionListRelationFilter
 }
@@ -322,6 +355,7 @@ export type PlanOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  templateId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   goal?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -334,10 +368,14 @@ export type PlanOrderByWithRelationInput = {
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   endDate?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  rubricNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  draftReference?: Prisma.SortOrderInput | Prisma.SortOrder
+  experienceLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   project?: Prisma.ProjectOrderByWithRelationInput
+  template?: Prisma.WorkflowTemplateOrderByWithRelationInput
   steps?: Prisma.PlanStepOrderByRelationAggregateInput
   focusSessions?: Prisma.FocusSessionOrderByRelationAggregateInput
 }
@@ -349,6 +387,7 @@ export type PlanWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.PlanWhereInput | Prisma.PlanWhereInput[]
   userId?: Prisma.StringFilter<"Plan"> | string
   projectId?: Prisma.StringNullableFilter<"Plan"> | string | null
+  templateId?: Prisma.StringNullableFilter<"Plan"> | string | null
   name?: Prisma.StringFilter<"Plan"> | string
   description?: Prisma.StringNullableFilter<"Plan"> | string | null
   goal?: Prisma.StringNullableFilter<"Plan"> | string | null
@@ -361,10 +400,14 @@ export type PlanWhereUniqueInput = Prisma.AtLeast<{
   startDate?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
+  rubricNotes?: Prisma.StringNullableFilter<"Plan"> | string | null
+  draftReference?: Prisma.StringNullableFilter<"Plan"> | string | null
+  experienceLevel?: Prisma.EnumExperienceLevelNullableFilter<"Plan"> | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  template?: Prisma.XOR<Prisma.WorkflowTemplateNullableScalarRelationFilter, Prisma.WorkflowTemplateWhereInput> | null
   steps?: Prisma.PlanStepListRelationFilter
   focusSessions?: Prisma.FocusSessionListRelationFilter
 }, "id">
@@ -373,6 +416,7 @@ export type PlanOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  templateId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   goal?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -385,6 +429,9 @@ export type PlanOrderByWithAggregationInput = {
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   endDate?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  rubricNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  draftReference?: Prisma.SortOrderInput | Prisma.SortOrder
+  experienceLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PlanCountOrderByAggregateInput
@@ -401,6 +448,7 @@ export type PlanScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Plan"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Plan"> | string
   projectId?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
+  templateId?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"Plan"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
   goal?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
@@ -413,6 +461,9 @@ export type PlanScalarWhereWithAggregatesInput = {
   startDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
   endDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Plan"> | Date | string | null
+  rubricNotes?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
+  draftReference?: Prisma.StringNullableWithAggregatesFilter<"Plan"> | string | null
+  experienceLevel?: Prisma.EnumExperienceLevelNullableWithAggregatesFilter<"Plan"> | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Plan"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Plan"> | Date | string
 }
@@ -431,10 +482,14 @@ export type PlanCreateInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPlansInput
   project?: Prisma.ProjectCreateNestedOneWithoutPlansInput
+  template?: Prisma.WorkflowTemplateCreateNestedOneWithoutPlansInput
   steps?: Prisma.PlanStepCreateNestedManyWithoutPlanInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutPlanInput
 }
@@ -443,6 +498,7 @@ export type PlanUncheckedCreateInput = {
   id?: string
   userId: string
   projectId?: string | null
+  templateId?: string | null
   name: string
   description?: string | null
   goal?: string | null
@@ -455,6 +511,9 @@ export type PlanUncheckedCreateInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   steps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutPlanInput
@@ -475,10 +534,14 @@ export type PlanUpdateInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
   project?: Prisma.ProjectUpdateOneWithoutPlansNestedInput
+  template?: Prisma.WorkflowTemplateUpdateOneWithoutPlansNestedInput
   steps?: Prisma.PlanStepUpdateManyWithoutPlanNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutPlanNestedInput
 }
@@ -487,6 +550,7 @@ export type PlanUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -499,6 +563,9 @@ export type PlanUncheckedUpdateInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   steps?: Prisma.PlanStepUncheckedUpdateManyWithoutPlanNestedInput
@@ -509,6 +576,7 @@ export type PlanCreateManyInput = {
   id?: string
   userId: string
   projectId?: string | null
+  templateId?: string | null
   name: string
   description?: string | null
   goal?: string | null
@@ -521,6 +589,9 @@ export type PlanCreateManyInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -539,6 +610,9 @@ export type PlanUpdateManyMutationInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -547,6 +621,7 @@ export type PlanUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -559,6 +634,9 @@ export type PlanUncheckedUpdateManyInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -577,6 +655,7 @@ export type PlanCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  templateId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   goal?: Prisma.SortOrder
@@ -589,6 +668,9 @@ export type PlanCountOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  rubricNotes?: Prisma.SortOrder
+  draftReference?: Prisma.SortOrder
+  experienceLevel?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -601,6 +683,7 @@ export type PlanMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  templateId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   goal?: Prisma.SortOrder
@@ -613,6 +696,9 @@ export type PlanMaxOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  rubricNotes?: Prisma.SortOrder
+  draftReference?: Prisma.SortOrder
+  experienceLevel?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -621,6 +707,7 @@ export type PlanMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  templateId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   goal?: Prisma.SortOrder
@@ -633,6 +720,9 @@ export type PlanMinOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
+  rubricNotes?: Prisma.SortOrder
+  draftReference?: Prisma.SortOrder
+  experienceLevel?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -735,6 +825,48 @@ export type PlanUncheckedUpdateManyWithoutProjectNestedInput = {
   deleteMany?: Prisma.PlanScalarWhereInput | Prisma.PlanScalarWhereInput[]
 }
 
+export type PlanCreateNestedManyWithoutTemplateInput = {
+  create?: Prisma.XOR<Prisma.PlanCreateWithoutTemplateInput, Prisma.PlanUncheckedCreateWithoutTemplateInput> | Prisma.PlanCreateWithoutTemplateInput[] | Prisma.PlanUncheckedCreateWithoutTemplateInput[]
+  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutTemplateInput | Prisma.PlanCreateOrConnectWithoutTemplateInput[]
+  createMany?: Prisma.PlanCreateManyTemplateInputEnvelope
+  connect?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+}
+
+export type PlanUncheckedCreateNestedManyWithoutTemplateInput = {
+  create?: Prisma.XOR<Prisma.PlanCreateWithoutTemplateInput, Prisma.PlanUncheckedCreateWithoutTemplateInput> | Prisma.PlanCreateWithoutTemplateInput[] | Prisma.PlanUncheckedCreateWithoutTemplateInput[]
+  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutTemplateInput | Prisma.PlanCreateOrConnectWithoutTemplateInput[]
+  createMany?: Prisma.PlanCreateManyTemplateInputEnvelope
+  connect?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+}
+
+export type PlanUpdateManyWithoutTemplateNestedInput = {
+  create?: Prisma.XOR<Prisma.PlanCreateWithoutTemplateInput, Prisma.PlanUncheckedCreateWithoutTemplateInput> | Prisma.PlanCreateWithoutTemplateInput[] | Prisma.PlanUncheckedCreateWithoutTemplateInput[]
+  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutTemplateInput | Prisma.PlanCreateOrConnectWithoutTemplateInput[]
+  upsert?: Prisma.PlanUpsertWithWhereUniqueWithoutTemplateInput | Prisma.PlanUpsertWithWhereUniqueWithoutTemplateInput[]
+  createMany?: Prisma.PlanCreateManyTemplateInputEnvelope
+  set?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  disconnect?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  delete?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  connect?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  update?: Prisma.PlanUpdateWithWhereUniqueWithoutTemplateInput | Prisma.PlanUpdateWithWhereUniqueWithoutTemplateInput[]
+  updateMany?: Prisma.PlanUpdateManyWithWhereWithoutTemplateInput | Prisma.PlanUpdateManyWithWhereWithoutTemplateInput[]
+  deleteMany?: Prisma.PlanScalarWhereInput | Prisma.PlanScalarWhereInput[]
+}
+
+export type PlanUncheckedUpdateManyWithoutTemplateNestedInput = {
+  create?: Prisma.XOR<Prisma.PlanCreateWithoutTemplateInput, Prisma.PlanUncheckedCreateWithoutTemplateInput> | Prisma.PlanCreateWithoutTemplateInput[] | Prisma.PlanUncheckedCreateWithoutTemplateInput[]
+  connectOrCreate?: Prisma.PlanCreateOrConnectWithoutTemplateInput | Prisma.PlanCreateOrConnectWithoutTemplateInput[]
+  upsert?: Prisma.PlanUpsertWithWhereUniqueWithoutTemplateInput | Prisma.PlanUpsertWithWhereUniqueWithoutTemplateInput[]
+  createMany?: Prisma.PlanCreateManyTemplateInputEnvelope
+  set?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  disconnect?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  delete?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  connect?: Prisma.PlanWhereUniqueInput | Prisma.PlanWhereUniqueInput[]
+  update?: Prisma.PlanUpdateWithWhereUniqueWithoutTemplateInput | Prisma.PlanUpdateWithWhereUniqueWithoutTemplateInput[]
+  updateMany?: Prisma.PlanUpdateManyWithWhereWithoutTemplateInput | Prisma.PlanUpdateManyWithWhereWithoutTemplateInput[]
+  deleteMany?: Prisma.PlanScalarWhereInput | Prisma.PlanScalarWhereInput[]
+}
+
 export type EnumPlanStatusFieldUpdateOperationsInput = {
   set?: $Enums.PlanStatus
 }
@@ -749,6 +881,10 @@ export type EnumPlanAiModeFieldUpdateOperationsInput = {
 
 export type EnumBreakdownIntensityFieldUpdateOperationsInput = {
   set?: $Enums.BreakdownIntensity
+}
+
+export type NullableEnumExperienceLevelFieldUpdateOperationsInput = {
+  set?: $Enums.ExperienceLevel | null
 }
 
 export type PlanCreateNestedOneWithoutStepsInput = {
@@ -795,9 +931,13 @@ export type PlanCreateWithoutUserInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project?: Prisma.ProjectCreateNestedOneWithoutPlansInput
+  template?: Prisma.WorkflowTemplateCreateNestedOneWithoutPlansInput
   steps?: Prisma.PlanStepCreateNestedManyWithoutPlanInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutPlanInput
 }
@@ -805,6 +945,7 @@ export type PlanCreateWithoutUserInput = {
 export type PlanUncheckedCreateWithoutUserInput = {
   id?: string
   projectId?: string | null
+  templateId?: string | null
   name: string
   description?: string | null
   goal?: string | null
@@ -817,6 +958,9 @@ export type PlanUncheckedCreateWithoutUserInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   steps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutPlanInput
@@ -856,6 +1000,7 @@ export type PlanScalarWhereInput = {
   id?: Prisma.StringFilter<"Plan"> | string
   userId?: Prisma.StringFilter<"Plan"> | string
   projectId?: Prisma.StringNullableFilter<"Plan"> | string | null
+  templateId?: Prisma.StringNullableFilter<"Plan"> | string | null
   name?: Prisma.StringFilter<"Plan"> | string
   description?: Prisma.StringNullableFilter<"Plan"> | string | null
   goal?: Prisma.StringNullableFilter<"Plan"> | string | null
@@ -868,6 +1013,9 @@ export type PlanScalarWhereInput = {
   startDate?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Plan"> | Date | string | null
+  rubricNotes?: Prisma.StringNullableFilter<"Plan"> | string | null
+  draftReference?: Prisma.StringNullableFilter<"Plan"> | string | null
+  experienceLevel?: Prisma.EnumExperienceLevelNullableFilter<"Plan"> | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Plan"> | Date | string
 }
@@ -886,9 +1034,13 @@ export type PlanCreateWithoutProjectInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPlansInput
+  template?: Prisma.WorkflowTemplateCreateNestedOneWithoutPlansInput
   steps?: Prisma.PlanStepCreateNestedManyWithoutPlanInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutPlanInput
 }
@@ -896,6 +1048,7 @@ export type PlanCreateWithoutProjectInput = {
 export type PlanUncheckedCreateWithoutProjectInput = {
   id?: string
   userId: string
+  templateId?: string | null
   name: string
   description?: string | null
   goal?: string | null
@@ -908,6 +1061,9 @@ export type PlanUncheckedCreateWithoutProjectInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   steps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutPlanInput
@@ -940,7 +1096,7 @@ export type PlanUpdateManyWithWhereWithoutProjectInput = {
   data: Prisma.XOR<Prisma.PlanUpdateManyMutationInput, Prisma.PlanUncheckedUpdateManyWithoutProjectInput>
 }
 
-export type PlanCreateWithoutStepsInput = {
+export type PlanCreateWithoutTemplateInput = {
   id?: string
   name: string
   description?: string | null
@@ -954,14 +1110,18 @@ export type PlanCreateWithoutStepsInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPlansInput
   project?: Prisma.ProjectCreateNestedOneWithoutPlansInput
+  steps?: Prisma.PlanStepCreateNestedManyWithoutPlanInput
   focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutPlanInput
 }
 
-export type PlanUncheckedCreateWithoutStepsInput = {
+export type PlanUncheckedCreateWithoutTemplateInput = {
   id?: string
   userId: string
   projectId?: string | null
@@ -977,6 +1137,86 @@ export type PlanUncheckedCreateWithoutStepsInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  steps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutPlanInput
+  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutPlanInput
+}
+
+export type PlanCreateOrConnectWithoutTemplateInput = {
+  where: Prisma.PlanWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlanCreateWithoutTemplateInput, Prisma.PlanUncheckedCreateWithoutTemplateInput>
+}
+
+export type PlanCreateManyTemplateInputEnvelope = {
+  data: Prisma.PlanCreateManyTemplateInput | Prisma.PlanCreateManyTemplateInput[]
+  skipDuplicates?: boolean
+}
+
+export type PlanUpsertWithWhereUniqueWithoutTemplateInput = {
+  where: Prisma.PlanWhereUniqueInput
+  update: Prisma.XOR<Prisma.PlanUpdateWithoutTemplateInput, Prisma.PlanUncheckedUpdateWithoutTemplateInput>
+  create: Prisma.XOR<Prisma.PlanCreateWithoutTemplateInput, Prisma.PlanUncheckedCreateWithoutTemplateInput>
+}
+
+export type PlanUpdateWithWhereUniqueWithoutTemplateInput = {
+  where: Prisma.PlanWhereUniqueInput
+  data: Prisma.XOR<Prisma.PlanUpdateWithoutTemplateInput, Prisma.PlanUncheckedUpdateWithoutTemplateInput>
+}
+
+export type PlanUpdateManyWithWhereWithoutTemplateInput = {
+  where: Prisma.PlanScalarWhereInput
+  data: Prisma.XOR<Prisma.PlanUpdateManyMutationInput, Prisma.PlanUncheckedUpdateManyWithoutTemplateInput>
+}
+
+export type PlanCreateWithoutStepsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  goal?: string | null
+  completion?: string | null
+  status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutPlansInput
+  project?: Prisma.ProjectCreateNestedOneWithoutPlansInput
+  template?: Prisma.WorkflowTemplateCreateNestedOneWithoutPlansInput
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutPlanInput
+}
+
+export type PlanUncheckedCreateWithoutStepsInput = {
+  id?: string
+  userId: string
+  projectId?: string | null
+  templateId?: string | null
+  name: string
+  description?: string | null
+  goal?: string | null
+  completion?: string | null
+  status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutPlanInput
@@ -1012,10 +1252,14 @@ export type PlanUpdateWithoutStepsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
   project?: Prisma.ProjectUpdateOneWithoutPlansNestedInput
+  template?: Prisma.WorkflowTemplateUpdateOneWithoutPlansNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutPlanNestedInput
 }
 
@@ -1023,6 +1267,7 @@ export type PlanUncheckedUpdateWithoutStepsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1035,6 +1280,9 @@ export type PlanUncheckedUpdateWithoutStepsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutPlanNestedInput
@@ -1054,10 +1302,14 @@ export type PlanCreateWithoutFocusSessionsInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPlansInput
   project?: Prisma.ProjectCreateNestedOneWithoutPlansInput
+  template?: Prisma.WorkflowTemplateCreateNestedOneWithoutPlansInput
   steps?: Prisma.PlanStepCreateNestedManyWithoutPlanInput
 }
 
@@ -1065,6 +1317,7 @@ export type PlanUncheckedCreateWithoutFocusSessionsInput = {
   id?: string
   userId: string
   projectId?: string | null
+  templateId?: string | null
   name: string
   description?: string | null
   goal?: string | null
@@ -1077,6 +1330,9 @@ export type PlanUncheckedCreateWithoutFocusSessionsInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
   createdAt?: Date | string
   updatedAt?: Date | string
   steps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutPlanInput
@@ -1112,10 +1368,14 @@ export type PlanUpdateWithoutFocusSessionsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
   project?: Prisma.ProjectUpdateOneWithoutPlansNestedInput
+  template?: Prisma.WorkflowTemplateUpdateOneWithoutPlansNestedInput
   steps?: Prisma.PlanStepUpdateManyWithoutPlanNestedInput
 }
 
@@ -1123,6 +1383,7 @@ export type PlanUncheckedUpdateWithoutFocusSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1135,6 +1396,9 @@ export type PlanUncheckedUpdateWithoutFocusSessionsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   steps?: Prisma.PlanStepUncheckedUpdateManyWithoutPlanNestedInput
@@ -1143,6 +1407,7 @@ export type PlanUncheckedUpdateWithoutFocusSessionsInput = {
 export type PlanCreateManyUserInput = {
   id?: string
   projectId?: string | null
+  templateId?: string | null
   name: string
   description?: string | null
   goal?: string | null
@@ -1155,6 +1420,9 @@ export type PlanCreateManyUserInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1173,9 +1441,13 @@ export type PlanUpdateWithoutUserInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneWithoutPlansNestedInput
+  template?: Prisma.WorkflowTemplateUpdateOneWithoutPlansNestedInput
   steps?: Prisma.PlanStepUpdateManyWithoutPlanNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutPlanNestedInput
 }
@@ -1183,6 +1455,7 @@ export type PlanUpdateWithoutUserInput = {
 export type PlanUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1195,6 +1468,9 @@ export type PlanUncheckedUpdateWithoutUserInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   steps?: Prisma.PlanStepUncheckedUpdateManyWithoutPlanNestedInput
@@ -1204,6 +1480,7 @@ export type PlanUncheckedUpdateWithoutUserInput = {
 export type PlanUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1216,6 +1493,9 @@ export type PlanUncheckedUpdateManyWithoutUserInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1223,6 +1503,7 @@ export type PlanUncheckedUpdateManyWithoutUserInput = {
 export type PlanCreateManyProjectInput = {
   id?: string
   userId: string
+  templateId?: string | null
   name: string
   description?: string | null
   goal?: string | null
@@ -1235,6 +1516,9 @@ export type PlanCreateManyProjectInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1253,9 +1537,13 @@ export type PlanUpdateWithoutProjectInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
+  template?: Prisma.WorkflowTemplateUpdateOneWithoutPlansNestedInput
   steps?: Prisma.PlanStepUpdateManyWithoutPlanNestedInput
   focusSessions?: Prisma.FocusSessionUpdateManyWithoutPlanNestedInput
 }
@@ -1263,6 +1551,7 @@ export type PlanUpdateWithoutProjectInput = {
 export type PlanUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1275,6 +1564,9 @@ export type PlanUncheckedUpdateWithoutProjectInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   steps?: Prisma.PlanStepUncheckedUpdateManyWithoutPlanNestedInput
@@ -1284,6 +1576,7 @@ export type PlanUncheckedUpdateWithoutProjectInput = {
 export type PlanUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  templateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1296,6 +1589,105 @@ export type PlanUncheckedUpdateManyWithoutProjectInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PlanCreateManyTemplateInput = {
+  id?: string
+  userId: string
+  projectId?: string | null
+  name: string
+  description?: string | null
+  goal?: string | null
+  completion?: string | null
+  status?: $Enums.PlanStatus
+  source?: $Enums.PlanSource
+  aiMode?: $Enums.PlanAiMode
+  breakdownIntensity?: $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  deletedAt?: Date | string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: $Enums.ExperienceLevel | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PlanUpdateWithoutTemplateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutPlansNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutPlansNestedInput
+  steps?: Prisma.PlanStepUpdateManyWithoutPlanNestedInput
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutPlanNestedInput
+}
+
+export type PlanUncheckedUpdateWithoutTemplateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  steps?: Prisma.PlanStepUncheckedUpdateManyWithoutPlanNestedInput
+  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutPlanNestedInput
+}
+
+export type PlanUncheckedUpdateManyWithoutTemplateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goal?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+  source?: Prisma.EnumPlanSourceFieldUpdateOperationsInput | $Enums.PlanSource
+  aiMode?: Prisma.EnumPlanAiModeFieldUpdateOperationsInput | $Enums.PlanAiMode
+  breakdownIntensity?: Prisma.EnumBreakdownIntensityFieldUpdateOperationsInput | $Enums.BreakdownIntensity
+  totalEstimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rubricNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  draftReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceLevel?: Prisma.NullableEnumExperienceLevelFieldUpdateOperationsInput | $Enums.ExperienceLevel | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1344,6 +1736,7 @@ export type PlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   userId?: boolean
   projectId?: boolean
+  templateId?: boolean
   name?: boolean
   description?: boolean
   goal?: boolean
@@ -1356,10 +1749,14 @@ export type PlanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   startDate?: boolean
   endDate?: boolean
   deletedAt?: boolean
+  rubricNotes?: boolean
+  draftReference?: boolean
+  experienceLevel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
+  template?: boolean | Prisma.Plan$templateArgs<ExtArgs>
   steps?: boolean | Prisma.Plan$stepsArgs<ExtArgs>
   focusSessions?: boolean | Prisma.Plan$focusSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.PlanCountOutputTypeDefaultArgs<ExtArgs>
@@ -1369,6 +1766,7 @@ export type PlanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   userId?: boolean
   projectId?: boolean
+  templateId?: boolean
   name?: boolean
   description?: boolean
   goal?: boolean
@@ -1381,16 +1779,21 @@ export type PlanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   startDate?: boolean
   endDate?: boolean
   deletedAt?: boolean
+  rubricNotes?: boolean
+  draftReference?: boolean
+  experienceLevel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
+  template?: boolean | Prisma.Plan$templateArgs<ExtArgs>
 }, ExtArgs["result"]["plan"]>
 
 export type PlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
   projectId?: boolean
+  templateId?: boolean
   name?: boolean
   description?: boolean
   goal?: boolean
@@ -1403,16 +1806,21 @@ export type PlanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   startDate?: boolean
   endDate?: boolean
   deletedAt?: boolean
+  rubricNotes?: boolean
+  draftReference?: boolean
+  experienceLevel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
+  template?: boolean | Prisma.Plan$templateArgs<ExtArgs>
 }, ExtArgs["result"]["plan"]>
 
 export type PlanSelectScalar = {
   id?: boolean
   userId?: boolean
   projectId?: boolean
+  templateId?: boolean
   name?: boolean
   description?: boolean
   goal?: boolean
@@ -1425,14 +1833,18 @@ export type PlanSelectScalar = {
   startDate?: boolean
   endDate?: boolean
   deletedAt?: boolean
+  rubricNotes?: boolean
+  draftReference?: boolean
+  experienceLevel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "projectId" | "name" | "description" | "goal" | "completion" | "status" | "source" | "aiMode" | "breakdownIntensity" | "totalEstimatedMinutes" | "startDate" | "endDate" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["plan"]>
+export type PlanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "projectId" | "templateId" | "name" | "description" | "goal" | "completion" | "status" | "source" | "aiMode" | "breakdownIntensity" | "totalEstimatedMinutes" | "startDate" | "endDate" | "deletedAt" | "rubricNotes" | "draftReference" | "experienceLevel" | "createdAt" | "updatedAt", ExtArgs["result"]["plan"]>
 export type PlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
+  template?: boolean | Prisma.Plan$templateArgs<ExtArgs>
   steps?: boolean | Prisma.Plan$stepsArgs<ExtArgs>
   focusSessions?: boolean | Prisma.Plan$focusSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.PlanCountOutputTypeDefaultArgs<ExtArgs>
@@ -1440,10 +1852,12 @@ export type PlanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type PlanIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
+  template?: boolean | Prisma.Plan$templateArgs<ExtArgs>
 }
 export type PlanIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   project?: boolean | Prisma.Plan$projectArgs<ExtArgs>
+  template?: boolean | Prisma.Plan$templateArgs<ExtArgs>
 }
 
 export type $PlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1451,6 +1865,7 @@ export type $PlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     project: Prisma.$ProjectPayload<ExtArgs> | null
+    template: Prisma.$WorkflowTemplatePayload<ExtArgs> | null
     steps: Prisma.$PlanStepPayload<ExtArgs>[]
     focusSessions: Prisma.$FocusSessionPayload<ExtArgs>[]
   }
@@ -1458,6 +1873,7 @@ export type $PlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: string
     userId: string
     projectId: string | null
+    templateId: string | null
     name: string
     description: string | null
     goal: string | null
@@ -1470,6 +1886,9 @@ export type $PlanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     startDate: Date | null
     endDate: Date | null
     deletedAt: Date | null
+    rubricNotes: string | null
+    draftReference: string | null
+    experienceLevel: $Enums.ExperienceLevel | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["plan"]>
@@ -1868,6 +2287,7 @@ export interface Prisma__PlanClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   project<T extends Prisma.Plan$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  template<T extends Prisma.Plan$templateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$templateArgs<ExtArgs>>): Prisma.Prisma__WorkflowTemplateClient<runtime.Types.Result.GetResult<Prisma.$WorkflowTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   steps<T extends Prisma.Plan$stepsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   focusSessions<T extends Prisma.Plan$focusSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Plan$focusSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FocusSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1902,6 +2322,7 @@ export interface PlanFieldRefs {
   readonly id: Prisma.FieldRef<"Plan", 'String'>
   readonly userId: Prisma.FieldRef<"Plan", 'String'>
   readonly projectId: Prisma.FieldRef<"Plan", 'String'>
+  readonly templateId: Prisma.FieldRef<"Plan", 'String'>
   readonly name: Prisma.FieldRef<"Plan", 'String'>
   readonly description: Prisma.FieldRef<"Plan", 'String'>
   readonly goal: Prisma.FieldRef<"Plan", 'String'>
@@ -1914,6 +2335,9 @@ export interface PlanFieldRefs {
   readonly startDate: Prisma.FieldRef<"Plan", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"Plan", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Plan", 'DateTime'>
+  readonly rubricNotes: Prisma.FieldRef<"Plan", 'String'>
+  readonly draftReference: Prisma.FieldRef<"Plan", 'String'>
+  readonly experienceLevel: Prisma.FieldRef<"Plan", 'ExperienceLevel'>
   readonly createdAt: Prisma.FieldRef<"Plan", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Plan", 'DateTime'>
 }
@@ -2333,6 +2757,25 @@ export type Plan$projectArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   include?: Prisma.ProjectInclude<ExtArgs> | null
   where?: Prisma.ProjectWhereInput
+}
+
+/**
+ * Plan.template
+ */
+export type Plan$templateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WorkflowTemplate
+   */
+  select?: Prisma.WorkflowTemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WorkflowTemplate
+   */
+  omit?: Prisma.WorkflowTemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorkflowTemplateInclude<ExtArgs> | null
+  where?: Prisma.WorkflowTemplateWhereInput
 }
 
 /**

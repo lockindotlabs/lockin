@@ -7,6 +7,8 @@ export type SavedPlanTask = {
   dueDate: string
   durationMinutes: number
   isCompleted: boolean
+  guidance?: string | null
+  completionNote?: string | null
 }
 
 export type SavedPlan = {

@@ -214,6 +214,7 @@ export default function TaskList({
                   isCompleted={p.isCompleted}
                   savedTitle={p.savedTitle}
                   savedDescription={p.savedDescription}
+                  guidance={p.guidance}
                   onTitleChange={(title: string) => onTitleChange(i, title)}
                   onDescriptionChange={(description: string) =>
                     onDescriptionChange(i, description)

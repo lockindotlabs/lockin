@@ -122,6 +122,23 @@ export const SprintStatus = {
 export type SprintStatus = (typeof SprintStatus)[keyof typeof SprintStatus]
 
 
+export const WorkflowOutputType = {
+  DOCUMENT: 'DOCUMENT',
+  SKILL_PRACTICE: 'SKILL_PRACTICE',
+  PROJECT: 'PROJECT'
+} as const
+
+export type WorkflowOutputType = (typeof WorkflowOutputType)[keyof typeof WorkflowOutputType]
+
+
+export const ExperienceLevel = {
+  FIRST_TIME: 'FIRST_TIME',
+  EXPERIENCED: 'EXPERIENCED'
+} as const
+
+export type ExperienceLevel = (typeof ExperienceLevel)[keyof typeof ExperienceLevel]
+
+
 export const AiUsageStatus = {
   STARTED: 'STARTED',
   SUCCESS: 'SUCCESS',

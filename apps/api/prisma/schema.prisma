@@ -82,12 +82,54 @@ model Project {
   @@index([userId])
 }
 
+model WorkflowTemplate {
+  id               String                   @id @default(cuid())
+  slug             String                   @unique
+  title            String
+  category         String
+  isAcademic       Boolean                  @default(false)
+  domainTags       String[]                 @default([])
+  outputType       WorkflowOutputType
+  supportsGroupMode Boolean                 @default(false)
+  description      String?
+  createdAt        DateTime                 @default(now())
+  updatedAt        DateTime                 @updatedAt
+  steps            WorkflowTemplateStep[]
+  scaffoldQuestions WorkflowScaffoldQuestion[]
+  plans            Plan[]
+}
+
+model WorkflowTemplateStep {
+  id               String           @id @default(cuid())
+  templateId       String
+  template         WorkflowTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  order            Int
+  title            String
+  guidance         String?
+  estimatedMinutes Int              @default(30)
+
+  @@index([templateId, order])
+}
+
+model WorkflowScaffoldQuestion {
+  id         String           @id @default(cuid())
+  templateId String
+  template   WorkflowTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  order      Int
+  prompt     String
+  helperText String?
+
+  @@index([templateId, order])
+}
+
 model Plan {
   id                    String             @id @default(cuid())
   userId                String
   user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   projectId             String?
   project               Project?           @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  templateId            String?
+  template              WorkflowTemplate?  @relation(fields: [templateId], references: [id], onDelete: SetNull)
   name                  String
   description           String?
   goal                  String?
@@ -100,6 +142,9 @@ model Plan {
   startDate             DateTime?
   endDate               DateTime?
   deletedAt             DateTime?
+  rubricNotes           String?
+  draftReference        String?
+  experienceLevel       ExperienceLevel?
   steps                 PlanStep[]
   focusSessions         FocusSession[]
   createdAt             DateTime           @default(now())
@@ -120,6 +165,8 @@ model PlanStep {
   dueDate          DateTime?
   estimatedMinutes Int            @default(30)
   order            Int            @default(0)
+  guidance         String?
+  completionNote   String?
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
 
@@ -277,6 +324,17 @@ enum SprintStatus {
   ACTIVE
   COMPLETED
   CANCELLED
+}
+
+enum WorkflowOutputType {
+  DOCUMENT
+  SKILL_PRACTICE
+  PROJECT
+}
+
+enum ExperienceLevel {
+  FIRST_TIME
+  EXPERIENCED
 }
 
 enum AiUsageStatus {

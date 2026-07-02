@@ -9,6 +9,8 @@ type StoredPlanStep = {
   dueDate: Date | null
   estimatedMinutes: number
   status: "TODO" | "IN_PROGRESS" | "DONE" | "CANCELLED"
+  guidance: string | null
+  completionNote: string | null
 }
 
 type StoredPlan = {
@@ -19,6 +21,10 @@ type StoredPlan = {
   source: "MANUAL" | "AI"
   aiMode: "MANUAL" | "ASSISTED"
   breakdownIntensity: "LOW_ENERGY" | "NORMAL" | "HIGH_ENERGY"
+  templateId: string | null
+  rubricNotes: string | null
+  draftReference: string | null
+  experienceLevel: "FIRST_TIME" | "EXPERIENCED" | null
   createdAt: Date
   updatedAt: Date
   steps: StoredPlanStep[]
@@ -31,6 +37,7 @@ export type PlanStepInput = {
   dueDate: string
   durationMinutes: number
   isCompleted: boolean
+  guidance?: string | null
 }
 
 export type PlanInput = {
@@ -44,6 +51,10 @@ export type PlanInput = {
   source?: "MANUAL" | "AI"
   aiMode?: "MANUAL" | "ASSISTED"
   breakdownIntensity?: "LOW_ENERGY" | "NORMAL" | "HIGH_ENERGY"
+  templateId?: string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: "FIRST_TIME" | "EXPERIENCED" | null
 }
 
 function toDate(value: string | undefined) {
@@ -85,6 +96,8 @@ export function serializePlan(plan: StoredPlan) {
       dueDate: toDateOnly(step.dueDate),
       durationMinutes: step.estimatedMinutes,
       isCompleted: step.status === "DONE",
+      guidance: step.guidance ?? null,
+      completionNote: step.completionNote ?? null,
     })),
     createdAt: plan.createdAt.toISOString(),
     updatedAt: plan.updatedAt.toISOString(),
@@ -92,6 +105,10 @@ export function serializePlan(plan: StoredPlan) {
     source: plan.source,
     aiMode: plan.aiMode,
     breakdownIntensity: plan.breakdownIntensity,
+    templateId: plan.templateId ?? null,
+    rubricNotes: plan.rubricNotes ?? null,
+    draftReference: plan.draftReference ?? null,
+    experienceLevel: plan.experienceLevel ?? null,
   }
 }
 
@@ -166,6 +183,10 @@ export async function upsertOwnedPlan(userId: string, input: PlanInput) {
           ...(input.breakdownIntensity
             ? { breakdownIntensity: input.breakdownIntensity }
             : {}),
+          ...(input.templateId !== undefined ? { templateId: input.templateId } : {}),
+          ...(input.rubricNotes !== undefined ? { rubricNotes: input.rubricNotes } : {}),
+          ...(input.draftReference !== undefined ? { draftReference: input.draftReference } : {}),
+          ...(input.experienceLevel !== undefined ? { experienceLevel: input.experienceLevel } : {}),
           deletedAt: null,
         },
         create: {
@@ -178,6 +199,10 @@ export async function upsertOwnedPlan(userId: string, input: PlanInput) {
           source: input.source ?? "MANUAL",
           aiMode: input.aiMode ?? "MANUAL",
           breakdownIntensity: input.breakdownIntensity ?? "NORMAL",
+          templateId: input.templateId ?? null,
+          rubricNotes: input.rubricNotes ?? null,
+          draftReference: input.draftReference ?? null,
+          experienceLevel: input.experienceLevel ?? null,
         },
       })
 
@@ -185,11 +210,24 @@ export async function upsertOwnedPlan(userId: string, input: PlanInput) {
         return null
       }
 
+      // Preserve completionNotes before deleting steps (narrow PATCH writes notes separately,
+      // but autosave cycles through deleteMany/createMany which would erase them)
+      const existingNotes = await tx.planStep.findMany({
+        where: { planId: plan.id },
+        select: { id: true, completionNote: true },
+      })
+      const noteById = new Map(existingNotes.map((s) => [s.id, s.completionNote]))
+
       await tx.planStep.deleteMany({ where: { planId: plan.id } })
 
       if (steps.length > 0) {
         await tx.planStep.createMany({
-          data: steps.map((step) => ({ ...step, planId: plan.id })),
+          data: steps.map((step) => ({
+            ...step,
+            planId: plan.id,
+            guidance: (input.tasks.find((t) => t.id === step.id)?.guidance) ?? null,
+            completionNote: noteById.get(step.id) ?? null,
+          })),
           skipDuplicates: true,
         })
       }

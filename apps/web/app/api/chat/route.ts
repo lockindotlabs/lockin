@@ -18,6 +18,7 @@ import {
 } from "@/lib/server/chat-store"
 import { getCurrentDbUser } from "@/lib/server/current-db-user"
 import { resolveMentionContext } from "@/lib/server/mention-context"
+import { resolveTemplateContext } from "@/lib/server/template-context"
 import type { MentionRef } from "@/lib/mentions/mention-types"
 import prisma from "@workspace/db"
 import { getEffectiveTier } from "@/lib/billing/catalog"
@@ -478,6 +479,41 @@ Do not call askChoicesBatch when:
 
 Prefer askChoicesBatch over askChoice for new planning intake, including when only one question is needed. Use askChoice specifically for the post-draft save confirmation described below.
 
+### Intent classification when no template is active
+
+When the user requests a new plan AND no workflow template context is provided in this system prompt, call askChoicesBatch with the following intent classification questions before drafting the plan. This replaces the generic intake above — do not ask energy/deadline/scope again at this stage.
+
+Include all of the following questions in a single askChoicesBatch call:
+
+1. "Việc này có tính học thuật không?" — options: "Có" / "Không"
+2. "→ Nếu học thuật, lĩnh vực nào?" (only show if q1 = "Có") — options: "Kinh doanh / Startup" / "CNTT / Kỹ thuật" / "Ngôn ngữ / Văn học" / "Khác"
+3. "Bạn cần tạo ra cái gì?" — options: "Tài liệu / Báo cáo" / "Kỹ năng / Luyện tập" / "Dự án nhiều bước"
+4. "Làm một mình hay theo nhóm?" — options: "Một mình" / "Theo nhóm"
+5. "Có rubric hoặc tiêu chí chấm cụ thể không?" — options: "Có, tôi sẽ đính kèm" / "Không có"
+6. "Đã có outline / draft sẵn chưa?" — options: "Có rồi" / "Chưa, làm từ đầu"
+7. "Lần đầu làm dạng này hay đã quen?" — options: "Lần đầu" / "Đã làm nhiều lần"
+
+After receiving answers, use them to determine the plan structure:
+- If academic + field → match the closest available template by domainTags/category. If no match, use a generic academic outline (problem → method → conclusion).
+- If not academic → select the most fitting available template, or fall back to generic.
+- outputType: "Tài liệu" → outline structure; "Kỹ năng" → spaced-practice schedule; "Dự án" → milestone structure.
+- If group → prepend a step for role assignment and sync checkpoints.
+- If rubric provided → prioritize rubric over template blueprint.
+- If draft provided → structure plan as review/supplement, not full rewrite.
+- If first time → write guidance for each step in detail with examples. If experienced → brief bullet guidance only.
+
+Present the matched template or approach as a revise-able suggestion before calling createPlan. Always allow the user to change the match before proceeding.
+
+Skip this intake if the user has already answered these questions in the current thread, or if a template context is already injected above.
+
+### Thinking scaffold + Socratic follow-up before createPlan
+
+When a template is active (its blueprint appears in this system prompt), ask the template's scaffold question(s) using askChoicesBatch or a text prompt before calling createPlan. The scaffold question requires the user to articulate their own thinking — do not answer it for them.
+
+If the user's answer to a scaffold question is fewer than 15 words, or is clearly generic/vague (e.g., "I want to make an app", "improve something"), call askChoice once to ask a Socratic follow-up: request a specific clarification ("Who exactly will pay for this and why haven't they done it yet?"). Do this at most once per scaffold question — do not loop.
+
+After the user provides a substantive answer, proceed to createPlan grounded in the template blueprint and the user's scaffold answers.
+
 ### askChoice as post-draft save confirmation
 
 After you draft a structured, Sprint-ready plan in plain text, call askChoice to ask whether the user wants to save that exact plan.
@@ -568,6 +604,7 @@ type ChatConfig = {
   modelName?: string
   capabilities?: string[]
   mentions?: MentionRef[]
+  templateId?: string | null
 }
 
 const DEFAULT_MODEL_NAME = "gemini-3.1-flash-lite-preview"
@@ -743,6 +780,7 @@ export async function POST(req: Request) {
     requestChatId: id,
     mentions: config?.mentions,
   })
+  const templateContext = await resolveTemplateContext(config?.templateId)
 
   const requestId = "req_" + Math.random().toString(36).substring(2, 15)
 
@@ -809,6 +847,7 @@ Use webSearch for current information, source-sensitive claims, external factual
 When using webSearch, ground the answer in the search results and include relevant source links when available.`
           : undefined,
         mentionContext,
+        templateContext,
         TOOL_BEHAVIOR_INSTRUCTIONS,
       ]
         .filter(Boolean)

@@ -13,10 +13,10 @@
  * 🟢 You can import this file directly.
  */
 
-import * as Prisma from './internal/prismaNamespaceBrowser.ts'
+import * as Prisma from './internal/prismaNamespaceBrowser.js'
 export { Prisma }
-export * as $Enums from './enums.ts'
-export * from './enums.ts';
+export * as $Enums from './enums.js'
+export * from './enums.js';
 /**
  * Model User
  * 
@@ -42,6 +42,21 @@ export type UserSettings = Prisma.UserSettingsModel
  * 
  */
 export type Project = Prisma.ProjectModel
+/**
+ * Model WorkflowTemplate
+ * 
+ */
+export type WorkflowTemplate = Prisma.WorkflowTemplateModel
+/**
+ * Model WorkflowTemplateStep
+ * 
+ */
+export type WorkflowTemplateStep = Prisma.WorkflowTemplateStepModel
+/**
+ * Model WorkflowScaffoldQuestion
+ * 
+ */
+export type WorkflowScaffoldQuestion = Prisma.WorkflowScaffoldQuestionModel
 /**
  * Model Plan
  * 

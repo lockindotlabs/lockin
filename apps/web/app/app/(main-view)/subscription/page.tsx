@@ -158,7 +158,13 @@ export default function SubscriptionPage() {
       })
 
       if (!response.ok) {
-        throw new Error(`Checkout failed with status ${response.status}`)
+        const data = (await response.json().catch(() => null)) as
+          | { error?: string }
+          | null
+
+        throw new Error(
+          data?.error ?? `Checkout failed with status ${response.status}`
+        )
       }
 
       const data = (await response.json()) as { checkoutUrl?: string }
@@ -171,7 +177,11 @@ export default function SubscriptionPage() {
       window.location.assign(data.checkoutUrl)
     } catch (error) {
       console.error(error)
-      toast.error("Could not start checkout. Please try again.")
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Could not start checkout. Please try again."
+      )
       setCheckoutTier(null)
       setCheckoutPlanName(null)
     }

@@ -108,6 +108,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       isActive: pathname === "/app/ask",
     },
     {
+      title: "Templates",
+      url: "/app/templates",
+      icon: <BookOpen02 />,
+      isActive: pathname === "/app/templates",
+    },
+    {
       title: "Insights",
       url: "/app/insights",
       icon: <LineChartUp03 />,

@@ -11,6 +11,7 @@ type StoredPlanStep = {
   status: "TODO" | "IN_PROGRESS" | "DONE" | "CANCELLED"
   guidance: string | null
   completionNote: string | null
+  parentId: string | null
 }
 
 type StoredPlan = {
@@ -38,6 +39,7 @@ export type PlanStepInput = {
   durationMinutes: number
   isCompleted: boolean
   guidance?: string | null
+  parentId?: string | null
 }
 
 export type PlanInput = {
@@ -98,6 +100,7 @@ export function serializePlan(plan: StoredPlan) {
       isCompleted: step.status === "DONE",
       guidance: step.guidance ?? null,
       completionNote: step.completionNote ?? null,
+      parentId: step.parentId ?? null,
     })),
     createdAt: plan.createdAt.toISOString(),
     updatedAt: plan.updatedAt.toISOString(),
@@ -149,6 +152,7 @@ export async function listOwnedPlans(userId: string) {
 
 export async function upsertOwnedPlan(userId: string, input: PlanInput) {
   const totalEstimatedMinutes = sumEstimatedMinutes(input.tasks)
+  const taskIds = new Set(input.tasks.map((task) => task.id))
   const steps = input.tasks.map((step, order) => ({
     id: step.id,
     userId,
@@ -158,6 +162,11 @@ export async function upsertOwnedPlan(userId: string, input: PlanInput) {
     dueDate: toDate(step.dueDate),
     estimatedMinutes: step.durationMinutes,
     order,
+    // Drop dangling parent references so the self-FK never rejects the batch
+    parentId:
+      step.parentId && taskIds.has(step.parentId) && step.parentId !== step.id
+        ? step.parentId
+        : null,
   }))
 
   const writePlan = () =>
@@ -221,8 +230,14 @@ export async function upsertOwnedPlan(userId: string, input: PlanInput) {
       await tx.planStep.deleteMany({ where: { planId: plan.id } })
 
       if (steps.length > 0) {
+        // Parents must be inserted before children for the self-referencing FK
+        const orderedForInsert = [
+          ...steps.filter((step) => !step.parentId),
+          ...steps.filter((step) => step.parentId),
+        ]
+
         await tx.planStep.createMany({
-          data: steps.map((step) => ({
+          data: orderedForInsert.map((step) => ({
             ...step,
             planId: plan.id,
             guidance: (input.tasks.find((t) => t.id === step.id)?.guidance) ?? null,

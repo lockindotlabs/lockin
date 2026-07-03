@@ -8,12 +8,19 @@ import { Button } from "@workspace/ui/components/button"
 import { useSidebar } from "@workspace/ui/components/sidebar"
 import {
   CheckCircle2Icon,
+  ChevronDownIcon,
   CircleIcon,
+  LightbulbIcon,
   PauseIcon,
   PlayIcon,
   SquareIcon,
   XCircleIcon,
 } from "lucide-react"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@workspace/ui/components/collapsible"
 import {
   fetchFocusSession,
   fetchPlanWithSteps,
@@ -1235,6 +1242,20 @@ export default function SessionPage() {
                 </p>
               ) : null
             })()}
+            {currentStep.guidance && (
+              <Collapsible className="mt-2 border-t border-border/60 pt-2 text-left">
+                <CollapsibleTrigger className="mx-auto flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground">
+                  <LightbulbIcon className="size-3.5" />
+                  <span>Cách làm</span>
+                  <ChevronDownIcon className="size-3 transition-transform [[data-state=open]_&]:rotate-180" />
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <p className="mt-2 text-xs leading-relaxed whitespace-pre-line text-muted-foreground">
+                    {currentStep.guidance}
+                  </p>
+                </CollapsibleContent>
+              </Collapsible>
+            )}
           </div>
         )}
 

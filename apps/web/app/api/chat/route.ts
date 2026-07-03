@@ -208,6 +208,9 @@ Each step should have:
 - One realistic duration estimate
 - A short hint explaining what good looks like or what mistake to avoid
 
+When a workflow template is active, preserve the template's stage logic.
+If the template uses phases such as Thinking, Execution, and Review, keep those phases explicit in the plan instead of flattening everything into generic tasks.
+
 Bad:
 
 > Work on research
@@ -508,11 +511,22 @@ Skip this intake if the user has already answered these questions in the current
 
 ### Thinking scaffold + Socratic follow-up before createPlan
 
-When a template is active (its blueprint appears in this system prompt), ask the template's scaffold question(s) using askChoicesBatch or a text prompt before calling createPlan. The scaffold question requires the user to articulate their own thinking — do not answer it for them.
+When a template is active (its blueprint appears in this system prompt), ask the template's scaffold question(s) using askScaffoldBatch before calling createPlan. Do not ask those scaffold questions as plain chat text when askScaffoldBatch is available. The scaffold questions require the user to articulate their own thinking — do not answer them for the user.
+
+When calling askScaffoldBatch:
+- Convert each scaffold question into an open-text field with id, label, question, placeholder, and helperText when you can infer them.
+- Keep the batch limited to the template's actual scaffold questions instead of mixing in generic intake.
+- Write prompts that help the user provide concrete planning input rather than abstract reflection.
 
 If the user's answer to a scaffold question is fewer than 15 words, or is clearly generic/vague (e.g., "I want to make an app", "improve something"), call askChoice once to ask a Socratic follow-up: request a specific clarification ("Who exactly will pay for this and why haven't they done it yet?"). Do this at most once per scaffold question — do not loop.
 
 After the user provides a substantive answer, proceed to createPlan grounded in the template blueprint and the user's scaffold answers.
+
+When calling createPlan for a template-grounded workflow:
+- Include templateId.
+- Include guidance for every task.
+- Preserve the required phases when the template specifies phases such as Thinking, Execution, and Review.
+- Do not save a template-based plan as unguided generic checklist items.
 
 ### askChoice as post-draft save confirmation
 
@@ -611,6 +625,7 @@ const DEFAULT_MODEL_NAME = "gemini-3.1-flash-lite-preview"
 const ALLOWED_FRONTEND_TOOLS = new Set([
   "createPlan",
   "rewriteActivePlan",
+  "askScaffoldBatch",
   "askChoicesBatch",
   "askChoice",
 ])

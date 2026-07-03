@@ -14,6 +14,7 @@ import { lastAssistantMessageIsCompleteWithToolCalls, type UIMessage } from "ai"
 import { useEffect, useMemo, useRef } from "react"
 
 import { AskChoiceTool } from "@/components/ask-choice-tool-ui"
+import { AskScaffoldTool } from "@/components/ask-scaffold-tool-ui"
 import { Thread } from "@/components/thread"
 import { WebSearchAssistantToolUI } from "@/components/web-search-tool-ui"
 import {
@@ -127,6 +128,7 @@ export function Assistant({
       <InitialPromptSender prompt={initialPrompt} sessionKey={sessionKey} />
       <PlanAssistantTools chatSessionId={chatId} ensureChatId={ensureChatId} />
       <AskChoiceTool />
+      <AskScaffoldTool />
       <WebSearchAssistantToolUI />
       <Thread mode={mode} initialMentions={initialMentions} />
       {/* <DevToolsFrame className="min-h-200 w-full" /> */}

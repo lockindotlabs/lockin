@@ -27,6 +27,7 @@ import {
   MoreVerticalIcon,
   Trash2Icon,
   ChevronDownIcon,
+  ListPlusIcon,
 } from "lucide-react"
 import {
   Collapsible,
@@ -49,6 +50,8 @@ export interface TaskCardProps {
   onDurationChange?: (durationMinutes: number) => void
   onCompletedChange?: (isCompleted: boolean) => void
   onDelete?: () => void
+  isSubtask?: boolean
+  onAddSubtask?: () => void
 }
 
 const durationOptions = [15, 30, 45, 60, 90, 120]
@@ -83,6 +86,8 @@ export default function TaskCard({
   onDurationChange,
   onCompletedChange,
   onDelete,
+  isSubtask,
+  onAddSubtask,
 }: TaskCardProps) {
   const parseDate = (d?: string | Date) => {
     if (!d) return undefined
@@ -321,6 +326,12 @@ export default function TaskCard({
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-40" align="end">
           <DropdownMenuGroup>
+            {onAddSubtask && (
+              <DropdownMenuItem onClick={onAddSubtask}>
+                <ListPlusIcon />
+                Add subtask
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem>
               <ArchiveIcon />
               Archive

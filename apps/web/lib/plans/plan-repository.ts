@@ -9,6 +9,7 @@ export type SavedPlanTask = {
   isCompleted: boolean
   guidance?: string | null
   completionNote?: string | null
+  parentId?: string | null
 }
 
 export type SavedPlan = {
@@ -23,6 +24,10 @@ export type SavedPlan = {
   source?: "MANUAL" | "AI"
   aiMode?: "MANUAL" | "ASSISTED"
   breakdownIntensity?: "LOW_ENERGY" | "NORMAL" | "HIGH_ENERGY"
+  templateId?: string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: "FIRST_TIME" | "EXPERIENCED" | null
 }
 
 export type PlanSummary = {

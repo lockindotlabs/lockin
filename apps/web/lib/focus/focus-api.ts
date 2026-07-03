@@ -20,6 +20,7 @@ export type PlanStep = {
   dueDate: string | null
   estimatedMinutes: number
   order: number
+  guidance?: string | null
 }
 
 export type FocusPlan = {
@@ -88,6 +89,7 @@ type StoredPlan = {
     dueDate: string
     durationMinutes: number
     isCompleted: boolean
+    guidance?: string | null
   }>
   createdAt: string
   updatedAt: string
@@ -115,6 +117,7 @@ function toFocusPlan(plan: StoredPlan): FocusPlan {
     dueDate: task.dueDate || null,
     estimatedMinutes: task.durationMinutes,
     order: index,
+    guidance: task.guidance ?? null,
   }))
 
   return {

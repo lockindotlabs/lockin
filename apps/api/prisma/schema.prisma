@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../../../packages/db/src/generated/prisma"
+  provider            = "prisma-client"
+  output              = "../../../packages/db/src/generated/prisma"
+  importFileExtension = "ts"
 }
 
 datasource db {
@@ -167,12 +168,16 @@ model PlanStep {
   order            Int            @default(0)
   guidance         String?
   completionNote   String?
+  parentId         String?
+  parent           PlanStep?      @relation("PlanStepChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children         PlanStep[]     @relation("PlanStepChildren")
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
 
   @@index([userId])
   @@index([planId])
   @@index([planId, order])
+  @@index([parentId])
 }
 
 model Task {

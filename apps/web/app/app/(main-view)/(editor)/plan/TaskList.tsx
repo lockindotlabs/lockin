@@ -41,6 +41,7 @@ export interface TaskListProps {
     dueDate: string,
     durationMinutes: number
   ) => void
+  onAddSubtask?: (index: number) => void
   emptyState?: (openAddTaskForm: () => void) => React.ReactNode
 }
 
@@ -71,6 +72,7 @@ export default function TaskList({
   onCompletedChange,
   onDeleteTask,
   onAddTask,
+  onAddSubtask,
   emptyState,
 }: TaskListProps) {
   const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null)
@@ -203,7 +205,7 @@ export default function TaskList({
                 onDragEnd={handleDragEnd}
                 className={`group flex items-start gap-2 transition-opacity duration-200 last:*:border-0 ${
                   isDragged ? "opacity-20" : "opacity-100"
-                }`}
+                } ${p.parentId ? "ml-9" : ""}`}
               >
                 <div className="mt-3 -ml-8 flex shrink-0 items-start justify-center p-1 opacity-0 transition-opacity group-hover:opacity-100">
                   <GripVerticalIcon className="size-4 cursor-grab text-muted-foreground/50 transition-colors hover:text-muted-foreground active:cursor-grabbing" />
@@ -227,6 +229,12 @@ export default function TaskList({
                     onCompletedChange(i, isCompleted)
                   }
                   onDelete={() => onDeleteTask(i)}
+                  isSubtask={Boolean(p.parentId)}
+                  onAddSubtask={
+                    onAddSubtask && !p.parentId
+                      ? () => onAddSubtask(i)
+                      : undefined
+                  }
                 />
               </div>
             )

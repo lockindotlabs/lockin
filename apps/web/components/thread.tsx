@@ -63,6 +63,11 @@ import GeminiLogo from "./logo-gemini"
 import { ContextDisplay } from "./context-display"
 import { CapabilitiesSelector } from "./capabilities-selector"
 import { getMentionKey, type MentionRef } from "@/lib/mentions/mention-types"
+import {
+  TemplateAutoClear,
+  TemplateConfigRegistrar,
+  TemplatePicker,
+} from "@/components/template-picker"
 import { motion } from "motion/react"
 import { AiPlannerIcon } from "./icons"
 import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
@@ -71,7 +76,7 @@ import Link from "next/link"
 import { PlanGrid } from "./plan-grid"
 import { Asterisk01, ClockRewind, Plus } from "@untitledui/icons"
 import { useChatSummaries } from "@/lib/chat/use-chat-summaries"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -507,6 +512,10 @@ const Composer: FC<{
   onSelectedCapabilityChange,
 }) => {
   const [mentions, setMentions] = useState<MentionRef[]>(initialMentions)
+  const templateSearchParams = useSearchParams()
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
+    () => templateSearchParams.get("template")
+  )
   const initialMentionSignature = useMemo(
     () =>
       initialMentions
@@ -566,6 +575,8 @@ const Composer: FC<{
       resetMentions={initialMentions}
       setMentions={setMentions}
     >
+      <TemplateConfigRegistrar templateId={selectedTemplateId} />
+      <TemplateAutoClear onClear={() => setSelectedTemplateId(null)} />
       <ComposerPrimitive.Root className="aui-composer-root relative flex w-full flex-col">
         <ComposerPrimitive.AttachmentDropzone
           render={
@@ -593,6 +604,8 @@ const Composer: FC<{
             onSelectedModelChange={onSelectedModelChange}
             selectedCapabilityId={selectedCapabilityId}
             onSelectedCapabilityChange={onSelectedCapabilityChange}
+            selectedTemplateId={selectedTemplateId}
+            onSelectedTemplateChange={setSelectedTemplateId}
           />
         </ComposerPrimitive.AttachmentDropzone>
       </ComposerPrimitive.Root>
@@ -605,11 +618,15 @@ const ComposerAction: FC<{
   onSelectedModelChange: (value: string) => void
   selectedCapabilityId: string | undefined
   onSelectedCapabilityChange: (value: string | undefined) => void
+  selectedTemplateId: string | null
+  onSelectedTemplateChange: (id: string | null) => void
 }> = ({
   selectedModelId,
   onSelectedModelChange,
   selectedCapabilityId,
   onSelectedCapabilityChange,
+  selectedTemplateId,
+  onSelectedTemplateChange,
 }) => {
   return (
     <div className="aui-composer-action-wrapper relative flex items-center justify-between">
@@ -621,6 +638,10 @@ const ComposerAction: FC<{
           onValueChange={onSelectedCapabilityChange}
           variant="ghost"
           size="sm"
+        />
+        <TemplatePicker
+          selectedTemplateId={selectedTemplateId}
+          onSelect={onSelectedTemplateChange}
         />
       </div>
 

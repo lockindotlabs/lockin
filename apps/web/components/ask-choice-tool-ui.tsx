@@ -251,6 +251,19 @@ function normalizeOptions(
   })
 }
 
+function isSavePlanConfirmation(
+  question: string,
+  options: NormalizedOption[]
+) {
+  if (options.length !== 2) return false
+
+  const labels = options.map((option) => option.label.toLowerCase())
+  return (
+    /save/i.test(question) ||
+    (labels.includes("save plan") && labels.includes("not now"))
+  )
+}
+
 type NormalizedBatchQuestion = {
   id: string
   question: string
@@ -306,6 +319,7 @@ function AskChoiceCard({
   const allowOther = resolved.allowOther !== false
   const allowSkip = resolved.allowSkip !== false
   const context = resolved.context?.trim()
+  const isSavePrompt = isSavePlanConfirmation(question, options)
 
   const isStreaming = status.type === "running" && options.length === 0
   const isCancelled = status.type === "incomplete"
@@ -443,51 +457,76 @@ function AskChoiceCard({
 
         {/* option rows */}
         <div className="flex flex-col">
-          {options.map((opt, i) => {
-            const isSel = selected === i
-            return (
-              <button
-                key={`${opt.label}-${i}`}
-                type="button"
-                onClick={() => choose(i)}
-                className={cn(
-                  "group flex w-full items-center gap-4 border-t border-border px-4 py-3.5 text-left transition-colors",
-                  "hover:bg-muted active:translate-y-px",
-                  isSel && "bg-primary/10"
-                )}
-              >
-                <span
-                  className={cn(
-                    "flex size-[30px] shrink-0 items-center justify-center rounded-[9px] border text-[13px] transition-colors",
-                    "bg-muted text-muted-foreground",
-                    isSel && "border-primary bg-primary text-primary-foreground"
-                  )}
-                  style={{
-                    fontFamily: "var(--font-ibm-mono), ui-monospace, monospace",
-                  }}
+          {isSavePrompt ? (
+            <div className="grid gap-3 border-t border-border px-4 py-4 sm:grid-cols-2">
+              {options.map((opt, i) => (
+                <Button
+                  key={`${opt.label}-${i}`}
+                  type="button"
+                  variant={i === 0 ? "default" : "outline"}
+                  className="h-auto justify-start px-4 py-3 text-left"
+                  onClick={() => choose(i)}
                 >
-                  {i + 1}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="truncate font-medium">{opt.label}</span>
-                  {opt.description && (
-                    <span className="block truncate text-[13px] text-muted-foreground">
-                      {opt.description}
-                    </span>
-                  )}
-                </span>
-                <CheckIcon
+                  <span className="block">
+                    <span className="block font-medium">{opt.label}</span>
+                    {opt.description && (
+                      <span className="mt-1 block text-xs text-current/75">
+                        {opt.description}
+                      </span>
+                    )}
+                  </span>
+                </Button>
+              ))}
+            </div>
+          ) : (
+            options.map((opt, i) => {
+              const isSel = selected === i
+              return (
+                <button
+                  key={`${opt.label}-${i}`}
+                  type="button"
+                  onClick={() => choose(i)}
                   className={cn(
-                    "size-[18px] shrink-0 text-primary transition-[transform,opacity]",
-                    isSel ? "scale-100 opacity-100" : "scale-50 opacity-0"
+                    "group flex w-full items-center gap-4 border-t border-border px-4 py-3.5 text-left transition-colors",
+                    "hover:bg-muted active:translate-y-px",
+                    isSel && "bg-primary/10"
                   )}
-                />
-              </button>
-            )
-          })}
+                >
+                  <span
+                    className={cn(
+                      "flex size-[30px] shrink-0 items-center justify-center rounded-[9px] border text-[13px] transition-colors",
+                      "bg-muted text-muted-foreground",
+                      isSel &&
+                        "border-primary bg-primary text-primary-foreground"
+                    )}
+                    style={{
+                      fontFamily:
+                        "var(--font-ibm-mono), ui-monospace, monospace",
+                    }}
+                  >
+                    {i + 1}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="truncate font-medium">{opt.label}</span>
+                    {opt.description && (
+                      <span className="block truncate text-[13px] text-muted-foreground">
+                        {opt.description}
+                      </span>
+                    )}
+                  </span>
+                  <CheckIcon
+                    className={cn(
+                      "size-[18px] shrink-0 text-primary transition-[transform,opacity]",
+                      isSel ? "scale-100 opacity-100" : "scale-50 opacity-0"
+                    )}
+                  />
+                </button>
+              )
+            })
+          )}
 
           {/* "Something else" custom row */}
-          {allowOther && (
+          {allowOther && !isSavePrompt && (
             <div
               className={cn(
                 "flex items-center gap-4 border-t border-border px-4 py-3 transition-colors",

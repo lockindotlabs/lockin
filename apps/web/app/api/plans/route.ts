@@ -19,6 +19,9 @@ const PlanStepSchema = z.object({
   dueDate: z.string(),
   durationMinutes: z.number().int().positive(),
   isCompleted: z.boolean(),
+  guidance: z.string().nullable().optional(),
+  completionNote: z.string().nullable().optional(),
+  parentId: z.string().nullable().optional(),
 })
 
 const PlanSchema = z.object({
@@ -35,6 +38,10 @@ const PlanSchema = z.object({
   breakdownIntensity: z
     .enum(["LOW_ENERGY", "NORMAL", "HIGH_ENERGY"])
     .optional(),
+  templateId: z.string().nullable().optional(),
+  rubricNotes: z.string().nullable().optional(),
+  draftReference: z.string().nullable().optional(),
+  experienceLevel: z.enum(["FIRST_TIME", "EXPERIENCED"]).nullable().optional(),
 })
 
 export async function GET() {

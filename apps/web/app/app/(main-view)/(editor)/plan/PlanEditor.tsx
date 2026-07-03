@@ -70,6 +70,7 @@ export type EditorTask = {
   durationMinutes: number
   isCompleted: boolean
   guidance?: string | null
+  parentId?: string | null
 }
 
 function createId() {
@@ -92,7 +93,8 @@ function createTask(
   title: string,
   description: string,
   dueDate: string,
-  durationMinutes: number
+  durationMinutes: number,
+  parentId: string | null = null
 ): EditorTask {
   return {
     id: createId(),
@@ -101,6 +103,7 @@ function createTask(
     dueDate,
     durationMinutes,
     isCompleted: false,
+    parentId,
   }
 }
 
@@ -113,6 +116,7 @@ function toEditorTask(task: SavedPlanTask): EditorTask {
     durationMinutes: task.durationMinutes,
     isCompleted: task.isCompleted,
     guidance: task.guidance ?? null,
+    parentId: task.parentId ?? null,
   }
 }
 
@@ -290,6 +294,8 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
           dueDate: task.dueDate,
           durationMinutes: task.durationMinutes,
           isCompleted: task.isCompleted,
+          guidance: task.guidance ?? null,
+          parentId: task.parentId ?? null,
         })),
         createdAt,
         updatedAt,
@@ -390,7 +396,39 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
   }
 
   const deleteTask = (index: number) => {
-    setPersisted((p) => p.filter((_, i) => i !== index))
+    setPersisted((p) => {
+      const target = p[index]
+      if (!target) return p
+      // Deleting a parent also removes its subtasks
+      return p.filter(
+        (item, i) => i !== index && item.parentId !== target.id
+      )
+    })
+    markChanged()
+  }
+
+  const addSubtask = (parentIndex: number) => {
+    setPersisted((p) => {
+      const parent = p[parentIndex]
+      if (!parent || parent.parentId) return p
+
+      // Insert after the parent's last consecutive subtask so display order
+      // (flat array) keeps children grouped under their parent
+      let insertAt = parentIndex + 1
+      while (insertAt < p.length && p[insertAt]?.parentId === parent.id) {
+        insertAt += 1
+      }
+
+      const child = createTask(
+        "",
+        "",
+        parent.dueDate || format(new Date(), "yyyy-MM-dd"),
+        15,
+        parent.id
+      )
+
+      return [...p.slice(0, insertAt), child, ...p.slice(insertAt)]
+    })
     markChanged()
   }
 
@@ -553,6 +591,7 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
           onCompletedChange={updateTaskCompletion}
           onDeleteTask={deleteTask}
           onAddTask={handleAddTask}
+          onAddSubtask={addSubtask}
           emptyState={() => (
             <section className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-start justify-center gap-4 pt-8">
               <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">

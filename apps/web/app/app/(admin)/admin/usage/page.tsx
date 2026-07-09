@@ -17,6 +17,7 @@ import type {
   AdminUsageData,
   EventFilter,
 } from "@/types/admin-analytics"
+import { ScrollArea } from "@workspace/ui/components/scroll-area"
 
 function eventMatchesFilter(event: AdminActivityItem, filter: EventFilter) {
   if (filter === "all") {
@@ -48,31 +49,38 @@ export default function AdminUsagePage() {
     (data?.recentEvents.length ?? 0) > 0
 
   return (
-    <main className="flex min-h-svh flex-col bg-background text-foreground">
-      <AdminPageHeader
-        icon={UsersIcon}
-        title="Usage & Retention"
-        description="Review focus-session throughput and the most recent product activity."
-      />
-
-      {isLoading ? <AnalyticsLoadingState /> : null}
-      {!isLoading && error ? <AnalyticsErrorState /> : null}
-      {!isLoading && !error && !hasData ? <AnalyticsEmptyState /> : null}
-
-      {!isLoading && !error && data && hasData ? (
-        <div className="flex flex-col gap-8 px-4 pb-10 sm:px-6 lg:px-8">
-          <SprintAnalyticsSection
-            metrics={data.sprintMetrics}
-            trendData={data.sprintTrendData}
-          />
-
-          <RecentActivityTable
-            events={filteredEvents}
-            activeFilter={eventFilter}
-            onActiveFilterChange={setEventFilter}
-          />
+    <>
+      <ScrollArea className="flex h-[calc(100vh-1rem)] flex-col overflow-y-auto bg-background/50 text-foreground">
+        <div className="relative mt-12 max-h-[88px] min-h-[20px] w-full overflow-hidden">
+          <div className="relative w-full pb-0 xl:pb-[calc(50%-576px)]" />
         </div>
-      ) : null}
-    </main>
+        <main className="flex flex-col bg-background text-foreground">
+          <AdminPageHeader
+            icon={UsersIcon}
+            title="Usage & Retention"
+            description="Review focus-session throughput and the most recent product activity."
+          />
+
+          {isLoading ? <AnalyticsLoadingState /> : null}
+          {!isLoading && error ? <AnalyticsErrorState /> : null}
+          {!isLoading && !error && !hasData ? <AnalyticsEmptyState /> : null}
+
+          {!isLoading && !error && data && hasData ? (
+            <div className="flex flex-col gap-8 px-4 pb-10 sm:px-6 lg:px-8">
+              <SprintAnalyticsSection
+                metrics={data.sprintMetrics}
+                trendData={data.sprintTrendData}
+              />
+
+              <RecentActivityTable
+                events={filteredEvents}
+                activeFilter={eventFilter}
+                onActiveFilterChange={setEventFilter}
+              />
+            </div>
+          ) : null}
+        </main>
+      </ScrollArea>
+    </>
   )
 }

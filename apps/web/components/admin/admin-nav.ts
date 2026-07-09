@@ -5,6 +5,7 @@ import {
   HomeIcon,
   Settings2Icon,
   UsersIcon,
+  UserCog,
   type LucideIcon,
 } from "lucide-react"
 
@@ -57,6 +58,17 @@ export const adminNavSections: AdminNavSection[] = [
     ],
   },
   {
+    label: "Users",
+    items: [
+      {
+        title: "Users",
+        url: "/app/admin/users",
+        icon: UserCog,
+        match: "prefix",
+      },
+    ],
+  },
+  {
     label: "System",
     items: [
       {
@@ -101,6 +113,12 @@ export const adminNavItems: AdminNavItem[] = [
     title: "Billing",
     url: "/app/admin/billing",
     icon: CreditCardIcon,
+    match: "prefix",
+  },
+  {
+    title: "Users",
+    url: "/app/admin/users",
+    icon: UserCog,
     match: "prefix",
   },
   {

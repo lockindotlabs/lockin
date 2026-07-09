@@ -26,6 +26,13 @@ export type AggregateUser = {
 
 export type UserMinAggregateOutputType = {
   id: string | null
+  email: string | null
+  firstName: string | null
+  lastName: string | null
+  imageUrl: string | null
+  role: string | null
+  banned: boolean | null
+  locked: boolean | null
   isActive: boolean | null
   planTier: $Enums.BillingTier | null
   planExpiresAt: Date | null
@@ -35,6 +42,13 @@ export type UserMinAggregateOutputType = {
 
 export type UserMaxAggregateOutputType = {
   id: string | null
+  email: string | null
+  firstName: string | null
+  lastName: string | null
+  imageUrl: string | null
+  role: string | null
+  banned: boolean | null
+  locked: boolean | null
   isActive: boolean | null
   planTier: $Enums.BillingTier | null
   planExpiresAt: Date | null
@@ -44,6 +58,13 @@ export type UserMaxAggregateOutputType = {
 
 export type UserCountAggregateOutputType = {
   id: number
+  email: number
+  firstName: number
+  lastName: number
+  imageUrl: number
+  role: number
+  banned: number
+  locked: number
   isActive: number
   planTier: number
   planExpiresAt: number
@@ -55,6 +76,13 @@ export type UserCountAggregateOutputType = {
 
 export type UserMinAggregateInputType = {
   id?: true
+  email?: true
+  firstName?: true
+  lastName?: true
+  imageUrl?: true
+  role?: true
+  banned?: true
+  locked?: true
   isActive?: true
   planTier?: true
   planExpiresAt?: true
@@ -64,6 +92,13 @@ export type UserMinAggregateInputType = {
 
 export type UserMaxAggregateInputType = {
   id?: true
+  email?: true
+  firstName?: true
+  lastName?: true
+  imageUrl?: true
+  role?: true
+  banned?: true
+  locked?: true
   isActive?: true
   planTier?: true
   planExpiresAt?: true
@@ -73,6 +108,13 @@ export type UserMaxAggregateInputType = {
 
 export type UserCountAggregateInputType = {
   id?: true
+  email?: true
+  firstName?: true
+  lastName?: true
+  imageUrl?: true
+  role?: true
+  banned?: true
+  locked?: true
   isActive?: true
   planTier?: true
   planExpiresAt?: true
@@ -155,6 +197,13 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type UserGroupByOutputType = {
   id: string
+  email: string | null
+  firstName: string | null
+  lastName: string | null
+  imageUrl: string | null
+  role: string
+  banned: boolean
+  locked: boolean
   isActive: boolean
   planTier: $Enums.BillingTier
   planExpiresAt: Date | null
@@ -185,6 +234,13 @@ export type UserWhereInput = {
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.StringFilter<"User"> | string
+  email?: Prisma.StringNullableFilter<"User"> | string | null
+  firstName?: Prisma.StringNullableFilter<"User"> | string | null
+  lastName?: Prisma.StringNullableFilter<"User"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"User"> | string | null
+  role?: Prisma.StringFilter<"User"> | string
+  banned?: Prisma.BoolFilter<"User"> | boolean
+  locked?: Prisma.BoolFilter<"User"> | boolean
   isActive?: Prisma.BoolFilter<"User"> | boolean
   planTier?: Prisma.EnumBillingTierFilter<"User"> | $Enums.BillingTier
   planExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -205,6 +261,13 @@ export type UserWhereInput = {
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastName?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  role?: Prisma.SortOrder
+  banned?: Prisma.SortOrder
+  locked?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   planTier?: Prisma.SortOrder
   planExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -228,6 +291,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
+  email?: Prisma.StringNullableFilter<"User"> | string | null
+  firstName?: Prisma.StringNullableFilter<"User"> | string | null
+  lastName?: Prisma.StringNullableFilter<"User"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"User"> | string | null
+  role?: Prisma.StringFilter<"User"> | string
+  banned?: Prisma.BoolFilter<"User"> | boolean
+  locked?: Prisma.BoolFilter<"User"> | boolean
   isActive?: Prisma.BoolFilter<"User"> | boolean
   planTier?: Prisma.EnumBillingTierFilter<"User"> | $Enums.BillingTier
   planExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -248,6 +318,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastName?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  role?: Prisma.SortOrder
+  banned?: Prisma.SortOrder
+  locked?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   planTier?: Prisma.SortOrder
   planExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -263,6 +340,13 @@ export type UserScalarWhereWithAggregatesInput = {
   OR?: Prisma.UserScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
+  email?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  firstName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  lastName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  imageUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  role?: Prisma.StringWithAggregatesFilter<"User"> | string
+  banned?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  locked?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   planTier?: Prisma.EnumBillingTierWithAggregatesFilter<"User"> | $Enums.BillingTier
   planExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
@@ -272,6 +356,13 @@ export type UserScalarWhereWithAggregatesInput = {
 
 export type UserCreateInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -292,6 +383,13 @@ export type UserCreateInput = {
 
 export type UserUncheckedCreateInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -312,6 +410,13 @@ export type UserUncheckedCreateInput = {
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -332,6 +437,13 @@ export type UserUpdateInput = {
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -352,6 +464,13 @@ export type UserUncheckedUpdateInput = {
 
 export type UserCreateManyInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -361,6 +480,13 @@ export type UserCreateManyInput = {
 
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -370,6 +496,13 @@ export type UserUpdateManyMutationInput = {
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -379,6 +512,13 @@ export type UserUncheckedUpdateManyInput = {
 
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  role?: Prisma.SortOrder
+  banned?: Prisma.SortOrder
+  locked?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   planTier?: Prisma.SortOrder
   planExpiresAt?: Prisma.SortOrder
@@ -388,6 +528,13 @@ export type UserCountOrderByAggregateInput = {
 
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  role?: Prisma.SortOrder
+  banned?: Prisma.SortOrder
+  locked?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   planTier?: Prisma.SortOrder
   planExpiresAt?: Prisma.SortOrder
@@ -397,6 +544,13 @@ export type UserMaxOrderByAggregateInput = {
 
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  role?: Prisma.SortOrder
+  banned?: Prisma.SortOrder
+  locked?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   planTier?: Prisma.SortOrder
   planExpiresAt?: Prisma.SortOrder
@@ -411,6 +565,10 @@ export type UserScalarRelationFilter = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type BoolFieldUpdateOperationsInput = {
@@ -585,6 +743,13 @@ export type UserUpdateOneRequiredWithoutAiUsagesNestedInput = {
 
 export type UserCreateWithoutChatsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -604,6 +769,13 @@ export type UserCreateWithoutChatsInput = {
 
 export type UserUncheckedCreateWithoutChatsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -639,6 +811,13 @@ export type UserUpdateToOneWithWhereWithoutChatsInput = {
 
 export type UserUpdateWithoutChatsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -658,6 +837,13 @@ export type UserUpdateWithoutChatsInput = {
 
 export type UserUncheckedUpdateWithoutChatsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -677,6 +863,13 @@ export type UserUncheckedUpdateWithoutChatsInput = {
 
 export type UserCreateWithoutExtensionTokensInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -696,6 +889,13 @@ export type UserCreateWithoutExtensionTokensInput = {
 
 export type UserUncheckedCreateWithoutExtensionTokensInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -731,6 +931,13 @@ export type UserUpdateToOneWithWhereWithoutExtensionTokensInput = {
 
 export type UserUpdateWithoutExtensionTokensInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -750,6 +957,13 @@ export type UserUpdateWithoutExtensionTokensInput = {
 
 export type UserUncheckedUpdateWithoutExtensionTokensInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -769,6 +983,13 @@ export type UserUncheckedUpdateWithoutExtensionTokensInput = {
 
 export type UserCreateWithoutSettingsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -788,6 +1009,13 @@ export type UserCreateWithoutSettingsInput = {
 
 export type UserUncheckedCreateWithoutSettingsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -823,6 +1051,13 @@ export type UserUpdateToOneWithWhereWithoutSettingsInput = {
 
 export type UserUpdateWithoutSettingsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -842,6 +1077,13 @@ export type UserUpdateWithoutSettingsInput = {
 
 export type UserUncheckedUpdateWithoutSettingsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -861,6 +1103,13 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
 
 export type UserCreateWithoutProjectsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -880,6 +1129,13 @@ export type UserCreateWithoutProjectsInput = {
 
 export type UserUncheckedCreateWithoutProjectsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -915,6 +1171,13 @@ export type UserUpdateToOneWithWhereWithoutProjectsInput = {
 
 export type UserUpdateWithoutProjectsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -934,6 +1197,13 @@ export type UserUpdateWithoutProjectsInput = {
 
 export type UserUncheckedUpdateWithoutProjectsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -953,6 +1223,13 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
 
 export type UserCreateWithoutPlansInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -972,6 +1249,13 @@ export type UserCreateWithoutPlansInput = {
 
 export type UserUncheckedCreateWithoutPlansInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1007,6 +1291,13 @@ export type UserUpdateToOneWithWhereWithoutPlansInput = {
 
 export type UserUpdateWithoutPlansInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1026,6 +1317,13 @@ export type UserUpdateWithoutPlansInput = {
 
 export type UserUncheckedUpdateWithoutPlansInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1045,6 +1343,13 @@ export type UserUncheckedUpdateWithoutPlansInput = {
 
 export type UserCreateWithoutPlanStepsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1064,6 +1369,13 @@ export type UserCreateWithoutPlanStepsInput = {
 
 export type UserUncheckedCreateWithoutPlanStepsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1099,6 +1411,13 @@ export type UserUpdateToOneWithWhereWithoutPlanStepsInput = {
 
 export type UserUpdateWithoutPlanStepsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1118,6 +1437,13 @@ export type UserUpdateWithoutPlanStepsInput = {
 
 export type UserUncheckedUpdateWithoutPlanStepsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1137,6 +1463,13 @@ export type UserUncheckedUpdateWithoutPlanStepsInput = {
 
 export type UserCreateWithoutTasksInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1156,6 +1489,13 @@ export type UserCreateWithoutTasksInput = {
 
 export type UserUncheckedCreateWithoutTasksInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1191,6 +1531,13 @@ export type UserUpdateToOneWithWhereWithoutTasksInput = {
 
 export type UserUpdateWithoutTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1210,6 +1557,13 @@ export type UserUpdateWithoutTasksInput = {
 
 export type UserUncheckedUpdateWithoutTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1229,6 +1583,13 @@ export type UserUncheckedUpdateWithoutTasksInput = {
 
 export type UserCreateWithoutFocusSessionsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1248,6 +1609,13 @@ export type UserCreateWithoutFocusSessionsInput = {
 
 export type UserUncheckedCreateWithoutFocusSessionsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1283,6 +1651,13 @@ export type UserUpdateToOneWithWhereWithoutFocusSessionsInput = {
 
 export type UserUpdateWithoutFocusSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1302,6 +1677,13 @@ export type UserUpdateWithoutFocusSessionsInput = {
 
 export type UserUncheckedUpdateWithoutFocusSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1321,6 +1703,13 @@ export type UserUncheckedUpdateWithoutFocusSessionsInput = {
 
 export type UserCreateWithoutPaymentOrdersInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1340,6 +1729,13 @@ export type UserCreateWithoutPaymentOrdersInput = {
 
 export type UserUncheckedCreateWithoutPaymentOrdersInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1375,6 +1771,13 @@ export type UserUpdateToOneWithWhereWithoutPaymentOrdersInput = {
 
 export type UserUpdateWithoutPaymentOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1394,6 +1797,13 @@ export type UserUpdateWithoutPaymentOrdersInput = {
 
 export type UserUncheckedUpdateWithoutPaymentOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1413,6 +1823,13 @@ export type UserUncheckedUpdateWithoutPaymentOrdersInput = {
 
 export type UserCreateWithoutSprintInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1432,6 +1849,13 @@ export type UserCreateWithoutSprintInput = {
 
 export type UserUncheckedCreateWithoutSprintInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1467,6 +1891,13 @@ export type UserUpdateToOneWithWhereWithoutSprintInput = {
 
 export type UserUpdateWithoutSprintInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1486,6 +1917,13 @@ export type UserUpdateWithoutSprintInput = {
 
 export type UserUncheckedUpdateWithoutSprintInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1505,6 +1943,13 @@ export type UserUncheckedUpdateWithoutSprintInput = {
 
 export type UserCreateWithoutAiUsagesInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1524,6 +1969,13 @@ export type UserCreateWithoutAiUsagesInput = {
 
 export type UserUncheckedCreateWithoutAiUsagesInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1559,6 +2011,13 @@ export type UserUpdateToOneWithWhereWithoutAiUsagesInput = {
 
 export type UserUpdateWithoutAiUsagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1578,6 +2037,13 @@ export type UserUpdateWithoutAiUsagesInput = {
 
 export type UserUncheckedUpdateWithoutAiUsagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1709,6 +2175,13 @@ export type UserCountOutputTypeCountAiUsagesArgs<ExtArgs extends runtime.Types.E
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  email?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  imageUrl?: boolean
+  role?: boolean
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: boolean
   planExpiresAt?: boolean
@@ -1730,6 +2203,13 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  email?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  imageUrl?: boolean
+  role?: boolean
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: boolean
   planExpiresAt?: boolean
@@ -1739,6 +2219,13 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  email?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  imageUrl?: boolean
+  role?: boolean
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: boolean
   planExpiresAt?: boolean
@@ -1748,6 +2235,13 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type UserSelectScalar = {
   id?: boolean
+  email?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  imageUrl?: boolean
+  role?: boolean
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: boolean
   planExpiresAt?: boolean
@@ -1755,7 +2249,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "isActive" | "planTier" | "planExpiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "firstName" | "lastName" | "imageUrl" | "role" | "banned" | "locked" | "isActive" | "planTier" | "planExpiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
@@ -1790,6 +2284,13 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    email: string | null
+    firstName: string | null
+    lastName: string | null
+    imageUrl: string | null
+    role: string
+    banned: boolean
+    locked: boolean
     isActive: boolean
     planTier: $Enums.BillingTier
     planExpiresAt: Date | null
@@ -2230,6 +2731,13 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
+  readonly email: Prisma.FieldRef<"User", 'String'>
+  readonly firstName: Prisma.FieldRef<"User", 'String'>
+  readonly lastName: Prisma.FieldRef<"User", 'String'>
+  readonly imageUrl: Prisma.FieldRef<"User", 'String'>
+  readonly role: Prisma.FieldRef<"User", 'String'>
+  readonly banned: Prisma.FieldRef<"User", 'Boolean'>
+  readonly locked: Prisma.FieldRef<"User", 'Boolean'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
   readonly planTier: Prisma.FieldRef<"User", 'BillingTier'>
   readonly planExpiresAt: Prisma.FieldRef<"User", 'DateTime'>

@@ -415,10 +415,6 @@ export type ProjectUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.ProjectScalarWhereInput | Prisma.ProjectScalarWhereInput[]
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type ProjectCreateNestedOneWithoutPlansInput = {
   create?: Prisma.XOR<Prisma.ProjectCreateWithoutPlansInput, Prisma.ProjectUncheckedCreateWithoutPlansInput>
   connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutPlansInput

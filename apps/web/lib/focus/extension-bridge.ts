@@ -76,6 +76,9 @@ export function notifyExtensionSessionStarted(params: {
   duration: number
   startTime: number
   tasks: Array<{ id?: string; label: string; done: boolean; durationMinutes?: number }>
+  blocklistHard?: string[]
+  blocklistSoft?: string[]
+  tabGuard?: boolean
 }) {
   notifyExtension({ type: "lockin-session-start", ...params })
 }

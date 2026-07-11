@@ -1,5 +1,7 @@
 "use client"
 
+import type { FocusBlockSettings } from "@/lib/focus/block-settings"
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001"
 
 async function authHeaders(getToken: () => Promise<string | null>) {
@@ -248,6 +250,60 @@ export async function endFocusSession(
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+export async function fetchFocusBlockSettings(
+  getToken: () => Promise<string | null>
+): Promise<FocusBlockSettings> {
+  try {
+    const headers = await authHeaders(getToken)
+    const res = await fetch(`${API_BASE}/api/settings`, {
+      headers,
+      cache: "no-store",
+    })
+    if (!res.ok) {
+      return { blocklistHard: [], blocklistSoft: [], tabGuard: false }
+    }
+    const { data } = await res.json()
+    return {
+      blocklistHard: Array.isArray(data?.blocklistHard)
+        ? data.blocklistHard
+        : [],
+      blocklistSoft: Array.isArray(data?.blocklistSoft)
+        ? data.blocklistSoft
+        : [],
+      tabGuard: Boolean(data?.tabGuard),
+    }
+  } catch {
+    return { blocklistHard: [], blocklistSoft: [], tabGuard: false }
+  }
+}
+
+export async function saveFocusBlockSettings(
+  settings: FocusBlockSettings,
+  getToken: () => Promise<string | null>
+): Promise<FocusBlockSettings | null> {
+  try {
+    const headers = await authHeaders(getToken)
+    const res = await fetch(`${API_BASE}/api/settings`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify(settings),
+    })
+    if (!res.ok) return null
+    const { data } = await res.json()
+    return {
+      blocklistHard: Array.isArray(data?.blocklistHard)
+        ? data.blocklistHard
+        : settings.blocklistHard,
+      blocklistSoft: Array.isArray(data?.blocklistSoft)
+        ? data.blocklistSoft
+        : settings.blocklistSoft,
+      tabGuard: Boolean(data?.tabGuard),
+    }
+  } catch {
+    return null
+  }
+}
 
 const TODAY_START = new Date()
 TODAY_START.setHours(0, 0, 0, 0)

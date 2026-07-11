@@ -16,11 +16,17 @@ import {
   ZapIcon,
   TimerIcon,
   ChevronRightIcon,
+  GlobeIcon,
+  PlusIcon,
+  ShieldIcon,
+  XIcon,
 } from "lucide-react"
 import {
   fetchPlans,
   fetchFocusSessions,
+  fetchFocusBlockSettings,
   fetchPlanWithSteps,
+  saveFocusBlockSettings,
   startFocusSession,
   incompleteSteps,
   effortTodaySeconds,
@@ -45,6 +51,14 @@ import {
   TableRow,
 } from "@workspace/ui/components/table"
 import { ScrollArea } from "@workspace/ui/components/scroll-area"
+import {
+  DEFAULT_HARD_BLOCK_DOMAINS,
+  DEFAULT_SOFT_BLOCK_DOMAINS,
+  normalizeDomain,
+  uniqueDomains,
+  withDefaultBlockSuggestions,
+  type FocusBlockSettings,
+} from "@/lib/focus/block-settings"
 
 function getPlanCategory(plan: FocusPlan) {
   const steps = plan.steps || []
@@ -144,13 +158,19 @@ const DURATION_PRESETS = [
 function SprintSetupModal({
   plan,
   steps,
+  initialBlockSettings,
   onStart,
   onClose,
   loading,
 }: {
   plan: FocusPlan
   steps: PlanStep[]
-  onStart: (selectedSteps: PlanStep[], durationSeconds: number) => void
+  initialBlockSettings: FocusBlockSettings
+  onStart: (
+    selectedSteps: PlanStep[],
+    durationSeconds: number,
+    blockSettings: FocusBlockSettings
+  ) => void
   onClose: () => void
   loading: boolean
 }) {
@@ -159,6 +179,13 @@ function SprintSetupModal({
   )
   const [durationSeconds, setDurationSeconds] = React.useState<number | null>(
     null
+  )
+  const [blockSettings, setBlockSettings] = React.useState<FocusBlockSettings>(
+    () => withDefaultBlockSuggestions(initialBlockSettings)
+  )
+  const [newDomain, setNewDomain] = React.useState("")
+  const [newDomainMode, setNewDomainMode] = React.useState<"hard" | "soft">(
+    "hard"
   )
 
   const toggleStep = (id: string) => {
@@ -188,6 +215,51 @@ function SprintSetupModal({
     if (largest) toggleStep(largest.id)
   }
 
+  const toggleBlockedDomain = (
+    domain: string,
+    mode: "hard" | "soft",
+    checked?: boolean
+  ) => {
+    const normalized = normalizeDomain(domain)
+    if (!normalized) return
+
+    setBlockSettings((prev) => {
+      const hard = new Set(prev.blocklistHard.map(normalizeDomain))
+      const soft = new Set(prev.blocklistSoft.map(normalizeDomain))
+      const target = mode === "hard" ? hard : soft
+      const other = mode === "hard" ? soft : hard
+      const shouldInclude = checked ?? !target.has(normalized)
+
+      target.delete(normalized)
+      other.delete(normalized)
+      if (shouldInclude) target.add(normalized)
+
+      return {
+        ...prev,
+        blocklistHard: Array.from(hard),
+        blocklistSoft: Array.from(soft),
+      }
+    })
+  }
+
+  const addBlockedDomain = () => {
+    const normalized = normalizeDomain(newDomain)
+    if (!normalized) return
+    toggleBlockedDomain(normalized, newDomainMode, true)
+    setNewDomain("")
+  }
+
+  const suggestedHard = uniqueDomains([
+    ...DEFAULT_HARD_BLOCK_DOMAINS,
+    ...blockSettings.blocklistHard,
+  ])
+  const suggestedSoft = uniqueDomains([
+    ...DEFAULT_SOFT_BLOCK_DOMAINS,
+    ...blockSettings.blocklistSoft,
+  ]).filter((domain) => !blockSettings.blocklistHard.includes(domain))
+  const blockedCount =
+    blockSettings.blocklistHard.length + blockSettings.blocklistSoft.length
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center"
@@ -197,7 +269,7 @@ function SprintSetupModal({
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative w-full max-w-md rounded-2xl border border-border bg-background shadow-2xl">
+      <div className="relative w-full max-w-3xl rounded-2xl border border-border bg-background shadow-2xl">
         {/* Header */}
         <div className="border-b border-border px-5 py-4">
           <div className="flex items-center justify-between">
@@ -218,11 +290,12 @@ function SprintSetupModal({
           </div>
         </div>
 
-        <div className="max-h-[60vh] space-y-5 overflow-y-auto px-5 py-4">
+        <div className="grid max-h-[68vh] gap-5 overflow-y-auto px-5 py-4 md:grid-cols-[minmax(0,1fr)_minmax(280px,0.9fr)]">
+          <div className="space-y-5">
           {/* Steps */}
           <div>
             <p className="mb-2 text-xs font-medium tracking-wider text-muted-foreground uppercase">
-              Steps to include
+              Tasks in this sprint
             </p>
             {steps.length === 0 ? (
               <p className="text-sm text-muted-foreground">
@@ -304,6 +377,172 @@ function SprintSetupModal({
               />
             </div>
           </div>
+          </div>
+
+          <div className="rounded-xl border border-border/70 bg-muted/20 p-3">
+            <div className="mb-3 flex items-start justify-between gap-3">
+              <div>
+                <p className="flex items-center gap-1.5 text-xs font-medium tracking-wider text-muted-foreground uppercase">
+                  <ShieldIcon className="size-3.5" />
+                  Websites blocked
+                </p>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                  These settings are saved and reused for future sprints.
+                </p>
+              </div>
+              <Badge variant="secondary" className="shrink-0">
+                {blockedCount}
+              </Badge>
+            </div>
+
+            <button
+              type="button"
+              onClick={() =>
+                setBlockSettings((prev) => ({
+                  ...prev,
+                  tabGuard: !prev.tabGuard,
+                }))
+              }
+              className="mb-3 flex w-full items-center justify-between rounded-lg border border-border bg-background px-3 py-2 text-left text-sm"
+            >
+              <span>
+                <span className="block font-medium">Tab guard</span>
+                <span className="text-xs text-muted-foreground">
+                  Remind me when I drift to a blocked page.
+                </span>
+              </span>
+              {blockSettings.tabGuard ? (
+                <CheckCircle2Icon className="size-4 text-primary" />
+              ) : (
+                <CircleIcon className="size-4 text-muted-foreground" />
+              )}
+            </button>
+
+            <div className="space-y-3">
+              <div>
+                <p className="mb-1.5 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+                  Hard block - redirect
+                </p>
+                <div className="space-y-1">
+                  {suggestedHard.map((domain) => {
+                    const checked = blockSettings.blocklistHard.includes(domain)
+                    return (
+                      <button
+                        key={domain}
+                        type="button"
+                        onClick={() => toggleBlockedDomain(domain, "hard")}
+                        className={`flex w-full items-center gap-2 rounded-lg border px-2.5 py-2 text-left text-xs transition-colors ${
+                          checked
+                            ? "border-amber-300 bg-amber-50 text-foreground dark:border-amber-900/60 dark:bg-amber-950/20"
+                            : "border-border bg-background hover:bg-muted/60"
+                        }`}
+                      >
+                        {checked ? (
+                          <CheckCircle2Icon className="size-3.5 shrink-0 text-amber-600" />
+                        ) : (
+                          <CircleIcon className="size-3.5 shrink-0 text-muted-foreground" />
+                        )}
+                        <span className="min-w-0 flex-1 truncate font-mono">
+                          {domain}
+                        </span>
+                        <span className="rounded-full bg-black px-1.5 py-0.5 text-[9px] font-bold text-amber-300">
+                          HARD
+                        </span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <p className="mb-1.5 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+                  Soft block - reminder
+                </p>
+                <div className="space-y-1">
+                  {suggestedSoft.map((domain) => {
+                    const checked = blockSettings.blocklistSoft.includes(domain)
+                    return (
+                      <button
+                        key={domain}
+                        type="button"
+                        onClick={() => toggleBlockedDomain(domain, "soft")}
+                        className={`flex w-full items-center gap-2 rounded-lg border px-2.5 py-2 text-left text-xs transition-colors ${
+                          checked
+                            ? "border-primary/40 bg-primary/5 text-foreground"
+                            : "border-border bg-background hover:bg-muted/60"
+                        }`}
+                      >
+                        {checked ? (
+                          <CheckCircle2Icon className="size-3.5 shrink-0 text-primary" />
+                        ) : (
+                          <CircleIcon className="size-3.5 shrink-0 text-muted-foreground" />
+                        )}
+                        <span className="min-w-0 flex-1 truncate font-mono">
+                          {domain}
+                        </span>
+                        <span className="rounded-full border border-border px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground">
+                          SOFT
+                        </span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-3 flex gap-2">
+              <div className="flex min-w-0 flex-1 items-center gap-2 rounded-lg border border-border bg-background px-2.5">
+                <GlobeIcon className="size-3.5 shrink-0 text-muted-foreground" />
+                <input
+                  value={newDomain}
+                  onChange={(event) => setNewDomain(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") addBlockedDomain()
+                  }}
+                  placeholder="e.g. twitter.com"
+                  className="h-9 min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-muted-foreground"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() =>
+                  setNewDomainMode((mode) =>
+                    mode === "hard" ? "soft" : "hard"
+                  )
+                }
+                className="rounded-lg border border-border px-2 text-[10px] font-bold uppercase"
+              >
+                {newDomainMode}
+              </button>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="px-2"
+                onClick={addBlockedDomain}
+              >
+                <PlusIcon className="size-3.5" />
+              </Button>
+            </div>
+
+            {(blockSettings.blocklistHard.length > 0 ||
+              blockSettings.blocklistSoft.length > 0) && (
+              <button
+                type="button"
+                onClick={() =>
+                  setBlockSettings((prev) => ({
+                    ...prev,
+                    blocklistHard: [],
+                    blocklistSoft: [],
+                  }))
+                }
+                className="mt-2 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+              >
+                <XIcon className="size-3" />
+                Clear blocked sites
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Footer */}
@@ -320,7 +559,13 @@ function SprintSetupModal({
             size="sm"
             className="flex-1"
             disabled={selectedSteps.length === 0 || loading}
-            onClick={() => onStart(selectedSteps, chosenDuration)}
+            onClick={() =>
+              onStart(selectedSteps, chosenDuration, {
+                blocklistHard: uniqueDomains(blockSettings.blocklistHard),
+                blocklistSoft: uniqueDomains(blockSettings.blocklistSoft),
+                tabGuard: blockSettings.tabGuard,
+              })
+            }
           >
             <PlayIcon className="size-3.5" />
             {loading ? "Starting…" : "Start Sprint"}
@@ -448,6 +693,11 @@ export default function FocusPage() {
 
   const [plans, setPlans] = React.useState<FocusPlan[]>([])
   const [sessions, setSessions] = React.useState<FocusSession[]>([])
+  const [blockSettings, setBlockSettings] = React.useState<FocusBlockSettings>({
+    blocklistHard: [],
+    blocklistSoft: [],
+    tabGuard: false,
+  })
   const [loading, setLoading] = React.useState(true)
   const [setupPlan, setSetupPlan] = React.useState<FocusPlan | null>(null)
   const [setupSteps, setSetupSteps] = React.useState<PlanStep[]>([])
@@ -463,9 +713,14 @@ export default function FocusPage() {
     let active = true
     setLoading(true)
 
-    Promise.all([fetchPlans(getToken), fetchFocusSessions(getToken)]).then(
-      async ([rawPlans, rawSessions]) => {
+    Promise.all([
+      fetchPlans(getToken),
+      fetchFocusSessions(getToken),
+      fetchFocusBlockSettings(getToken),
+    ]).then(
+      async ([rawPlans, rawSessions, loadedBlockSettings]) => {
         if (!active) return
+        setBlockSettings(loadedBlockSettings)
 
         const activeSession = rawSessions.find((s) => s.endedAt === null)
         if (activeSession) {
@@ -512,10 +767,17 @@ export default function FocusPage() {
   // Create session and navigate
   const handleConfirmSprint = async (
     selectedSteps: PlanStep[],
-    durationSeconds: number
+    durationSeconds: number,
+    nextBlockSettings: FocusBlockSettings
   ) => {
     if (!setupPlan) return
     setStarting(true)
+
+    const savedBlockSettings = await saveFocusBlockSettings(
+      nextBlockSettings,
+      getToken
+    )
+    setBlockSettings(savedBlockSettings ?? nextBlockSettings)
 
     const session = await startFocusSession(
       {
@@ -548,6 +810,9 @@ export default function FocusPage() {
         taskName: setupPlan.name,
         duration: durationSeconds,
         startTime: new Date(session.startedAt).getTime(),
+        blocklistHard: nextBlockSettings.blocklistHard,
+        blocklistSoft: nextBlockSettings.blocklistSoft,
+        tabGuard: nextBlockSettings.tabGuard,
         tasks: selectedSteps.map((s) => ({
           id: s.id,
           label: s.title,
@@ -839,6 +1104,7 @@ export default function FocusPage() {
           <SprintSetupModal
             plan={setupPlan}
             steps={setupSteps}
+            initialBlockSettings={blockSettings}
             onStart={handleConfirmSprint}
             onClose={() => setSetupPlan(null)}
             loading={starting}

@@ -7,20 +7,15 @@ import { RedirectToSignIn, Show } from "@clerk/nextjs"
 import { Button } from "@workspace/ui/components/button"
 import { useSidebar } from "@workspace/ui/components/sidebar"
 import {
+  ArrowDownToLineIcon,
+  ArrowUpToLineIcon,
   CheckCircle2Icon,
-  ChevronDownIcon,
   CircleIcon,
-  LightbulbIcon,
   PauseIcon,
   PlayIcon,
   SquareIcon,
   XCircleIcon,
 } from "lucide-react"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@workspace/ui/components/collapsible"
 import {
   fetchFocusSession,
   fetchPlanWithSteps,
@@ -42,6 +37,11 @@ import {
 } from "@/lib/focus/extension-bridge"
 import Aurora from "@/components/Aurora"
 import { TaskOvertimeModal } from "@/components/focus/TaskOvertimeModal"
+import {
+  hasStepGuidance,
+  STEP_GUIDANCE_CONTENT_CLASS,
+} from "@/lib/focus/step-guidance-panel"
+import { FocusCoachChat } from "@/components/focus/FocusCoachChat"
 
 // ─── Timer display ────────────────────────────────────────────────────────────
 
@@ -151,6 +151,24 @@ function computeStepDetails(
     }
   }
   return res
+}
+
+// Always-visible how-to for the current step, shown inside the "Now working
+// on" card so the tip is right there while focusing — no expand needed.
+function StepGuidance({ guidance }: { guidance: string | null | undefined }) {
+  if (!hasStepGuidance(guidance)) {
+    return null
+  }
+
+  return (
+    <div className="mt-3 border-t border-border/60 pt-3 text-left">
+      <p className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
+        <span aria-hidden="true">💡</span>
+        <span>Cách làm</span>
+      </p>
+      <p className={STEP_GUIDANCE_CONTENT_CLASS}>{guidance?.trim()}</p>
+    </div>
+  )
 }
 
 // ─── End Sprint Checklist Modal ──────────────────────────────────────────────
@@ -551,6 +569,19 @@ export default function SessionPage() {
   const [showEndSprintSummary, setShowEndSprintSummary] = React.useState(false)
   const [showSprintEndChecklist, setShowSprintEndChecklist] =
     React.useState(false)
+
+  // Steps live in their own scroll area so the page itself never scrolls. The
+  // jump-to-top/bottom buttons only appear when the list actually overflows.
+  const stepsScrollRef = React.useRef<HTMLDivElement>(null)
+  const [stepsOverflow, setStepsOverflow] = React.useState(false)
+  const scrollStepsTo = React.useCallback((position: "top" | "bottom") => {
+    const el = stepsScrollRef.current
+    if (!el) return
+    el.scrollTo({
+      top: position === "top" ? 0 : el.scrollHeight,
+      behavior: "smooth",
+    })
+  }, [])
 
   const [addedSeconds, setAddedSeconds] = React.useState<number>(() => {
     if (typeof window !== "undefined") {
@@ -1061,9 +1092,22 @@ export default function SessionPage() {
   const doneCount = completedIds.size
   const planName = plan?.name ?? session?.plan?.name ?? "Sprint"
 
+  // Track whether the steps list overflows its scroll area so the jump buttons
+  // only render when they're actually useful. Re-measures on step count changes
+  // and on any resize of the container.
+  React.useEffect(() => {
+    const el = stepsScrollRef.current
+    if (!el) return
+    const measure = () => setStepsOverflow(el.scrollHeight > el.clientHeight + 4)
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [steps.length, loading])
+
   if (loading) {
     return (
-      <main className="flex min-h-svh flex-col items-center justify-center bg-background">
+      <main className="flex h-full min-h-0 flex-col items-center justify-center bg-background">
         <div className="text-sm text-muted-foreground">Loading session…</div>
         <Show when="signed-out">
           <RedirectToSignIn />
@@ -1073,7 +1117,7 @@ export default function SessionPage() {
   }
 
   return (
-    <main className="relative flex min-h-svh flex-col overflow-hidden bg-background text-foreground">
+    <main className="relative flex h-full min-h-0 flex-col overflow-hidden bg-background text-foreground">
       <div className="pointer-events-none absolute inset-0 z-0 opacity-35">
         <Aurora
           colorStops={["#F97316", "#EAB308", "#F97316"]}
@@ -1087,8 +1131,10 @@ export default function SessionPage() {
         <RedirectToSignIn />
       </Show>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-lg flex-col items-center px-4 pt-12 pb-16">
-        {/* Plan name */}
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl flex-col gap-4 px-4 py-5 max-lg:overflow-y-auto">
+        {/* ── TOP: centered sprint header + timer + progress + controls ── */}
+        <div className="mx-auto flex w-full max-w-md shrink-0 flex-col items-center">
+          {/* Plan name */}
         <p className="mb-1 text-xs font-medium tracking-wider text-muted-foreground uppercase">
           Sprint
         </p>
@@ -1159,32 +1205,7 @@ export default function SessionPage() {
             </div>
           </div>
         </div>
-
-        {/* CSS Keyframes block */}
-        <style>{`
-          @keyframes run-light {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(300%); }
-          }
-          .animate-run-light {
-            animation: run-light 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-          }
-          @keyframes fly {
-            0% {
-              transform: translate(0, 0) scale(1);
-              opacity: 1;
-            }
-            100% {
-              transform: translate(var(--tx), var(--ty)) scale(0.2);
-              opacity: 0;
-            }
-          }
-          .animate-particle {
-            animation: fly 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-          }
-        `}</style>
-
-        {/* Task Progress Bar */}
+        {/* Task Progress Bar (centered, under the timer) */}
         {steps.length > 0 && (
           <div
             className={`relative mb-6 w-full overflow-hidden rounded-xl border px-4 py-3.5 shadow-sm transition-[border-color,background-color,box-shadow] duration-500 ${
@@ -1218,49 +1239,8 @@ export default function SessionPage() {
           </div>
         )}
 
-        {/* Current step */}
-        {currentStep && (
-          <div className="mb-6 w-full rounded-xl border border-border/70 bg-background/50 px-4 py-3 text-center shadow-sm backdrop-blur-md">
-            <p className="mb-0.5 text-xs text-muted-foreground">
-              Now working on
-            </p>
-            <p className="text-sm font-medium">{currentStep.title}</p>
-            {currentStep.estimatedMinutes > 0 && (
-              <p className="mt-0.5 text-xs text-muted-foreground">
-                ~{formatMinutes(currentStep.estimatedMinutes)}
-              </p>
-            )}
-            {(() => {
-              const allowedSec =
-                currentStep.estimatedMinutes * 60 +
-                (perTaskExtensions[currentStep.id]?.totalSeconds ?? 0)
-              const spent = stepDetails[currentStep.id]?.spentSeconds ?? 0
-              const taskOvertimeSeconds = Math.max(0, spent - allowedSec)
-              return taskOvertimeSeconds > 0 ? (
-                <p className="mt-0.5 font-mono text-xs font-semibold text-rose-500">
-                  +{fmt(taskOvertimeSeconds)} over
-                </p>
-              ) : null
-            })()}
-            {currentStep.guidance && (
-              <Collapsible className="mt-2 border-t border-border/60 pt-2 text-left">
-                <CollapsibleTrigger className="mx-auto flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground">
-                  <LightbulbIcon className="size-3.5" />
-                  <span>Cách làm</span>
-                  <ChevronDownIcon className="size-3 transition-transform [[data-state=open]_&]:rotate-180" />
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <p className="mt-2 text-xs leading-relaxed whitespace-pre-line text-muted-foreground">
-                    {currentStep.guidance}
-                  </p>
-                </CollapsibleContent>
-              </Collapsible>
-            )}
-          </div>
-        )}
-
         {/* Pause / Resume */}
-        <div className="mb-8 flex gap-3">
+        <div className="mb-6 flex gap-3">
           <Button
             variant="outline"
             size="sm"
@@ -1314,20 +1294,76 @@ export default function SessionPage() {
             </Button>
           )}
         </div>
+        </div>
 
-        {/* Step checklist */}
-        {steps.length > 0 && (
-          <section className="w-full">
-            <div className="mb-3 flex items-center justify-between">
+        {/* CSS Keyframes block */}
+        <style>{`
+          @keyframes run-light {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(300%); }
+          }
+          .animate-run-light {
+            animation: run-light 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+          }
+          @keyframes fly {
+            0% {
+              transform: translate(0, 0) scale(1);
+              opacity: 1;
+            }
+            100% {
+              transform: translate(var(--tx), var(--ty)) scale(0.2);
+              opacity: 0;
+            }
+          }
+          .animate-particle {
+            animation: fly 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+          }
+        `}</style>
+
+        {/* ── Columns: steps on the left, tip + coach on the right (equal top) ── */}
+        <div className="flex min-h-0 w-full flex-1 flex-col gap-5 lg:flex-row lg:gap-8">
+          {/* LEFT: steps only */}
+          <div className="flex w-full flex-col lg:min-h-0 lg:w-1/2">
+            {/* Step checklist — scrolls inside its own area so the page stays put */}
+            {steps.length > 0 && (
+              <section className="flex w-full flex-col">
+            <div className="mb-3 flex items-center justify-between gap-2">
               <h2 className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
                 Steps
               </h2>
-              <span className="text-xs text-muted-foreground">
-                {doneCount} / {steps.length}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">
+                  {doneCount} / {steps.length}
+                </span>
+                {stepsOverflow && (
+                  <div className="flex items-center gap-0.5">
+                    <button
+                      type="button"
+                      onClick={() => scrollStepsTo("top")}
+                      aria-label="Cuộn lên đầu danh sách steps"
+                      className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    >
+                      <ArrowUpToLineIcon className="size-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => scrollStepsTo("bottom")}
+                      aria-label="Cuộn xuống cuối danh sách steps"
+                      className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    >
+                      <ArrowDownToLineIcon className="size-3.5" />
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="divide-y divide-border/60 rounded-xl border border-border/70 bg-background/50 shadow-sm backdrop-blur-md">
+            <div
+              ref={stepsScrollRef}
+              className={`divide-y divide-border/60 rounded-xl border border-border/70 bg-background/50 shadow-sm backdrop-blur-md ${
+                steps.length >= 5 ? "max-h-[17rem] overflow-y-auto" : ""
+              }`}
+            >
               {steps.map((step) => {
                 const done = completedIds.has(step.id)
                 const isCurrent = step.id === currentStep?.id
@@ -1364,6 +1400,55 @@ export default function SessionPage() {
             </div>
           </section>
         )}
+        </div>
+
+        {/* ── RIGHT: current step, how-to guidance, coach (top-aligned) ── */}
+        <div className="flex w-full flex-col gap-4 lg:min-h-0 lg:w-1/2 lg:overflow-y-auto lg:pr-1">
+          {currentStep ? (
+            <>
+              {/* Now working on */}
+              <div className="w-full rounded-xl border border-border/70 bg-background/50 px-4 py-3 text-center shadow-sm backdrop-blur-md">
+                <p className="mb-0.5 text-xs text-muted-foreground">
+                  Now working on
+                </p>
+                <p className="text-sm font-medium">{currentStep.title}</p>
+                {currentStep.estimatedMinutes > 0 && (
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    ~{formatMinutes(currentStep.estimatedMinutes)}
+                  </p>
+                )}
+                {(() => {
+                  const allowedSec =
+                    currentStep.estimatedMinutes * 60 +
+                    (perTaskExtensions[currentStep.id]?.totalSeconds ?? 0)
+                  const spent = stepDetails[currentStep.id]?.spentSeconds ?? 0
+                  const taskOvertimeSeconds = Math.max(0, spent - allowedSec)
+                  return taskOvertimeSeconds > 0 ? (
+                    <p className="mt-0.5 font-mono text-xs font-semibold text-rose-500">
+                      +{fmt(taskOvertimeSeconds)} over
+                    </p>
+                  ) : null
+                })()}
+                <StepGuidance guidance={currentStep.guidance} />
+              </div>
+
+              {/* AI coach — guides only (refuses solutions), capped at 2 asks per step */}
+              <FocusCoachChat
+                stepId={currentStep.id}
+                stepTitle={currentStep.title}
+                guidance={currentStep.guidance}
+                planName={planName}
+              />
+            </>
+          ) : (
+            <div className="flex flex-1 items-center justify-center rounded-xl border border-dashed border-border/60 px-4 py-8 text-center text-xs text-muted-foreground">
+              {allDone
+                ? "Tất cả steps đã xong 🎉"
+                : "Chọn hoặc bắt đầu một step để xem gợi ý."}
+            </div>
+          )}
+        </div>
+        </div>
       </div>
 
       {/* End Sprint Summary modal */}

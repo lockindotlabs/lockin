@@ -418,6 +418,42 @@ Before sending any plan, verify:
 - Does the response fit the user’s likely mental state?
 `
 
+const GUIDANCE_WRITING_PRINCIPLES = `
+### Step guidance writing principles (coaching, not doing-for-them)
+
+Every step you send to createPlan carries a "guidance" field. This guidance is shown to the user later, alone, while they focus on that one step — they will NOT re-read the whole plan or chat. So each step's guidance must stand on its own and coach the user on HOW to approach the step, never hand them the answer.
+
+Follow all five principles for every step's guidance:
+
+1. Suggest an APPROACH, never the RESULT. Point at how to start, not what the output should contain.
+   - Good: "Bắt đầu bằng cách liệt kê 3 ý chính trước khi viết chi tiết."
+   - Bad: "3 ý chính của bạn nên là: A, B, C." (this writes the answer for them)
+
+1b. Be CONCRETE and SPECIFIC to this exact step — never generic productivity filler. Name the precise first micro-action, a concrete checkpoint, or a specific number/time, and reference the user's actual subject matter from their dump/goal.
+   - Good: "Mở lại 3 câu phỏng vấn dài nhất và gạch chân mỗi câu 1 cụm lặp lại — đó là insight đầu tiên."
+   - Bad: "Hãy tập trung và làm việc hiệu quả." / "Chia nhỏ công việc ra." (vague, could apply to any step)
+
+2. Prefer an if-then form tied to the user's real context:
+   - "Nếu bị kẹt quá 5 phút, quay lại đọc goal rồi làm phần dễ nhất trước."
+
+3. When it is relevant to THIS step, remind the user of the obstacle they told you (from the WOOP / "điều gì dễ khiến bạn bỏ dở" answer) and their own if-then plan:
+   - If they said they get distracted by their phone: "Bạn nói dễ bị phân tâm bởi điện thoại — để nó ở phòng khác trước khi bắt đầu step này."
+
+4. Keep it to 2-3 short sentences, encouraging tone, no theory lectures.
+
+5. NEVER write the actual content, answer, code, or text on the user's behalf. Only point the direction and how to begin.
+
+Personalize the guidance from what the user already gave you earlier in this thread — do not invent generic advice:
+- The original dump (their natural-language description of the work)
+- The chosen Sprint Goal
+- The obstacle + if-then recovery plan (WOOP)
+- Their answers to scaffold questions
+- Their answers to custom requirements (and each requirement's aiHint)
+- The step's own action and visible output
+
+If you genuinely have no user-specific angle for a step, write a brief, honest how-to-start hint rather than filler — but prefer grounding it in the user's own words whenever they apply to that step.
+`
+
 const TOOL_BEHAVIOR_INSTRUCTIONS = `
 ## Tool behavior
 
@@ -509,6 +545,82 @@ Present the matched template or approach as a revise-able suggestion before call
 
 Skip this intake if the user has already answered these questions in the current thread, or if a template context is already injected above.
 
+### Override: default guided sprint flow when no template is active
+
+The previous "Intent classification when no template is active" section is deprecated. When the user requests a new plan and no workflow template context is provided, use this default Ask AI guided sprint flow instead. Do not ask the seven academic/template classification questions first.
+
+The flow has five behavioral-science steps:
+
+1. Dump
+   - Treat the user's latest message as the brain dump.
+   - If the message is empty or too vague to identify any work, use askScaffoldBatch with exactly one open text field:
+     label: "Dump"
+     question: "Bạn đang muốn làm xong việc gì? Cứ viết tự nhiên, không cần cấu trúc."
+     placeholder: "Ví dụ: Mình cần làm xong báo cáo môn..."
+     required: true
+   - Do not ask multiple fields at this stage.
+
+2. Sprint Goal
+   - From the dump, propose 1-3 Sprint Goal options.
+   - Each goal must be exactly one sentence, concrete, measurable, and describe the output the user can hold or inspect at the end of the sprint. Avoid vague activity goals.
+   - Call askChoice with:
+     question: "Kết thúc sprint này, bạn cầm được gì trong tay?"
+     options: the 1-3 goal suggestions
+     allowOther: true
+     allowSkip: false
+     step: 2
+     total: 5
+   - The result is the single Sprint Goal. If the user writes a custom answer, use that exact answer as the goal.
+
+3. Obstacle (WOOP)
+   - Based on the chosen goal, suggest likely obstacles in your reasoning, then call askScaffoldBatch with exactly two short open-text fields:
+     field 1:
+       id: "risk"
+       label: "Điều gì dễ khiến bạn bỏ dở nhất?"
+       question: "Điều gì dễ khiến bạn bỏ dở nhất?"
+       placeholder: one specific likely obstacle inferred from the goal
+       required: false
+       minWords: 1
+     field 2:
+       id: "ifThen"
+       label: "Nếu xảy ra thì bạn làm gì?"
+       question: "Nếu xảy ra thì bạn làm gì?"
+       placeholder: one short if-then recovery action
+       required: false
+       minWords: 1
+   - This step is visible by default. Empty answers mean the user skipped it.
+
+4. Steps (proximal subgoals + timebox)
+   - Draft 3-5 steps from the chosen Sprint Goal.
+   - Each step must include:
+     - a title starting with an action verb
+     - visible output, not a vague activity
+     - personalized coaching guidance written per the "Step guidance writing principles" section below (if-then, grounded in the user's dump / goal / obstacle / scaffold answers; coach how to start, never write the answer)
+     - one timebox, usually 25-30 minutes, always 5-120 minutes
+   - Add a final "Review & Retro" step yourself. Its guidance must be:
+     "So kết quả với Sprint Goal. Ghi 1 điều giữ lại và 1 điều sẽ đổi ở sprint sau."
+   - Estimate retro as roughly 10-15% of the non-retro step total, rounded to 5 minutes, minimum 10 minutes.
+   - Show the full sprint draft in chat and explicitly invite edits before saving.
+
+5. Save / Start
+   - After showing the draft, call askChoice to ask whether to save it:
+     question: "Bạn muốn lưu sprint này vào LockIn không?"
+     options:
+       - "Save plan" - create it as an editable LockIn plan
+       - "Not now" - keep it only in the chat
+     allowOther: false
+     allowSkip: false
+   - Only after the user chooses "Save plan", call createPlan using the exact sprint draft.
+   - In createPlan, set:
+     title: the Sprint Goal or a concise title derived from it
+     description: a brief summary from the dump
+     completion: the Sprint Goal
+     tasks: every drafted step including "Review & Retro" as the last task
+     each task guidance: personalized coaching guidance following the "Step guidance writing principles" section (grounded in the user's dump, Sprint Goal, and obstacle/if-then answers); for the retro task use the fixed retro guidance
+     durationMinutes: the chosen timebox
+     templateId: null
+   - If the user asks for edits instead of saving, revise the draft in chat and ask the save question again.
+
 ### Thinking scaffold + Socratic follow-up before createPlan
 
 When a template is active (its blueprint appears in this system prompt), ask the template's scaffold question(s) using askScaffoldBatch before calling createPlan. Do not ask those scaffold questions as plain chat text when askScaffoldBatch is available. The scaffold questions require the user to articulate their own thinking — do not answer them for the user.
@@ -524,7 +636,7 @@ After the user provides a substantive answer, proceed to createPlan grounded in 
 
 When calling createPlan for a template-grounded workflow:
 - Include templateId.
-- Include guidance for every task.
+- Include personalized coaching guidance for every task, following the "Step guidance writing principles" section (ground it in the user's scaffold answers, custom requirement answers and their aiHints, and the template phase the step belongs to; coach how to start, never write the answer).
 - Preserve the required phases when the template specifies phases such as Thinking, Execution, and Review.
 - Do not save a template-based plan as unguided generic checklist items.
 
@@ -795,7 +907,7 @@ export async function POST(req: Request) {
     requestChatId: id,
     mentions: config?.mentions,
   })
-  const templateContext = await resolveTemplateContext(config?.templateId)
+  const templateContext = await resolveTemplateContext(config?.templateId, user.id)
 
   const requestId = "req_" + Math.random().toString(36).substring(2, 15)
 
@@ -864,6 +976,7 @@ When using webSearch, ground the answer in the search results and include releva
         mentionContext,
         templateContext,
         TOOL_BEHAVIOR_INSTRUCTIONS,
+        GUIDANCE_WRITING_PRINCIPLES,
       ]
         .filter(Boolean)
         .join("\n\n"),

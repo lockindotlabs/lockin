@@ -3,6 +3,7 @@ import {
   BarChart3Icon,
   CreditCardIcon,
   HomeIcon,
+  Layers3Icon,
   Settings2Icon,
   UsersIcon,
   type LucideIcon,
@@ -101,6 +102,12 @@ export const adminNavItems: AdminNavItem[] = [
     title: "Billing",
     url: "/app/admin/billing",
     icon: CreditCardIcon,
+    match: "prefix",
+  },
+  {
+    title: "Templates",
+    url: "/app/admin/templates",
+    icon: Layers3Icon,
     match: "prefix",
   },
   {

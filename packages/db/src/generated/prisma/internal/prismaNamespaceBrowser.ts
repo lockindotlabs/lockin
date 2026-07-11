@@ -164,6 +164,17 @@ export const WorkflowTemplateScalarFieldEnum = {
   outputType: 'outputType',
   supportsGroupMode: 'supportsGroupMode',
   description: 'description',
+  goalTemplate: 'goalTemplate',
+  customRequirements: 'customRequirements',
+  authorId: 'authorId',
+  authorName: 'authorName',
+  status: 'status',
+  installCount: 'installCount',
+  priceVnd: 'priceVnd',
+  rejectionReason: 'rejectionReason',
+  publishedAt: 'publishedAt',
+  submittedAt: 'submittedAt',
+  sourcePlanId: 'sourcePlanId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -188,7 +199,8 @@ export const WorkflowScaffoldQuestionScalarFieldEnum = {
   templateId: 'templateId',
   order: 'order',
   prompt: 'prompt',
-  helperText: 'helperText'
+  helperText: 'helperText',
+  aiPurpose: 'aiPurpose'
 } as const
 
 export type WorkflowScaffoldQuestionScalarFieldEnum = (typeof WorkflowScaffoldQuestionScalarFieldEnum)[keyof typeof WorkflowScaffoldQuestionScalarFieldEnum]

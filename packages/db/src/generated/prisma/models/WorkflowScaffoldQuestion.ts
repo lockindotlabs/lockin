@@ -40,6 +40,7 @@ export type WorkflowScaffoldQuestionMinAggregateOutputType = {
   order: number | null
   prompt: string | null
   helperText: string | null
+  aiPurpose: $Enums.ScaffoldQuestionPurpose | null
 }
 
 export type WorkflowScaffoldQuestionMaxAggregateOutputType = {
@@ -48,6 +49,7 @@ export type WorkflowScaffoldQuestionMaxAggregateOutputType = {
   order: number | null
   prompt: string | null
   helperText: string | null
+  aiPurpose: $Enums.ScaffoldQuestionPurpose | null
 }
 
 export type WorkflowScaffoldQuestionCountAggregateOutputType = {
@@ -56,6 +58,7 @@ export type WorkflowScaffoldQuestionCountAggregateOutputType = {
   order: number
   prompt: number
   helperText: number
+  aiPurpose: number
   _all: number
 }
 
@@ -74,6 +77,7 @@ export type WorkflowScaffoldQuestionMinAggregateInputType = {
   order?: true
   prompt?: true
   helperText?: true
+  aiPurpose?: true
 }
 
 export type WorkflowScaffoldQuestionMaxAggregateInputType = {
@@ -82,6 +86,7 @@ export type WorkflowScaffoldQuestionMaxAggregateInputType = {
   order?: true
   prompt?: true
   helperText?: true
+  aiPurpose?: true
 }
 
 export type WorkflowScaffoldQuestionCountAggregateInputType = {
@@ -90,6 +95,7 @@ export type WorkflowScaffoldQuestionCountAggregateInputType = {
   order?: true
   prompt?: true
   helperText?: true
+  aiPurpose?: true
   _all?: true
 }
 
@@ -185,6 +191,7 @@ export type WorkflowScaffoldQuestionGroupByOutputType = {
   order: number
   prompt: string
   helperText: string | null
+  aiPurpose: $Enums.ScaffoldQuestionPurpose
   _count: WorkflowScaffoldQuestionCountAggregateOutputType | null
   _avg: WorkflowScaffoldQuestionAvgAggregateOutputType | null
   _sum: WorkflowScaffoldQuestionSumAggregateOutputType | null
@@ -216,6 +223,7 @@ export type WorkflowScaffoldQuestionWhereInput = {
   order?: Prisma.IntFilter<"WorkflowScaffoldQuestion"> | number
   prompt?: Prisma.StringFilter<"WorkflowScaffoldQuestion"> | string
   helperText?: Prisma.StringNullableFilter<"WorkflowScaffoldQuestion"> | string | null
+  aiPurpose?: Prisma.EnumScaffoldQuestionPurposeFilter<"WorkflowScaffoldQuestion"> | $Enums.ScaffoldQuestionPurpose
   template?: Prisma.XOR<Prisma.WorkflowTemplateScalarRelationFilter, Prisma.WorkflowTemplateWhereInput>
 }
 
@@ -225,6 +233,7 @@ export type WorkflowScaffoldQuestionOrderByWithRelationInput = {
   order?: Prisma.SortOrder
   prompt?: Prisma.SortOrder
   helperText?: Prisma.SortOrderInput | Prisma.SortOrder
+  aiPurpose?: Prisma.SortOrder
   template?: Prisma.WorkflowTemplateOrderByWithRelationInput
 }
 
@@ -237,6 +246,7 @@ export type WorkflowScaffoldQuestionWhereUniqueInput = Prisma.AtLeast<{
   order?: Prisma.IntFilter<"WorkflowScaffoldQuestion"> | number
   prompt?: Prisma.StringFilter<"WorkflowScaffoldQuestion"> | string
   helperText?: Prisma.StringNullableFilter<"WorkflowScaffoldQuestion"> | string | null
+  aiPurpose?: Prisma.EnumScaffoldQuestionPurposeFilter<"WorkflowScaffoldQuestion"> | $Enums.ScaffoldQuestionPurpose
   template?: Prisma.XOR<Prisma.WorkflowTemplateScalarRelationFilter, Prisma.WorkflowTemplateWhereInput>
 }, "id">
 
@@ -246,6 +256,7 @@ export type WorkflowScaffoldQuestionOrderByWithAggregationInput = {
   order?: Prisma.SortOrder
   prompt?: Prisma.SortOrder
   helperText?: Prisma.SortOrderInput | Prisma.SortOrder
+  aiPurpose?: Prisma.SortOrder
   _count?: Prisma.WorkflowScaffoldQuestionCountOrderByAggregateInput
   _avg?: Prisma.WorkflowScaffoldQuestionAvgOrderByAggregateInput
   _max?: Prisma.WorkflowScaffoldQuestionMaxOrderByAggregateInput
@@ -262,6 +273,7 @@ export type WorkflowScaffoldQuestionScalarWhereWithAggregatesInput = {
   order?: Prisma.IntWithAggregatesFilter<"WorkflowScaffoldQuestion"> | number
   prompt?: Prisma.StringWithAggregatesFilter<"WorkflowScaffoldQuestion"> | string
   helperText?: Prisma.StringNullableWithAggregatesFilter<"WorkflowScaffoldQuestion"> | string | null
+  aiPurpose?: Prisma.EnumScaffoldQuestionPurposeWithAggregatesFilter<"WorkflowScaffoldQuestion"> | $Enums.ScaffoldQuestionPurpose
 }
 
 export type WorkflowScaffoldQuestionCreateInput = {
@@ -269,6 +281,7 @@ export type WorkflowScaffoldQuestionCreateInput = {
   order: number
   prompt: string
   helperText?: string | null
+  aiPurpose?: $Enums.ScaffoldQuestionPurpose
   template: Prisma.WorkflowTemplateCreateNestedOneWithoutScaffoldQuestionsInput
 }
 
@@ -278,6 +291,7 @@ export type WorkflowScaffoldQuestionUncheckedCreateInput = {
   order: number
   prompt: string
   helperText?: string | null
+  aiPurpose?: $Enums.ScaffoldQuestionPurpose
 }
 
 export type WorkflowScaffoldQuestionUpdateInput = {
@@ -285,6 +299,7 @@ export type WorkflowScaffoldQuestionUpdateInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   helperText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiPurpose?: Prisma.EnumScaffoldQuestionPurposeFieldUpdateOperationsInput | $Enums.ScaffoldQuestionPurpose
   template?: Prisma.WorkflowTemplateUpdateOneRequiredWithoutScaffoldQuestionsNestedInput
 }
 
@@ -294,6 +309,7 @@ export type WorkflowScaffoldQuestionUncheckedUpdateInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   helperText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiPurpose?: Prisma.EnumScaffoldQuestionPurposeFieldUpdateOperationsInput | $Enums.ScaffoldQuestionPurpose
 }
 
 export type WorkflowScaffoldQuestionCreateManyInput = {
@@ -302,6 +318,7 @@ export type WorkflowScaffoldQuestionCreateManyInput = {
   order: number
   prompt: string
   helperText?: string | null
+  aiPurpose?: $Enums.ScaffoldQuestionPurpose
 }
 
 export type WorkflowScaffoldQuestionUpdateManyMutationInput = {
@@ -309,6 +326,7 @@ export type WorkflowScaffoldQuestionUpdateManyMutationInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   helperText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiPurpose?: Prisma.EnumScaffoldQuestionPurposeFieldUpdateOperationsInput | $Enums.ScaffoldQuestionPurpose
 }
 
 export type WorkflowScaffoldQuestionUncheckedUpdateManyInput = {
@@ -317,6 +335,7 @@ export type WorkflowScaffoldQuestionUncheckedUpdateManyInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   helperText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiPurpose?: Prisma.EnumScaffoldQuestionPurposeFieldUpdateOperationsInput | $Enums.ScaffoldQuestionPurpose
 }
 
 export type WorkflowScaffoldQuestionListRelationFilter = {
@@ -335,6 +354,7 @@ export type WorkflowScaffoldQuestionCountOrderByAggregateInput = {
   order?: Prisma.SortOrder
   prompt?: Prisma.SortOrder
   helperText?: Prisma.SortOrder
+  aiPurpose?: Prisma.SortOrder
 }
 
 export type WorkflowScaffoldQuestionAvgOrderByAggregateInput = {
@@ -347,6 +367,7 @@ export type WorkflowScaffoldQuestionMaxOrderByAggregateInput = {
   order?: Prisma.SortOrder
   prompt?: Prisma.SortOrder
   helperText?: Prisma.SortOrder
+  aiPurpose?: Prisma.SortOrder
 }
 
 export type WorkflowScaffoldQuestionMinOrderByAggregateInput = {
@@ -355,6 +376,7 @@ export type WorkflowScaffoldQuestionMinOrderByAggregateInput = {
   order?: Prisma.SortOrder
   prompt?: Prisma.SortOrder
   helperText?: Prisma.SortOrder
+  aiPurpose?: Prisma.SortOrder
 }
 
 export type WorkflowScaffoldQuestionSumOrderByAggregateInput = {
@@ -403,11 +425,16 @@ export type WorkflowScaffoldQuestionUncheckedUpdateManyWithoutTemplateNestedInpu
   deleteMany?: Prisma.WorkflowScaffoldQuestionScalarWhereInput | Prisma.WorkflowScaffoldQuestionScalarWhereInput[]
 }
 
+export type EnumScaffoldQuestionPurposeFieldUpdateOperationsInput = {
+  set?: $Enums.ScaffoldQuestionPurpose
+}
+
 export type WorkflowScaffoldQuestionCreateWithoutTemplateInput = {
   id?: string
   order: number
   prompt: string
   helperText?: string | null
+  aiPurpose?: $Enums.ScaffoldQuestionPurpose
 }
 
 export type WorkflowScaffoldQuestionUncheckedCreateWithoutTemplateInput = {
@@ -415,6 +442,7 @@ export type WorkflowScaffoldQuestionUncheckedCreateWithoutTemplateInput = {
   order: number
   prompt: string
   helperText?: string | null
+  aiPurpose?: $Enums.ScaffoldQuestionPurpose
 }
 
 export type WorkflowScaffoldQuestionCreateOrConnectWithoutTemplateInput = {
@@ -452,6 +480,7 @@ export type WorkflowScaffoldQuestionScalarWhereInput = {
   order?: Prisma.IntFilter<"WorkflowScaffoldQuestion"> | number
   prompt?: Prisma.StringFilter<"WorkflowScaffoldQuestion"> | string
   helperText?: Prisma.StringNullableFilter<"WorkflowScaffoldQuestion"> | string | null
+  aiPurpose?: Prisma.EnumScaffoldQuestionPurposeFilter<"WorkflowScaffoldQuestion"> | $Enums.ScaffoldQuestionPurpose
 }
 
 export type WorkflowScaffoldQuestionCreateManyTemplateInput = {
@@ -459,6 +488,7 @@ export type WorkflowScaffoldQuestionCreateManyTemplateInput = {
   order: number
   prompt: string
   helperText?: string | null
+  aiPurpose?: $Enums.ScaffoldQuestionPurpose
 }
 
 export type WorkflowScaffoldQuestionUpdateWithoutTemplateInput = {
@@ -466,6 +496,7 @@ export type WorkflowScaffoldQuestionUpdateWithoutTemplateInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   helperText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiPurpose?: Prisma.EnumScaffoldQuestionPurposeFieldUpdateOperationsInput | $Enums.ScaffoldQuestionPurpose
 }
 
 export type WorkflowScaffoldQuestionUncheckedUpdateWithoutTemplateInput = {
@@ -473,6 +504,7 @@ export type WorkflowScaffoldQuestionUncheckedUpdateWithoutTemplateInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   helperText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiPurpose?: Prisma.EnumScaffoldQuestionPurposeFieldUpdateOperationsInput | $Enums.ScaffoldQuestionPurpose
 }
 
 export type WorkflowScaffoldQuestionUncheckedUpdateManyWithoutTemplateInput = {
@@ -480,6 +512,7 @@ export type WorkflowScaffoldQuestionUncheckedUpdateManyWithoutTemplateInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   helperText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiPurpose?: Prisma.EnumScaffoldQuestionPurposeFieldUpdateOperationsInput | $Enums.ScaffoldQuestionPurpose
 }
 
 
@@ -490,6 +523,7 @@ export type WorkflowScaffoldQuestionSelect<ExtArgs extends runtime.Types.Extensi
   order?: boolean
   prompt?: boolean
   helperText?: boolean
+  aiPurpose?: boolean
   template?: boolean | Prisma.WorkflowTemplateDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workflowScaffoldQuestion"]>
 
@@ -499,6 +533,7 @@ export type WorkflowScaffoldQuestionSelectCreateManyAndReturn<ExtArgs extends ru
   order?: boolean
   prompt?: boolean
   helperText?: boolean
+  aiPurpose?: boolean
   template?: boolean | Prisma.WorkflowTemplateDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workflowScaffoldQuestion"]>
 
@@ -508,6 +543,7 @@ export type WorkflowScaffoldQuestionSelectUpdateManyAndReturn<ExtArgs extends ru
   order?: boolean
   prompt?: boolean
   helperText?: boolean
+  aiPurpose?: boolean
   template?: boolean | Prisma.WorkflowTemplateDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["workflowScaffoldQuestion"]>
 
@@ -517,9 +553,10 @@ export type WorkflowScaffoldQuestionSelectScalar = {
   order?: boolean
   prompt?: boolean
   helperText?: boolean
+  aiPurpose?: boolean
 }
 
-export type WorkflowScaffoldQuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "templateId" | "order" | "prompt" | "helperText", ExtArgs["result"]["workflowScaffoldQuestion"]>
+export type WorkflowScaffoldQuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "templateId" | "order" | "prompt" | "helperText" | "aiPurpose", ExtArgs["result"]["workflowScaffoldQuestion"]>
 export type WorkflowScaffoldQuestionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   template?: boolean | Prisma.WorkflowTemplateDefaultArgs<ExtArgs>
 }
@@ -541,6 +578,7 @@ export type $WorkflowScaffoldQuestionPayload<ExtArgs extends runtime.Types.Exten
     order: number
     prompt: string
     helperText: string | null
+    aiPurpose: $Enums.ScaffoldQuestionPurpose
   }, ExtArgs["result"]["workflowScaffoldQuestion"]>
   composites: {}
 }
@@ -970,6 +1008,7 @@ export interface WorkflowScaffoldQuestionFieldRefs {
   readonly order: Prisma.FieldRef<"WorkflowScaffoldQuestion", 'Int'>
   readonly prompt: Prisma.FieldRef<"WorkflowScaffoldQuestion", 'String'>
   readonly helperText: Prisma.FieldRef<"WorkflowScaffoldQuestion", 'String'>
+  readonly aiPurpose: Prisma.FieldRef<"WorkflowScaffoldQuestion", 'ScaffoldQuestionPurpose'>
 }
     
 

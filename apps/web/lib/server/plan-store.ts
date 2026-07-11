@@ -119,7 +119,11 @@ export function serializePlanSummary(plan: {
   id: string
   name: string
   updatedAt: Date
-  steps: { id: string; status: "TODO" | "IN_PROGRESS" | "DONE" | "CANCELLED"; dueDate: Date | null }[]
+  steps: {
+    id: string
+    status: "TODO" | "IN_PROGRESS" | "DONE" | "CANCELLED"
+    dueDate: Date | null
+  }[]
 }) {
   return {
     id: plan.id,
@@ -192,10 +196,18 @@ export async function upsertOwnedPlan(userId: string, input: PlanInput) {
           ...(input.breakdownIntensity
             ? { breakdownIntensity: input.breakdownIntensity }
             : {}),
-          ...(input.templateId !== undefined ? { templateId: input.templateId } : {}),
-          ...(input.rubricNotes !== undefined ? { rubricNotes: input.rubricNotes } : {}),
-          ...(input.draftReference !== undefined ? { draftReference: input.draftReference } : {}),
-          ...(input.experienceLevel !== undefined ? { experienceLevel: input.experienceLevel } : {}),
+          ...(input.templateId !== undefined
+            ? { templateId: input.templateId }
+            : {}),
+          ...(input.rubricNotes !== undefined
+            ? { rubricNotes: input.rubricNotes }
+            : {}),
+          ...(input.draftReference !== undefined
+            ? { draftReference: input.draftReference }
+            : {}),
+          ...(input.experienceLevel !== undefined
+            ? { experienceLevel: input.experienceLevel }
+            : {}),
           deletedAt: null,
         },
         create: {
@@ -225,7 +237,9 @@ export async function upsertOwnedPlan(userId: string, input: PlanInput) {
         where: { planId: plan.id },
         select: { id: true, completionNote: true },
       })
-      const noteById = new Map(existingNotes.map((s) => [s.id, s.completionNote]))
+      const noteById = new Map(
+        existingNotes.map((s) => [s.id, s.completionNote])
+      )
 
       await tx.planStep.deleteMany({ where: { planId: plan.id } })
 
@@ -240,7 +254,8 @@ export async function upsertOwnedPlan(userId: string, input: PlanInput) {
           data: orderedForInsert.map((step) => ({
             ...step,
             planId: plan.id,
-            guidance: (input.tasks.find((t) => t.id === step.id)?.guidance) ?? null,
+            guidance:
+              input.tasks.find((t) => t.id === step.id)?.guidance ?? null,
             completionNote: noteById.get(step.id) ?? null,
           })),
           skipDuplicates: true,

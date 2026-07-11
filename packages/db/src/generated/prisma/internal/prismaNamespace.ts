@@ -1647,6 +1647,17 @@ export const WorkflowTemplateScalarFieldEnum = {
   outputType: 'outputType',
   supportsGroupMode: 'supportsGroupMode',
   description: 'description',
+  goalTemplate: 'goalTemplate',
+  customRequirements: 'customRequirements',
+  authorId: 'authorId',
+  authorName: 'authorName',
+  status: 'status',
+  installCount: 'installCount',
+  priceVnd: 'priceVnd',
+  rejectionReason: 'rejectionReason',
+  publishedAt: 'publishedAt',
+  submittedAt: 'submittedAt',
+  sourcePlanId: 'sourcePlanId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1671,7 +1682,8 @@ export const WorkflowScaffoldQuestionScalarFieldEnum = {
   templateId: 'templateId',
   order: 'order',
   prompt: 'prompt',
-  helperText: 'helperText'
+  helperText: 'helperText',
+  aiPurpose: 'aiPurpose'
 } as const
 
 export type WorkflowScaffoldQuestionScalarFieldEnum = (typeof WorkflowScaffoldQuestionScalarFieldEnum)[keyof typeof WorkflowScaffoldQuestionScalarFieldEnum]
@@ -1875,28 +1887,28 @@ export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof Json
  * Reference to a field of type 'String'
  */
 export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
-    
+
 
 
 /**
  * Reference to a field of type 'String[]'
  */
 export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
-    
+
 
 
 /**
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
+
 
 
 /**
  * Reference to a field of type 'BillingTier'
  */
 export type EnumBillingTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BillingTier'>
-    
+
 
 
 /**
@@ -1974,6 +1986,34 @@ export type EnumWorkflowOutputTypeFieldRefInput<$PrismaModel> = FieldRefInputTyp
  */
 export type ListEnumWorkflowOutputTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkflowOutputType[]'>
     
+
+
+/**
+ * Reference to a field of type 'TemplateStatus'
+ */
+export type EnumTemplateStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TemplateStatus'>
+
+
+
+/**
+ * Reference to a field of type 'TemplateStatus[]'
+ */
+export type ListEnumTemplateStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TemplateStatus[]'>
+
+
+
+/**
+ * Reference to a field of type 'ScaffoldQuestionPurpose'
+ */
+export type EnumScaffoldQuestionPurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScaffoldQuestionPurpose'>
+
+
+
+/**
+ * Reference to a field of type 'ScaffoldQuestionPurpose[]'
+ */
+export type ListEnumScaffoldQuestionPurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScaffoldQuestionPurpose[]'>
+
 
 
 /**
@@ -2344,4 +2384,3 @@ export type PrismaAction =
  * `PrismaClient` proxy available in interactive transactions.
  */
 export type TransactionClient = Omit<DefaultPrismaClient, runtime.ITXClientDenyList>
-

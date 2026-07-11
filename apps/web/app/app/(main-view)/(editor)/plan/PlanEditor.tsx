@@ -51,6 +51,7 @@ import {
 import { HeaderLeft, HeaderRight } from "@/components/header-context"
 import { cn } from "@/lib/utils"
 import { Asterisk01 } from "@untitledui/icons"
+import { PublishPlanAsTemplateDialog } from "@/components/templates/PublishPlanAsTemplateDialog"
 
 type PlanEditorProps = {
   planId: string
@@ -181,7 +182,10 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
   const { toggleSidebarRight, openRight } = useSidebar()
   const { state } = useSidebar()
   const [persisted, setPersisted] = React.useState<EditorTask[]>([])
-  const [completionGate, setCompletionGate] = React.useState<{ index: number; stepId: string } | null>(null)
+  const [completionGate, setCompletionGate] = React.useState<{
+    index: number
+    stepId: string
+  } | null>(null)
   const [reflectionNote, setReflectionNote] = React.useState("")
   const [persistedPlan, setPersistedPlan] =
     React.useState<EditorPlan>(createEmptyPlan)
@@ -400,9 +404,7 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
       const target = p[index]
       if (!target) return p
       // Deleting a parent also removes its subtasks
-      return p.filter(
-        (item, i) => i !== index && item.parentId !== target.id
-      )
+      return p.filter((item, i) => i !== index && item.parentId !== target.id)
     })
     markChanged()
   }
@@ -561,6 +563,7 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
           copyUrl={`/app/plan?id=${encodeURIComponent(planId)}`}
           onDelete={handleDeletePlan}
         />
+        <PublishPlanAsTemplateDialog planId={planId} />
       </HeaderRight>
 
       <ScrollArea
@@ -636,7 +639,12 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
         </Button>
       </ScrollArea>
 
-      <Dialog open={!!completionGate} onOpenChange={(open) => { if (!open) setCompletionGate(null) }}>
+      <Dialog
+        open={!!completionGate}
+        onOpenChange={(open) => {
+          if (!open) setCompletionGate(null)
+        }}
+      >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Bước này bạn đã làm được gì?</DialogTitle>
@@ -655,9 +663,7 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
             >
               Bỏ qua
             </Button>
-            <Button
-              onClick={() => void handleReflectionSubmit(reflectionNote)}
-            >
+            <Button onClick={() => void handleReflectionSubmit(reflectionNote)}>
               Xác nhận hoàn thành
             </Button>
           </DialogFooter>

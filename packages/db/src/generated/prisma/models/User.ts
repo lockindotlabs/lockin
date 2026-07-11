@@ -201,6 +201,7 @@ export type UserWhereInput = {
   paymentOrders?: Prisma.PaymentOrderListRelationFilter
   Sprint?: Prisma.SprintListRelationFilter
   aiUsages?: Prisma.AiUsageListRelationFilter
+  authoredTemplates?: Prisma.WorkflowTemplateListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -221,6 +222,7 @@ export type UserOrderByWithRelationInput = {
   paymentOrders?: Prisma.PaymentOrderOrderByRelationAggregateInput
   Sprint?: Prisma.SprintOrderByRelationAggregateInput
   aiUsages?: Prisma.AiUsageOrderByRelationAggregateInput
+  authoredTemplates?: Prisma.WorkflowTemplateOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -244,6 +246,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   paymentOrders?: Prisma.PaymentOrderListRelationFilter
   Sprint?: Prisma.SprintListRelationFilter
   aiUsages?: Prisma.AiUsageListRelationFilter
+  authoredTemplates?: Prisma.WorkflowTemplateListRelationFilter
 }, "id">
 
 export type UserOrderByWithAggregationInput = {
@@ -288,6 +291,7 @@ export type UserCreateInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -308,6 +312,7 @@ export type UserUncheckedCreateInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUpdateInput = {
@@ -328,6 +333,7 @@ export type UserUpdateInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -348,6 +354,7 @@ export type UserUncheckedUpdateInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -407,6 +414,11 @@ export type UserMinOrderByAggregateInput = {
 export type UserScalarRelationFilter = {
   is?: Prisma.UserWhereInput
   isNot?: Prisma.UserWhereInput
+}
+
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -483,6 +495,22 @@ export type UserUpdateOneRequiredWithoutProjectsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutProjectsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProjectsInput, Prisma.UserUpdateWithoutProjectsInput>, Prisma.UserUncheckedUpdateWithoutProjectsInput>
+}
+
+export type UserCreateNestedOneWithoutAuthoredTemplatesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAuthoredTemplatesInput, Prisma.UserUncheckedCreateWithoutAuthoredTemplatesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuthoredTemplatesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutAuthoredTemplatesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAuthoredTemplatesInput, Prisma.UserUncheckedCreateWithoutAuthoredTemplatesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuthoredTemplatesInput
+  upsert?: Prisma.UserUpsertWithoutAuthoredTemplatesInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuthoredTemplatesInput, Prisma.UserUpdateWithoutAuthoredTemplatesInput>, Prisma.UserUncheckedUpdateWithoutAuthoredTemplatesInput>
 }
 
 export type UserCreateNestedOneWithoutPlansInput = {
@@ -600,6 +628,7 @@ export type UserCreateWithoutChatsInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutChatsInput = {
@@ -619,6 +648,7 @@ export type UserUncheckedCreateWithoutChatsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutChatsInput = {
@@ -654,6 +684,7 @@ export type UserUpdateWithoutChatsInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChatsInput = {
@@ -673,6 +704,7 @@ export type UserUncheckedUpdateWithoutChatsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutExtensionTokensInput = {
@@ -692,6 +724,7 @@ export type UserCreateWithoutExtensionTokensInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutExtensionTokensInput = {
@@ -711,6 +744,7 @@ export type UserUncheckedCreateWithoutExtensionTokensInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutExtensionTokensInput = {
@@ -746,6 +780,7 @@ export type UserUpdateWithoutExtensionTokensInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExtensionTokensInput = {
@@ -765,6 +800,7 @@ export type UserUncheckedUpdateWithoutExtensionTokensInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutSettingsInput = {
@@ -784,6 +820,7 @@ export type UserCreateWithoutSettingsInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutSettingsInput = {
@@ -803,6 +840,7 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutSettingsInput = {
@@ -838,6 +876,7 @@ export type UserUpdateWithoutSettingsInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSettingsInput = {
@@ -857,6 +896,7 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutProjectsInput = {
@@ -876,6 +916,7 @@ export type UserCreateWithoutProjectsInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutProjectsInput = {
@@ -895,6 +936,7 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutProjectsInput = {
@@ -930,6 +972,7 @@ export type UserUpdateWithoutProjectsInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectsInput = {
@@ -940,6 +983,103 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
+  aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
+}
+
+export type UserCreateWithoutAuthoredTemplatesInput = {
+  id: string
+  isActive?: boolean
+  planTier?: $Enums.BillingTier
+  planExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  plans?: Prisma.PlanCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
+  aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAuthoredTemplatesInput = {
+  id: string
+  isActive?: boolean
+  planTier?: $Enums.BillingTier
+  planExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
+  aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAuthoredTemplatesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAuthoredTemplatesInput, Prisma.UserUncheckedCreateWithoutAuthoredTemplatesInput>
+}
+
+export type UserUpsertWithoutAuthoredTemplatesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAuthoredTemplatesInput, Prisma.UserUncheckedUpdateWithoutAuthoredTemplatesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAuthoredTemplatesInput, Prisma.UserUncheckedCreateWithoutAuthoredTemplatesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAuthoredTemplatesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAuthoredTemplatesInput, Prisma.UserUncheckedUpdateWithoutAuthoredTemplatesInput>
+}
+
+export type UserUpdateWithoutAuthoredTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
+  aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAuthoredTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
   plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
   planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
   chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
@@ -968,6 +1108,7 @@ export type UserCreateWithoutPlansInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutPlansInput = {
@@ -987,6 +1128,7 @@ export type UserUncheckedCreateWithoutPlansInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutPlansInput = {
@@ -1022,6 +1164,7 @@ export type UserUpdateWithoutPlansInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPlansInput = {
@@ -1041,6 +1184,7 @@ export type UserUncheckedUpdateWithoutPlansInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutPlanStepsInput = {
@@ -1060,6 +1204,7 @@ export type UserCreateWithoutPlanStepsInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutPlanStepsInput = {
@@ -1079,6 +1224,7 @@ export type UserUncheckedCreateWithoutPlanStepsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutPlanStepsInput = {
@@ -1114,6 +1260,7 @@ export type UserUpdateWithoutPlanStepsInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPlanStepsInput = {
@@ -1133,6 +1280,7 @@ export type UserUncheckedUpdateWithoutPlanStepsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutTasksInput = {
@@ -1152,6 +1300,7 @@ export type UserCreateWithoutTasksInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutTasksInput = {
@@ -1171,6 +1320,7 @@ export type UserUncheckedCreateWithoutTasksInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutTasksInput = {
@@ -1206,6 +1356,7 @@ export type UserUpdateWithoutTasksInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTasksInput = {
@@ -1225,6 +1376,7 @@ export type UserUncheckedUpdateWithoutTasksInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutFocusSessionsInput = {
@@ -1244,6 +1396,7 @@ export type UserCreateWithoutFocusSessionsInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutFocusSessionsInput = {
@@ -1263,6 +1416,7 @@ export type UserUncheckedCreateWithoutFocusSessionsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutFocusSessionsInput = {
@@ -1298,6 +1452,7 @@ export type UserUpdateWithoutFocusSessionsInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFocusSessionsInput = {
@@ -1317,6 +1472,7 @@ export type UserUncheckedUpdateWithoutFocusSessionsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutPaymentOrdersInput = {
@@ -1336,6 +1492,7 @@ export type UserCreateWithoutPaymentOrdersInput = {
   extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutPaymentOrdersInput = {
@@ -1355,6 +1512,7 @@ export type UserUncheckedCreateWithoutPaymentOrdersInput = {
   extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutPaymentOrdersInput = {
@@ -1390,6 +1548,7 @@ export type UserUpdateWithoutPaymentOrdersInput = {
   extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentOrdersInput = {
@@ -1409,6 +1568,7 @@ export type UserUncheckedUpdateWithoutPaymentOrdersInput = {
   extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutSprintInput = {
@@ -1428,6 +1588,7 @@ export type UserCreateWithoutSprintInput = {
   extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutSprintInput = {
@@ -1447,6 +1608,7 @@ export type UserUncheckedCreateWithoutSprintInput = {
   extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutSprintInput = {
@@ -1482,6 +1644,7 @@ export type UserUpdateWithoutSprintInput = {
   extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSprintInput = {
@@ -1501,6 +1664,7 @@ export type UserUncheckedUpdateWithoutSprintInput = {
   extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutAiUsagesInput = {
@@ -1520,6 +1684,7 @@ export type UserCreateWithoutAiUsagesInput = {
   extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutAiUsagesInput = {
@@ -1539,6 +1704,7 @@ export type UserUncheckedCreateWithoutAiUsagesInput = {
   extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutAiUsagesInput = {
@@ -1574,6 +1740,7 @@ export type UserUpdateWithoutAiUsagesInput = {
   extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAiUsagesInput = {
@@ -1593,6 +1760,7 @@ export type UserUncheckedUpdateWithoutAiUsagesInput = {
   extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 
@@ -1611,6 +1779,7 @@ export type UserCountOutputType = {
   paymentOrders: number
   Sprint: number
   aiUsages: number
+  authoredTemplates: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1624,6 +1793,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   paymentOrders?: boolean | UserCountOutputTypeCountPaymentOrdersArgs
   Sprint?: boolean | UserCountOutputTypeCountSprintArgs
   aiUsages?: boolean | UserCountOutputTypeCountAiUsagesArgs
+  authoredTemplates?: boolean | UserCountOutputTypeCountAuthoredTemplatesArgs
 }
 
 /**
@@ -1706,6 +1876,13 @@ export type UserCountOutputTypeCountAiUsagesArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.AiUsageWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAuthoredTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WorkflowTemplateWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1725,6 +1902,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   paymentOrders?: boolean | Prisma.User$paymentOrdersArgs<ExtArgs>
   Sprint?: boolean | Prisma.User$SprintArgs<ExtArgs>
   aiUsages?: boolean | Prisma.User$aiUsagesArgs<ExtArgs>
+  authoredTemplates?: boolean | Prisma.User$authoredTemplatesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1768,6 +1946,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   paymentOrders?: boolean | Prisma.User$paymentOrdersArgs<ExtArgs>
   Sprint?: boolean | Prisma.User$SprintArgs<ExtArgs>
   aiUsages?: boolean | Prisma.User$aiUsagesArgs<ExtArgs>
+  authoredTemplates?: boolean | Prisma.User$authoredTemplatesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1787,6 +1966,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     paymentOrders: Prisma.$PaymentOrderPayload<ExtArgs>[]
     Sprint: Prisma.$SprintPayload<ExtArgs>[]
     aiUsages: Prisma.$AiUsagePayload<ExtArgs>[]
+    authoredTemplates: Prisma.$WorkflowTemplatePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2200,6 +2380,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   paymentOrders<T extends Prisma.User$paymentOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   Sprint<T extends Prisma.User$SprintArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$SprintArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SprintPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aiUsages<T extends Prisma.User$aiUsagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiUsagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  authoredTemplates<T extends Prisma.User$authoredTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$authoredTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkflowTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2884,6 +3065,30 @@ export type User$aiUsagesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.AiUsageScalarFieldEnum | Prisma.AiUsageScalarFieldEnum[]
+}
+
+/**
+ * User.authoredTemplates
+ */
+export type User$authoredTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WorkflowTemplate
+   */
+  select?: Prisma.WorkflowTemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WorkflowTemplate
+   */
+  omit?: Prisma.WorkflowTemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorkflowTemplateInclude<ExtArgs> | null
+  where?: Prisma.WorkflowTemplateWhereInput
+  orderBy?: Prisma.WorkflowTemplateOrderByWithRelationInput | Prisma.WorkflowTemplateOrderByWithRelationInput[]
+  cursor?: Prisma.WorkflowTemplateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WorkflowTemplateScalarFieldEnum | Prisma.WorkflowTemplateScalarFieldEnum[]
 }
 
 /**

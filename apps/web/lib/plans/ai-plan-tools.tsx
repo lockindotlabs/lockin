@@ -91,7 +91,7 @@ const taskInputSchema = {
     guidance: {
       type: "string" as const,
       description:
-        "Short how-to guidance for this step. Include actionable instructions, not theory.",
+        "Personalized coaching guidance for this step (2-3 short sentences), shown to the user alone while they focus on it. Coach HOW to approach and start — prefer an if-then form grounded in the user's own dump, goal, and stated obstacle. Never write the answer, content, or code for them.",
     },
     parentId: {
       type: "string" as const,

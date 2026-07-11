@@ -26,6 +26,7 @@ model User {
   paymentOrders   PaymentOrder[]
   Sprint          Sprint[]
   aiUsages        AiUsage[]
+  authoredTemplates WorkflowTemplate[] @relation("AuthoredTemplates")
 }
 
 model Chat {
@@ -83,21 +84,50 @@ model Project {
   @@index([userId])
 }
 
+enum TemplateStatus {
+  DRAFT
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum ScaffoldQuestionPurpose {
+  ADJUST_GOAL
+  GENERATE_STEPS
+  ESTIMATE_TIMEBOX
+  IDENTIFY_OBSTACLE
+}
+
 model WorkflowTemplate {
-  id               String                   @id @default(cuid())
-  slug             String                   @unique
-  title            String
-  category         String
-  isAcademic       Boolean                  @default(false)
-  domainTags       String[]                 @default([])
-  outputType       WorkflowOutputType
-  supportsGroupMode Boolean                 @default(false)
-  description      String?
-  createdAt        DateTime                 @default(now())
-  updatedAt        DateTime                 @updatedAt
-  steps            WorkflowTemplateStep[]
+  id                String                    @id @default(cuid())
+  slug              String                    @unique
+  title             String
+  category          String
+  isAcademic        Boolean                   @default(false)
+  domainTags        String[]                  @default([])
+  outputType        WorkflowOutputType
+  supportsGroupMode Boolean                   @default(false)
+  description       String?
+  goalTemplate      String?
+  customRequirements Json                     @default("[]")
+  authorId          String?
+  author            User?                     @relation("AuthoredTemplates", fields: [authorId], references: [id], onDelete: SetNull)
+  authorName        String?
+  status            TemplateStatus            @default(APPROVED)
+  installCount      Int                       @default(0)
+  priceVnd          Int?
+  rejectionReason   String?
+  publishedAt       DateTime?
+  submittedAt       DateTime?
+  sourcePlanId      String?
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+  steps             WorkflowTemplateStep[]
   scaffoldQuestions WorkflowScaffoldQuestion[]
-  plans            Plan[]
+  plans             Plan[]
+
+  @@index([status, category])
+  @@index([authorId, status])
 }
 
 model WorkflowTemplateStep {
@@ -119,6 +149,7 @@ model WorkflowScaffoldQuestion {
   order      Int
   prompt     String
   helperText String?
+  aiPurpose  ScaffoldQuestionPurpose @default(GENERATE_STEPS)
 
   @@index([templateId, order])
 }

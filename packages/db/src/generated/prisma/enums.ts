@@ -9,6 +9,26 @@
 * 🟢 You can import this file directly.
 */
 
+export const TemplateStatus = {
+  DRAFT: 'DRAFT',
+  PENDING_REVIEW: 'PENDING_REVIEW',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type TemplateStatus = (typeof TemplateStatus)[keyof typeof TemplateStatus]
+
+
+export const ScaffoldQuestionPurpose = {
+  ADJUST_GOAL: 'ADJUST_GOAL',
+  GENERATE_STEPS: 'GENERATE_STEPS',
+  ESTIMATE_TIMEBOX: 'ESTIMATE_TIMEBOX',
+  IDENTIFY_OBSTACLE: 'IDENTIFY_OBSTACLE'
+} as const
+
+export type ScaffoldQuestionPurpose = (typeof ScaffoldQuestionPurpose)[keyof typeof ScaffoldQuestionPurpose]
+
+
 export const CompletionType = {
   EARLY: 'EARLY',
   NORMAL: 'NORMAL',

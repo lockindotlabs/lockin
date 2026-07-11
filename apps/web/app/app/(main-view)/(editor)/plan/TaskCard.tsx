@@ -203,12 +203,16 @@ export default function TaskCard({
         {/* Guidance collapsible — only shown if step has template guidance */}
         {guidance && (
           <Collapsible className="w-full">
-            <CollapsibleTrigger className="flex w-full items-center gap-1.5 py-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
-              <span className="rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide">Cách làm</span>
+            <CollapsibleTrigger className="flex w-full items-center gap-1.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground">
+              <span className="rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
+                Cách làm
+              </span>
               <ChevronDownIcon className="size-3 transition-transform [[data-state=open]_&]:rotate-180" />
             </CollapsibleTrigger>
             <CollapsibleContent className="pb-2">
-              <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-line">{guidance}</p>
+              <p className="text-xs leading-relaxed whitespace-pre-line text-muted-foreground">
+                {guidance}
+              </p>
             </CollapsibleContent>
           </Collapsible>
         )}

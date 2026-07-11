@@ -1,4 +1,5 @@
 import prisma from "@workspace/db"
+import type { Prisma } from "@workspace/db"
 import { getExe101FallbackTemplate } from "@/lib/templates/exe101-fallback"
 
 type TemplateInstructionPack = {
@@ -122,10 +123,65 @@ function renderList(title: string, items: string[]) {
   return `${title}:\n${items.map((item) => `- ${item}`).join("\n")}`
 }
 
+type PromptCustomRequirement = {
+  label: string
+  fieldType: string
+  required: boolean
+  aiHint: string
+  options: string[]
+}
+
+function parseCustomRequirements(
+  value: Prisma.JsonValue | null | undefined
+): PromptCustomRequirement[] {
+  if (!Array.isArray(value)) return []
+
+  return value
+    .map<PromptCustomRequirement | null>((item) => {
+      if (!item || typeof item !== "object" || Array.isArray(item)) {
+        return null
+      }
+
+      const record = item as Record<string, unknown>
+      const label = typeof record.label === "string" ? record.label.trim() : ""
+      const aiHint = typeof record.aiHint === "string" ? record.aiHint.trim() : ""
+      const fieldType =
+        typeof record.fieldType === "string" ? record.fieldType : "TEXT"
+      const required =
+        typeof record.required === "boolean" ? record.required : false
+      const options = Array.isArray(record.options)
+        ? record.options.filter((option): option is string => typeof option === "string")
+        : []
+
+      if (!label || !aiHint) return null
+
+      return { label, fieldType, required, aiHint, options }
+    })
+    .filter((item): item is PromptCustomRequirement => item !== null)
+}
+
+export function formatCustomRequirementsForPrompt(
+  value: Prisma.JsonValue | null | undefined
+) {
+  return parseCustomRequirements(value)
+    .map((requirement) => {
+      const options =
+        requirement.fieldType === "SELECT" && requirement.options.length
+          ? `; options: ${requirement.options.join(", ")}`
+          : ""
+      return `- ${requirement.label} (${requirement.fieldType}${requirement.required ? ", required" : ""}${options}) -> use for: ${requirement.aiHint}`
+    })
+    .join("\n")
+}
+
 export async function resolveTemplateContext(
-  templateId: string | null | undefined
+  templateId: string | null | undefined,
+  userId?: string | null
 ) {
   if (!templateId) return undefined
+  const visibilityFilter = userId
+    ? { OR: [{ status: "APPROVED" as const }, { authorId: userId }] }
+    : { status: "APPROVED" as const }
 
   let template:
     | {
@@ -133,18 +189,23 @@ export async function resolveTemplateContext(
         slug: string
         title: string
         description: string | null
+        goalTemplate: string | null
+        customRequirements: Prisma.JsonValue
         category: string
         outputType: string
         domainTags: string[]
         steps: { order: number; title: string; estimatedMinutes: number; guidance: string | null }[]
-        scaffoldQuestions: { order: number; prompt: string; helperText: string | null }[]
+        scaffoldQuestions: { order: number; prompt: string; helperText: string | null; aiPurpose?: string }[]
       }
     | null = null
 
   try {
     template = await prisma.workflowTemplate.findFirst({
       where: {
-        OR: [{ id: templateId }, { slug: templateId }],
+        AND: [
+          { OR: [{ id: templateId }, { slug: templateId }] },
+          visibilityFilter,
+        ],
       },
       include: {
         steps: { orderBy: { order: "asc" } },
@@ -163,6 +224,8 @@ export async function resolveTemplateContext(
         slug: fallback.slug,
         title: fallback.title,
         description: fallback.description,
+        goalTemplate: null,
+        customRequirements: [],
         category: fallback.category,
         outputType: fallback.outputType,
         domainTags: fallback.domainTags,
@@ -176,6 +239,7 @@ export async function resolveTemplateContext(
           order: question.order,
           prompt: question.prompt,
           helperText: question.helperText ?? null,
+          aiPurpose: "GENERATE_STEPS",
         })),
       }
     }
@@ -193,9 +257,13 @@ export async function resolveTemplateContext(
   const scaffoldLines = template.scaffoldQuestions
     .map(
       (question) =>
-        `- ${question.prompt}${question.helperText ? ` (${question.helperText})` : ""}`
+        `- ${question.prompt} (AI purpose: ${question.aiPurpose ?? "GENERATE_STEPS"}${question.helperText ? `; helper: ${question.helperText}` : ""})`
     )
     .join("\n")
+
+  const customRequirementLines = formatCustomRequirementsForPrompt(
+    template.customRequirements
+  )
 
   const instructionPack = TEMPLATE_INSTRUCTIONS[template.slug]
   const instructionSections = instructionPack
@@ -215,6 +283,9 @@ export async function resolveTemplateContext(
     "Whenever you draft the plan, explicitly preserve three phases in order: Thinking, Execution, Review.",
     `Template: ${template.title}`,
     template.description ? `Description: ${template.description}` : null,
+    template.goalTemplate
+      ? `Sprint goal template: ${template.goalTemplate}`
+      : null,
     `Category: ${template.category}`,
     `Output type: ${template.outputType}`,
     template.domainTags.length > 0
@@ -226,6 +297,10 @@ export async function resolveTemplateContext(
     scaffoldLines
       ? `\nScaffold questions (ask these before generating the final plan):\n${scaffoldLines}`
       : null,
+    customRequirementLines
+      ? `\nCustom requirements (ask after scaffold questions; inject each answer into the prompt as "- label: answer (use for: aiHint)"):\n${customRequirementLines}`
+      : null,
+    "\nAlways append a locked final step named Review & Retro. Guidance: So kết quả với Sprint Goal. Ghi 1 điều giữ lại và 1 điều sẽ đổi ở sprint sau.",
     instructionSections ? `\nTemplate-specific planning rules:\n${instructionSections}` : null,
     "\nDo not fall back to a generic outline if this template already provides a stronger notice-based structure.",
   ]

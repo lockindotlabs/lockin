@@ -20,8 +20,20 @@ export type WorkflowTemplateModel = runtime.Types.Result.DefaultSelection<Prisma
 
 export type AggregateWorkflowTemplate = {
   _count: WorkflowTemplateCountAggregateOutputType | null
+  _avg: WorkflowTemplateAvgAggregateOutputType | null
+  _sum: WorkflowTemplateSumAggregateOutputType | null
   _min: WorkflowTemplateMinAggregateOutputType | null
   _max: WorkflowTemplateMaxAggregateOutputType | null
+}
+
+export type WorkflowTemplateAvgAggregateOutputType = {
+  installCount: number | null
+  priceVnd: number | null
+}
+
+export type WorkflowTemplateSumAggregateOutputType = {
+  installCount: number | null
+  priceVnd: number | null
 }
 
 export type WorkflowTemplateMinAggregateOutputType = {
@@ -33,6 +45,16 @@ export type WorkflowTemplateMinAggregateOutputType = {
   outputType: $Enums.WorkflowOutputType | null
   supportsGroupMode: boolean | null
   description: string | null
+  goalTemplate: string | null
+  authorId: string | null
+  authorName: string | null
+  status: $Enums.TemplateStatus | null
+  installCount: number | null
+  priceVnd: number | null
+  rejectionReason: string | null
+  publishedAt: Date | null
+  submittedAt: Date | null
+  sourcePlanId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -46,6 +68,16 @@ export type WorkflowTemplateMaxAggregateOutputType = {
   outputType: $Enums.WorkflowOutputType | null
   supportsGroupMode: boolean | null
   description: string | null
+  goalTemplate: string | null
+  authorId: string | null
+  authorName: string | null
+  status: $Enums.TemplateStatus | null
+  installCount: number | null
+  priceVnd: number | null
+  rejectionReason: string | null
+  publishedAt: Date | null
+  submittedAt: Date | null
+  sourcePlanId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -60,11 +92,32 @@ export type WorkflowTemplateCountAggregateOutputType = {
   outputType: number
   supportsGroupMode: number
   description: number
+  goalTemplate: number
+  customRequirements: number
+  authorId: number
+  authorName: number
+  status: number
+  installCount: number
+  priceVnd: number
+  rejectionReason: number
+  publishedAt: number
+  submittedAt: number
+  sourcePlanId: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type WorkflowTemplateAvgAggregateInputType = {
+  installCount?: true
+  priceVnd?: true
+}
+
+export type WorkflowTemplateSumAggregateInputType = {
+  installCount?: true
+  priceVnd?: true
+}
 
 export type WorkflowTemplateMinAggregateInputType = {
   id?: true
@@ -75,6 +128,16 @@ export type WorkflowTemplateMinAggregateInputType = {
   outputType?: true
   supportsGroupMode?: true
   description?: true
+  goalTemplate?: true
+  authorId?: true
+  authorName?: true
+  status?: true
+  installCount?: true
+  priceVnd?: true
+  rejectionReason?: true
+  publishedAt?: true
+  submittedAt?: true
+  sourcePlanId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -88,6 +151,16 @@ export type WorkflowTemplateMaxAggregateInputType = {
   outputType?: true
   supportsGroupMode?: true
   description?: true
+  goalTemplate?: true
+  authorId?: true
+  authorName?: true
+  status?: true
+  installCount?: true
+  priceVnd?: true
+  rejectionReason?: true
+  publishedAt?: true
+  submittedAt?: true
+  sourcePlanId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -102,6 +175,17 @@ export type WorkflowTemplateCountAggregateInputType = {
   outputType?: true
   supportsGroupMode?: true
   description?: true
+  goalTemplate?: true
+  customRequirements?: true
+  authorId?: true
+  authorName?: true
+  status?: true
+  installCount?: true
+  priceVnd?: true
+  rejectionReason?: true
+  publishedAt?: true
+  submittedAt?: true
+  sourcePlanId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -114,13 +198,13 @@ export type WorkflowTemplateAggregateArgs<ExtArgs extends runtime.Types.Extensio
   where?: Prisma.WorkflowTemplateWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-   * 
+   *
    * Determine the order of WorkflowTemplates to fetch.
    */
   orderBy?: Prisma.WorkflowTemplateOrderByWithRelationInput | Prisma.WorkflowTemplateOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-   * 
+   *
    * Sets the start position
    */
   cursor?: Prisma.WorkflowTemplateWhereUniqueInput
@@ -145,6 +229,18 @@ export type WorkflowTemplateAggregateArgs<ExtArgs extends runtime.Types.Extensio
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: WorkflowTemplateAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Select which fields to sum
+  **/
+  _sum?: WorkflowTemplateSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
    * Select which fields to find the minimum value
   **/
   _min?: WorkflowTemplateMinAggregateInputType
@@ -175,6 +271,8 @@ export type WorkflowTemplateGroupByArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   _count?: WorkflowTemplateCountAggregateInputType | true
+  _avg?: WorkflowTemplateAvgAggregateInputType
+  _sum?: WorkflowTemplateSumAggregateInputType
   _min?: WorkflowTemplateMinAggregateInputType
   _max?: WorkflowTemplateMaxAggregateInputType
 }
@@ -189,9 +287,22 @@ export type WorkflowTemplateGroupByOutputType = {
   outputType: $Enums.WorkflowOutputType
   supportsGroupMode: boolean
   description: string | null
+  goalTemplate: string | null
+  customRequirements: runtime.JsonValue
+  authorId: string | null
+  authorName: string | null
+  status: $Enums.TemplateStatus
+  installCount: number
+  priceVnd: number | null
+  rejectionReason: string | null
+  publishedAt: Date | null
+  submittedAt: Date | null
+  sourcePlanId: string | null
   createdAt: Date
   updatedAt: Date
   _count: WorkflowTemplateCountAggregateOutputType | null
+  _avg: WorkflowTemplateAvgAggregateOutputType | null
+  _sum: WorkflowTemplateSumAggregateOutputType | null
   _min: WorkflowTemplateMinAggregateOutputType | null
   _max: WorkflowTemplateMaxAggregateOutputType | null
 }
@@ -224,8 +335,20 @@ export type WorkflowTemplateWhereInput = {
   outputType?: Prisma.EnumWorkflowOutputTypeFilter<"WorkflowTemplate"> | $Enums.WorkflowOutputType
   supportsGroupMode?: Prisma.BoolFilter<"WorkflowTemplate"> | boolean
   description?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  goalTemplate?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  customRequirements?: Prisma.JsonFilter<"WorkflowTemplate">
+  authorId?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  authorName?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  status?: Prisma.EnumTemplateStatusFilter<"WorkflowTemplate"> | $Enums.TemplateStatus
+  installCount?: Prisma.IntFilter<"WorkflowTemplate"> | number
+  priceVnd?: Prisma.IntNullableFilter<"WorkflowTemplate"> | number | null
+  rejectionReason?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  publishedAt?: Prisma.DateTimeNullableFilter<"WorkflowTemplate"> | Date | string | null
+  submittedAt?: Prisma.DateTimeNullableFilter<"WorkflowTemplate"> | Date | string | null
+  sourcePlanId?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"WorkflowTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WorkflowTemplate"> | Date | string
+  author?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   steps?: Prisma.WorkflowTemplateStepListRelationFilter
   scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionListRelationFilter
   plans?: Prisma.PlanListRelationFilter
@@ -241,8 +364,20 @@ export type WorkflowTemplateOrderByWithRelationInput = {
   outputType?: Prisma.SortOrder
   supportsGroupMode?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  goalTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
+  customRequirements?: Prisma.SortOrder
+  authorId?: Prisma.SortOrderInput | Prisma.SortOrder
+  authorName?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
+  installCount?: Prisma.SortOrder
+  priceVnd?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  submittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourcePlanId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  author?: Prisma.UserOrderByWithRelationInput
   steps?: Prisma.WorkflowTemplateStepOrderByRelationAggregateInput
   scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionOrderByRelationAggregateInput
   plans?: Prisma.PlanOrderByRelationAggregateInput
@@ -261,8 +396,20 @@ export type WorkflowTemplateWhereUniqueInput = Prisma.AtLeast<{
   outputType?: Prisma.EnumWorkflowOutputTypeFilter<"WorkflowTemplate"> | $Enums.WorkflowOutputType
   supportsGroupMode?: Prisma.BoolFilter<"WorkflowTemplate"> | boolean
   description?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  goalTemplate?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  customRequirements?: Prisma.JsonFilter<"WorkflowTemplate">
+  authorId?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  authorName?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  status?: Prisma.EnumTemplateStatusFilter<"WorkflowTemplate"> | $Enums.TemplateStatus
+  installCount?: Prisma.IntFilter<"WorkflowTemplate"> | number
+  priceVnd?: Prisma.IntNullableFilter<"WorkflowTemplate"> | number | null
+  rejectionReason?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  publishedAt?: Prisma.DateTimeNullableFilter<"WorkflowTemplate"> | Date | string | null
+  submittedAt?: Prisma.DateTimeNullableFilter<"WorkflowTemplate"> | Date | string | null
+  sourcePlanId?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"WorkflowTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WorkflowTemplate"> | Date | string
+  author?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   steps?: Prisma.WorkflowTemplateStepListRelationFilter
   scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionListRelationFilter
   plans?: Prisma.PlanListRelationFilter
@@ -278,11 +425,24 @@ export type WorkflowTemplateOrderByWithAggregationInput = {
   outputType?: Prisma.SortOrder
   supportsGroupMode?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  goalTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
+  customRequirements?: Prisma.SortOrder
+  authorId?: Prisma.SortOrderInput | Prisma.SortOrder
+  authorName?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
+  installCount?: Prisma.SortOrder
+  priceVnd?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  submittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourcePlanId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.WorkflowTemplateCountOrderByAggregateInput
+  _avg?: Prisma.WorkflowTemplateAvgOrderByAggregateInput
   _max?: Prisma.WorkflowTemplateMaxOrderByAggregateInput
   _min?: Prisma.WorkflowTemplateMinOrderByAggregateInput
+  _sum?: Prisma.WorkflowTemplateSumOrderByAggregateInput
 }
 
 export type WorkflowTemplateScalarWhereWithAggregatesInput = {
@@ -298,6 +458,17 @@ export type WorkflowTemplateScalarWhereWithAggregatesInput = {
   outputType?: Prisma.EnumWorkflowOutputTypeWithAggregatesFilter<"WorkflowTemplate"> | $Enums.WorkflowOutputType
   supportsGroupMode?: Prisma.BoolWithAggregatesFilter<"WorkflowTemplate"> | boolean
   description?: Prisma.StringNullableWithAggregatesFilter<"WorkflowTemplate"> | string | null
+  goalTemplate?: Prisma.StringNullableWithAggregatesFilter<"WorkflowTemplate"> | string | null
+  customRequirements?: Prisma.JsonWithAggregatesFilter<"WorkflowTemplate">
+  authorId?: Prisma.StringNullableWithAggregatesFilter<"WorkflowTemplate"> | string | null
+  authorName?: Prisma.StringNullableWithAggregatesFilter<"WorkflowTemplate"> | string | null
+  status?: Prisma.EnumTemplateStatusWithAggregatesFilter<"WorkflowTemplate"> | $Enums.TemplateStatus
+  installCount?: Prisma.IntWithAggregatesFilter<"WorkflowTemplate"> | number
+  priceVnd?: Prisma.IntNullableWithAggregatesFilter<"WorkflowTemplate"> | number | null
+  rejectionReason?: Prisma.StringNullableWithAggregatesFilter<"WorkflowTemplate"> | string | null
+  publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"WorkflowTemplate"> | Date | string | null
+  submittedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"WorkflowTemplate"> | Date | string | null
+  sourcePlanId?: Prisma.StringNullableWithAggregatesFilter<"WorkflowTemplate"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"WorkflowTemplate"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"WorkflowTemplate"> | Date | string
 }
@@ -312,8 +483,19 @@ export type WorkflowTemplateCreateInput = {
   outputType: $Enums.WorkflowOutputType
   supportsGroupMode?: boolean
   description?: string | null
+  goalTemplate?: string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorName?: string | null
+  status?: $Enums.TemplateStatus
+  installCount?: number
+  priceVnd?: number | null
+  rejectionReason?: string | null
+  publishedAt?: Date | string | null
+  submittedAt?: Date | string | null
+  sourcePlanId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  author?: Prisma.UserCreateNestedOneWithoutAuthoredTemplatesInput
   steps?: Prisma.WorkflowTemplateStepCreateNestedManyWithoutTemplateInput
   scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionCreateNestedManyWithoutTemplateInput
   plans?: Prisma.PlanCreateNestedManyWithoutTemplateInput
@@ -329,6 +511,17 @@ export type WorkflowTemplateUncheckedCreateInput = {
   outputType: $Enums.WorkflowOutputType
   supportsGroupMode?: boolean
   description?: string | null
+  goalTemplate?: string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorId?: string | null
+  authorName?: string | null
+  status?: $Enums.TemplateStatus
+  installCount?: number
+  priceVnd?: number | null
+  rejectionReason?: string | null
+  publishedAt?: Date | string | null
+  submittedAt?: Date | string | null
+  sourcePlanId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   steps?: Prisma.WorkflowTemplateStepUncheckedCreateNestedManyWithoutTemplateInput
@@ -346,8 +539,19 @@ export type WorkflowTemplateUpdateInput = {
   outputType?: Prisma.EnumWorkflowOutputTypeFieldUpdateOperationsInput | $Enums.WorkflowOutputType
   supportsGroupMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
+  installCount?: Prisma.IntFieldUpdateOperationsInput | number
+  priceVnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  author?: Prisma.UserUpdateOneWithoutAuthoredTemplatesNestedInput
   steps?: Prisma.WorkflowTemplateStepUpdateManyWithoutTemplateNestedInput
   scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionUpdateManyWithoutTemplateNestedInput
   plans?: Prisma.PlanUpdateManyWithoutTemplateNestedInput
@@ -363,6 +567,17 @@ export type WorkflowTemplateUncheckedUpdateInput = {
   outputType?: Prisma.EnumWorkflowOutputTypeFieldUpdateOperationsInput | $Enums.WorkflowOutputType
   supportsGroupMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
+  installCount?: Prisma.IntFieldUpdateOperationsInput | number
+  priceVnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   steps?: Prisma.WorkflowTemplateStepUncheckedUpdateManyWithoutTemplateNestedInput
@@ -380,6 +595,17 @@ export type WorkflowTemplateCreateManyInput = {
   outputType: $Enums.WorkflowOutputType
   supportsGroupMode?: boolean
   description?: string | null
+  goalTemplate?: string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorId?: string | null
+  authorName?: string | null
+  status?: $Enums.TemplateStatus
+  installCount?: number
+  priceVnd?: number | null
+  rejectionReason?: string | null
+  publishedAt?: Date | string | null
+  submittedAt?: Date | string | null
+  sourcePlanId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -394,6 +620,16 @@ export type WorkflowTemplateUpdateManyMutationInput = {
   outputType?: Prisma.EnumWorkflowOutputTypeFieldUpdateOperationsInput | $Enums.WorkflowOutputType
   supportsGroupMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
+  installCount?: Prisma.IntFieldUpdateOperationsInput | number
+  priceVnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -408,8 +644,29 @@ export type WorkflowTemplateUncheckedUpdateManyInput = {
   outputType?: Prisma.EnumWorkflowOutputTypeFieldUpdateOperationsInput | $Enums.WorkflowOutputType
   supportsGroupMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
+  installCount?: Prisma.IntFieldUpdateOperationsInput | number
+  priceVnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type WorkflowTemplateListRelationFilter = {
+  every?: Prisma.WorkflowTemplateWhereInput
+  some?: Prisma.WorkflowTemplateWhereInput
+  none?: Prisma.WorkflowTemplateWhereInput
+}
+
+export type WorkflowTemplateOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type WorkflowTemplateCountOrderByAggregateInput = {
@@ -422,8 +679,24 @@ export type WorkflowTemplateCountOrderByAggregateInput = {
   outputType?: Prisma.SortOrder
   supportsGroupMode?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  goalTemplate?: Prisma.SortOrder
+  customRequirements?: Prisma.SortOrder
+  authorId?: Prisma.SortOrder
+  authorName?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  installCount?: Prisma.SortOrder
+  priceVnd?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
+  publishedAt?: Prisma.SortOrder
+  submittedAt?: Prisma.SortOrder
+  sourcePlanId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type WorkflowTemplateAvgOrderByAggregateInput = {
+  installCount?: Prisma.SortOrder
+  priceVnd?: Prisma.SortOrder
 }
 
 export type WorkflowTemplateMaxOrderByAggregateInput = {
@@ -435,6 +708,16 @@ export type WorkflowTemplateMaxOrderByAggregateInput = {
   outputType?: Prisma.SortOrder
   supportsGroupMode?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  goalTemplate?: Prisma.SortOrder
+  authorId?: Prisma.SortOrder
+  authorName?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  installCount?: Prisma.SortOrder
+  priceVnd?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
+  publishedAt?: Prisma.SortOrder
+  submittedAt?: Prisma.SortOrder
+  sourcePlanId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -448,8 +731,23 @@ export type WorkflowTemplateMinOrderByAggregateInput = {
   outputType?: Prisma.SortOrder
   supportsGroupMode?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  goalTemplate?: Prisma.SortOrder
+  authorId?: Prisma.SortOrder
+  authorName?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  installCount?: Prisma.SortOrder
+  priceVnd?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
+  publishedAt?: Prisma.SortOrder
+  submittedAt?: Prisma.SortOrder
+  sourcePlanId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type WorkflowTemplateSumOrderByAggregateInput = {
+  installCount?: Prisma.SortOrder
+  priceVnd?: Prisma.SortOrder
 }
 
 export type WorkflowTemplateScalarRelationFilter = {
@@ -460,6 +758,48 @@ export type WorkflowTemplateScalarRelationFilter = {
 export type WorkflowTemplateNullableScalarRelationFilter = {
   is?: Prisma.WorkflowTemplateWhereInput | null
   isNot?: Prisma.WorkflowTemplateWhereInput | null
+}
+
+export type WorkflowTemplateCreateNestedManyWithoutAuthorInput = {
+  create?: Prisma.XOR<Prisma.WorkflowTemplateCreateWithoutAuthorInput, Prisma.WorkflowTemplateUncheckedCreateWithoutAuthorInput> | Prisma.WorkflowTemplateCreateWithoutAuthorInput[] | Prisma.WorkflowTemplateUncheckedCreateWithoutAuthorInput[]
+  connectOrCreate?: Prisma.WorkflowTemplateCreateOrConnectWithoutAuthorInput | Prisma.WorkflowTemplateCreateOrConnectWithoutAuthorInput[]
+  createMany?: Prisma.WorkflowTemplateCreateManyAuthorInputEnvelope
+  connect?: Prisma.WorkflowTemplateWhereUniqueInput | Prisma.WorkflowTemplateWhereUniqueInput[]
+}
+
+export type WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput = {
+  create?: Prisma.XOR<Prisma.WorkflowTemplateCreateWithoutAuthorInput, Prisma.WorkflowTemplateUncheckedCreateWithoutAuthorInput> | Prisma.WorkflowTemplateCreateWithoutAuthorInput[] | Prisma.WorkflowTemplateUncheckedCreateWithoutAuthorInput[]
+  connectOrCreate?: Prisma.WorkflowTemplateCreateOrConnectWithoutAuthorInput | Prisma.WorkflowTemplateCreateOrConnectWithoutAuthorInput[]
+  createMany?: Prisma.WorkflowTemplateCreateManyAuthorInputEnvelope
+  connect?: Prisma.WorkflowTemplateWhereUniqueInput | Prisma.WorkflowTemplateWhereUniqueInput[]
+}
+
+export type WorkflowTemplateUpdateManyWithoutAuthorNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkflowTemplateCreateWithoutAuthorInput, Prisma.WorkflowTemplateUncheckedCreateWithoutAuthorInput> | Prisma.WorkflowTemplateCreateWithoutAuthorInput[] | Prisma.WorkflowTemplateUncheckedCreateWithoutAuthorInput[]
+  connectOrCreate?: Prisma.WorkflowTemplateCreateOrConnectWithoutAuthorInput | Prisma.WorkflowTemplateCreateOrConnectWithoutAuthorInput[]
+  upsert?: Prisma.WorkflowTemplateUpsertWithWhereUniqueWithoutAuthorInput | Prisma.WorkflowTemplateUpsertWithWhereUniqueWithoutAuthorInput[]
+  createMany?: Prisma.WorkflowTemplateCreateManyAuthorInputEnvelope
+  set?: Prisma.WorkflowTemplateWhereUniqueInput | Prisma.WorkflowTemplateWhereUniqueInput[]
+  disconnect?: Prisma.WorkflowTemplateWhereUniqueInput | Prisma.WorkflowTemplateWhereUniqueInput[]
+  delete?: Prisma.WorkflowTemplateWhereUniqueInput | Prisma.WorkflowTemplateWhereUniqueInput[]
+  connect?: Prisma.WorkflowTemplateWhereUniqueInput | Prisma.WorkflowTemplateWhereUniqueInput[]
+  update?: Prisma.WorkflowTemplateUpdateWithWhereUniqueWithoutAuthorInput | Prisma.WorkflowTemplateUpdateWithWhereUniqueWithoutAuthorInput[]
+  updateMany?: Prisma.WorkflowTemplateUpdateManyWithWhereWithoutAuthorInput | Prisma.WorkflowTemplateUpdateManyWithWhereWithoutAuthorInput[]
+  deleteMany?: Prisma.WorkflowTemplateScalarWhereInput | Prisma.WorkflowTemplateScalarWhereInput[]
+}
+
+export type WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput = {
+  create?: Prisma.XOR<Prisma.WorkflowTemplateCreateWithoutAuthorInput, Prisma.WorkflowTemplateUncheckedCreateWithoutAuthorInput> | Prisma.WorkflowTemplateCreateWithoutAuthorInput[] | Prisma.WorkflowTemplateUncheckedCreateWithoutAuthorInput[]
+  connectOrCreate?: Prisma.WorkflowTemplateCreateOrConnectWithoutAuthorInput | Prisma.WorkflowTemplateCreateOrConnectWithoutAuthorInput[]
+  upsert?: Prisma.WorkflowTemplateUpsertWithWhereUniqueWithoutAuthorInput | Prisma.WorkflowTemplateUpsertWithWhereUniqueWithoutAuthorInput[]
+  createMany?: Prisma.WorkflowTemplateCreateManyAuthorInputEnvelope
+  set?: Prisma.WorkflowTemplateWhereUniqueInput | Prisma.WorkflowTemplateWhereUniqueInput[]
+  disconnect?: Prisma.WorkflowTemplateWhereUniqueInput | Prisma.WorkflowTemplateWhereUniqueInput[]
+  delete?: Prisma.WorkflowTemplateWhereUniqueInput | Prisma.WorkflowTemplateWhereUniqueInput[]
+  connect?: Prisma.WorkflowTemplateWhereUniqueInput | Prisma.WorkflowTemplateWhereUniqueInput[]
+  update?: Prisma.WorkflowTemplateUpdateWithWhereUniqueWithoutAuthorInput | Prisma.WorkflowTemplateUpdateWithWhereUniqueWithoutAuthorInput[]
+  updateMany?: Prisma.WorkflowTemplateUpdateManyWithWhereWithoutAuthorInput | Prisma.WorkflowTemplateUpdateManyWithWhereWithoutAuthorInput[]
+  deleteMany?: Prisma.WorkflowTemplateScalarWhereInput | Prisma.WorkflowTemplateScalarWhereInput[]
 }
 
 export type WorkflowTemplateCreatedomainTagsInput = {
@@ -473,6 +813,18 @@ export type WorkflowTemplateUpdatedomainTagsInput = {
 
 export type EnumWorkflowOutputTypeFieldUpdateOperationsInput = {
   set?: $Enums.WorkflowOutputType
+}
+
+export type EnumTemplateStatusFieldUpdateOperationsInput = {
+  set?: $Enums.TemplateStatus
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type WorkflowTemplateCreateNestedOneWithoutStepsInput = {
@@ -519,6 +871,114 @@ export type WorkflowTemplateUpdateOneWithoutPlansNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorkflowTemplateUpdateToOneWithWhereWithoutPlansInput, Prisma.WorkflowTemplateUpdateWithoutPlansInput>, Prisma.WorkflowTemplateUncheckedUpdateWithoutPlansInput>
 }
 
+export type WorkflowTemplateCreateWithoutAuthorInput = {
+  id?: string
+  slug: string
+  title: string
+  category: string
+  isAcademic?: boolean
+  domainTags?: Prisma.WorkflowTemplateCreatedomainTagsInput | string[]
+  outputType: $Enums.WorkflowOutputType
+  supportsGroupMode?: boolean
+  description?: string | null
+  goalTemplate?: string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorName?: string | null
+  status?: $Enums.TemplateStatus
+  installCount?: number
+  priceVnd?: number | null
+  rejectionReason?: string | null
+  publishedAt?: Date | string | null
+  submittedAt?: Date | string | null
+  sourcePlanId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  steps?: Prisma.WorkflowTemplateStepCreateNestedManyWithoutTemplateInput
+  scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionCreateNestedManyWithoutTemplateInput
+  plans?: Prisma.PlanCreateNestedManyWithoutTemplateInput
+}
+
+export type WorkflowTemplateUncheckedCreateWithoutAuthorInput = {
+  id?: string
+  slug: string
+  title: string
+  category: string
+  isAcademic?: boolean
+  domainTags?: Prisma.WorkflowTemplateCreatedomainTagsInput | string[]
+  outputType: $Enums.WorkflowOutputType
+  supportsGroupMode?: boolean
+  description?: string | null
+  goalTemplate?: string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorName?: string | null
+  status?: $Enums.TemplateStatus
+  installCount?: number
+  priceVnd?: number | null
+  rejectionReason?: string | null
+  publishedAt?: Date | string | null
+  submittedAt?: Date | string | null
+  sourcePlanId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  steps?: Prisma.WorkflowTemplateStepUncheckedCreateNestedManyWithoutTemplateInput
+  scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionUncheckedCreateNestedManyWithoutTemplateInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutTemplateInput
+}
+
+export type WorkflowTemplateCreateOrConnectWithoutAuthorInput = {
+  where: Prisma.WorkflowTemplateWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorkflowTemplateCreateWithoutAuthorInput, Prisma.WorkflowTemplateUncheckedCreateWithoutAuthorInput>
+}
+
+export type WorkflowTemplateCreateManyAuthorInputEnvelope = {
+  data: Prisma.WorkflowTemplateCreateManyAuthorInput | Prisma.WorkflowTemplateCreateManyAuthorInput[]
+  skipDuplicates?: boolean
+}
+
+export type WorkflowTemplateUpsertWithWhereUniqueWithoutAuthorInput = {
+  where: Prisma.WorkflowTemplateWhereUniqueInput
+  update: Prisma.XOR<Prisma.WorkflowTemplateUpdateWithoutAuthorInput, Prisma.WorkflowTemplateUncheckedUpdateWithoutAuthorInput>
+  create: Prisma.XOR<Prisma.WorkflowTemplateCreateWithoutAuthorInput, Prisma.WorkflowTemplateUncheckedCreateWithoutAuthorInput>
+}
+
+export type WorkflowTemplateUpdateWithWhereUniqueWithoutAuthorInput = {
+  where: Prisma.WorkflowTemplateWhereUniqueInput
+  data: Prisma.XOR<Prisma.WorkflowTemplateUpdateWithoutAuthorInput, Prisma.WorkflowTemplateUncheckedUpdateWithoutAuthorInput>
+}
+
+export type WorkflowTemplateUpdateManyWithWhereWithoutAuthorInput = {
+  where: Prisma.WorkflowTemplateScalarWhereInput
+  data: Prisma.XOR<Prisma.WorkflowTemplateUpdateManyMutationInput, Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorInput>
+}
+
+export type WorkflowTemplateScalarWhereInput = {
+  AND?: Prisma.WorkflowTemplateScalarWhereInput | Prisma.WorkflowTemplateScalarWhereInput[]
+  OR?: Prisma.WorkflowTemplateScalarWhereInput[]
+  NOT?: Prisma.WorkflowTemplateScalarWhereInput | Prisma.WorkflowTemplateScalarWhereInput[]
+  id?: Prisma.StringFilter<"WorkflowTemplate"> | string
+  slug?: Prisma.StringFilter<"WorkflowTemplate"> | string
+  title?: Prisma.StringFilter<"WorkflowTemplate"> | string
+  category?: Prisma.StringFilter<"WorkflowTemplate"> | string
+  isAcademic?: Prisma.BoolFilter<"WorkflowTemplate"> | boolean
+  domainTags?: Prisma.StringNullableListFilter<"WorkflowTemplate">
+  outputType?: Prisma.EnumWorkflowOutputTypeFilter<"WorkflowTemplate"> | $Enums.WorkflowOutputType
+  supportsGroupMode?: Prisma.BoolFilter<"WorkflowTemplate"> | boolean
+  description?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  goalTemplate?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  customRequirements?: Prisma.JsonFilter<"WorkflowTemplate">
+  authorId?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  authorName?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  status?: Prisma.EnumTemplateStatusFilter<"WorkflowTemplate"> | $Enums.TemplateStatus
+  installCount?: Prisma.IntFilter<"WorkflowTemplate"> | number
+  priceVnd?: Prisma.IntNullableFilter<"WorkflowTemplate"> | number | null
+  rejectionReason?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  publishedAt?: Prisma.DateTimeNullableFilter<"WorkflowTemplate"> | Date | string | null
+  submittedAt?: Prisma.DateTimeNullableFilter<"WorkflowTemplate"> | Date | string | null
+  sourcePlanId?: Prisma.StringNullableFilter<"WorkflowTemplate"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"WorkflowTemplate"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"WorkflowTemplate"> | Date | string
+}
+
 export type WorkflowTemplateCreateWithoutStepsInput = {
   id?: string
   slug: string
@@ -529,8 +989,19 @@ export type WorkflowTemplateCreateWithoutStepsInput = {
   outputType: $Enums.WorkflowOutputType
   supportsGroupMode?: boolean
   description?: string | null
+  goalTemplate?: string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorName?: string | null
+  status?: $Enums.TemplateStatus
+  installCount?: number
+  priceVnd?: number | null
+  rejectionReason?: string | null
+  publishedAt?: Date | string | null
+  submittedAt?: Date | string | null
+  sourcePlanId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  author?: Prisma.UserCreateNestedOneWithoutAuthoredTemplatesInput
   scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionCreateNestedManyWithoutTemplateInput
   plans?: Prisma.PlanCreateNestedManyWithoutTemplateInput
 }
@@ -545,6 +1016,17 @@ export type WorkflowTemplateUncheckedCreateWithoutStepsInput = {
   outputType: $Enums.WorkflowOutputType
   supportsGroupMode?: boolean
   description?: string | null
+  goalTemplate?: string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorId?: string | null
+  authorName?: string | null
+  status?: $Enums.TemplateStatus
+  installCount?: number
+  priceVnd?: number | null
+  rejectionReason?: string | null
+  publishedAt?: Date | string | null
+  submittedAt?: Date | string | null
+  sourcePlanId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionUncheckedCreateNestedManyWithoutTemplateInput
@@ -577,8 +1059,19 @@ export type WorkflowTemplateUpdateWithoutStepsInput = {
   outputType?: Prisma.EnumWorkflowOutputTypeFieldUpdateOperationsInput | $Enums.WorkflowOutputType
   supportsGroupMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
+  installCount?: Prisma.IntFieldUpdateOperationsInput | number
+  priceVnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  author?: Prisma.UserUpdateOneWithoutAuthoredTemplatesNestedInput
   scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionUpdateManyWithoutTemplateNestedInput
   plans?: Prisma.PlanUpdateManyWithoutTemplateNestedInput
 }
@@ -593,6 +1086,17 @@ export type WorkflowTemplateUncheckedUpdateWithoutStepsInput = {
   outputType?: Prisma.EnumWorkflowOutputTypeFieldUpdateOperationsInput | $Enums.WorkflowOutputType
   supportsGroupMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
+  installCount?: Prisma.IntFieldUpdateOperationsInput | number
+  priceVnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionUncheckedUpdateManyWithoutTemplateNestedInput
@@ -609,8 +1113,19 @@ export type WorkflowTemplateCreateWithoutScaffoldQuestionsInput = {
   outputType: $Enums.WorkflowOutputType
   supportsGroupMode?: boolean
   description?: string | null
+  goalTemplate?: string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorName?: string | null
+  status?: $Enums.TemplateStatus
+  installCount?: number
+  priceVnd?: number | null
+  rejectionReason?: string | null
+  publishedAt?: Date | string | null
+  submittedAt?: Date | string | null
+  sourcePlanId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  author?: Prisma.UserCreateNestedOneWithoutAuthoredTemplatesInput
   steps?: Prisma.WorkflowTemplateStepCreateNestedManyWithoutTemplateInput
   plans?: Prisma.PlanCreateNestedManyWithoutTemplateInput
 }
@@ -625,6 +1140,17 @@ export type WorkflowTemplateUncheckedCreateWithoutScaffoldQuestionsInput = {
   outputType: $Enums.WorkflowOutputType
   supportsGroupMode?: boolean
   description?: string | null
+  goalTemplate?: string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorId?: string | null
+  authorName?: string | null
+  status?: $Enums.TemplateStatus
+  installCount?: number
+  priceVnd?: number | null
+  rejectionReason?: string | null
+  publishedAt?: Date | string | null
+  submittedAt?: Date | string | null
+  sourcePlanId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   steps?: Prisma.WorkflowTemplateStepUncheckedCreateNestedManyWithoutTemplateInput
@@ -657,8 +1183,19 @@ export type WorkflowTemplateUpdateWithoutScaffoldQuestionsInput = {
   outputType?: Prisma.EnumWorkflowOutputTypeFieldUpdateOperationsInput | $Enums.WorkflowOutputType
   supportsGroupMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
+  installCount?: Prisma.IntFieldUpdateOperationsInput | number
+  priceVnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  author?: Prisma.UserUpdateOneWithoutAuthoredTemplatesNestedInput
   steps?: Prisma.WorkflowTemplateStepUpdateManyWithoutTemplateNestedInput
   plans?: Prisma.PlanUpdateManyWithoutTemplateNestedInput
 }
@@ -673,6 +1210,17 @@ export type WorkflowTemplateUncheckedUpdateWithoutScaffoldQuestionsInput = {
   outputType?: Prisma.EnumWorkflowOutputTypeFieldUpdateOperationsInput | $Enums.WorkflowOutputType
   supportsGroupMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
+  installCount?: Prisma.IntFieldUpdateOperationsInput | number
+  priceVnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   steps?: Prisma.WorkflowTemplateStepUncheckedUpdateManyWithoutTemplateNestedInput
@@ -689,8 +1237,19 @@ export type WorkflowTemplateCreateWithoutPlansInput = {
   outputType: $Enums.WorkflowOutputType
   supportsGroupMode?: boolean
   description?: string | null
+  goalTemplate?: string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorName?: string | null
+  status?: $Enums.TemplateStatus
+  installCount?: number
+  priceVnd?: number | null
+  rejectionReason?: string | null
+  publishedAt?: Date | string | null
+  submittedAt?: Date | string | null
+  sourcePlanId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  author?: Prisma.UserCreateNestedOneWithoutAuthoredTemplatesInput
   steps?: Prisma.WorkflowTemplateStepCreateNestedManyWithoutTemplateInput
   scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionCreateNestedManyWithoutTemplateInput
 }
@@ -705,6 +1264,17 @@ export type WorkflowTemplateUncheckedCreateWithoutPlansInput = {
   outputType: $Enums.WorkflowOutputType
   supportsGroupMode?: boolean
   description?: string | null
+  goalTemplate?: string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorId?: string | null
+  authorName?: string | null
+  status?: $Enums.TemplateStatus
+  installCount?: number
+  priceVnd?: number | null
+  rejectionReason?: string | null
+  publishedAt?: Date | string | null
+  submittedAt?: Date | string | null
+  sourcePlanId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   steps?: Prisma.WorkflowTemplateStepUncheckedCreateNestedManyWithoutTemplateInput
@@ -737,8 +1307,19 @@ export type WorkflowTemplateUpdateWithoutPlansInput = {
   outputType?: Prisma.EnumWorkflowOutputTypeFieldUpdateOperationsInput | $Enums.WorkflowOutputType
   supportsGroupMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
+  installCount?: Prisma.IntFieldUpdateOperationsInput | number
+  priceVnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  author?: Prisma.UserUpdateOneWithoutAuthoredTemplatesNestedInput
   steps?: Prisma.WorkflowTemplateStepUpdateManyWithoutTemplateNestedInput
   scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionUpdateManyWithoutTemplateNestedInput
 }
@@ -753,10 +1334,123 @@ export type WorkflowTemplateUncheckedUpdateWithoutPlansInput = {
   outputType?: Prisma.EnumWorkflowOutputTypeFieldUpdateOperationsInput | $Enums.WorkflowOutputType
   supportsGroupMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
+  installCount?: Prisma.IntFieldUpdateOperationsInput | number
+  priceVnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   steps?: Prisma.WorkflowTemplateStepUncheckedUpdateManyWithoutTemplateNestedInput
   scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionUncheckedUpdateManyWithoutTemplateNestedInput
+}
+
+export type WorkflowTemplateCreateManyAuthorInput = {
+  id?: string
+  slug: string
+  title: string
+  category: string
+  isAcademic?: boolean
+  domainTags?: Prisma.WorkflowTemplateCreatedomainTagsInput | string[]
+  outputType: $Enums.WorkflowOutputType
+  supportsGroupMode?: boolean
+  description?: string | null
+  goalTemplate?: string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorName?: string | null
+  status?: $Enums.TemplateStatus
+  installCount?: number
+  priceVnd?: number | null
+  rejectionReason?: string | null
+  publishedAt?: Date | string | null
+  submittedAt?: Date | string | null
+  sourcePlanId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type WorkflowTemplateUpdateWithoutAuthorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isAcademic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  domainTags?: Prisma.WorkflowTemplateUpdatedomainTagsInput | string[]
+  outputType?: Prisma.EnumWorkflowOutputTypeFieldUpdateOperationsInput | $Enums.WorkflowOutputType
+  supportsGroupMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
+  installCount?: Prisma.IntFieldUpdateOperationsInput | number
+  priceVnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  steps?: Prisma.WorkflowTemplateStepUpdateManyWithoutTemplateNestedInput
+  scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionUpdateManyWithoutTemplateNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutTemplateNestedInput
+}
+
+export type WorkflowTemplateUncheckedUpdateWithoutAuthorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isAcademic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  domainTags?: Prisma.WorkflowTemplateUpdatedomainTagsInput | string[]
+  outputType?: Prisma.EnumWorkflowOutputTypeFieldUpdateOperationsInput | $Enums.WorkflowOutputType
+  supportsGroupMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
+  installCount?: Prisma.IntFieldUpdateOperationsInput | number
+  priceVnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  steps?: Prisma.WorkflowTemplateStepUncheckedUpdateManyWithoutTemplateNestedInput
+  scaffoldQuestions?: Prisma.WorkflowScaffoldQuestionUncheckedUpdateManyWithoutTemplateNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutTemplateNestedInput
+}
+
+export type WorkflowTemplateUncheckedUpdateManyWithoutAuthorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  isAcademic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  domainTags?: Prisma.WorkflowTemplateUpdatedomainTagsInput | string[]
+  outputType?: Prisma.EnumWorkflowOutputTypeFieldUpdateOperationsInput | $Enums.WorkflowOutputType
+  supportsGroupMode?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  goalTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customRequirements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  authorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
+  installCount?: Prisma.IntFieldUpdateOperationsInput | number
+  priceVnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  submittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourcePlanId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -818,8 +1512,20 @@ export type WorkflowTemplateSelect<ExtArgs extends runtime.Types.Extensions.Inte
   outputType?: boolean
   supportsGroupMode?: boolean
   description?: boolean
+  goalTemplate?: boolean
+  customRequirements?: boolean
+  authorId?: boolean
+  authorName?: boolean
+  status?: boolean
+  installCount?: boolean
+  priceVnd?: boolean
+  rejectionReason?: boolean
+  publishedAt?: boolean
+  submittedAt?: boolean
+  sourcePlanId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  author?: boolean | Prisma.WorkflowTemplate$authorArgs<ExtArgs>
   steps?: boolean | Prisma.WorkflowTemplate$stepsArgs<ExtArgs>
   scaffoldQuestions?: boolean | Prisma.WorkflowTemplate$scaffoldQuestionsArgs<ExtArgs>
   plans?: boolean | Prisma.WorkflowTemplate$plansArgs<ExtArgs>
@@ -836,8 +1542,20 @@ export type WorkflowTemplateSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   outputType?: boolean
   supportsGroupMode?: boolean
   description?: boolean
+  goalTemplate?: boolean
+  customRequirements?: boolean
+  authorId?: boolean
+  authorName?: boolean
+  status?: boolean
+  installCount?: boolean
+  priceVnd?: boolean
+  rejectionReason?: boolean
+  publishedAt?: boolean
+  submittedAt?: boolean
+  sourcePlanId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  author?: boolean | Prisma.WorkflowTemplate$authorArgs<ExtArgs>
 }, ExtArgs["result"]["workflowTemplate"]>
 
 export type WorkflowTemplateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -850,8 +1568,20 @@ export type WorkflowTemplateSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   outputType?: boolean
   supportsGroupMode?: boolean
   description?: boolean
+  goalTemplate?: boolean
+  customRequirements?: boolean
+  authorId?: boolean
+  authorName?: boolean
+  status?: boolean
+  installCount?: boolean
+  priceVnd?: boolean
+  rejectionReason?: boolean
+  publishedAt?: boolean
+  submittedAt?: boolean
+  sourcePlanId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  author?: boolean | Prisma.WorkflowTemplate$authorArgs<ExtArgs>
 }, ExtArgs["result"]["workflowTemplate"]>
 
 export type WorkflowTemplateSelectScalar = {
@@ -864,23 +1594,40 @@ export type WorkflowTemplateSelectScalar = {
   outputType?: boolean
   supportsGroupMode?: boolean
   description?: boolean
+  goalTemplate?: boolean
+  customRequirements?: boolean
+  authorId?: boolean
+  authorName?: boolean
+  status?: boolean
+  installCount?: boolean
+  priceVnd?: boolean
+  rejectionReason?: boolean
+  publishedAt?: boolean
+  submittedAt?: boolean
+  sourcePlanId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type WorkflowTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "category" | "isAcademic" | "domainTags" | "outputType" | "supportsGroupMode" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["workflowTemplate"]>
+export type WorkflowTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "category" | "isAcademic" | "domainTags" | "outputType" | "supportsGroupMode" | "description" | "goalTemplate" | "customRequirements" | "authorId" | "authorName" | "status" | "installCount" | "priceVnd" | "rejectionReason" | "publishedAt" | "submittedAt" | "sourcePlanId" | "createdAt" | "updatedAt", ExtArgs["result"]["workflowTemplate"]>
 export type WorkflowTemplateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  author?: boolean | Prisma.WorkflowTemplate$authorArgs<ExtArgs>
   steps?: boolean | Prisma.WorkflowTemplate$stepsArgs<ExtArgs>
   scaffoldQuestions?: boolean | Prisma.WorkflowTemplate$scaffoldQuestionsArgs<ExtArgs>
   plans?: boolean | Prisma.WorkflowTemplate$plansArgs<ExtArgs>
   _count?: boolean | Prisma.WorkflowTemplateCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type WorkflowTemplateIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type WorkflowTemplateIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type WorkflowTemplateIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  author?: boolean | Prisma.WorkflowTemplate$authorArgs<ExtArgs>
+}
+export type WorkflowTemplateIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  author?: boolean | Prisma.WorkflowTemplate$authorArgs<ExtArgs>
+}
 
 export type $WorkflowTemplatePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "WorkflowTemplate"
   objects: {
+    author: Prisma.$UserPayload<ExtArgs> | null
     steps: Prisma.$WorkflowTemplateStepPayload<ExtArgs>[]
     scaffoldQuestions: Prisma.$WorkflowScaffoldQuestionPayload<ExtArgs>[]
     plans: Prisma.$PlanPayload<ExtArgs>[]
@@ -895,6 +1642,17 @@ export type $WorkflowTemplatePayload<ExtArgs extends runtime.Types.Extensions.In
     outputType: $Enums.WorkflowOutputType
     supportsGroupMode: boolean
     description: string | null
+    goalTemplate: string | null
+    customRequirements: runtime.JsonValue
+    authorId: string | null
+    authorName: string | null
+    status: $Enums.TemplateStatus
+    installCount: number
+    priceVnd: number | null
+    rejectionReason: string | null
+    publishedAt: Date | null
+    submittedAt: Date | null
+    sourcePlanId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["workflowTemplate"]>
@@ -1291,6 +2049,7 @@ readonly fields: WorkflowTemplateFieldRefs;
  */
 export interface Prisma__WorkflowTemplateClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  author<T extends Prisma.WorkflowTemplate$authorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkflowTemplate$authorArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   steps<T extends Prisma.WorkflowTemplate$stepsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkflowTemplate$stepsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkflowTemplateStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   scaffoldQuestions<T extends Prisma.WorkflowTemplate$scaffoldQuestionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkflowTemplate$scaffoldQuestionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkflowScaffoldQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   plans<T extends Prisma.WorkflowTemplate$plansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkflowTemplate$plansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1332,6 +2091,17 @@ export interface WorkflowTemplateFieldRefs {
   readonly outputType: Prisma.FieldRef<"WorkflowTemplate", 'WorkflowOutputType'>
   readonly supportsGroupMode: Prisma.FieldRef<"WorkflowTemplate", 'Boolean'>
   readonly description: Prisma.FieldRef<"WorkflowTemplate", 'String'>
+  readonly goalTemplate: Prisma.FieldRef<"WorkflowTemplate", 'String'>
+  readonly customRequirements: Prisma.FieldRef<"WorkflowTemplate", 'Json'>
+  readonly authorId: Prisma.FieldRef<"WorkflowTemplate", 'String'>
+  readonly authorName: Prisma.FieldRef<"WorkflowTemplate", 'String'>
+  readonly status: Prisma.FieldRef<"WorkflowTemplate", 'TemplateStatus'>
+  readonly installCount: Prisma.FieldRef<"WorkflowTemplate", 'Int'>
+  readonly priceVnd: Prisma.FieldRef<"WorkflowTemplate", 'Int'>
+  readonly rejectionReason: Prisma.FieldRef<"WorkflowTemplate", 'String'>
+  readonly publishedAt: Prisma.FieldRef<"WorkflowTemplate", 'DateTime'>
+  readonly submittedAt: Prisma.FieldRef<"WorkflowTemplate", 'DateTime'>
+  readonly sourcePlanId: Prisma.FieldRef<"WorkflowTemplate", 'String'>
   readonly createdAt: Prisma.FieldRef<"WorkflowTemplate", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"WorkflowTemplate", 'DateTime'>
 }
@@ -1588,6 +2358,10 @@ export type WorkflowTemplateCreateManyAndReturnArgs<ExtArgs extends runtime.Type
    */
   data: Prisma.WorkflowTemplateCreateManyInput | Prisma.WorkflowTemplateCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorkflowTemplateIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1658,6 +2432,10 @@ export type WorkflowTemplateUpdateManyAndReturnArgs<ExtArgs extends runtime.Type
    * Limit how many WorkflowTemplates to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorkflowTemplateIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1724,6 +2502,25 @@ export type WorkflowTemplateDeleteManyArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many WorkflowTemplates to delete.
    */
   limit?: number
+}
+
+/**
+ * WorkflowTemplate.author
+ */
+export type WorkflowTemplate$authorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

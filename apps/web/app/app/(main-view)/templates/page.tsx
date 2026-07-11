@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import {
   BookOpenIcon,
@@ -19,10 +20,12 @@ import {
 } from "lucide-react"
 
 import { Badge } from "@workspace/ui/components/badge"
-import { Button } from "@workspace/ui/components/button"
+import { Button, buttonVariants } from "@workspace/ui/components/button"
 import { ScrollArea } from "@workspace/ui/components/scroll-area"
+import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
 import { createDbChat } from "@/lib/chat/db-chat-client"
 import { savePendingAskPrompt } from "@/lib/chat/pending-ask-prompt"
+import { MyTemplatesPanel } from "@/components/templates/MyTemplatesPanel"
 
 type TemplateStep = {
   id: string
@@ -61,6 +64,8 @@ type MarketTemplate = {
   title: string
   category: string
   description: string | null
+  authorName?: string | null
+  installCount?: number
   outputType: "DOCUMENT" | "SKILL_PRACTICE" | "PROJECT"
   isAcademic: boolean
   supportsGroupMode: boolean
@@ -195,7 +200,12 @@ function TemplateCard({
             {formatTotalDuration(totalMinutes(template.steps))}
           </span>
         </div>
-        <ChevronRightIcon className="size-4 shrink-0" />
+        <div className="flex items-center gap-3">
+          {typeof template.installCount === "number" ? (
+            <span>{template.installCount} cai dat</span>
+          ) : null}
+          <ChevronRightIcon className="size-4 shrink-0" />
+        </div>
       </div>
     </button>
   )
@@ -263,17 +273,18 @@ function TemplateDetailPane({
   const detail = template.detail
   const scaffoldFields = detail?.scaffoldFields ?? []
   const allScaffoldsFilled =
-    scaffoldFields.length > 0 &&
+    scaffoldFields.length === 0 ||
     scaffoldFields.every((field) => (answers[field.id]?.trim().length ?? 0) > 0)
 
   const handleStart = async () => {
-    if (!detail || !allScaffoldsFilled || isStarting) {
+    if (!allScaffoldsFilled || isStarting) {
       return
     }
 
     setIsStarting(true)
 
     try {
+      void fetch(`/api/templates/${template.id}/install`, { method: "POST" })
       const chat = await createDbChat()
       savePendingAskPrompt(chat.id, buildTemplatePrompt(template, answers))
 
@@ -317,6 +328,9 @@ function TemplateDetailPane({
         <p className="text-sm leading-relaxed text-muted-foreground">
           {detail?.overview ?? template.description ?? "Khung quy trinh cho template nay."}
         </p>
+        {template.authorName ? (
+          <p className="mt-2 text-sm text-muted-foreground">Tac gia: {template.authorName}</p>
+        ) : null}
 
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
           <div className="rounded-2xl border bg-muted/20 p-3">
@@ -432,6 +446,7 @@ export default function TemplatesPage() {
   const [templates, setTemplates] = React.useState<MarketTemplate[]>([])
   const [selectedTemplateId, setSelectedTemplateId] = React.useState<string | null>(null)
   const [isLoaded, setIsLoaded] = React.useState(false)
+  const [tab, setTab] = React.useState("marketplace")
 
   React.useEffect(() => {
     let active = true
@@ -474,8 +489,24 @@ export default function TemplatesPage() {
           Moi template o day khong chi la ten mau. Nguoi dung co the xem chi tiet template se lam gi,
           viec nao sprint duoc, viec nao can thoi gian dai hon, roi tra loi scaffold questions truoc khi AI draft plan.
         </p>
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <Tabs value={tab} onValueChange={setTab}>
+            <TabsList aria-label="Template sections">
+              <TabsTrigger value="marketplace">Marketplace</TabsTrigger>
+              <TabsTrigger value="mine">Template cua toi</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          <Link
+            href="/app/templates/editor/new"
+            className={buttonVariants({ size: "sm" })}
+          >
+            Tao template moi
+          </Link>
+        </div>
 
-        {!isLoaded ? (
+        {tab === "mine" ? (
+          <MyTemplatesPanel />
+        ) : !isLoaded ? (
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)]">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {[1, 2, 3, 4].map((item) => (

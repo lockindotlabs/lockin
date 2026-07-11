@@ -22,6 +22,8 @@ export type WorkflowTemplateSummary = {
   description: string | null
   outputType: string
   isAcademic: boolean
+  status?: "DRAFT" | "PENDING_REVIEW" | "APPROVED" | "REJECTED"
+  isOwned?: boolean
 }
 
 function useWorkflowTemplates() {
@@ -83,6 +85,8 @@ export function TemplatePicker({
   const templates = useWorkflowTemplates()
 
   const selected = templates.find((t) => t.id === selectedTemplateId) ?? null
+  const isUnapprovedOwned = (template: WorkflowTemplateSummary) =>
+    template.isOwned && template.status && template.status !== "APPROVED"
 
   return (
     <DropdownMenu>
@@ -129,7 +133,14 @@ export function TemplatePicker({
                   onClick={() => onSelect(selectedTemplateId === t.id ? null : t.id)}
                   className="flex flex-col items-start gap-0.5 py-2"
                 >
-                  <span className="font-medium leading-tight">{t.title}</span>
+                  <span className="flex items-center gap-2 font-medium leading-tight">
+                    {t.title}
+                    {isUnapprovedOwned(t) ? (
+                      <span className="rounded-full bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-300">
+                        Chưa duyệt
+                      </span>
+                    ) : null}
+                  </span>
                   {t.description && (
                     <span className="line-clamp-2 text-xs text-muted-foreground leading-snug">
                       {t.description}

@@ -1,7 +1,7 @@
 import { getCurrentDbUser } from "@/lib/server/current-db-user"
+import { listMarketTemplates } from "@/lib/server/template-market-store"
 import { getExe101TemplateDetail } from "@/lib/templates/exe101-detail"
 import { EXE101_FALLBACK_TEMPLATES } from "@/lib/templates/exe101-fallback"
-import prisma from "@workspace/db"
 
 function withDetail<T extends {
   slug: string
@@ -14,7 +14,7 @@ function withDetail<T extends {
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   const user = await getCurrentDbUser()
 
   if (!user) {
@@ -22,41 +22,21 @@ export async function GET() {
   }
 
   try {
-    const templates = await prisma.workflowTemplate.findMany({
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        category: true,
-        description: true,
-        outputType: true,
-        isAcademic: true,
-        supportsGroupMode: true,
-        steps: {
-          select: {
-            id: true,
-            order: true,
-            title: true,
-            estimatedMinutes: true,
-          },
-          orderBy: { order: "asc" },
-        },
-        scaffoldQuestions: {
-          select: {
-            id: true,
-            order: true,
-            prompt: true,
-            helperText: true,
-          },
-          orderBy: { order: "asc" },
-        },
-      },
-      orderBy: [{ category: "asc" }, { title: "asc" }],
+    const { searchParams } = new URL(req.url)
+    const templates = await listMarketTemplates({
+      category: searchParams.get("category") ?? undefined,
+      search: searchParams.get("search") ?? undefined,
+      userId: user.id,
     })
 
-    if (templates.length > 0) {
-      return Response.json({ templates: templates.map(withDetail) })
-    }
+    return Response.json({
+      templates: templates.map((template) =>
+        withDetail({
+          ...template,
+          isOwned: template.authorId === user.id,
+        })
+      ),
+    })
   } catch {
     // Fall through to static EXE101 templates when the local DB is unavailable.
   }
@@ -71,6 +51,10 @@ export async function GET() {
       outputType: template.outputType,
       isAcademic: template.isAcademic,
       supportsGroupMode: template.supportsGroupMode,
+      authorName: null,
+      status: "APPROVED",
+      isOwned: false,
+      installCount: 0,
       steps: template.steps.map((step) => ({
         id: step.id,
         order: step.order,

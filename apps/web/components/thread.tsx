@@ -188,9 +188,9 @@ export const Thread: FC<{
     }, [chats])
 
   return (
-    <>
+    <div className="flex h-full min-h-0 flex-col">
       <AuiIf condition={(s) => s.thread.isEmpty && mode == "onboarding"}>
-        <div className="absolute top-12 right-0 left-0 z-10 flex h-12 items-center border-b bg-background/80 px-3 backdrop-blur">
+        <div className="sticky top-0 z-10 flex h-12 shrink-0 items-center border-b bg-background/80 px-3 backdrop-blur">
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
@@ -288,7 +288,7 @@ export const Thread: FC<{
         </div>
       </AuiIf>
       <ThreadPrimitive.Root
-        className="aui-root aui-thread-root @container flex max-h-[calc(100vh-1rem)] flex-1 flex-col"
+        className="aui-root aui-thread-root @container flex min-h-0 flex-1 flex-col"
         style={{
           ["--thread-max-width" as string]: "44rem",
           ["--composer-radius" as string]: "var(--radius-2xl)",
@@ -395,7 +395,7 @@ export const Thread: FC<{
           </div>
         </ThreadPrimitive.Viewport>
       </ThreadPrimitive.Root>
-    </>
+    </div>
   )
 }
 

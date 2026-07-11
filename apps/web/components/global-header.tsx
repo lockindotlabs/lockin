@@ -70,7 +70,7 @@ export default function GlobalHeader() {
   if (!visible) return null
 
   return (
-    <div className="absolute top-0 z-10 flex h-12 w-full items-center justify-between border-b bg-background/80 px-3 backdrop-blur-sm">
+    <div className="sticky top-0 z-20 flex h-12 w-full shrink-0 items-center justify-between border-b bg-background/80 px-3 backdrop-blur-sm">
       <div className="flex items-center">
         <SidebarTrigger
           className={`${state === "collapsed" ? "" : "pointer-events-none opacity-0"} text-sidebar-foreground transition-opacity`}

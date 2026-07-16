@@ -59,6 +59,14 @@ export default function GlobalHeader() {
       )
     }
 
+    if (pathname.startsWith("/app/admin")) {
+      return (
+        <div className="flex items-center gap-2 text-sm font-medium">
+          <span>Admin</span>
+        </div>
+      )
+    }
+
     // Default to Ask
     return (
       <div className="flex items-center gap-2 text-sm font-medium">

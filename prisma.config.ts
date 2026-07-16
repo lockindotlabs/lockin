@@ -25,6 +25,9 @@ if (databaseUrl.includes(":6543")) {
 
 export default {
   schema: "apps/api/prisma/schema.prisma",
+  migrations: {
+    seed: "tsx apps/api/prisma/seed.ts",
+  },
   datasource: {
     url: databaseUrl,
   },

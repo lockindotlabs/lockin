@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Loader2Icon, SendHorizontalIcon, SparklesIcon } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 // The coach only nudges; asking is capped so it stays a focus aid, not a
 // crutch that answers the whole step for you.
@@ -20,6 +21,7 @@ export function FocusCoachChat({
   guidance?: string | null
   planName?: string | null
 }) {
+  const { t } = useTranslation()
   // Threads and ask-counts are kept per step so switching steps preserves each
   // step's short history and its own 2-ask budget for the sprint.
   const [threads, setThreads] = React.useState<Record<string, CoachMessage[]>>(
@@ -66,7 +68,7 @@ export function FocusCoachChat({
         const data = (await res.json().catch(() => null)) as {
           error?: string
         } | null
-        throw new Error(data?.error ?? "Không tạo được phản hồi.")
+        throw new Error(data?.error ?? t("app.focus.coach.replyError"))
       }
       const { reply } = (await res.json()) as { reply: string }
       setThreads((prev) => ({
@@ -74,7 +76,9 @@ export function FocusCoachChat({
         [stepId]: [...(prev[stepId] ?? []), { role: "coach", content: reply }],
       }))
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Có lỗi xảy ra.")
+      setError(
+        err instanceof Error ? err.message : t("app.focus.coach.genericError")
+      )
       // A failed request shouldn't burn one of the two asks.
       setAsks((prev) => ({
         ...prev,
@@ -90,10 +94,13 @@ export function FocusCoachChat({
       <div className="flex items-center justify-between border-b border-border/60 px-4 py-2.5">
         <p className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
           <SparklesIcon className="size-3.5 text-amber-500" />
-          Hỏi Coach
+          {t("app.focus.coach.title")}
         </p>
         <span className="text-[10px] font-medium text-muted-foreground">
-          Còn {remaining}/{MAX_ASKS_PER_STEP} lượt
+          {t("app.focus.coach.remaining", {
+            remaining,
+            total: MAX_ASKS_PER_STEP,
+          })}
         </span>
       </div>
 
@@ -103,8 +110,9 @@ export function FocusCoachChat({
       >
         {messages.length === 0 && !loading ? (
           <p className="text-xs leading-relaxed text-muted-foreground">
-            Kẹt ở bước này? Hỏi <strong>cách tiếp cận</strong> — Coach gợi ý hướng
-            làm, không đưa lời giải sẵn.
+            {t("app.focus.coach.emptyPrefix")}{" "}
+            <strong>{t("app.focus.coach.approach")}</strong>{" "}
+            {t("app.focus.coach.emptySuffix")}
           </p>
         ) : (
           <div className="flex flex-col gap-2.5">
@@ -112,7 +120,9 @@ export function FocusCoachChat({
               <div
                 key={index}
                 className={
-                  message.role === "user" ? "flex justify-end" : "flex justify-start"
+                  message.role === "user"
+                    ? "flex justify-end"
+                    : "flex justify-start"
                 }
               >
                 <p
@@ -130,7 +140,7 @@ export function FocusCoachChat({
               <div className="flex justify-start">
                 <p className="flex items-center gap-1.5 rounded-lg bg-muted/40 px-3 py-1.5 text-xs text-muted-foreground">
                   <Loader2Icon className="size-3 animate-spin" />
-                  Coach đang nghĩ…
+                  {t("app.focus.coach.thinking")}
                 </p>
               </div>
             )}
@@ -138,15 +148,14 @@ export function FocusCoachChat({
         )}
       </div>
 
-      {error && (
-        <p className="px-4 pb-1 text-[10px] text-rose-500">{error}</p>
-      )}
+      {error && <p className="px-4 pb-1 text-[10px] text-rose-500">{error}</p>}
 
       <div className="border-t border-border/60 p-2">
         {atLimit ? (
           <p className="px-2 py-1.5 text-center text-[11px] text-muted-foreground">
-            Đã dùng hết {MAX_ASKS_PER_STEP} lượt hỏi cho bước này — giờ là lúc bắt
-            tay vào làm 💪
+            {t("app.focus.coach.limitReached", {
+              total: MAX_ASKS_PER_STEP,
+            })}
           </p>
         ) : (
           <div className="flex items-center gap-2">
@@ -160,14 +169,14 @@ export function FocusCoachChat({
                 }
               }}
               disabled={loading}
-              placeholder="Mình nên bắt đầu bước này thế nào?"
-              className="min-w-0 flex-1 rounded-lg border border-border/60 bg-background/60 px-3 py-1.5 text-xs text-foreground outline-none transition-colors focus-visible:border-amber-400/70 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
+              placeholder={t("app.focus.coach.placeholder")}
+              className="min-w-0 flex-1 rounded-lg border border-border/60 bg-background/60 px-3 py-1.5 text-xs text-foreground transition-colors outline-none focus-visible:border-amber-400/70 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
             />
             <button
               type="button"
               onClick={() => void send()}
               disabled={loading || input.trim().length === 0}
-              aria-label="Gửi câu hỏi cho Coach"
+              aria-label={t("app.focus.coach.sendAria")}
               className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-amber-500 text-white transition-colors hover:bg-amber-600 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:opacity-40"
             >
               {loading ? (

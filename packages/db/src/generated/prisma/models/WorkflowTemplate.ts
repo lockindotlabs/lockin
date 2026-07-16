@@ -198,13 +198,13 @@ export type WorkflowTemplateAggregateArgs<ExtArgs extends runtime.Types.Extensio
   where?: Prisma.WorkflowTemplateWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-   *
+   * 
    * Determine the order of WorkflowTemplates to fetch.
    */
   orderBy?: Prisma.WorkflowTemplateOrderByWithRelationInput | Prisma.WorkflowTemplateOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-   *
+   * 
    * Sets the start position
    */
   cursor?: Prisma.WorkflowTemplateWhereUniqueInput
@@ -234,13 +234,13 @@ export type WorkflowTemplateAggregateArgs<ExtArgs extends runtime.Types.Extensio
   _avg?: WorkflowTemplateAvgAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   *
+   * 
    * Select which fields to sum
   **/
   _sum?: WorkflowTemplateSumAggregateInputType
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   *
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: WorkflowTemplateMinAggregateInputType

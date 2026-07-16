@@ -1,9 +1,10 @@
-"use client"
+﻿"use client"
 
 import * as React from "react"
 import { useParams, useRouter } from "next/navigation"
 import { useAuth } from "@clerk/nextjs"
 import { RedirectToSignIn, Show } from "@clerk/nextjs"
+import { useTranslation } from "react-i18next"
 import { Button } from "@workspace/ui/components/button"
 import { useSidebar } from "@workspace/ui/components/sidebar"
 import {
@@ -43,7 +44,7 @@ import {
 } from "@/lib/focus/step-guidance-panel"
 import { FocusCoachChat } from "@/components/focus/FocusCoachChat"
 
-// ─── Timer display ────────────────────────────────────────────────────────────
+// â”€â”€â”€ Timer display â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function fmt(seconds: number): string {
   const s = Math.max(0, Math.round(seconds))
@@ -91,7 +92,7 @@ function computeProcrastinationScore(
     estimatedSec > 0
       ? Math.max(0, actualSpentSeconds - estimatedSec) / estimatedSec
       : 0
-  const extensionFactor = Math.min(extensionCount / 3, 1) // hits 1.0 at the 3rd request — same threshold as OVERTIME_FAILED
+  const extensionFactor = Math.min(extensionCount / 3, 1) // hits 1.0 at the 3rd request â€” same threshold as OVERTIME_FAILED
   return Math.min(1, extensionFactor * 0.6 + Math.min(overtimeRatio, 1) * 0.4)
 }
 
@@ -105,14 +106,17 @@ function computeCompletionType(
 }
 
 // Shared by the end-sprint summary modal and the Scenario B end-of-timer
-// actions — derives spent/remaining time per step from when each was ticked.
+// actions â€” derives spent/remaining time per step from when each was ticked.
 function computeStepDetails(
   steps: PlanStep[],
   completedIds: Set<string>,
   taskCheckTimes: Record<string, number>,
   elapsed: number
 ): Record<string, { spentSeconds: number; remainingMinutes: number }> {
-  const res: Record<string, { spentSeconds: number; remainingMinutes: number }> = {}
+  const res: Record<
+    string,
+    { spentSeconds: number; remainingMinutes: number }
+  > = {}
   let previousCompletionTime = 0
 
   for (const s of steps) {
@@ -154,8 +158,10 @@ function computeStepDetails(
 }
 
 // Always-visible how-to for the current step, shown inside the "Now working
-// on" card so the tip is right there while focusing — no expand needed.
+// on" card so the tip is right there while focusing â€” no expand needed.
 function StepGuidance({ guidance }: { guidance: string | null | undefined }) {
+  const { t } = useTranslation()
+
   if (!hasStepGuidance(guidance)) {
     return null
   }
@@ -163,18 +169,18 @@ function StepGuidance({ guidance }: { guidance: string | null | undefined }) {
   return (
     <div className="mt-3 border-t border-border/60 pt-3 text-left">
       <p className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
-        <span aria-hidden="true">💡</span>
-        <span>Cách làm</span>
+        <span aria-hidden="true">ðŸ’¡</span>
+        <span>{t("app.focus.session.howTo")}</span>
       </p>
       <p className={STEP_GUIDANCE_CONTENT_CLASS}>{guidance?.trim()}</p>
     </div>
   )
 }
 
-// ─── End Sprint Checklist Modal ──────────────────────────────────────────────
+// â”€â”€â”€ End Sprint Checklist Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 // Ending while there's still time and/or unfinished steps is a deliberate
-// commitment break — every incomplete step must be explicitly resolved as
+// commitment break â€” every incomplete step must be explicitly resolved as
 // "I'm done" (trusted, no penalty) or "I haven't" (counts as given up,
 // scored as procrastination) before the End button unlocks. No silent
 // free-toggle escape hatch.
@@ -210,6 +216,7 @@ function EndSprintSummaryModal({
   onConfirmEnd: () => void
   ending: boolean
 }) {
+  const { t } = useTranslation()
   const hasIncomplete = steps.some((s) => !completedIds.has(s.id))
   const unresolvedCount = steps.filter(
     (s) => !completedIds.has(s.id) && !perTaskFinalAction[s.id]
@@ -225,25 +232,25 @@ function EndSprintSummaryModal({
       />
       <div className="relative z-10 w-full max-w-md rounded-2xl border border-border/70 bg-background/95 p-6 text-foreground shadow-2xl backdrop-blur-lg">
         <h3 className="text-lg font-semibold tracking-tight text-foreground">
-          End Focus Sprint
+          {t("app.focus.session.endModal.title")}
         </h3>
         <p className="mt-1.5 text-xs text-muted-foreground">
-          Resolve every unfinished step below before you can end.
+          {t("app.focus.session.endModal.subtitle")}
         </p>
 
         {/* Warning if there are incomplete steps */}
         {hasIncomplete && (
           <div className="mt-3 space-y-1 rounded-lg border border-amber-200 bg-amber-50 p-3.5 text-xs text-amber-700 dark:border-amber-900/30 dark:bg-amber-950/20 dark:text-amber-300">
             <p className="flex items-center gap-1.5 font-semibold">
-              <span>⚠️</span>{" "}
+              <span>âš ï¸</span>{" "}
               {isTooEarly
-                ? "You're ending this sprint too early!"
-                : "You haven't finished everything yet!"}
+                ? t("app.focus.session.endModal.tooEarlyTitle")
+                : t("app.focus.session.endModal.unfinishedTitle")}
             </p>
             <p className="leading-relaxed">
               {isTooEarly
-                ? 'There\'s still time left and unfinished steps. Resolve each one below — "I\'m done" or "I haven\'t" — or continue the sprint.'
-                : "Resolve the remaining steps below before ending."}
+                ? t("app.focus.session.endModal.tooEarlyDescription")
+                : t("app.focus.session.endModal.unfinishedDescription")}
             </p>
           </div>
         )}
@@ -272,7 +279,7 @@ function EndSprintSummaryModal({
                       {step.title}
                     </p>
                     <p className="mt-0.5 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
-                      Completed
+                      {t("app.focus.session.endModal.completed")}
                     </p>
                   </div>
                 </div>
@@ -291,7 +298,7 @@ function EndSprintSummaryModal({
                       {step.title}
                     </p>
                     <p className="mt-0.5 text-[10px] font-medium text-muted-foreground">
-                      Marked as not done
+                      {t("app.focus.session.endModal.markedNotDone")}
                     </p>
                   </div>
                 </div>
@@ -310,16 +317,20 @@ function EndSprintSummaryModal({
                       {step.title}
                     </p>
                     <p className="mt-0.5 text-[10px] text-muted-foreground">
-                      Estimate:{" "}
+                      {t("app.focus.session.endModal.estimate")}{" "}
                       <strong className="text-foreground">
                         {remainingMin}m
                       </strong>
                       {spentSec > 0 &&
-                        ` (spent ${Math.round(spentSec / 60)}m)`}
+                        t("app.focus.session.endModal.spent", {
+                          minutes: Math.round(spentSec / 60),
+                        })}
                       {extension && extension.count > 0 && (
                         <span className="ml-1 text-amber-600 dark:text-amber-400">
-                          · asked for +{Math.round(extension.totalSeconds / 60)}
-                          m more ({extension.count}x)
+                          {t("app.focus.session.endModal.extensionSummary", {
+                            minutes: Math.round(extension.totalSeconds / 60),
+                            count: extension.count,
+                          })}
                         </span>
                       )}
                     </p>
@@ -332,18 +343,18 @@ function EndSprintSummaryModal({
                     className="flex-1 text-xs"
                     onClick={() => onGiveUp(step.id)}
                   >
-                    I haven't
+                    {t("app.focus.session.endModal.notDoneButton")}
                   </Button>
                   <Button
                     size="sm"
                     className="flex-1 bg-emerald-600 text-xs text-white hover:bg-emerald-700"
                     onClick={() => onMarkDone(step.id)}
                   >
-                    I'm done
+                    {t("app.focus.session.endModal.doneButton")}
                   </Button>
                 </div>
                 <p className="mt-1.5 text-[10px] text-muted-foreground/80">
-                  You're responsible for your own actions — be honest about what's actually done.
+                  {t("app.focus.session.endModal.honesty")}
                 </p>
               </div>
             )
@@ -353,14 +364,14 @@ function EndSprintSummaryModal({
         {/* Sprint Summary Details */}
         <div className="mt-5 space-y-2 rounded-xl border border-primary/10 bg-primary/5 px-4 py-3">
           <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Time elapsed:</span>
+            <span>{t("app.focus.session.endModal.timeElapsed")}</span>
             <span className="font-semibold text-foreground">
               {fmt(elapsed)}
             </span>
           </div>
           {!isOvertime && remaining > 0 && (
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Remaining sprint time:</span>
+              <span>{t("app.focus.session.endModal.remainingTime")}</span>
               <span className="font-semibold text-rose-500">
                 {fmt(remaining)}
               </span>
@@ -380,7 +391,9 @@ function EndSprintSummaryModal({
             onClick={onClose}
             disabled={ending}
           >
-            {hasIncomplete ? "Continue Sprint" : "Cancel"}
+            {hasIncomplete
+              ? t("app.focus.session.endModal.continueSprint")
+              : t("app.focus.session.endModal.cancel")}
           </Button>
           <Button
             size="sm"
@@ -389,15 +402,19 @@ function EndSprintSummaryModal({
             disabled={ending || !canEnd}
             title={
               !canEnd
-                ? `Resolve ${unresolvedCount} more step(s) first`
+                ? t("app.focus.session.endModal.resolveFirst", {
+                    count: unresolvedCount,
+                  })
                 : undefined
             }
           >
             {ending
-              ? "Ending..."
+              ? t("app.focus.session.endModal.ending")
               : canEnd
-                ? "Save & End"
-                : `Resolve ${unresolvedCount} more`}
+                ? t("app.focus.session.endModal.saveAndEnd")
+                : t("app.focus.session.endModal.resolveMore", {
+                    count: unresolvedCount,
+                  })}
           </Button>
         </div>
       </div>
@@ -405,7 +422,7 @@ function EndSprintSummaryModal({
   )
 }
 
-// ─── Hooks ────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Hooks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function useTimer(
   sessionId: string,
@@ -425,11 +442,17 @@ function useTimer(
     const ms = new Date(startedAt).getTime()
     startRef.current = ms
 
-    const storedPausedSecs = localStorage.getItem(`lockin:session:${sessionId}:pausedSecs`)
-    const parsedPausedSecs = storedPausedSecs ? parseInt(storedPausedSecs, 10) : 0
+    const storedPausedSecs = localStorage.getItem(
+      `lockin:session:${sessionId}:pausedSecs`
+    )
+    const parsedPausedSecs = storedPausedSecs
+      ? parseInt(storedPausedSecs, 10)
+      : 0
     pausedSecsRef.current = parsedPausedSecs
 
-    const storedPausedAt = localStorage.getItem(`lockin:session:${sessionId}:pausedAt`)
+    const storedPausedAt = localStorage.getItem(
+      `lockin:session:${sessionId}:pausedAt`
+    )
     const parsedPausedAt = storedPausedAt ? parseInt(storedPausedAt, 10) : null
     pausedAtRef.current = parsedPausedAt
 
@@ -438,14 +461,19 @@ function useTimer(
       currentPausedSecs += Math.floor((Date.now() - parsedPausedAt) / 1000)
     }
 
-    setElapsed(Math.max(0, Math.floor((Date.now() - ms) / 1000) - currentPausedSecs))
+    setElapsed(
+      Math.max(0, Math.floor((Date.now() - ms) / 1000) - currentPausedSecs)
+    )
   }, [startedAt, sessionId])
 
   React.useEffect(() => {
     if (paused) {
       if (pausedAtRef.current === null) {
         pausedAtRef.current = Date.now()
-        localStorage.setItem(`lockin:session:${sessionId}:pausedAt`, String(pausedAtRef.current))
+        localStorage.setItem(
+          `lockin:session:${sessionId}:pausedAt`,
+          String(pausedAtRef.current)
+        )
       }
       return
     }
@@ -453,7 +481,10 @@ function useTimer(
       pausedSecsRef.current += Math.floor(
         (Date.now() - pausedAtRef.current) / 1000
       )
-      localStorage.setItem(`lockin:session:${sessionId}:pausedSecs`, String(pausedSecsRef.current))
+      localStorage.setItem(
+        `lockin:session:${sessionId}:pausedSecs`,
+        String(pausedSecsRef.current)
+      )
       pausedAtRef.current = null
       localStorage.removeItem(`lockin:session:${sessionId}:pausedAt`)
     }
@@ -481,15 +512,16 @@ function useTimer(
   }
 }
 
-// ─── Session Page ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ Session Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export default function SessionPage() {
   const params = useParams<{ sessionId: string }>()
   const router = useRouter()
   const { getToken } = useAuth()
+  const { t } = useTranslation()
   const sessionId = params.sessionId
 
-  // Auto-collapse the sidebar while focusing — restore whatever it was set
+  // Auto-collapse the sidebar while focusing â€” restore whatever it was set
   // to before, on the way out, rather than always forcing it back open
   // (the user may have already had it closed).
   const { open: sidebarOpen, setOpen: setSidebarOpen } = useSidebar()
@@ -505,10 +537,13 @@ export default function SessionPage() {
   const [session, setSession] = React.useState<FocusSession | null>(null)
   const [plan, setPlan] = React.useState<FocusPlan | null>(null)
   const [steps, setSteps] = React.useState<PlanStep[]>([])
+  const [titleBounceKey, setTitleBounceKey] = React.useState(0)
 
   const [completedIds, setCompletedIds] = React.useState<Set<string>>(() => {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem(`lockin:session:${sessionId}:completedIds`)
+      const stored = localStorage.getItem(
+        `lockin:session:${sessionId}:completedIds`
+      )
       if (stored) {
         try {
           return new Set(JSON.parse(stored))
@@ -522,7 +557,9 @@ export default function SessionPage() {
     Record<string, number>
   >(() => {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem(`lockin:session:${sessionId}:taskCheckTimes`)
+      const stored = localStorage.getItem(
+        `lockin:session:${sessionId}:taskCheckTimes`
+      )
       if (stored) {
         try {
           return JSON.parse(stored)
@@ -539,13 +576,13 @@ export default function SessionPage() {
   const [taskCompletedAt, setTaskCompletedAt] = React.useState<
     Record<string, string>
   >({})
-  // "Give me more time" usage per task — drives both the timing outcome and
+  // "Give me more time" usage per task â€” drives both the timing outcome and
   // whether the whole sprint counts as on-time (>2 requests on any one task
   // fails the sprint, per the commitment rule).
   const [perTaskExtensions, setPerTaskExtensions] = React.useState<
     Record<string, { count: number; totalSeconds: number }>
   >({})
-  // How a task's overtime modal was resolved — DONE or GAVE_UP. Once set to
+  // How a task's overtime modal was resolved â€” DONE or GAVE_UP. Once set to
   // GAVE_UP a task can't be reopened via the checklist.
   const [perTaskFinalAction, setPerTaskFinalAction] = React.useState<
     Record<string, TaskFinalAction>
@@ -585,7 +622,9 @@ export default function SessionPage() {
 
   const [addedSeconds, setAddedSeconds] = React.useState<number>(() => {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem(`lockin:session:${sessionId}:addedSeconds`)
+      const stored = localStorage.getItem(
+        `lockin:session:${sessionId}:addedSeconds`
+      )
       if (stored) {
         try {
           return parseInt(stored, 10) || 0
@@ -637,14 +676,19 @@ export default function SessionPage() {
     session?.startedAt ?? null
   )
 
-  // A task once given up can't be reopened via the checklist — skip it when
+  // A task once given up can't be reopened via the checklist â€” skip it when
   // picking the "current" (first pending) step.
   const isStepPending = (s: PlanStep) =>
     !completedIds.has(s.id) && perTaskFinalAction[s.id] !== "GAVE_UP"
   const currentStepIndex = steps.findIndex(isStepPending)
   const currentStep = steps[currentStepIndex]
 
-  const stepDetails = computeStepDetails(steps, completedIds, taskCheckTimes, elapsed)
+  const stepDetails = computeStepDetails(
+    steps,
+    completedIds,
+    taskCheckTimes,
+    elapsed
+  )
   const unresolvedSteps = steps.filter(
     (s) => !completedIds.has(s.id) && !perTaskFinalAction[s.id]
   )
@@ -711,7 +755,7 @@ export default function SessionPage() {
     }
   }, [remaining, overtime, session])
 
-  // Per-task overtime — fires while the CURRENT step alone runs past its own
+  // Per-task overtime â€” fires while the CURRENT step alone runs past its own
   // estimate (plus any extensions already granted), independent of the
   // sprint's total remaining time. Suppressed once the sprint-end checklist
   // takes over (total time is up) so only one modal is ever active.
@@ -740,7 +784,7 @@ export default function SessionPage() {
     stepDetails,
   ])
 
-  // Sprint's total time is up — switch from per-task popups to a checklist
+  // Sprint's total time is up â€” switch from per-task popups to a checklist
   // covering every step that's still neither done nor given up. No "just
   // leave" exit: each one must be resolved via the same 3-action modal.
   React.useEffect(() => {
@@ -756,7 +800,7 @@ export default function SessionPage() {
   }, [remaining, loading, unresolvedSteps.length, showSprintEndChecklist])
 
   // Once every step in the sprint-end checklist has been resolved (done or
-  // given up), finalize and leave automatically — there's nothing left to ask.
+  // given up), finalize and leave automatically â€” there's nothing left to ask.
   React.useEffect(() => {
     if (!showSprintEndChecklist || unresolvedSteps.length > 0) return
     const sprintOnTime = steps.every(
@@ -764,14 +808,22 @@ export default function SessionPage() {
     )
     const allDoneNow = steps.every((s) => completedIds.has(s.id))
     const completionType = computeCompletionType(allDoneNow, sprintOnTime)
-    const details = computeStepDetails(steps, completedIds, taskCheckTimes, elapsed)
+    const details = computeStepDetails(
+      steps,
+      completedIds,
+      taskCheckTimes,
+      elapsed
+    )
     handleEnd(completionType, completedIds, details, "/app/focus")
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showSprintEndChecklist, unresolvedSteps.length])
 
   const handleGiveUp = (stepId: string) => {
     setPerTaskFinalAction((prev) => ({ ...prev, [stepId]: "GAVE_UP" }))
-    setTaskCompletedAt((prev) => ({ ...prev, [stepId]: new Date().toISOString() }))
+    setTaskCompletedAt((prev) => ({
+      ...prev,
+      [stepId]: new Date().toISOString(),
+    }))
     setActiveOvertimeTaskId(null)
   }
 
@@ -783,7 +835,7 @@ export default function SessionPage() {
         totalSeconds: (prev[stepId]?.totalSeconds ?? 0) + minutes * 60,
       },
     }))
-    // Extensions feed the main timer too — the sprint clock actually grows,
+    // Extensions feed the main timer too â€” the sprint clock actually grows,
     // while the per-task overtime sub-timer keeps tracking that one step.
     setAddedSeconds((prev) => prev + minutes * 60)
     setActiveOvertimeTaskId(null)
@@ -796,24 +848,36 @@ export default function SessionPage() {
     setCompletedIds((prev) => new Set(prev).add(stepId))
     setTaskCheckTimes((prev) => ({ ...prev, [stepId]: elapsed }))
     setPerTaskFinalAction((prev) => ({ ...prev, [stepId]: "DONE" }))
-    setTaskCompletedAt((prev) => ({ ...prev, [stepId]: new Date().toISOString() }))
+    setTaskCompletedAt((prev) => ({
+      ...prev,
+      [stepId]: new Date().toISOString(),
+    }))
     setActiveOvertimeTaskId(null)
   }
 
   // Sync state to localStorage
   React.useEffect(() => {
     if (!sessionId) return
-    localStorage.setItem(`lockin:session:${sessionId}:completedIds`, JSON.stringify(Array.from(completedIds)))
+    localStorage.setItem(
+      `lockin:session:${sessionId}:completedIds`,
+      JSON.stringify(Array.from(completedIds))
+    )
   }, [completedIds, sessionId])
 
   React.useEffect(() => {
     if (!sessionId) return
-    localStorage.setItem(`lockin:session:${sessionId}:taskCheckTimes`, JSON.stringify(taskCheckTimes))
+    localStorage.setItem(
+      `lockin:session:${sessionId}:taskCheckTimes`,
+      JSON.stringify(taskCheckTimes)
+    )
   }, [taskCheckTimes, sessionId])
 
   React.useEffect(() => {
     if (!sessionId) return
-    localStorage.setItem(`lockin:session:${sessionId}:addedSeconds`, String(addedSeconds))
+    localStorage.setItem(
+      `lockin:session:${sessionId}:addedSeconds`,
+      String(addedSeconds)
+    )
   }, [addedSeconds, sessionId])
 
   React.useEffect(() => {
@@ -873,9 +937,15 @@ export default function SessionPage() {
       })
     }
 
-    window.addEventListener("lockin-extension-sprint-changed", handleExtensionSprintChanged)
+    window.addEventListener(
+      "lockin-extension-sprint-changed",
+      handleExtensionSprintChanged
+    )
     return () => {
-      window.removeEventListener("lockin-extension-sprint-changed", handleExtensionSprintChanged)
+      window.removeEventListener(
+        "lockin-extension-sprint-changed",
+        handleExtensionSprintChanged
+      )
     }
   }, [])
 
@@ -885,7 +955,7 @@ export default function SessionPage() {
 
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault()
-      e.returnValue = "Are you sure you want to leave? Your active sprint is in progress."
+      e.returnValue = t("app.focus.session.leaveWarning")
       return e.returnValue
     }
 
@@ -893,7 +963,7 @@ export default function SessionPage() {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload)
     }
-  }, [loading, ending])
+  }, [loading, ending, t])
 
   // Load session + plan data
   React.useEffect(() => {
@@ -921,8 +991,12 @@ export default function SessionPage() {
       setSession(s)
 
       // Try sessionStorage first, then fallback to localStorage
-      const storedSession = sessionStorage.getItem(`lockin:session:${sessionId}:steps`)
-      const storedLocal = localStorage.getItem(`lockin:session:${sessionId}:steps`)
+      const storedSession = sessionStorage.getItem(
+        `lockin:session:${sessionId}:steps`
+      )
+      const storedLocal = localStorage.getItem(
+        `lockin:session:${sessionId}:steps`
+      )
       const stored = storedSession || storedLocal
       if (stored) {
         try {
@@ -943,7 +1017,10 @@ export default function SessionPage() {
         setPlan(p)
         const activeSteps = incompleteSteps(p?.steps ?? [])
         setSteps(activeSteps)
-        localStorage.setItem(`lockin:session:${sessionId}:steps`, JSON.stringify(activeSteps))
+        localStorage.setItem(
+          `lockin:session:${sessionId}:steps`,
+          JSON.stringify(activeSteps)
+        )
       }
 
       if (active) setLoading(false)
@@ -958,7 +1035,7 @@ export default function SessionPage() {
   const toggleStep = (id: string) => {
     const s = steps.find((step) => step.id === id)
     if (!s) return
-    // A given-up task can't be reopened from the checklist — it's resolved.
+    // A given-up task can't be reopened from the checklist â€” it's resolved.
     if (perTaskFinalAction[id] === "GAVE_UP") return
 
     const wasDone = completedIds.has(id)
@@ -1011,7 +1088,8 @@ export default function SessionPage() {
     const snapshot: TaskSnapshot[] = steps.map((s) => {
       const done = finalCompletedIds.has(s.id)
       const details = finalStepDetails[s.id]
-      const resolvedAction = perTaskFinalAction[s.id] ?? (done ? "DONE" : undefined)
+      const resolvedAction =
+        perTaskFinalAction[s.id] ?? (done ? "DONE" : undefined)
       const extension = perTaskExtensions[s.id]
       const extensionCount = extension?.count ?? 0
       const extensionSecondsTotal = extension?.totalSeconds ?? 0
@@ -1028,14 +1106,24 @@ export default function SessionPage() {
         plannedMinutes: s.estimatedMinutes,
         actualSpentSeconds: spentSeconds,
         timingOutcome: resolvedAction
-          ? computeTimingOutcome(s.estimatedMinutes, spentSeconds, extensionCount, resolvedAction)
+          ? computeTimingOutcome(
+              s.estimatedMinutes,
+              spentSeconds,
+              extensionCount,
+              resolvedAction
+            )
           : undefined,
         completedAt: taskCompletedAt[s.id],
         extensionCount,
         extensionSecondsTotal,
         finalAction: resolvedAction,
         procrastinationScore: resolvedAction
-          ? computeProcrastinationScore(s.estimatedMinutes, spentSeconds, extensionCount, resolvedAction)
+          ? computeProcrastinationScore(
+              s.estimatedMinutes,
+              spentSeconds,
+              extensionCount,
+              resolvedAction
+            )
           : undefined,
       }
     })
@@ -1073,7 +1161,7 @@ export default function SessionPage() {
   }
 
   // Manual early-end path (EndSprintSummaryModal). Reads live state directly
-  // — every incomplete step must already be resolved (DONE or GAVE_UP) via
+  // â€” every incomplete step must already be resolved (DONE or GAVE_UP) via
   // the modal's per-task buttons before this can be invoked (gated by
   // `canEnd` in the modal itself).
   const handleManualEnd = () => {
@@ -1082,7 +1170,12 @@ export default function SessionPage() {
       (s) => (perTaskExtensions[s.id]?.count ?? 0) <= 2
     )
     const completionType = computeCompletionType(isAllCompleted, sprintOnTime)
-    const details = computeStepDetails(steps, completedIds, taskCheckTimes, elapsed)
+    const details = computeStepDetails(
+      steps,
+      completedIds,
+      taskCheckTimes,
+      elapsed
+    )
 
     handleEnd(completionType, completedIds, details)
   }
@@ -1090,7 +1183,8 @@ export default function SessionPage() {
   // All steps done?
   const allDone = steps.length > 0 && steps.every((s) => completedIds.has(s.id))
   const doneCount = completedIds.size
-  const planName = plan?.name ?? session?.plan?.name ?? "Sprint"
+  const planName =
+    plan?.name ?? session?.plan?.name ?? t("app.focus.session.sprintFallback")
 
   // Track whether the steps list overflows its scroll area so the jump buttons
   // only render when they're actually useful. Re-measures on step count changes
@@ -1098,7 +1192,8 @@ export default function SessionPage() {
   React.useEffect(() => {
     const el = stepsScrollRef.current
     if (!el) return
-    const measure = () => setStepsOverflow(el.scrollHeight > el.clientHeight + 4)
+    const measure = () =>
+      setStepsOverflow(el.scrollHeight > el.clientHeight + 4)
     measure()
     const observer = new ResizeObserver(measure)
     observer.observe(el)
@@ -1108,7 +1203,9 @@ export default function SessionPage() {
   if (loading) {
     return (
       <main className="flex h-full min-h-0 flex-col items-center justify-center bg-background">
-        <div className="text-sm text-muted-foreground">Loading session…</div>
+        <div className="text-sm text-muted-foreground">
+          {t("app.focus.session.loading")}
+        </div>
         <Show when="signed-out">
           <RedirectToSignIn />
         </Show>
@@ -1131,169 +1228,182 @@ export default function SessionPage() {
         <RedirectToSignIn />
       </Show>
 
-      <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl flex-col gap-4 px-4 py-5 max-lg:overflow-y-auto">
-        {/* ── TOP: centered sprint header + timer + progress + controls ── */}
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl flex-col gap-4 px-4 pt-16 pb-5 max-lg:overflow-y-auto">
+        {/* â”€â”€ TOP: centered sprint header + timer + progress + controls â”€â”€ */}
         <div className="mx-auto flex w-full max-w-md shrink-0 flex-col items-center">
           {/* Plan name */}
-        <p className="mb-1 text-xs font-medium tracking-wider text-muted-foreground uppercase">
-          Sprint
-        </p>
-        <h1 className="mb-8 text-center text-xl font-semibold tracking-tight">
-          {planName}
-        </h1>
-
-        {/* Timer */}
-        <div className="relative mb-8 flex size-52 items-center justify-center">
-          {/* SVG ring */}
-          <svg
-            className="absolute inset-0 -rotate-90"
-            viewBox="0 0 200 200"
-            aria-hidden="true"
+          <button
+            key={titleBounceKey}
+            type="button"
+            className="mb-8 animate-in rounded-md px-2 text-center duration-200 fill-mode-both fade-in slide-in-from-bottom-1 motion-reduce:animate-none"
+            onClick={() => setTitleBounceKey((key) => key + 1)}
           >
-            <circle
-              cx="100"
-              cy="100"
-              r="88"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="8"
-              className="text-border"
-            />
-            <circle
-              cx="100"
-              cy="100"
-              r="88"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="8"
-              strokeDasharray={`${2 * Math.PI * 88}`}
-              strokeDashoffset={`${2 * Math.PI * 88 * (1 - (allDone ? 100 : pct) / 100)}`}
-              strokeLinecap="round"
-              className={
-                allDone
-                  ? "text-emerald-500"
-                  : isOvertime
-                    ? "text-rose-500"
-                    : "text-primary"
-              }
-              style={{ transition: "stroke-dashoffset 0.5s linear" }}
-            />
-          </svg>
+            <p className="mb-1 text-xs font-medium tracking-wider text-muted-foreground uppercase">
+              {t("app.focus.session.sprintLabel")}
+            </p>
+            <h1 className="text-xl font-semibold tracking-tight">{planName}</h1>
+          </button>
 
-          {/* Time text */}
-          <div className="text-center">
+          {/* Timer */}
+          <div className="relative mb-8 flex size-52 items-center justify-center">
+            {/* SVG ring */}
+            <svg
+              className="absolute inset-0 -rotate-90"
+              viewBox="0 0 200 200"
+              aria-hidden="true"
+            >
+              <circle
+                cx="100"
+                cy="100"
+                r="88"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="8"
+                className="text-border"
+              />
+              <circle
+                cx="100"
+                cy="100"
+                r="88"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="8"
+                strokeDasharray={`${2 * Math.PI * 88}`}
+                strokeDashoffset={`${2 * Math.PI * 88 * (1 - (allDone ? 100 : pct) / 100)}`}
+                strokeLinecap="round"
+                className={
+                  allDone
+                    ? "text-emerald-500"
+                    : isOvertime
+                      ? "text-rose-500"
+                      : "text-primary"
+                }
+                style={{ transition: "stroke-dashoffset 0.5s linear" }}
+              />
+            </svg>
+
+            {/* Time text */}
+            <div className="text-center">
+              <div
+                className={`font-mono text-4xl font-light tracking-tight tabular-nums ${
+                  allDone
+                    ? "text-emerald-500"
+                    : isOvertime
+                      ? "text-rose-500"
+                      : ""
+                }`}
+              >
+                {allDone ? "" : isOvertime ? "+" : ""}
+                {allDone
+                  ? "00:00"
+                  : isOvertime
+                    ? fmt(elapsed - adjustedDuration)
+                    : fmt(remaining)}
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                {allDone
+                  ? t("app.focus.session.completeLabel", { percent: 100 })
+                  : isOvertime
+                    ? t("app.focus.session.overtime")
+                    : paused
+                      ? t("app.focus.session.paused")
+                      : t("app.focus.session.completeLabel", { percent: pct })}
+              </div>
+            </div>
+          </div>
+          {/* Task Progress Bar (centered, under the timer) */}
+          {steps.length > 0 && (
             <div
-              className={`font-mono text-4xl font-light tracking-tight tabular-nums ${
-                allDone ? "text-emerald-500" : isOvertime ? "text-rose-500" : ""
+              className={`relative mb-6 w-full overflow-hidden rounded-xl border px-4 py-3.5 shadow-sm transition-[border-color,background-color,box-shadow] duration-500 ${
+                triggerAnimate
+                  ? "border-amber-400/85 bg-amber-500/5 shadow-[0_0_15px_rgba(245,158,11,0.25)]"
+                  : "border-border/50 bg-background/40 backdrop-blur-md"
               }`}
             >
-              {allDone ? "" : isOvertime ? "+" : ""}
-              {allDone
-                ? "00:00"
-                : isOvertime
-                  ? fmt(elapsed - adjustedDuration)
-                  : fmt(remaining)}
-            </div>
-            <div className="mt-1 text-xs text-muted-foreground">
-              {allDone
-                ? "100% complete"
-                : isOvertime
-                  ? "overtime"
-                  : paused
-                    ? "paused"
-                    : `${pct}% complete`}
-            </div>
-          </div>
-        </div>
-        {/* Task Progress Bar (centered, under the timer) */}
-        {steps.length > 0 && (
-          <div
-            className={`relative mb-6 w-full overflow-hidden rounded-xl border px-4 py-3.5 shadow-sm transition-[border-color,background-color,box-shadow] duration-500 ${
-              triggerAnimate
-                ? "border-amber-400/85 bg-amber-500/5 shadow-[0_0_15px_rgba(245,158,11,0.25)]"
-                : "border-border/50 bg-background/40 backdrop-blur-md"
-            }`}
-          >
-            <div className="mb-2 flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-amber-500 uppercase">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-500" />
-                Task Progress
-              </span>
-              <span className="text-xs font-semibold text-amber-500 tabular-nums">
-                {doneCount} / {steps.length} (
-                {Math.round((doneCount / steps.length) * 100)}%)
-              </span>
-            </div>
+              <div className="mb-2 flex items-center justify-between">
+                <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-amber-500 uppercase">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-500" />
+                  {t("app.focus.session.taskProgress")}
+                </span>
+                <span className="text-xs font-semibold text-amber-500 tabular-nums">
+                  {doneCount} / {steps.length} (
+                  {Math.round((doneCount / steps.length) * 100)}%)
+                </span>
+              </div>
 
-            <div className="relative h-2.5 w-full overflow-hidden rounded-full border border-border/40 bg-muted/30">
-              {/* Progress fill */}
-              <div
-                className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 shadow-[0_0_8px_rgba(245,158,11,0.5)] transition-[width] duration-500 ease-out"
-                style={{ width: `${(doneCount / steps.length) * 100}%` }}
-              />
-              {/* Glowing completion beam */}
-              {triggerAnimate && (
-                <div className="animate-run-light pointer-events-none absolute inset-0 w-1/2 skew-x-12 bg-gradient-to-r from-transparent via-white/80 to-transparent" />
-              )}
+              <div className="relative h-2.5 w-full overflow-hidden rounded-full border border-border/40 bg-muted/30">
+                {/* Progress fill */}
+                <div
+                  className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 shadow-[0_0_8px_rgba(245,158,11,0.5)] transition-[width] duration-500 ease-out"
+                  style={{ width: `${(doneCount / steps.length) * 100}%` }}
+                />
+                {/* Glowing completion beam */}
+                {triggerAnimate && (
+                  <div className="animate-run-light pointer-events-none absolute inset-0 w-1/2 skew-x-12 bg-gradient-to-r from-transparent via-white/80 to-transparent" />
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Pause / Resume */}
-        <div className="mb-6 flex gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              setPaused((p) => {
-                const next = !p
-                // Pause/resume is local-only UI state (never persisted to the
-                // server), so pushing to the extension is the only way it can
-                // find out — without this its timer keeps running regardless
-                // of what the app shows.
-                if (next) notifyExtensionSessionPaused(sessionId)
-                else notifyExtensionSessionResumed(sessionId)
-                return next
-              })
-            }
-            disabled={ending}
-          >
-            {paused ? (
-              <>
-                <PlayIcon className="size-3.5" />
-                Resume
-              </>
-            ) : (
-              <>
-                <PauseIcon className="size-3.5" />
-                Pause
-              </>
-            )}
-          </Button>
-
-          {allDone ? (
-            <Button
-              size="sm"
-              onClick={() => setShowEndSprintSummary(true)}
-              disabled={ending}
-              className="bg-emerald-600 text-white hover:bg-emerald-700"
-            >
-              <CheckCircle2Icon className="size-3.5" />
-              {ending ? "Saving…" : "All done — End Sprint"}
-            </Button>
-          ) : (
+          {/* Pause / Resume */}
+          <div className="mb-6 flex gap-3">
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setShowEndSprintSummary(true)}
+              onClick={() =>
+                setPaused((p) => {
+                  const next = !p
+                  // Pause/resume is local-only UI state (never persisted to the
+                  // server), so pushing to the extension is the only way it can
+                  // find out â€” without this its timer keeps running regardless
+                  // of what the app shows.
+                  if (next) notifyExtensionSessionPaused(sessionId)
+                  else notifyExtensionSessionResumed(sessionId)
+                  return next
+                })
+              }
               disabled={ending}
-              className="border-rose-200 text-rose-600 hover:bg-rose-50 dark:border-rose-900 dark:text-rose-400"
             >
-              <SquareIcon className="size-3.5" />
-              {ending ? "Saving…" : "End Sprint"}
+              {paused ? (
+                <>
+                  <PlayIcon className="size-3.5" />
+                  {t("app.focus.session.resume")}
+                </>
+              ) : (
+                <>
+                  <PauseIcon className="size-3.5" />
+                  {t("app.focus.session.pause")}
+                </>
+              )}
             </Button>
-          )}
-        </div>
+
+            {allDone ? (
+              <Button
+                size="sm"
+                onClick={() => setShowEndSprintSummary(true)}
+                disabled={ending}
+                className="bg-emerald-600 text-white hover:bg-emerald-700"
+              >
+                <CheckCircle2Icon className="size-3.5" />
+                {ending
+                  ? t("app.focus.session.saving")
+                  : t("app.focus.session.allDoneEndSprint")}
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowEndSprintSummary(true)}
+                disabled={ending}
+                className="border-rose-200 text-rose-600 hover:bg-rose-50 dark:border-rose-900 dark:text-rose-400"
+              >
+                <SquareIcon className="size-3.5" />
+                {ending
+                  ? t("app.focus.session.saving")
+                  : t("app.focus.session.endSprint")}
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* CSS Keyframes block */}
@@ -1320,134 +1430,136 @@ export default function SessionPage() {
           }
         `}</style>
 
-        {/* ── Columns: steps on the left, tip + coach on the right (equal top) ── */}
+        {/* â”€â”€ Columns: steps on the left, tip + coach on the right (equal top) â”€â”€ */}
         <div className="flex min-h-0 w-full flex-1 flex-col gap-5 lg:flex-row lg:gap-8">
           {/* LEFT: steps only */}
           <div className="flex w-full flex-col lg:min-h-0 lg:w-1/2">
-            {/* Step checklist — scrolls inside its own area so the page stays put */}
+            {/* Step checklist â€” scrolls inside its own area so the page stays put */}
             {steps.length > 0 && (
-              <section className="flex w-full flex-col">
-            <div className="mb-3 flex items-center justify-between gap-2">
-              <h2 className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
-                Steps
-              </h2>
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">
-                  {doneCount} / {steps.length}
-                </span>
-                {stepsOverflow && (
-                  <div className="flex items-center gap-0.5">
-                    <button
-                      type="button"
-                      onClick={() => scrollStepsTo("top")}
-                      aria-label="Cuộn lên đầu danh sách steps"
-                      className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-                    >
-                      <ArrowUpToLineIcon className="size-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => scrollStepsTo("bottom")}
-                      aria-label="Cuộn xuống cuối danh sách steps"
-                      className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-                    >
-                      <ArrowDownToLineIcon className="size-3.5" />
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div
-              ref={stepsScrollRef}
-              className={`divide-y divide-border/60 rounded-xl border border-border/70 bg-background/50 shadow-sm backdrop-blur-md ${
-                steps.length >= 5 ? "max-h-[17rem] overflow-y-auto" : ""
-              }`}
-            >
-              {steps.map((step) => {
-                const done = completedIds.has(step.id)
-                const isCurrent = step.id === currentStep?.id
-                return (
-                  <button
-                    key={step.id}
-                    onClick={() => toggleStep(step.id)}
-                    className={`flex w-full items-start gap-3 px-4 py-3 text-left transition-colors first:rounded-t-xl last:rounded-b-xl hover:bg-muted/20 ${
-                      isCurrent && !done ? "bg-primary/5" : ""
-                    }`}
-                  >
-                    <span
-                      className={`mt-0.5 shrink-0 ${done ? "text-emerald-500" : isCurrent ? "text-primary" : "text-muted-foreground"}`}
-                    >
-                      {done ? (
-                        <CheckCircle2Icon className="size-4" />
-                      ) : (
-                        <CircleIcon className="size-4" />
-                      )}
+              <section className="flex w-full flex-col overflow-hidden rounded-xl border border-border/70 bg-background/50 shadow-sm backdrop-blur-md">
+                <div className="flex items-center justify-between gap-2 px-4 py-3">
+                  <h2 className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
+                    {t("app.focus.session.steps")}
+                  </h2>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground tabular-nums">
+                      {doneCount} / {steps.length}
                     </span>
-                    <span
-                      className={`flex-1 text-sm ${done ? "text-muted-foreground line-through" : ""}`}
-                    >
-                      {step.title}
-                    </span>
-                    {step.estimatedMinutes > 0 && (
-                      <span className="shrink-0 text-xs text-muted-foreground">
-                        {step.estimatedMinutes}m
-                      </span>
+                    {stepsOverflow && (
+                      <div className="flex items-center gap-0.5">
+                        <button
+                          type="button"
+                          onClick={() => scrollStepsTo("top")}
+                          aria-label={t("app.focus.session.scrollTop")}
+                          className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                        >
+                          <ArrowUpToLineIcon className="size-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => scrollStepsTo("bottom")}
+                          aria-label={t("app.focus.session.scrollBottom")}
+                          className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                        >
+                          <ArrowDownToLineIcon className="size-3.5" />
+                        </button>
+                      </div>
                     )}
-                  </button>
-                )
-              })}
-            </div>
-          </section>
-        )}
-        </div>
+                  </div>
+                </div>
 
-        {/* ── RIGHT: current step, how-to guidance, coach (top-aligned) ── */}
-        <div className="flex w-full flex-col gap-4 lg:min-h-0 lg:w-1/2 lg:overflow-y-auto lg:pr-1">
-          {currentStep ? (
-            <>
-              {/* Now working on */}
-              <div className="w-full rounded-xl border border-border/70 bg-background/50 px-4 py-3 text-center shadow-sm backdrop-blur-md">
-                <p className="mb-0.5 text-xs text-muted-foreground">
-                  Now working on
-                </p>
-                <p className="text-sm font-medium">{currentStep.title}</p>
-                {currentStep.estimatedMinutes > 0 && (
-                  <p className="mt-0.5 text-xs text-muted-foreground">
-                    ~{formatMinutes(currentStep.estimatedMinutes)}
+                <div
+                  ref={stepsScrollRef}
+                  className={`divide-y divide-border/60 border-t border-border/60 ${
+                    steps.length >= 5 ? "max-h-[17rem] overflow-y-auto" : ""
+                  }`}
+                >
+                  {steps.map((step) => {
+                    const done = completedIds.has(step.id)
+                    const isCurrent = step.id === currentStep?.id
+                    return (
+                      <button
+                        key={step.id}
+                        onClick={() => toggleStep(step.id)}
+                        className={`flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/20 ${
+                          isCurrent && !done ? "bg-primary/5" : ""
+                        }`}
+                      >
+                        <span
+                          className={`mt-0.5 shrink-0 ${done ? "text-emerald-500" : isCurrent ? "text-primary" : "text-muted-foreground"}`}
+                        >
+                          {done ? (
+                            <CheckCircle2Icon className="size-4" />
+                          ) : (
+                            <CircleIcon className="size-4" />
+                          )}
+                        </span>
+                        <span
+                          className={`flex-1 text-sm ${done ? "text-muted-foreground line-through" : ""}`}
+                        >
+                          {step.title}
+                        </span>
+                        {step.estimatedMinutes > 0 && (
+                          <span className="shrink-0 text-xs text-muted-foreground">
+                            {step.estimatedMinutes}m
+                          </span>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+              </section>
+            )}
+          </div>
+
+          {/* â”€â”€ RIGHT: current step, how-to guidance, coach (top-aligned) â”€â”€ */}
+          <div className="flex w-full flex-col gap-4 lg:min-h-0 lg:w-1/2 lg:overflow-y-auto lg:pr-1">
+            {currentStep ? (
+              <>
+                {/* Now working on */}
+                <div className="w-full rounded-xl border border-border/70 bg-background/50 px-4 py-3 text-center shadow-sm backdrop-blur-md">
+                  <p className="mb-0.5 text-xs text-muted-foreground">
+                    {t("app.focus.session.nowWorkingOn")}
                   </p>
-                )}
-                {(() => {
-                  const allowedSec =
-                    currentStep.estimatedMinutes * 60 +
-                    (perTaskExtensions[currentStep.id]?.totalSeconds ?? 0)
-                  const spent = stepDetails[currentStep.id]?.spentSeconds ?? 0
-                  const taskOvertimeSeconds = Math.max(0, spent - allowedSec)
-                  return taskOvertimeSeconds > 0 ? (
-                    <p className="mt-0.5 font-mono text-xs font-semibold text-rose-500">
-                      +{fmt(taskOvertimeSeconds)} over
+                  <p className="text-sm font-medium">{currentStep.title}</p>
+                  {currentStep.estimatedMinutes > 0 && (
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      ~{formatMinutes(currentStep.estimatedMinutes)}
                     </p>
-                  ) : null
-                })()}
-                <StepGuidance guidance={currentStep.guidance} />
-              </div>
+                  )}
+                  {(() => {
+                    const allowedSec =
+                      currentStep.estimatedMinutes * 60 +
+                      (perTaskExtensions[currentStep.id]?.totalSeconds ?? 0)
+                    const spent = stepDetails[currentStep.id]?.spentSeconds ?? 0
+                    const taskOvertimeSeconds = Math.max(0, spent - allowedSec)
+                    return taskOvertimeSeconds > 0 ? (
+                      <p className="mt-0.5 font-mono text-xs font-semibold text-rose-500">
+                        {t("app.focus.session.overBy", {
+                          duration: fmt(taskOvertimeSeconds),
+                        })}
+                      </p>
+                    ) : null
+                  })()}
+                  <StepGuidance guidance={currentStep.guidance} />
+                </div>
 
-              {/* AI coach — guides only (refuses solutions), capped at 2 asks per step */}
-              <FocusCoachChat
-                stepId={currentStep.id}
-                stepTitle={currentStep.title}
-                guidance={currentStep.guidance}
-                planName={planName}
-              />
-            </>
-          ) : (
-            <div className="flex flex-1 items-center justify-center rounded-xl border border-dashed border-border/60 px-4 py-8 text-center text-xs text-muted-foreground">
-              {allDone
-                ? "Tất cả steps đã xong 🎉"
-                : "Chọn hoặc bắt đầu một step để xem gợi ý."}
-            </div>
-          )}
-        </div>
+                {/* AI coach â€” guides only (refuses solutions), capped at 2 asks per step */}
+                <FocusCoachChat
+                  stepId={currentStep.id}
+                  stepTitle={currentStep.title}
+                  guidance={currentStep.guidance}
+                  planName={planName}
+                />
+              </>
+            ) : (
+              <div className="flex flex-1 items-center justify-center rounded-xl border border-dashed border-border/60 px-4 py-8 text-center text-xs text-muted-foreground">
+                {allDone
+                  ? t("app.focus.session.allStepsDone")
+                  : t("app.focus.session.pickStepHint")}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -1492,7 +1604,7 @@ export default function SessionPage() {
         />
       )}
 
-      {/* Sprint's total time is up — resolve every step still pending */}
+      {/* Sprint's total time is up â€” resolve every step still pending */}
       {showSprintEndChecklist && unresolvedSteps.length > 0 && (
         <TaskOvertimeModal
           mode="sprint-end"

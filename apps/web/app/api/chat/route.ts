@@ -23,7 +23,14 @@ import type { MentionRef } from "@/lib/mentions/mention-types"
 import prisma from "@workspace/db"
 import { getEffectiveTier } from "@/lib/billing/catalog"
 import { AI_CATALOG, calculateCredits } from "@/lib/ai/catalog"
-import { validateAiRequest, checkQuotaAndRecordStarted } from "@/lib/ai/enforcement"
+import {
+  validateAiRequest,
+  checkQuotaAndRecordStarted,
+} from "@/lib/ai/enforcement"
+import {
+  getAiLanguageInstruction,
+  getRequestLocale,
+} from "@/lib/server/request-locale"
 
 export const maxDuration = 30
 
@@ -828,6 +835,8 @@ export async function POST(req: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 })
   }
 
+  const locale = await getRequestLocale(req, user.id)
+
   const { id, message, tools, config } = (await req.json()) as {
     id?: string
     message?: UIMessage
@@ -843,7 +852,11 @@ export async function POST(req: Request) {
   const modelName = getModelName(config?.modelName)
   const tier = getEffectiveTier(user.planTier, user.planExpiresAt)
 
-  const validation = validateAiRequest({ tier, modelName, requestedCapabilities })
+  const validation = validateAiRequest({
+    tier,
+    modelName,
+    requestedCapabilities,
+  })
   if (!validation.valid) {
     return Response.json(validation.error, { status: validation.status })
   }
@@ -907,7 +920,10 @@ export async function POST(req: Request) {
     requestChatId: id,
     mentions: config?.mentions,
   })
-  const templateContext = await resolveTemplateContext(config?.templateId, user.id)
+  const templateContext = await resolveTemplateContext(
+    config?.templateId,
+    user.id
+  )
 
   const requestId = "req_" + Math.random().toString(36).substring(2, 15)
 
@@ -929,7 +945,13 @@ export async function POST(req: Request) {
       const isMonthly = checkResult.reason === "MONTHLY_CREDITS_EXCEEDED"
       const resetAt = isMonthly
         ? new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1))
-        : new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1))
+        : new Date(
+            Date.UTC(
+              now.getUTCFullYear(),
+              now.getUTCMonth(),
+              now.getUTCDate() + 1
+            )
+          )
 
       return Response.json(
         {
@@ -947,7 +969,10 @@ export async function POST(req: Request) {
     }
   } catch (err) {
     console.error("Quota transaction check failed:", err)
-    return Response.json({ error: "Failed to verify AI quota." }, { status: 500 })
+    return Response.json(
+      { error: "Failed to verify AI quota." },
+      { status: 500 }
+    )
   }
 
   try {
@@ -968,6 +993,7 @@ export async function POST(req: Request) {
       },
       system: [
         SYSTEM_INSTRUCTIONS,
+        getAiLanguageInstruction(locale),
         hasWebSearch
           ? `Web search is available through the webSearch tool.
 Use webSearch for current information, source-sensitive claims, external factual questions, or anything that may have changed recently.

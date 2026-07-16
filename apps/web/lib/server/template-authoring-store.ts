@@ -24,10 +24,6 @@ function isUniqueConstraintError(error: unknown) {
   )
 }
 
-function normalizePrice(priceVnd: number | null | undefined) {
-  return priceVnd && priceVnd > 0 ? priceVnd : null
-}
-
 function toTemplateChildren(input: TemplateDraftInput) {
   return {
     steps: {
@@ -105,7 +101,7 @@ async function createTemplateRecord(
       authorName,
       status: "DRAFT",
       installCount: 0,
-      priceVnd: normalizePrice(input.priceVnd),
+      priceVnd: null,
       rejectionReason: null,
       publishedAt: null,
       submittedAt: null,
@@ -189,7 +185,7 @@ export async function updateOwnedTemplate(
         domainTags: input.domainTags,
         outputType: input.outputType,
         supportsGroupMode: input.supportsGroupMode,
-        priceVnd: normalizePrice(input.priceVnd),
+        priceVnd: null,
         status: "DRAFT",
         rejectionReason: null,
         submittedAt: null,

@@ -525,5 +525,451 @@
         }
       }
     }
+  },
+  "app": {
+    "nav": {
+      "home": "Home",
+      "plans": "Plans",
+      "focus": "Focus",
+      "askAi": "Ask AI",
+      "templates": "Templates",
+      "insights": "Insights",
+      "admin": "Admin",
+      "settings": "Settings",
+      "subscription": "Subscription",
+      "knowledgeHub": "Knowledge Hub"
+    },
+    "common": {
+      "loading": "Loading..."
+    },
+    "actions": {
+      "newPlan": "New Plan",
+      "more": "More",
+      "copyLink": "Copy Link",
+      "openInNewTab": "Open in New Tab",
+      "delete": "Delete",
+      "rename": "Rename"
+    },
+    "sidebar": {
+      "recentPlans": "Recent plans",
+      "noSavedPlans": "No saved plans yet"
+    },
+    "search": {
+      "placeholder": "Type a command or search...",
+      "quickActions": "Quick actions",
+      "chats": "Chats",
+      "plans": "Plans",
+      "loadingChats": "Loading chats...",
+      "loadingPlans": "Loading plans...",
+      "noResults": "No results found.",
+      "unableToSearch": "Unable to search. Try again.",
+      "createBlankPlan": "Create a blank plan",
+      "currentPage": "Current page",
+      "openPage": "Open page",
+      "messageCount_one": "{{count}} message",
+      "messageCount_other": "{{count}} messages",
+      "stepCount_one": "{{count}} step",
+      "stepCount_other": "{{count}} steps",
+      "shortcutPrefix": "Use",
+      "shortcutSuffix": "to open the command palette",
+      "filters": {
+        "all": "All",
+        "chats": "Chats",
+        "plans": "Plans"
+      }
+    },
+    "chat": {
+      "newChat": "New chat",
+      "renamePrompt": "Rename chat",
+      "recent": "Recent",
+      "noRecent": "No recent chats",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "previousSevenDays": "Previous 7 days",
+      "older": "Older"
+    },
+    "plan": {
+      "untitled": "Untitled Plan",
+      "current": "Current plan"
+    },
+    "plans": {
+      "recently": "Recently",
+      "noTasks": "No tasks",
+      "taskProgress": "{{completed}}/{{total}} tasks",
+      "filterAria": "Filter plans by status",
+      "toggleViewAria": "Toggle layout view",
+      "deleteAria": "Delete {{name}}",
+      "noPlansFound": "No plans found",
+      "noPlansInCategory": "There are no plans categorized under \"{{category}}\".",
+      "emptyTitle": "You don't have any saved plans yet",
+      "emptyDescription": "Create a plan to see it here.",
+      "tabs": {
+        "all": "All Plans"
+      },
+      "status": {
+        "overdue": "Overdue",
+        "dueToday": "Due Today",
+        "onTrack": "On Track",
+        "completed": "Completed"
+      },
+      "table": {
+        "planTitle": "Plan Title",
+        "status": "Status",
+        "tasks": "Tasks",
+        "lastOpened": "Last Opened"
+      }
+    },
+    "templates": {
+      "title": "Templates",
+      "subtitle": "Each template is more than a saved name. You can inspect what it does, what can fit into a sprint, what needs longer follow-up, and answer scaffold questions before AI drafts the plan.",
+      "createNew": "Create template",
+      "tabs": {
+        "aria": "Template sections",
+        "marketplace": "Marketplace",
+        "mine": "My templates"
+      },
+      "filters": {
+        "searchPlaceholder": "Search by name, description, tag...",
+        "allCategories": "All categories"
+      },
+      "badges": {
+        "academic": "Academic",
+        "document": "Document",
+        "skillPractice": "Practice",
+        "project": "Project",
+        "group": "Group",
+        "teamBased": "Team-based"
+      },
+      "duration": {
+        "minutes_one": "{{count}} min",
+        "minutes_other": "{{count}} min",
+        "hours_one": "{{count}} hr",
+        "hours_other": "{{count}} hrs",
+        "hoursMinutes": "{{hours}}h{{minutes}}m"
+      },
+      "stats": {
+        "steps_one": "{{count}} step",
+        "steps_other": "{{count}} steps",
+        "installs_one": "{{count}} install",
+        "installs_other": "{{count}} installs",
+        "coreSteps_one": "{{count}} core step",
+        "coreSteps_other": "{{count}} core steps",
+        "questions_one": "{{count}} question",
+        "questions_other": "{{count}} questions"
+      },
+      "detail": {
+        "empty": "Select a template to inspect the workflow, scaffold questions, and how the work will be split.",
+        "heading": "Template detail",
+        "fallbackOverview": "Workflow frame for this template.",
+        "author": "Author: {{author}}",
+        "workflowSize": "Workflow size",
+        "totalEstimate": "Total estimate",
+        "scaffoldQuestions": "Scaffold questions",
+        "sections": {
+          "whatItDoes": "What this template helps with",
+          "sprintable": "Work that can fit into a sprint",
+          "longRunning": "Work that needs longer follow-up",
+          "deliverables": "Final deliverables",
+          "saveWhen": "Save the plan only when..."
+        }
+      },
+      "scaffold": {
+        "title": "Scaffold questions",
+        "description": "Answer these questions briefly first. AI will use them to build a template-based plan instead of a generic chat response."
+      },
+      "start": {
+        "title": "Create a draft plan with this template",
+        "description": "Save plan will appear only after AI has enough context and drafts all 3 phases.",
+        "opening": "Opening chat",
+        "button": "Create draft"
+      },
+      "toast": {
+        "installFailed": "Could not record the template install. Chat will still open."
+      },
+      "empty": {
+        "title": "No templates yet",
+        "description": "Templates will appear here when they are added to the system."
+      },
+      "mine": {
+        "loading": "Loading your templates...",
+        "emptyTitle": "You do not have any templates yet",
+        "emptyDescription": "Create one from scratch or snapshot an existing plan to begin.",
+        "summary": "{{category}} • {{count}} steps",
+        "rejectionReason": "Rejection reason: {{reason}}",
+        "edit": "Edit",
+        "submit": "Submit for review",
+        "unpublish": "Unpublish",
+        "delete": "Delete",
+        "status": {
+          "draft": "Draft",
+          "pendingReview": "Pending review",
+          "approved": "Published",
+          "rejected": "Rejected"
+        }
+      }
+    },
+    "editor": {
+      "close": "Close editor"
+    },
+    "focus": {
+      "focusedToday": "{{duration}} focused today",
+      "dueTodayPlans_one": "{{count}} plan with steps due today.",
+      "dueTodayPlans_other": "{{count}} plans with steps due today.",
+      "pickPlan": "Pick a plan and start a sprint.",
+      "emptyTitle": "Nothing ready to sprint on",
+      "emptyDescription": "Create a plan to get started.",
+      "createPlan": "Create a plan",
+      "nextStep": "Next:",
+      "allStepsCompleted": "All steps completed",
+      "stepCount_one": "{{count}} step",
+      "stepCount_other": "{{count}} steps",
+      "stepUnit_one": "step",
+      "stepUnit_other": "steps",
+      "dueTodayCount_one": "{{count}} due today",
+      "dueTodayCount_other": "{{count}} due today",
+      "sprint": "Sprint",
+      "recentSprints": "Recent Sprints",
+      "noSprints": "No sprints yet.",
+      "session": {
+        "sprintFallback": "Sprint",
+        "loading": "Loading session...",
+        "sprintLabel": "Sprint",
+        "completeLabel": "{{percent}}% complete",
+        "overtime": "Overtime",
+        "paused": "Paused",
+        "taskProgress": "Task progress",
+        "resume": "Resume",
+        "pause": "Pause",
+        "saving": "Saving...",
+        "allDoneEndSprint": "All done - End Sprint",
+        "endSprint": "End Sprint",
+        "steps": "Steps",
+        "scrollTop": "Scroll to the top of the steps list",
+        "scrollBottom": "Scroll to the bottom of the steps list",
+        "nowWorkingOn": "Now working on",
+        "overBy": "+{{duration}} over",
+        "howTo": "How to",
+        "allStepsDone": "All steps are done",
+        "pickStepHint": "Choose or start a step to see guidance.",
+        "leaveWarning": "Are you sure you want to leave? Your active sprint is in progress.",
+        "endModal": {
+          "title": "End Focus Sprint",
+          "subtitle": "Resolve every unfinished step below before you can end.",
+          "tooEarlyTitle": "You're ending this sprint too early!",
+          "unfinishedTitle": "You haven't finished everything yet!",
+          "tooEarlyDescription": "There's still time left and unfinished steps. Resolve each one below - \"I'm done\" or \"I haven't\" - or continue the sprint.",
+          "unfinishedDescription": "Resolve the remaining steps below before ending.",
+          "completed": "Completed",
+          "markedNotDone": "Marked as not done",
+          "estimate": "Estimate:",
+          "spent": " (spent {{minutes}}m)",
+          "extensionSummary": " · asked for +{{minutes}}m more ({{count}}x)",
+          "notDoneButton": "I haven't",
+          "doneButton": "I'm done",
+          "honesty": "You're responsible for your own actions - be honest about what's actually done.",
+          "timeElapsed": "Time elapsed:",
+          "remainingTime": "Remaining sprint time:",
+          "continueSprint": "Continue Sprint",
+          "cancel": "Cancel",
+          "resolveFirst": "Resolve {{count}} more step(s) first",
+          "ending": "Ending...",
+          "saveAndEnd": "Save & End",
+          "resolveMore": "Resolve {{count}} more"
+        }
+      },
+      "coach": {
+        "title": "Ask Coach",
+        "remaining": "{{remaining}}/{{total}} left",
+        "emptyPrefix": "Stuck on this step? Ask for",
+        "approach": "an approach",
+        "emptySuffix": "- Coach suggests a direction without giving you a ready-made answer.",
+        "thinking": "Coach is thinking...",
+        "limitReached": "You've used all {{total}} coach asks for this step - time to start doing.",
+        "placeholder": "How should I start this step?",
+        "sendAria": "Send question to Coach",
+        "replyError": "Could not create a response.",
+        "genericError": "Something went wrong."
+      },
+      "overtime": {
+        "taskTitle": "This task is taking longer",
+        "sprintTitle": "Sprint time is up",
+        "taskDescription": "Resolve this task before continuing - there's no skipping overtime.",
+        "sprintDescription": "These steps aren't done yet. Resolve each one to end the sprint.",
+        "overEstimate": "+{{duration}} over estimate",
+        "extensionCount_one": "Asked for more time {{count}} time",
+        "extensionCount_other": "Asked for more time {{count}} times",
+        "notOnTimeWarning": "- sprint will count as not on time",
+        "giveUp": "I give up",
+        "markDone": "I actually finished this",
+        "honesty": "You're responsible for your own actions - be honest about what's actually done."
+      }
+    },
+    "language": {
+      "current": "{{locale}}"
+    },
+    "confirm": {
+      "delete": "Delete \"{{name}}\"?"
+    },
+    "assistant": {
+      "suggestions": {
+        "plan": {
+          "smaller": "Make it smaller.",
+          "fortyFiveMinutes": "I only have 45 minutes.",
+          "easiestStep": "Start with the easiest step.",
+          "lowEnergy": "Make this for low energy."
+        },
+        "onboarding": {
+          "uxCaseStudy": "Finish my UX case study",
+          "finals": "Study for finals",
+          "cleanRoom": "Clean my room",
+          "portfolio": "Build my portfolio"
+        }
+      }
+    },
+    "aiTools": {
+      "answered": "Answered",
+      "submitted": "Submitted",
+      "skipped": "Skipped",
+      "thinkingQuestion": "Thinking of a question...",
+      "thinkingQuestions": "Thinking of questions...",
+      "clarifyingQuestion": "Clarifying question",
+      "clarifyingQuestions": "Clarifying questions",
+      "questionNumber": "Question {{number}}",
+      "of": "of",
+      "dismissQuestion": "Dismiss question",
+      "skipQuestion": "Skip question",
+      "writeOwnAnswer": "Write your own answer",
+      "somethingElse": "Something else...",
+      "send": "Send",
+      "set": "Set",
+      "skip": "Skip",
+      "back": "Back",
+      "next": "Next",
+      "planningScaffold": "Planning scaffold",
+      "preparingScaffold": "Preparing scaffold...",
+      "scaffoldHint": "Fill the scaffold so the plan can be built from real context.",
+      "wordCount_one": "{{count}} word",
+      "wordCount_other": "{{count}} words",
+      "needWords": "need {{count}}+",
+      "required": "Required",
+      "canSubmitAddDetail": "Can submit, but add detail if possible",
+      "ready": "Ready",
+      "answerRequired": "Please answer this field before continuing.",
+      "shortAnswerHint": "Short answers are allowed, but adding a little more detail will help the plan come out more accurate.",
+      "submitScaffold": "Submit scaffold"
+    },
+    "status": {
+      "comingSoon": "Coming soon"
+    },
+    "feedback": {
+      "title": "Feedback",
+      "placeholder": "Type your feedback here...",
+      "note": "We do not respond to submissions, but we read all of them carefully.",
+      "submit": "Submit"
+    },
+    "guide": {
+      "cardTitle": "Getting Started",
+      "cardDescription": "Learn how LockIn turns overwhelming tasks into actionable Sprint plans.",
+      "viewGuide": "View Guide",
+      "dialogTitle": "Getting Started with LockIn",
+      "dialogDescription": "A step-by-step guide to get started with LockIn.",
+      "getStarted": "Get started",
+      "stepCounter": "Step {{step}} of {{total}}",
+      "start": "Start",
+      "steps": {
+        "0": {
+          "title": "Welcome to LockIn",
+          "body1": "Most productivity apps help you organize your work. LockIn helps you actually start it.",
+          "body2": "Large, vague tasks often lead to procrastination because they are difficult to begin. LockIn helps you turn overwhelming work into clear, actionable steps."
+        },
+        "1": {
+          "title": "Start with any task",
+          "body1": "Just describe what you need to get done in your own words.",
+          "body2": "LockIn is designed to handle messy, overwhelming tasks."
+        },
+        "2": {
+          "title": "Let AI create the first draft",
+          "body1": "Instead of figuring out where to start, let LockIn generate a plan for you.",
+          "body2": "The AI breaks large tasks into smaller steps and estimates how long each step may take."
+        },
+        "3": {
+          "title": "Review before you commit",
+          "body1": "AI suggestions are only a starting point.",
+          "body2": "Before beginning, you can edit steps, adjust their time estimates, reorder, and add your own steps."
+        },
+        "4": {
+          "title": "Enter Sprint Mode",
+          "body1": "When you are ready, start a Sprint.",
+          "body2": "Sprint Mode removes distractions and focuses your attention on one step at a time."
+        },
+        "5": {
+          "title": "Progress is built one step at a time",
+          "body1": "You do not need to finish everything today. Each completed Sprint moves the project forward.",
+          "body2": "When a Sprint ends, LockIn summarizes your progress and helps you decide what to do next."
+        },
+        "6": {
+          "title": "Ready to start?",
+          "body1": "Think of something you have been putting off.",
+          "body2": "LockIn will help you turn it into a plan you can actually begin."
+        }
+      }
+    },
+    "insights": {
+      "title": "Insights",
+      "subtitle": "How your sprints actually went - completion, timing, and procrastination.",
+      "empty": "No completed sprints yet - finish a focus sprint to see your stats here.",
+      "sprintFallback": "Sprint",
+      "stepsProgress": "{{done}}/{{total}} steps",
+      "heatmapCell": "{{date}} · {{count}} sprint · {{onTime}} on time · {{late}} not on time",
+      "heatmapEmptyCell": "{{date}} · no sprints",
+      "metrics": {
+        "totalSprints": "Total sprints",
+        "onTimeRate": "On-time rate",
+        "onTimeRateDescription": ">2 time extensions on a task fails that sprint",
+        "totalFocusTime": "Total focus time",
+        "avgProcrastination": "Avg. procrastination"
+      },
+      "sections": {
+        "completionBreakdown": "Completion breakdown",
+        "whenYouFocus": "When you focus",
+        "recentSprints": "Recent sprints"
+      },
+      "aria": {
+        "completionBreakdown": "Sprint completion breakdown"
+      },
+      "completion": {
+        "onTime": "On time",
+        "notOnTime": "Not on time",
+        "completedLate": "Completed late",
+        "overtime": "Overtime",
+        "endedEarly": "Ended early"
+      },
+      "procrastination": {
+        "none": "None",
+        "mild": "Mild",
+        "moderate": "Moderate",
+        "severe": "Severe",
+        "label": "{{value}} procrastination"
+      },
+      "days": {
+        "mon": "Mon",
+        "wed": "Wed",
+        "fri": "Fri"
+      },
+      "months": {
+        "0": "Jan",
+        "1": "Feb",
+        "2": "Mar",
+        "3": "Apr",
+        "4": "May",
+        "5": "Jun",
+        "6": "Jul",
+        "7": "Aug",
+        "8": "Sep",
+        "9": "Oct",
+        "10": "Nov",
+        "11": "Dec"
+      }
+    }
   }
 }

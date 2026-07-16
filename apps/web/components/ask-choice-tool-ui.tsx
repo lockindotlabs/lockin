@@ -26,6 +26,7 @@
  */
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import {
   type ToolCallMessagePartProps,
   useAssistantTool,
@@ -251,10 +252,7 @@ function normalizeOptions(
   })
 }
 
-function isSavePlanConfirmation(
-  question: string,
-  options: NormalizedOption[]
-) {
+function isSavePlanConfirmation(question: string, options: NormalizedOption[]) {
   if (options.length !== 2) return false
 
   const labels = options.map((option) => option.label.toLowerCase())
@@ -313,6 +311,7 @@ function AskChoiceCard({
   result,
   addResult,
 }: ToolCallMessagePartProps<AskChoiceArgs, AskChoiceResult>) {
+  const { t } = useTranslation()
   const resolved = parseArgs(isRecord(args) ? args : {}, argsText)
   const question = (resolved.question ?? "").trim()
   const options = normalizeOptions(resolved.options)
@@ -398,7 +397,10 @@ function AskChoiceCard({
               {question || "Clarifying question"}
             </p>
             <p className="mt-0.5 truncate text-sm font-medium text-foreground">
-              {skipped ? "Skipped" : summary?.answer || "Answered"}
+              {skipped
+                ? t("app.aiTools.skipped", { defaultValue: "Skipped" })
+                : summary?.answer ||
+                  t("app.aiTools.answered", { defaultValue: "Answered" })}
             </p>
           </div>
         </div>
@@ -423,7 +425,12 @@ function AskChoiceCard({
         <div className="flex items-center gap-4 px-4 py-2">
           <div className="min-w-0 flex-1">
             <h3 className="leading-snug font-medium text-balance text-foreground">
-              {question || (isStreaming ? "Thinking of a question…" : "")}
+              {question ||
+                (isStreaming
+                  ? t("app.aiTools.thinkingQuestion", {
+                      defaultValue: "Thinking of a question...",
+                    })
+                  : "")}
             </h3>
           </div>
 
@@ -439,14 +446,16 @@ function AskChoiceCard({
                   <span className="font-medium text-foreground">
                     {resolved.step}
                   </span>{" "}
-                  of {resolved.total}
+                  {t("app.aiTools.of", { defaultValue: "of" })} {resolved.total}
                 </span>
               )}
             {allowSkip && (
               <button
                 type="button"
                 onClick={skip}
-                aria-label="Dismiss question"
+                aria-label={t("app.aiTools.dismissQuestion", {
+                  defaultValue: "Dismiss question",
+                })}
                 className="flex size-6.5 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground [&_svg]:size-[17px]"
               >
                 <XIcon />
@@ -536,7 +545,9 @@ function AskChoiceCard({
               <button
                 type="button"
                 onClick={openCustom}
-                aria-label="Write your own answer"
+                aria-label={t("app.aiTools.writeOwnAnswer", {
+                  defaultValue: "Write your own answer",
+                })}
                 className={cn(
                   "flex size-[30px] shrink-0 items-center justify-center rounded-[9px] border bg-background text-muted-foreground transition-colors [&_svg]:size-[15px]",
                   customOpen &&
@@ -559,7 +570,9 @@ function AskChoiceCard({
                     submitCustom()
                   }
                 }}
-                placeholder="Something else…"
+                placeholder={t("app.aiTools.somethingElse", {
+                  defaultValue: "Something else...",
+                })}
                 className="min-w-0 flex-1 bg-transparent text-muted-foreground outline-none placeholder:text-muted-foreground"
               />
               {customValue.trim() ? (
@@ -568,7 +581,7 @@ function AskChoiceCard({
                   onClick={submitCustom}
                   className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-primary bg-primary px-3 text-sm font-medium text-primary-foreground shadow-[0_6px_14px_-6px_rgba(249,179,20,0.5)] transition-colors hover:bg-[#ffc22e]"
                 >
-                  Send
+                  {t("app.aiTools.send", { defaultValue: "Send" })}
                 </button>
               ) : (
                 allowSkip && (
@@ -577,7 +590,7 @@ function AskChoiceCard({
                     onClick={skip}
                     className="inline-flex h-8 shrink-0 items-center rounded-lg border px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                   >
-                    Skip
+                    {t("app.aiTools.skip", { defaultValue: "Skip" })}
                   </button>
                 )
               )}
@@ -596,6 +609,7 @@ function AskChoicesBatchCard({
   result,
   addResult,
 }: ToolCallMessagePartProps<AskChoicesBatchArgs, AskChoicesBatchResult>) {
+  const { t } = useTranslation()
   const resolved = parseBatchArgs(isRecord(args) ? args : {}, argsText)
   const questions = normalizeBatchQuestions(resolved.questions)
   const context = resolved.context?.trim()
@@ -739,7 +753,9 @@ function AskChoicesBatchCard({
                 ))
               ) : (
                 <p className="text-sm font-medium text-foreground">
-                  {isCancelled ? "Skipped" : "Answered"}
+                  {isCancelled
+                    ? t("app.aiTools.skipped", { defaultValue: "Skipped" })
+                    : t("app.aiTools.answered", { defaultValue: "Answered" })}
                 </p>
               )}
             </div>
@@ -764,14 +780,21 @@ function AskChoicesBatchCard({
         <div className="flex items-center justify-between gap-4 px-4 py-3">
           <h3 className="text-sm leading-snug text-muted-foreground">
             {isStreaming
-              ? "Thinking of questions..."
+              ? t("app.aiTools.thinkingQuestions", {
+                  defaultValue: "Thinking of questions...",
+                })
               : questions.length === 1
-                ? "Clarifying question"
-                : "Clarifying questions"}
+                ? t("app.aiTools.clarifyingQuestion", {
+                    defaultValue: "Clarifying question",
+                  })
+                : t("app.aiTools.clarifyingQuestions", {
+                    defaultValue: "Clarifying questions",
+                  })}
           </h3>
           {questions.length > 0 && (
             <span className="font-mono text-xs text-muted-foreground tabular-nums">
-              {activeIndex + 1} of {questions.length}
+              {activeIndex + 1} {t("app.aiTools.of", { defaultValue: "of" })}{" "}
+              {questions.length}
             </span>
           )}
         </div>
@@ -782,7 +805,10 @@ function AskChoicesBatchCard({
               <div className="min-w-0 flex-1">
                 {questions.length > 1 && (
                   <p className="mb-1 text-xs text-muted-foreground">
-                    Question {activeIndex + 1}
+                    {t("app.aiTools.questionNumber", {
+                      number: activeIndex + 1,
+                      defaultValue: `Question ${activeIndex + 1}`,
+                    })}
                   </p>
                 )}
                 <p className="leading-snug font-medium text-foreground">
@@ -792,12 +818,14 @@ function AskChoicesBatchCard({
               {activeQuestion.allowSkip && (
                 <Button
                   onClick={() => skip(activeQuestion)}
-                  aria-label="Skip question"
+                  aria-label={t("app.aiTools.skipQuestion", {
+                    defaultValue: "Skip question",
+                  })}
                   variant={"ghost"}
                   size={"xs"}
                   className={"text-muted-foreground"}
                 >
-                  Skip
+                  {t("app.aiTools.skip", { defaultValue: "Skip" })}
                 </Button>
               )}
             </div>
@@ -871,7 +899,9 @@ function AskChoicesBatchCard({
                         [activeQuestion.id]: true,
                       }))
                     }
-                    aria-label="Write your own answer"
+                    aria-label={t("app.aiTools.writeOwnAnswer", {
+                      defaultValue: "Write your own answer",
+                    })}
                     className={cn(
                       "flex size-[30px] shrink-0 items-center justify-center rounded-[9px] border bg-background text-muted-foreground transition-colors [&_svg]:size-[15px]",
                       (isCustomOpen || currentAnswer?.isCustom) &&
@@ -908,7 +938,9 @@ function AskChoicesBatchCard({
                         submitCustom(activeQuestion)
                       }
                     }}
-                    placeholder="Something else..."
+                    placeholder={t("app.aiTools.somethingElse", {
+                      defaultValue: "Something else...",
+                    })}
                     className="min-w-0 flex-1 bg-transparent text-muted-foreground outline-none placeholder:text-muted-foreground"
                   />
                   {currentCustomValue.trim() && (
@@ -918,8 +950,8 @@ function AskChoicesBatchCard({
                       className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-primary bg-primary px-3 text-sm font-medium text-primary-foreground shadow-[0_6px_14px_-6px_rgba(249,179,20,0.5)] transition-colors hover:bg-[#ffc22e]"
                     >
                       {isSingle || activeIndex === lastQuestionIndex
-                        ? "Send"
-                        : "Set"}
+                        ? t("app.aiTools.send", { defaultValue: "Send" })
+                        : t("app.aiTools.set", { defaultValue: "Set" })}
                     </button>
                   )}
                 </div>
@@ -927,7 +959,7 @@ function AskChoicesBatchCard({
 
               {currentAnswer?.skipped && (
                 <div className="border-t border-border px-4 py-2 text-sm text-muted-foreground">
-                  Skipped
+                  {t("app.aiTools.skipped", { defaultValue: "Skipped" })}
                 </div>
               )}
             </div>
@@ -943,7 +975,7 @@ function AskChoicesBatchCard({
               }
               className="inline-flex h-8 shrink-0 items-center rounded-lg border px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
-              Back
+              {t("app.aiTools.back", { defaultValue: "Back" })}
             </button>
           </div>
         )}

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  CircleAlertIcon,
   GripVerticalIcon,
   InfoIcon,
   LockIcon,
@@ -15,6 +16,11 @@ import {
   XIcon,
 } from "lucide-react"
 
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@workspace/ui/components/alert"
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import {
@@ -87,8 +93,14 @@ type FormState = {
   outputType: OutputType
   supportsGroupMode: boolean
   priceVnd: string
-  steps: Array<{ title: string; guidance: string; estimatedMinutes: number }>
+  steps: Array<{
+    id?: string
+    title: string
+    guidance: string
+    estimatedMinutes: number
+  }>
   scaffoldQuestions: Array<{
+    id?: string
     prompt: string
     aiPurpose: ScaffoldQuestionPurpose
   }>
@@ -194,6 +206,33 @@ function FieldHelper({ children }: { children: React.ReactNode }) {
   return <p className="text-xs leading-5 text-muted-foreground">{children}</p>
 }
 
+function newDraftId() {
+  return typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random()}`
+}
+
+function newStep(
+  values: Partial<FormState["steps"][number]> = {}
+): FormState["steps"][number] {
+  return {
+    id: values.id ?? newDraftId(),
+    title: values.title ?? "",
+    guidance: values.guidance ?? "",
+    estimatedMinutes: values.estimatedMinutes ?? 30,
+  }
+}
+
+function newScaffoldQuestion(
+  values: Partial<FormState["scaffoldQuestions"][number]> = {}
+): FormState["scaffoldQuestions"][number] {
+  return {
+    id: values.id ?? newDraftId(),
+    prompt: values.prompt ?? "",
+    aiPurpose: values.aiPurpose ?? "GENERATE_STEPS",
+  }
+}
+
 function GuidePanel({ guide }: { guide: GuideContent }) {
   return (
     <aside className="rounded-lg border bg-background p-5 lg:sticky lg:top-20">
@@ -221,10 +260,7 @@ function GuidePanel({ guide }: { guide: GuideContent }) {
 
 function newRequirement(): CustomRequirement {
   return {
-    id:
-      typeof crypto !== "undefined" && "randomUUID" in crypto
-        ? crypto.randomUUID()
-        : `${Date.now()}-${Math.random()}`,
+    id: newDraftId(),
     label: "",
     fieldType: "TEXT",
     options: "",
@@ -244,13 +280,15 @@ function createEmptyState(): FormState {
     outputType: "PROJECT",
     supportsGroupMode: false,
     priceVnd: "",
-    steps: [{ title: "", guidance: "", estimatedMinutes: 30 }],
+    steps: [newStep()],
     scaffoldQuestions: [
       {
+        id: newDraftId(),
         prompt: "Kết thúc sprint này, bạn cầm được gì trong tay?",
         aiPurpose: "ADJUST_GOAL",
       },
       {
+        id: newDraftId(),
         prompt: "Điều gì dễ khiến bạn bỏ dở nhất?",
         aiPurpose: "IDENTIFY_OBSTACLE",
       },
@@ -307,16 +345,43 @@ function toFormState(template: EditorTemplate | null): FormState {
     steps:
       template.steps.length > 0
         ? template.steps.map((step) => ({
+            id: step.id,
             title: step.title,
             guidance: step.guidance ?? "",
             estimatedMinutes: step.estimatedMinutes,
           }))
-        : [{ title: "", guidance: "", estimatedMinutes: 30 }],
+        : [newStep()],
     scaffoldQuestions: template.scaffoldQuestions.map((question) => ({
+      id: question.id,
       prompt: question.prompt,
       aiPurpose: question.aiPurpose ?? "GENERATE_STEPS",
     })),
     customRequirements: parseCustomRequirements(template.customRequirements),
+  }
+}
+
+function normalizeFormState(value: FormState): FormState {
+  return {
+    ...value,
+    steps:
+      value.steps.length > 0
+        ? value.steps.map((step) =>
+            newStep({
+              ...step,
+              id: step.id || newDraftId(),
+            })
+          )
+        : [newStep()],
+    scaffoldQuestions: value.scaffoldQuestions.map((question) =>
+      newScaffoldQuestion({
+        ...question,
+        id: question.id || newDraftId(),
+      })
+    ),
+    customRequirements: value.customRequirements.map((requirement) => ({
+      ...requirement,
+      id: requirement.id || newDraftId(),
+    })),
   }
 }
 
@@ -337,6 +402,26 @@ function splitOptions(value: string) {
     .split(",")
     .map((option) => option.trim())
     .filter(Boolean)
+}
+
+function getDescriptionSuggestionBlocker(form: FormState) {
+  const description = form.description.trim().replace(/\s+/g, " ")
+  const words = description
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean)
+  const uniqueWords = new Set(words)
+  const lowSignalPattern = /^(test|abc|abcd|asd|asdf|á|a|demo|mô tả|mo ta)$/i
+
+  if (description.length < 40 || words.length < 8) {
+    return "Không thể tạo gợi ý vì mô tả còn quá ngắn. Hãy mô tả việc này dành cho ai, cần tạo output gì, và khi nào nên dùng."
+  }
+
+  if (uniqueWords.size < 5 || lowSignalPattern.test(description)) {
+    return "Không thể tạo gợi ý vì mô tả chưa đủ thông tin thật. Hãy viết rõ bối cảnh, mục tiêu cuối và ràng buộc chính của template."
+  }
+
+  return null
 }
 
 async function readJsonResponse<T extends { error?: string }>(
@@ -383,7 +468,7 @@ export function TemplateEditorForm({
           form?: FormState
           currentStep?: number
         }
-        setForm(parsed.form ?? base)
+        setForm(parsed.form ? normalizeFormState(parsed.form) : base)
         setCurrentStep(
           typeof parsed.currentStep === "number"
             ? Math.min(Math.max(parsed.currentStep, 0), WIZARD_STEPS.length - 1)
@@ -453,7 +538,7 @@ export function TemplateEditorForm({
       .filter(Boolean),
     outputType: form.outputType,
     supportsGroupMode: form.supportsGroupMode,
-    priceVnd: form.priceVnd.trim() ? Number(form.priceVnd) : null,
+    priceVnd: null,
     steps: form.steps.map((step) => ({
       title: step.title.trim(),
       guidance: step.guidance.trim() || null,
@@ -641,40 +726,54 @@ export function TemplateEditorForm({
   }
 
   const suggestGoal = () => {
+    const blocker = getDescriptionSuggestionBlocker(form)
+    if (blocker) {
+      setError(blocker)
+      return
+    }
+
+    setError(null)
     const outputLabel =
       form.outputType === "DOCUMENT"
         ? "tài liệu cụ thể"
         : form.outputType === "SKILL_PRACTICE"
           ? "bài luyện kỹ năng có thể đánh giá"
           : "output cụ thể"
+    const workName = form.title.trim() || "tên công việc"
 
     setForm((current) => ({
       ...current,
-      goalTemplate:
-        current.goalTemplate.trim() || `Hoàn thành {tên công việc} với {${outputLabel}} sẵn sàng sử dụng.`,
+      goalTemplate: `Hoàn thành {${workName}} với {${outputLabel}} sẵn sàng sử dụng.`,
     }))
   }
 
   const suggestSteps = () => {
+    const blocker = getDescriptionSuggestionBlocker(form)
+    if (blocker) {
+      setError(blocker)
+      return
+    }
+
+    setError(null)
     setForm((current) => ({
       ...current,
-      steps:
-        current.steps.length > 1 || current.steps[0]?.title.trim()
-          ? current.steps
-          : [
+      steps: [
               {
+                id: newDraftId(),
                 title: "Xác định output cần bàn giao",
                 guidance:
                   "Sau khi đọc goal, viết rõ output cuối và tiêu chí hoàn thành trước tiên.",
                 estimatedMinutes: 25,
               },
               {
+                id: newDraftId(),
                 title: "Phác thảo cấu trúc thực hiện",
                 guidance:
                   "Khi đã có output, chia thành các phần nhỏ có thể kiểm tra được.",
                 estimatedMinutes: 30,
               },
               {
+                id: newDraftId(),
                 title: "Tạo bản nháp đầu tiên",
                 guidance:
                   "Sau khi có cấu trúc, làm bản nháp đủ nhìn thấy thay vì tối ưu quá sớm.",
@@ -686,12 +785,12 @@ export function TemplateEditorForm({
                   "Khi bản nháp xong, so lại với goal và sửa phần thiếu rõ nhất.",
                 estimatedMinutes: 25,
               },
-            ],
+      ],
     }))
   }
 
   return (
-    <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+    <div className="grid w-full gap-5 px-5 pt-16 pb-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)_288px] xl:grid-cols-[minmax(0,1fr)_320px] xl:px-8">
       <div className="min-w-0">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -781,7 +880,7 @@ export function TemplateEditorForm({
                 </FieldHelper>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Output type</label>
                   <Select
@@ -827,23 +926,7 @@ export function TemplateEditorForm({
                   </FieldHelper>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Price VND</label>
-                  <Input
-                    inputMode="numeric"
-                    value={form.priceVnd}
-                    onChange={(event) =>
-                      setForm((current) => ({
-                        ...current,
-                        priceVnd: event.target.value,
-                      }))
-                    }
-                  />
-                  <FieldHelper>
-                    Bạn điền giá → app dùng cho phân phối template → người dùng
-                    biết template miễn phí hay trả phí.
-                  </FieldHelper>
-                </div>
+                {/* Price is hidden until template installs have a payment gate. */}
               </div>
 
               <div className="space-y-2">
@@ -915,7 +998,10 @@ export function TemplateEditorForm({
 
               <div className="space-y-4">
                 {form.scaffoldQuestions.map((question, index) => (
-                  <div key={`${index}-${question.prompt}`} className="rounded-lg border p-4">
+                  <div
+                    key={question.id ?? `question-${index}`}
+                    className="rounded-lg border p-4"
+                  >
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <p className="text-sm font-medium">Câu hỏi {index + 1}</p>
                       <Button
@@ -1001,7 +1087,7 @@ export function TemplateEditorForm({
                       ...current,
                       scaffoldQuestions: [
                         ...current.scaffoldQuestions,
-                        { prompt: "", aiPurpose: "GENERATE_STEPS" },
+                        newScaffoldQuestion(),
                       ],
                     }))
                   }
@@ -1034,10 +1120,8 @@ export function TemplateEditorForm({
               <div className="space-y-4">
                 {form.steps.map((step, index) => (
                   <div
-                    key={`${index}-${step.title}`}
+                    key={step.id ?? `step-${index}`}
                     className="rounded-lg border p-4"
-                    draggable
-                    onDragStart={() => setDraggedStep(index)}
                     onDragOver={(event) => event.preventDefault()}
                     onDrop={() => {
                       if (draggedStep === null) return
@@ -1050,7 +1134,19 @@ export function TemplateEditorForm({
                   >
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2 text-sm font-medium">
-                        <GripVerticalIcon className="size-4 text-muted-foreground" />
+                        <button
+                          type="button"
+                          draggable
+                          className="cursor-grab rounded-md p-1 text-muted-foreground active:cursor-grabbing"
+                          aria-label={`Kéo Step ${index + 1}`}
+                          onDragStart={(event) => {
+                            event.dataTransfer.effectAllowed = "move"
+                            setDraggedStep(index)
+                          }}
+                          onDragEnd={() => setDraggedStep(null)}
+                        >
+                          <GripVerticalIcon className="size-4" />
+                        </button>
                         Step {index + 1}
                       </div>
                       {form.steps.length > 1 ? (
@@ -1149,7 +1245,7 @@ export function TemplateEditorForm({
                       ...current,
                       steps: [
                         ...current.steps,
-                        { title: "", guidance: "", estimatedMinutes: 30 },
+                        newStep(),
                       ],
                     }))
                   }
@@ -1485,7 +1581,13 @@ export function TemplateEditorForm({
           ) : null}
         </section>
 
-        {error ? <p className="mt-4 text-sm text-red-600">{error}</p> : null}
+        {error ? (
+          <Alert variant="destructive" className="mt-4">
+            <CircleAlertIcon className="size-4" />
+            <AlertTitle>Không thể tiếp tục</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        ) : null}
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
           <Button

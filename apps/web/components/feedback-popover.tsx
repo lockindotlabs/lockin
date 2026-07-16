@@ -1,27 +1,19 @@
 "use client"
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@workspace/ui/components/tooltip"
 import { Button } from "@workspace/ui/components/button"
 import {
   Popover,
   PopoverContent,
-  PopoverDescription,
-  PopoverHeader,
-  PopoverTitle,
   PopoverTrigger,
 } from "@workspace/ui/components/popover"
 import { Textarea } from "@workspace/ui/components/textarea"
-import { MessageSquareCodeIcon, MessageSquareDotIcon } from "lucide-react"
-import { time } from "node:console"
-import React from "react"
 import { SidebarMenuButton } from "@workspace/ui/components/sidebar"
 import { MessageChatSquare } from "@untitledui/icons"
+import { useTranslation } from "react-i18next"
 
 export function FeedbackPopover() {
+  const { t } = useTranslation()
+
   return (
     <>
       <Popover>
@@ -29,7 +21,7 @@ export function FeedbackPopover() {
           render={
             <SidebarMenuButton className="data-popup-open:bg-sidebar-accent!">
               <MessageChatSquare data-icon="inline-start" />
-              Feedback
+              {t("app.feedback.title", { defaultValue: "Feedback" })}
             </SidebarMenuButton>
           }
         />
@@ -40,16 +32,22 @@ export function FeedbackPopover() {
           className={"group min-w-80 gap-3 p-3"}
         >
           <Textarea
-            placeholder="Type your feedback here..."
+            placeholder={t("app.feedback.placeholder", {
+              defaultValue: "Type your feedback here...",
+            })}
             rows={6}
             className="max-h-60 resize-none"
           />
           <div className="flex items-center justify-between gap-2">
             <div className="text-2xs text-muted-foreground">
-              We don't response to submissions, but we read all of them
-              carefully
+              {t("app.feedback.note", {
+                defaultValue:
+                  "We do not respond to submissions, but we read all of them carefully.",
+              })}
             </div>
-            <Button onClick={() => {}}>Submit</Button>
+            <Button onClick={() => {}}>
+              {t("app.feedback.submit", { defaultValue: "Submit" })}
+            </Button>
           </div>
         </PopoverContent>
       </Popover>

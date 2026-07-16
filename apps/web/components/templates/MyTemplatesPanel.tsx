@@ -2,7 +2,14 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Loader2Icon, PencilIcon, SendHorizonalIcon, Trash2Icon, UploadIcon } from "lucide-react"
+import {
+  Loader2Icon,
+  PencilIcon,
+  SendHorizonalIcon,
+  Trash2Icon,
+  UploadIcon,
+} from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { Badge } from "@workspace/ui/components/badge"
 import { Button, buttonVariants } from "@workspace/ui/components/button"
@@ -17,16 +24,19 @@ type OwnedTemplate = {
   steps: Array<{ id: string }>
 }
 
-const STATUS_LABELS: Record<OwnedTemplate["status"], string> = {
-  DRAFT: "Nhap",
-  PENDING_REVIEW: "Cho duyet",
-  APPROVED: "Da dang",
-  REJECTED: "Bi tu choi",
+const STATUS_LABEL_KEYS: Record<OwnedTemplate["status"], string> = {
+  DRAFT: "app.templates.mine.status.draft",
+  PENDING_REVIEW: "app.templates.mine.status.pendingReview",
+  APPROVED: "app.templates.mine.status.approved",
+  REJECTED: "app.templates.mine.status.rejected",
 }
 
 export function MyTemplatesPanel() {
+  const { t } = useTranslation()
   const [templates, setTemplates] = React.useState<OwnedTemplate[]>([])
-  const [loadingActionId, setLoadingActionId] = React.useState<string | null>(null)
+  const [loadingActionId, setLoadingActionId] = React.useState<string | null>(
+    null
+  )
   const [isLoaded, setIsLoaded] = React.useState(false)
 
   const loadTemplates = React.useCallback(async () => {
@@ -40,7 +50,10 @@ export function MyTemplatesPanel() {
     void loadTemplates().catch(() => setIsLoaded(true))
   }, [loadTemplates])
 
-  const runAction = async (templateId: string, action: "submit" | "unpublish" | "delete") => {
+  const runAction = async (
+    templateId: string,
+    action: "submit" | "unpublish" | "delete"
+  ) => {
     setLoadingActionId(templateId)
 
     try {
@@ -62,18 +75,27 @@ export function MyTemplatesPanel() {
   }
 
   if (!isLoaded) {
-    return <div className="rounded-2xl border p-6 text-sm text-muted-foreground">Dang tai template cua ban...</div>
+    return (
+      <div className="rounded-2xl border p-6 text-sm text-muted-foreground">
+        {t("app.templates.mine.loading")}
+      </div>
+    )
   }
 
   if (templates.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed p-8 text-center">
-        <p className="text-sm font-medium">Ban chua co template nao</p>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Tao tu dau hoac snapshot mot plan san co de bat dau.
+        <p className="text-sm font-medium">
+          {t("app.templates.mine.emptyTitle")}
         </p>
-        <Link href="/app/templates/editor/new" className={buttonVariants({ size: "sm", className: "mt-4" })}>
-          Tao template moi
+        <p className="mt-2 text-sm text-muted-foreground">
+          {t("app.templates.mine.emptyDescription")}
+        </p>
+        <Link
+          href="/app/templates/editor/new"
+          className={buttonVariants({ size: "sm", className: "mt-4" })}
+        >
+          {t("app.templates.createNew")}
         </Link>
       </div>
     )
@@ -85,19 +107,29 @@ export function MyTemplatesPanel() {
         const isBusy = loadingActionId === template.id
 
         return (
-          <section key={template.id} className="rounded-2xl border bg-background p-5">
+          <section
+            key={template.id}
+            className="rounded-2xl border bg-background p-5"
+          >
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="text-base font-medium">{template.title}</h3>
-                  <Badge variant="secondary">{STATUS_LABELS[template.status]}</Badge>
+                  <Badge variant="secondary">
+                    {t(STATUS_LABEL_KEYS[template.status])}
+                  </Badge>
                 </div>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {template.category} • {template.steps.length} buoc
+                  {t("app.templates.mine.summary", {
+                    category: template.category,
+                    count: template.steps.length,
+                  })}
                 </p>
                 {template.rejectionReason ? (
                   <p className="mt-2 text-sm text-red-600">
-                    Ly do tu choi: {template.rejectionReason}
+                    {t("app.templates.mine.rejectionReason", {
+                      reason: template.rejectionReason,
+                    })}
                   </p>
                 ) : null}
               </div>
@@ -108,17 +140,22 @@ export function MyTemplatesPanel() {
                   className={buttonVariants({ size: "sm", variant: "outline" })}
                 >
                   <PencilIcon className="size-4" />
-                  Sua
+                  {t("app.templates.mine.edit")}
                 </Link>
 
-                {template.status === "DRAFT" || template.status === "REJECTED" ? (
+                {template.status === "DRAFT" ||
+                template.status === "REJECTED" ? (
                   <Button
                     size="sm"
                     onClick={() => void runAction(template.id, "submit")}
                     disabled={isBusy}
                   >
-                    {isBusy ? <Loader2Icon className="size-4 animate-spin" /> : <SendHorizonalIcon className="size-4" />}
-                    Gui duyet
+                    {isBusy ? (
+                      <Loader2Icon className="size-4 animate-spin" />
+                    ) : (
+                      <SendHorizonalIcon className="size-4" />
+                    )}
+                    {t("app.templates.mine.submit")}
                   </Button>
                 ) : null}
 
@@ -129,8 +166,12 @@ export function MyTemplatesPanel() {
                     onClick={() => void runAction(template.id, "unpublish")}
                     disabled={isBusy}
                   >
-                    {isBusy ? <Loader2Icon className="size-4 animate-spin" /> : <UploadIcon className="size-4" />}
-                    Go dang
+                    {isBusy ? (
+                      <Loader2Icon className="size-4 animate-spin" />
+                    ) : (
+                      <UploadIcon className="size-4" />
+                    )}
+                    {t("app.templates.mine.unpublish")}
                   </Button>
                 ) : null}
 
@@ -141,8 +182,12 @@ export function MyTemplatesPanel() {
                     onClick={() => void runAction(template.id, "delete")}
                     disabled={isBusy}
                   >
-                    {isBusy ? <Loader2Icon className="size-4 animate-spin" /> : <Trash2Icon className="size-4" />}
-                    Xoa
+                    {isBusy ? (
+                      <Loader2Icon className="size-4 animate-spin" />
+                    ) : (
+                      <Trash2Icon className="size-4" />
+                    )}
+                    {t("app.templates.mine.delete")}
                   </Button>
                 ) : null}
               </div>

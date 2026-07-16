@@ -1,13 +1,20 @@
 "use client"
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import {
   type ToolCallMessagePartProps,
   useAssistantTool,
   useAssistantToolUI,
   useInlineRender,
 } from "@assistant-ui/react"
-import { CheckIcon, ChevronLeftIcon, ChevronRightIcon, SparklesIcon, XIcon } from "lucide-react"
+import {
+  CheckIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  SparklesIcon,
+  XIcon,
+} from "lucide-react"
 
 import { Button } from "@workspace/ui/components/button"
 import { Textarea } from "@workspace/ui/components/textarea"
@@ -79,15 +86,18 @@ const askScaffoldBatchParameters = {
           },
           helperText: {
             type: "string" as const,
-            description: "Optional hint that nudges the user toward a better answer.",
+            description:
+              "Optional hint that nudges the user toward a better answer.",
           },
           required: {
             type: "boolean" as const,
-            description: "Whether this field must be answered before submission. Defaults to true.",
+            description:
+              "Whether this field must be answered before submission. Defaults to true.",
           },
           minWords: {
             type: "number" as const,
-            description: "Minimum suggested word count before the answer is considered complete. Defaults to 12.",
+            description:
+              "Minimum suggested word count before the answer is considered complete. Defaults to 12.",
           },
         },
         required: ["id", "label", "question"],
@@ -182,10 +192,13 @@ function AskScaffoldBatchCard({
   result,
   addResult,
 }: ToolCallMessagePartProps<AskScaffoldBatchArgs, AskScaffoldBatchResult>) {
+  const { t } = useTranslation()
   const resolved = parseArgs(isRecord(args) ? args : {}, argsText)
   const questions = normalizeQuestions(resolved.questions)
   const context = resolved.context?.trim()
-  const title = resolved.title?.trim() || "Planning scaffold"
+  const title =
+    resolved.title?.trim() ||
+    t("app.aiTools.planningScaffold", { defaultValue: "Planning scaffold" })
   const isStreaming = status.type === "running" && questions.length === 0
   const isCancelled = status.type === "incomplete"
   const answered = result !== undefined && result !== null
@@ -194,7 +207,9 @@ function AskScaffoldBatchCard({
   const [submitted, setSubmitted] = React.useState(false)
 
   React.useEffect(() => {
-    setActiveIndex((current) => Math.min(current, Math.max(questions.length - 1, 0)))
+    setActiveIndex((current) =>
+      Math.min(current, Math.max(questions.length - 1, 0))
+    )
   }, [questions.length])
 
   const activeQuestion = questions[activeIndex]
@@ -250,7 +265,8 @@ function AskScaffoldBatchCard({
   }, [addResult, answered, buildSummary, canSubmit])
 
   if (answered || isCancelled) {
-    const summary = (result as AskScaffoldBatchResult | undefined)?.answers ?? []
+    const summary =
+      (result as AskScaffoldBatchResult | undefined)?.answers ?? []
 
     return (
       <section
@@ -280,7 +296,9 @@ function AskScaffoldBatchCard({
               </div>
             ) : (
               <p className="text-sm font-medium text-foreground">
-                {isCancelled ? "Skipped" : "Submitted"}
+                {isCancelled
+                  ? t("app.aiTools.skipped", { defaultValue: "Skipped" })
+                  : t("app.aiTools.submitted", { defaultValue: "Submitted" })}
               </p>
             )}
           </div>
@@ -305,17 +323,25 @@ function AskScaffoldBatchCard({
         <div className="flex items-center justify-between gap-4 px-4 py-3">
           <div>
             <p className="text-sm font-medium text-foreground">
-              {isStreaming ? "Preparing scaffold..." : title}
+              {isStreaming
+                ? t("app.aiTools.preparingScaffold", {
+                    defaultValue: "Preparing scaffold...",
+                  })
+                : title}
             </p>
             {questions.length > 0 && (
               <p className="text-xs text-muted-foreground">
-                Fill the scaffold so the plan can be built from real context.
+                {t("app.aiTools.scaffoldHint", {
+                  defaultValue:
+                    "Fill the scaffold so the plan can be built from real context.",
+                })}
               </p>
             )}
           </div>
           {questions.length > 0 && (
             <span className="font-mono text-xs text-muted-foreground tabular-nums">
-              {activeIndex + 1} of {questions.length}
+              {activeIndex + 1} {t("app.aiTools.of", { defaultValue: "of" })}{" "}
+              {questions.length}
             </span>
           )}
         </div>
@@ -351,8 +377,16 @@ function AskScaffoldBatchCard({
 
             <div className="mt-2 flex items-center justify-between gap-3 text-xs">
               <span className="text-muted-foreground">
-                {(validationMap[activeQuestion.id]?.words ?? 0).toString()} words
-                {activeQuestion.required ? ` • need ${activeQuestion.minWords}+` : ""}
+                {t("app.aiTools.wordCount", {
+                  count: validationMap[activeQuestion.id]?.words ?? 0,
+                  defaultValue: `${validationMap[activeQuestion.id]?.words ?? 0} words`,
+                })}
+                {activeQuestion.required
+                  ? ` • ${t("app.aiTools.needWords", {
+                      count: activeQuestion.minWords,
+                      defaultValue: `need ${activeQuestion.minWords}+`,
+                    })}`
+                  : ""}
               </span>
               <span
                 className={cn(
@@ -362,22 +396,29 @@ function AskScaffoldBatchCard({
                 )}
               >
                 {validationMap[activeQuestion.id]?.missingRequired
-                  ? "Required"
+                  ? t("app.aiTools.required", { defaultValue: "Required" })
                   : validationMap[activeQuestion.id]?.tooShort
-                    ? "Can submit, but add detail if possible"
-                    : "Ready"}
+                    ? t("app.aiTools.canSubmitAddDetail", {
+                        defaultValue: "Can submit, but add detail if possible",
+                      })
+                    : t("app.aiTools.ready", { defaultValue: "Ready" })}
               </span>
             </div>
 
             {submitted && validationMap[activeQuestion.id]?.missingRequired && (
               <p className="mt-2 text-xs text-destructive">
-                Please answer this field before continuing.
+                {t("app.aiTools.answerRequired", {
+                  defaultValue: "Please answer this field before continuing.",
+                })}
               </p>
             )}
 
             {!submitted && validationMap[activeQuestion.id]?.tooShort && (
               <p className="mt-2 text-xs text-amber-600">
-                Short answers are allowed, but adding a little more detail will help the plan come out more accurate.
+                {t("app.aiTools.shortAnswerHint", {
+                  defaultValue:
+                    "Short answers are allowed, but adding a little more detail will help the plan come out more accurate.",
+                })}
               </p>
             )}
           </div>
@@ -389,11 +430,13 @@ function AskScaffoldBatchCard({
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => setActiveIndex((current) => Math.max(0, current - 1))}
+              onClick={() =>
+                setActiveIndex((current) => Math.max(0, current - 1))
+              }
               disabled={activeIndex === 0}
             >
               <ChevronLeftIcon className="size-4" />
-              Back
+              {t("app.aiTools.back", { defaultValue: "Back" })}
             </Button>
 
             {activeIndex < questions.length - 1 ? (
@@ -406,12 +449,19 @@ function AskScaffoldBatchCard({
                   )
                 }
               >
-                Next
+                {t("app.aiTools.next", { defaultValue: "Next" })}
                 <ChevronRightIcon className="size-4" />
               </Button>
             ) : (
-              <Button type="button" size="sm" onClick={submit} disabled={!canSubmit}>
-                Submit scaffold
+              <Button
+                type="button"
+                size="sm"
+                onClick={submit}
+                disabled={!canSubmit}
+              >
+                {t("app.aiTools.submitScaffold", {
+                  defaultValue: "Submit scaffold",
+                })}
               </Button>
             )}
           </div>
@@ -434,10 +484,9 @@ export function AskScaffoldTool() {
     []
   )
 
-  const render = useInlineRender<
-    AskScaffoldBatchArgs,
-    AskScaffoldBatchResult
-  >((props) => <AskScaffoldBatchCard {...props} />)
+  const render = useInlineRender<AskScaffoldBatchArgs, AskScaffoldBatchResult>(
+    (props) => <AskScaffoldBatchCard {...props} />
+  )
 
   useAssistantTool(batchTool)
   useAssistantToolUI({ toolName: "askScaffoldBatch", render })
@@ -446,7 +495,4 @@ export function AskScaffoldTool() {
 }
 
 export { AskScaffoldBatchCard }
-export type {
-  AskScaffoldBatchArgs,
-  AskScaffoldBatchResult,
-}
+export type { AskScaffoldBatchArgs, AskScaffoldBatchResult }

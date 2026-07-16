@@ -25,6 +25,7 @@ import {
   Trash2Icon,
 } from "lucide-react"
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 
 export type FavoriteItem = {
   id: string
@@ -48,6 +49,7 @@ export function NavFavorites({
   onDelete?: (item: FavoriteItem) => void
 }) {
   const { isMobile } = useSidebar()
+  const { t } = useTranslation()
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>{label}</SidebarGroupLabel>
@@ -89,7 +91,9 @@ export function NavFavorites({
                 }
               >
                 <MoreHorizontalIcon />
-                <span className="sr-only">More</span>
+                <span className="sr-only">
+                  {t("app.actions.more", { defaultValue: "More" })}
+                </span>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-56 rounded-lg"
@@ -99,11 +103,17 @@ export function NavFavorites({
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
                     <LinkIcon className="text-muted-foreground" />
-                    <span>Copy Link</span>
+                    <span>
+                      {t("app.actions.copyLink", { defaultValue: "Copy Link" })}
+                    </span>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <ArrowUpRightIcon className="text-muted-foreground" />
-                    <span>Open in New Tab</span>
+                    <span>
+                      {t("app.actions.openInNewTab", {
+                        defaultValue: "Open in New Tab",
+                      })}
+                    </span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -111,7 +121,9 @@ export function NavFavorites({
                     onClick={() => onDelete?.(item)}
                   >
                     <Trash2Icon className="text-muted-foreground" />
-                    <span>Delete</span>
+                    <span>
+                      {t("app.actions.delete", { defaultValue: "Delete" })}
+                    </span>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
@@ -122,7 +134,7 @@ export function NavFavorites({
           <SidebarMenuItem>
             <SidebarMenuButton className="text-sidebar-foreground/70">
               <MoreHorizontalIcon />
-              <span>More</span>
+              <span>{t("app.actions.more", { defaultValue: "More" })}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         )}

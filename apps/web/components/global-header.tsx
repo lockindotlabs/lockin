@@ -8,13 +8,37 @@ import { usePathname } from "next/navigation"
 import { useHeaderContext } from "@/components/header-context"
 
 import { NotificationPopover } from "./notification-popover"
+import { useTranslation } from "react-i18next"
 
 export default function GlobalHeader() {
   const { state } = useSidebar()
   const pathname = usePathname()
+  const { t } = useTranslation()
+  const [isTitleBouncing, setIsTitleBouncing] = React.useState(false)
+  const titleBounceFrameRef = React.useRef<number | null>(null)
 
   const { setLeftContainer, setRightContainer, hasLeftContent, visible } =
     useHeaderContext()
+
+  React.useEffect(() => {
+    return () => {
+      if (titleBounceFrameRef.current !== null) {
+        window.cancelAnimationFrame(titleBounceFrameRef.current)
+      }
+    }
+  }, [])
+
+  const triggerTitleBounce = React.useCallback(() => {
+    if (titleBounceFrameRef.current !== null) {
+      window.cancelAnimationFrame(titleBounceFrameRef.current)
+    }
+
+    setIsTitleBouncing(false)
+    titleBounceFrameRef.current = window.requestAnimationFrame(() => {
+      setIsTitleBouncing(true)
+      titleBounceFrameRef.current = null
+    })
+  }, [])
 
   const defaultTitle = React.useMemo(() => {
     if (!pathname) return null
@@ -22,7 +46,7 @@ export default function GlobalHeader() {
     if (pathname.startsWith("/app/ask")) {
       return (
         <div className="flex items-center gap-2 text-sm font-medium">
-          <span>Ask</span>
+          <span>{t("app.nav.askAi", { defaultValue: "Ask AI" })}</span>
         </div>
       )
     }
@@ -30,7 +54,7 @@ export default function GlobalHeader() {
     if (pathname.startsWith("/app/plans")) {
       return (
         <div className="flex items-center gap-2 text-sm font-medium">
-          <span>Plans</span>
+          <span>{t("app.nav.plans", { defaultValue: "Plans" })}</span>
         </div>
       )
     }
@@ -38,7 +62,7 @@ export default function GlobalHeader() {
     if (pathname.startsWith("/app/focus")) {
       return (
         <div className="flex items-center gap-2 text-sm font-medium">
-          <span>Focus</span>
+          <span>{t("app.nav.focus", { defaultValue: "Focus" })}</span>
         </div>
       )
     }
@@ -46,7 +70,7 @@ export default function GlobalHeader() {
     if (pathname.startsWith("/app/settings")) {
       return (
         <div className="flex items-center gap-2 text-sm font-medium">
-          <span>Settings</span>
+          <span>{t("app.nav.settings", { defaultValue: "Settings" })}</span>
         </div>
       )
     }
@@ -54,7 +78,9 @@ export default function GlobalHeader() {
     if (pathname.startsWith("/app/subscription")) {
       return (
         <div className="flex items-center gap-2 text-sm font-medium">
-          <span>Subscription</span>
+          <span>
+            {t("app.nav.subscription", { defaultValue: "Subscription" })}
+          </span>
         </div>
       )
     }
@@ -62,7 +88,7 @@ export default function GlobalHeader() {
     if (pathname.startsWith("/app/admin")) {
       return (
         <div className="flex items-center gap-2 text-sm font-medium">
-          <span>Admin</span>
+          <span>{t("app.nav.admin", { defaultValue: "Admin" })}</span>
         </div>
       )
     }
@@ -70,10 +96,10 @@ export default function GlobalHeader() {
     // Default to Ask
     return (
       <div className="flex items-center gap-2 text-sm font-medium">
-        <span>Home</span>
+        <span>{t("app.nav.home", { defaultValue: "Home" })}</span>
       </div>
     )
-  }, [pathname])
+  }, [pathname, t])
 
   if (!visible) return null
 
@@ -86,11 +112,21 @@ export default function GlobalHeader() {
         <div
           className={`${state === "collapsed" ? "" : "-translate-x-8"} flex items-center pl-2 transition-transform`}
         >
-          {/* Left portal container */}
-          <div ref={setLeftContainer} className="flex items-center" />
+          <div
+            className={`flex items-center ${
+              isTitleBouncing
+                ? "animate-in duration-200 fill-mode-both fade-in slide-in-from-bottom-1 motion-reduce:animate-none"
+                : ""
+            }`}
+            onClick={triggerTitleBounce}
+            onAnimationEnd={() => setIsTitleBouncing(false)}
+          >
+            {/* Left portal container */}
+            <div ref={setLeftContainer} className="flex items-center" />
 
-          {/* Fallback default content */}
-          {!hasLeftContent && defaultTitle}
+            {/* Fallback default content */}
+            {!hasLeftContent && defaultTitle}
+          </div>
         </div>
       </div>
 

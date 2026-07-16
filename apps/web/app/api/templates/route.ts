@@ -59,6 +59,7 @@ export async function GET(req: Request) {
         id: step.id,
         order: step.order,
         title: step.title,
+        guidance: step.guidance,
         estimatedMinutes: step.estimatedMinutes,
       })),
       scaffoldQuestions: template.scaffoldQuestions.map((question) => ({

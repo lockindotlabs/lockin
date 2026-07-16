@@ -3,6 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useTranslation } from "react-i18next"
 import {
   BookOpenIcon,
   CheckCircle2Icon,
@@ -18,20 +19,34 @@ import {
   TimerIcon,
   UsersIcon,
 } from "lucide-react"
+import { toast } from "sonner"
 
 import { Badge } from "@workspace/ui/components/badge"
 import { Button, buttonVariants } from "@workspace/ui/components/button"
+import { Input } from "@workspace/ui/components/input"
 import { ScrollArea } from "@workspace/ui/components/scroll-area"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select"
 import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
 import { createDbChat } from "@/lib/chat/db-chat-client"
 import { savePendingAskPrompt } from "@/lib/chat/pending-ask-prompt"
 import { MyTemplatesPanel } from "@/components/templates/MyTemplatesPanel"
+import {
+  buildMarketplaceTemplateDetail,
+  buildTemplatePrompt,
+} from "@/lib/templates/marketplace-detail"
 
 type TemplateStep = {
   id: string
   order: number
   title: string
   estimatedMinutes: number
+  guidance?: string | null
 }
 
 type ScaffoldQuestion = {
@@ -76,65 +91,48 @@ type MarketTemplate = {
 
 const OUTPUT_TYPE_META: Record<
   MarketTemplate["outputType"],
-  { label: string; icon: React.ReactNode }
+  { labelKey: string; icon: React.ReactNode }
 > = {
-  DOCUMENT: { label: "Tai lieu", icon: <FileTextIcon className="size-3" /> },
+  DOCUMENT: {
+    labelKey: "app.templates.badges.document",
+    icon: <FileTextIcon className="size-3" />,
+  },
   SKILL_PRACTICE: {
-    label: "Luyen tap",
+    labelKey: "app.templates.badges.skillPractice",
     icon: <ListChecksIcon className="size-3" />,
   },
-  PROJECT: { label: "Du an", icon: <RocketIcon className="size-3" /> },
+  PROJECT: {
+    labelKey: "app.templates.badges.project",
+    icon: <RocketIcon className="size-3" />,
+  },
 }
 
 function totalMinutes(steps: TemplateStep[]) {
   return steps.reduce((sum, step) => sum + step.estimatedMinutes, 0)
 }
 
-function formatTotalDuration(minutes: number) {
-  if (minutes < 60) return `${minutes} phut`
+function formatTotalDuration(
+  minutes: number,
+  t: ReturnType<typeof useTranslation>["t"]
+) {
+  if (minutes < 60) {
+    return t("app.templates.duration.minutes", {
+      count: minutes,
+      defaultValue: "{{count}} min",
+    })
+  }
   const hours = Math.floor(minutes / 60)
   const rest = minutes % 60
-  return rest === 0 ? `${hours} gio` : `${hours}h${rest}p`
-}
-
-function buildTemplatePrompt(
-  template: MarketTemplate,
-  answers: Record<string, string>
-) {
-  const scaffoldEntries = Object.entries(answers)
-    .map(([id, value]) => {
-      const field =
-        template.detail?.scaffoldFields.find((item) => item.id === id) ?? null
-      if (!value.trim() || !field) return null
-      return `- ${field.label}: ${value.trim()}`
-    })
-    .filter(Boolean)
-    .join("\n")
-
-  const sprintable = template.detail?.sprintableWork
-    .map((item) => `- ${item}`)
-    .join("\n")
-  const longRunning = template.detail?.longRunningWork
-    .map((item) => `- ${item}`)
-    .join("\n")
-
-  return [
-    `Toi muon lap plan theo template "${template.title}".`,
-    template.description ? `Context template: ${template.description}` : null,
-    "Hay lap plan theo dung workflow cua template nay.",
-    "Phan tach ro cac buoc Thinking - Execution - Review.",
-    "Neu co viec khong the xong trong 1 sprint, hay danh dau no la viec can theo doi dai hon 1 sprint.",
-    sprintable ? `Nhung viec co the sprint duoc:\n${sprintable}` : null,
-    longRunning
-      ? `Nhung viec can thoi gian dai hon 1 sprint:\n${longRunning}`
-      : null,
-    scaffoldEntries
-      ? `Day la cau tra loi scaffold cua toi:\n${scaffoldEntries}`
-      : null,
-    "Chi khi plan da du context, du cac phase, va du guidance thi moi de xuat save plan.",
-  ]
-    .filter(Boolean)
-    .join("\n\n")
+  return rest === 0
+    ? t("app.templates.duration.hours", {
+        count: hours,
+        defaultValue: "{{count}}h",
+      })
+    : t("app.templates.duration.hoursMinutes", {
+        hours,
+        minutes: rest,
+        defaultValue: "{{hours}}h{{minutes}}m",
+      })
 }
 
 function TemplateCard({
@@ -146,6 +144,7 @@ function TemplateCard({
   isActive: boolean
   onSelect: (template: MarketTemplate) => void
 }) {
+  const { t } = useTranslation()
   const outputMeta = OUTPUT_TYPE_META[template.outputType]
 
   return (
@@ -166,23 +165,23 @@ function TemplateCard({
           {template.isAcademic && (
             <Badge variant="secondary" className="gap-1 text-[10px]">
               <GraduationCapIcon className="size-3" />
-              Hoc thuat
+              {t("app.templates.badges.academic")}
             </Badge>
           )}
           <Badge variant="secondary" className="gap-1 text-[10px]">
             {outputMeta.icon}
-            {outputMeta.label}
+            {t(outputMeta.labelKey)}
           </Badge>
           {template.supportsGroupMode && (
             <Badge variant="secondary" className="gap-1 text-[10px]">
               <UsersIcon className="size-3" />
-              Nhom
+              {t("app.templates.badges.group")}
             </Badge>
           )}
         </div>
       </div>
 
-      <h3 className="mb-1 font-medium leading-snug">{template.title}</h3>
+      <h3 className="mb-1 leading-snug font-medium">{template.title}</h3>
       {template.description && (
         <p className="mb-3 line-clamp-3 text-sm text-muted-foreground">
           {template.description}
@@ -193,16 +192,22 @@ function TemplateCard({
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center gap-1">
             <ListChecksIcon className="size-3.5" />
-            {template.steps.length} buoc
+            {t("app.templates.stats.steps", {
+              count: template.steps.length,
+            })}
           </span>
           <span className="inline-flex items-center gap-1">
             <Clock3Icon className="size-3.5" />~
-            {formatTotalDuration(totalMinutes(template.steps))}
+            {formatTotalDuration(totalMinutes(template.steps), t)}
           </span>
         </div>
         <div className="flex items-center gap-3">
           {typeof template.installCount === "number" ? (
-            <span>{template.installCount} cai dat</span>
+            <span>
+              {t("app.templates.stats.installs", {
+                count: template.installCount,
+              })}
+            </span>
           ) : null}
           <ChevronRightIcon className="size-4 shrink-0" />
         </div>
@@ -240,12 +245,9 @@ function DetailList({
   )
 }
 
-function TemplateDetailPane({
-  template,
-}: {
-  template: MarketTemplate | null
-}) {
+function TemplateDetailPane({ template }: { template: MarketTemplate | null }) {
   const router = useRouter()
+  const { i18n, t } = useTranslation()
   const [answers, setAnswers] = React.useState<Record<string, string>>({})
   const [isStarting, setIsStarting] = React.useState(false)
 
@@ -256,7 +258,10 @@ function TemplateDetailPane({
     }
 
     const nextState = Object.fromEntries(
-      (template.detail?.scaffoldFields ?? []).map((field) => [field.id, ""])
+      buildMarketplaceTemplateDetail(template).scaffoldFields.map((field) => [
+        field.id,
+        "",
+      ])
     )
     setAnswers(nextState)
   }, [template])
@@ -265,13 +270,13 @@ function TemplateDetailPane({
     return (
       <div className="sticky top-6 rounded-2xl border border-dashed bg-background/50 p-10 text-center text-sm text-muted-foreground">
         <BookOpenIcon className="mx-auto mb-3 size-8 text-muted-foreground/50" />
-        Chon mot template de xem chi tiet workflow, scaffold questions, va cach no se chia viec.
+        {t("app.templates.detail.empty")}
       </div>
     )
   }
 
-  const detail = template.detail
-  const scaffoldFields = detail?.scaffoldFields ?? []
+  const detail = buildMarketplaceTemplateDetail(template)
+  const scaffoldFields = detail.scaffoldFields
   const allScaffoldsFilled =
     scaffoldFields.length === 0 ||
     scaffoldFields.every((field) => (answers[field.id]?.trim().length ?? 0) > 0)
@@ -284,9 +289,21 @@ function TemplateDetailPane({
     setIsStarting(true)
 
     try {
-      void fetch(`/api/templates/${template.id}/install`, { method: "POST" })
+      const installResponse = await fetch(
+        `/api/templates/${template.id}/install`,
+        {
+          method: "POST",
+        }
+      )
+      if (!installResponse.ok) {
+        toast.error(t("app.templates.toast.installFailed"))
+      }
+
       const chat = await createDbChat()
-      savePendingAskPrompt(chat.id, buildTemplatePrompt(template, answers))
+      savePendingAskPrompt(
+        chat.id,
+        buildTemplatePrompt(template, answers, i18n.language)
+      )
 
       const params = new URLSearchParams()
       params.set("id", chat.id)
@@ -305,7 +322,7 @@ function TemplateDetailPane({
         <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="mb-1 text-xs font-medium tracking-wider text-muted-foreground uppercase">
-              Template Detail
+              {t("app.templates.detail.heading")}
             </p>
             <h2 className="text-xl font-medium tracking-tight">
               {template.title}
@@ -314,75 +331,93 @@ function TemplateDetailPane({
           <div className="flex flex-wrap gap-1.5">
             <Badge variant="secondary" className="gap-1 text-[10px]">
               {OUTPUT_TYPE_META[template.outputType].icon}
-              {OUTPUT_TYPE_META[template.outputType].label}
+              {t(OUTPUT_TYPE_META[template.outputType].labelKey)}
             </Badge>
             {template.supportsGroupMode && (
               <Badge variant="secondary" className="gap-1 text-[10px]">
                 <UsersIcon className="size-3" />
-                Team-based
+                {t("app.templates.badges.teamBased")}
               </Badge>
             )}
           </div>
         </div>
 
         <p className="text-sm leading-relaxed text-muted-foreground">
-          {detail?.overview ?? template.description ?? "Khung quy trinh cho template nay."}
+          {detail?.overview ??
+            template.description ??
+            t("app.templates.detail.fallbackOverview")}
         </p>
         {template.authorName ? (
-          <p className="mt-2 text-sm text-muted-foreground">Tac gia: {template.authorName}</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {t("app.templates.detail.author", { author: template.authorName })}
+          </p>
         ) : null}
 
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
           <div className="rounded-2xl border bg-muted/20 p-3">
-            <p className="text-[11px] text-muted-foreground uppercase">Workflow size</p>
-            <p className="mt-1 text-sm font-medium">{template.steps.length} buoc cot loi</p>
-          </div>
-          <div className="rounded-2xl border bg-muted/20 p-3">
-            <p className="text-[11px] text-muted-foreground uppercase">Total estimate</p>
+            <p className="text-[11px] text-muted-foreground uppercase">
+              {t("app.templates.detail.workflowSize")}
+            </p>
             <p className="mt-1 text-sm font-medium">
-              ~{formatTotalDuration(totalMinutes(template.steps))}
+              {t("app.templates.stats.coreSteps", {
+                count: template.steps.length,
+              })}
             </p>
           </div>
           <div className="rounded-2xl border bg-muted/20 p-3">
-            <p className="text-[11px] text-muted-foreground uppercase">Scaffold questions</p>
+            <p className="text-[11px] text-muted-foreground uppercase">
+              {t("app.templates.detail.totalEstimate")}
+            </p>
             <p className="mt-1 text-sm font-medium">
-              {template.scaffoldQuestions.length} cau hoi
+              ~{formatTotalDuration(totalMinutes(template.steps), t)}
+            </p>
+          </div>
+          <div className="rounded-2xl border bg-muted/20 p-3">
+            <p className="text-[11px] text-muted-foreground uppercase">
+              {t("app.templates.detail.scaffoldQuestions")}
+            </p>
+            <p className="mt-1 text-sm font-medium">
+              {t("app.templates.stats.questions", {
+                count: template.scaffoldQuestions.length,
+              })}
             </p>
           </div>
         </div>
       </section>
 
       <DetailList
-        title="Template se giup lam gi"
-        items={detail?.whatThisTemplateDoes ?? []}
+        title={t("app.templates.detail.sections.whatItDoes")}
+        items={detail.whatThisTemplateDoes}
         icon={<CheckCircle2Icon className="size-4" />}
       />
       <DetailList
-        title="Nhung viec co the dua vao sprint"
-        items={detail?.sprintableWork ?? []}
+        title={t("app.templates.detail.sections.sprintable")}
+        items={detail.sprintableWork}
         icon={<TimerIcon className="size-4" />}
       />
       <DetailList
-        title="Nhung viec can thoi gian dai hon sprint"
-        items={detail?.longRunningWork ?? []}
+        title={t("app.templates.detail.sections.longRunning")}
+        items={detail.longRunningWork}
         icon={<Clock3Icon className="size-4" />}
       />
       <DetailList
-        title="Deliverables cuoi cung"
-        items={detail?.deliverables ?? []}
+        title={t("app.templates.detail.sections.deliverables")}
+        items={detail.deliverables}
         icon={<FileTextIcon className="size-4" />}
       />
       <DetailList
-        title="Chi nen save plan khi..."
-        items={detail?.saveReadinessChecks ?? []}
+        title={t("app.templates.detail.sections.saveWhen")}
+        items={detail.saveReadinessChecks}
         icon={<ListChecksIcon className="size-4" />}
       />
 
       <section className="rounded-3xl border bg-background p-5 shadow-sm">
         <div className="mb-4">
-          <h3 className="text-base font-medium">Scaffold Questions</h3>
+          <h3 className="text-base font-medium">
+            {t("app.templates.scaffold.title")}
+          </h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            Tra loi ngan gon cac cau hoi nay truoc. AI se dung no de lap plan dung template, thay vi tra chat chung chung.
+            {t("app.templates.scaffold.description")}
           </p>
         </div>
 
@@ -393,7 +428,9 @@ function TemplateDetailPane({
                 {index + 1}. {field.label}
               </label>
               {field.helperText && (
-                <p className="text-xs text-muted-foreground">{field.helperText}</p>
+                <p className="text-xs text-muted-foreground">
+                  {field.helperText}
+                </p>
               )}
               <textarea
                 value={answers[field.id] ?? ""}
@@ -405,7 +442,7 @@ function TemplateDetailPane({
                 }
                 placeholder={field.placeholder}
                 rows={4}
-                className="w-full resize-y rounded-2xl border bg-background px-3 py-2 text-sm outline-none ring-0 placeholder:text-muted-foreground/70 focus:border-ring/70 focus:ring-2 focus:ring-ring/15"
+                className="w-full resize-y rounded-2xl border bg-background px-3 py-2 text-sm ring-0 outline-none placeholder:text-muted-foreground/70 focus:border-ring/70 focus:ring-2 focus:ring-ring/15"
               />
             </div>
           ))}
@@ -413,9 +450,11 @@ function TemplateDetailPane({
 
         <div className="mt-5 flex items-center justify-between gap-3 rounded-2xl border bg-muted/20 px-4 py-3">
           <div className="min-w-0">
-            <p className="text-sm font-medium">Tao plan nhap voi template nay</p>
+            <p className="text-sm font-medium">
+              {t("app.templates.start.title")}
+            </p>
             <p className="text-xs text-muted-foreground">
-              Save plan se chi xuat hien sau khi AI da co du context va draft du 3 phase.
+              {t("app.templates.start.description")}
             </p>
           </div>
           <Button
@@ -427,12 +466,12 @@ function TemplateDetailPane({
             {isStarting ? (
               <>
                 <Loader2Icon className="size-4 animate-spin" />
-                Dang mo chat
+                {t("app.templates.start.opening")}
               </>
             ) : (
               <>
                 <SendHorizonalIcon className="size-4" />
-                Tao plan nhap
+                {t("app.templates.start.button")}
               </>
             )}
           </Button>
@@ -442,33 +481,118 @@ function TemplateDetailPane({
   )
 }
 
+function MarketplaceFilters({
+  searchQuery,
+  onSearchQueryChange,
+  categoryFilter,
+  onCategoryFilterChange,
+  categories,
+}: {
+  searchQuery: string
+  onSearchQueryChange: (value: string) => void
+  categoryFilter: string
+  onCategoryFilterChange: (value: string) => void
+  categories: string[]
+}) {
+  const { t } = useTranslation()
+
+  return (
+    <div className="mb-4 flex flex-col gap-3 rounded-2xl border bg-background p-3 sm:flex-row sm:items-center">
+      <Input
+        value={searchQuery}
+        onChange={(event) => onSearchQueryChange(event.target.value)}
+        placeholder={t("app.templates.filters.searchPlaceholder")}
+        className="sm:max-w-sm"
+      />
+      <Select
+        value={categoryFilter}
+        onValueChange={(value) => {
+          if (value) onCategoryFilterChange(value)
+        }}
+      >
+        <SelectTrigger className="w-full sm:w-64">
+          <SelectValue placeholder={t("app.templates.filters.allCategories")} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">
+            {t("app.templates.filters.allCategories")}
+          </SelectItem>
+          {categories.map((category) => (
+            <SelectItem key={category} value={category}>
+              {category}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  )
+}
+
 export default function TemplatesPage() {
+  const { t } = useTranslation()
   const [templates, setTemplates] = React.useState<MarketTemplate[]>([])
-  const [selectedTemplateId, setSelectedTemplateId] = React.useState<string | null>(null)
+  const [availableCategories, setAvailableCategories] = React.useState<
+    string[]
+  >([])
+  const [selectedTemplateId, setSelectedTemplateId] = React.useState<
+    string | null
+  >(null)
   const [isLoaded, setIsLoaded] = React.useState(false)
   const [tab, setTab] = React.useState("marketplace")
+  const [searchQuery, setSearchQuery] = React.useState("")
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = React.useState("")
+  const [categoryFilter, setCategoryFilter] = React.useState("all")
+
+  React.useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery)
+    }, 300)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [searchQuery])
 
   React.useEffect(() => {
     let active = true
-    fetch("/api/templates")
+    const params = new URLSearchParams()
+    const search = debouncedSearchQuery.trim()
+    if (search) params.set("search", search)
+    if (categoryFilter !== "all") params.set("category", categoryFilter)
+    const url =
+      params.size > 0 ? `/api/templates?${params.toString()}` : "/api/templates"
+
+    setIsLoaded(false)
+    fetch(url)
       .then((response) => response.json())
       .then((data: { templates: MarketTemplate[] }) => {
         if (!active) return
         const nextTemplates = data.templates ?? []
         setTemplates(nextTemplates)
-        setSelectedTemplateId((current) => current ?? nextTemplates[0]?.id ?? null)
+        setAvailableCategories((current) =>
+          Array.from(
+            new Set([
+              ...current,
+              ...nextTemplates.map((template) => template.category),
+            ])
+          ).sort()
+        )
+        setSelectedTemplateId((current) =>
+          nextTemplates.some((template) => template.id === current)
+            ? current
+            : (nextTemplates[0]?.id ?? null)
+        )
         setIsLoaded(true)
       })
       .catch(() => {
         if (!active) return
         setTemplates([])
+        setSelectedTemplateId(null)
         setIsLoaded(true)
       })
 
     return () => {
       active = false
     }
-  }, [])
+  }, [categoryFilter, debouncedSearchQuery])
 
   const selectedTemplate =
     templates.find((template) => template.id === selectedTemplateId) ?? null
@@ -482,62 +606,99 @@ export default function TemplatesPage() {
       <section className="mx-auto w-full max-w-7xl px-4 pb-16 lg:py-0">
         <div className="mb-1 flex items-center gap-3">
           <h1 className="truncate text-2xl font-medium tracking-tight">
-            Templates
+            {t("app.templates.title")}
           </h1>
         </div>
         <p className="mb-6 max-w-3xl text-sm text-muted-foreground">
-          Moi template o day khong chi la ten mau. Nguoi dung co the xem chi tiet template se lam gi,
-          viec nao sprint duoc, viec nao can thoi gian dai hon, roi tra loi scaffold questions truoc khi AI draft plan.
+          {t("app.templates.subtitle")}
         </p>
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <Tabs value={tab} onValueChange={setTab}>
-            <TabsList aria-label="Template sections">
-              <TabsTrigger value="marketplace">Marketplace</TabsTrigger>
-              <TabsTrigger value="mine">Template cua toi</TabsTrigger>
+            <TabsList aria-label={t("app.templates.tabs.aria")}>
+              <TabsTrigger value="marketplace">
+                {t("app.templates.tabs.marketplace")}
+              </TabsTrigger>
+              <TabsTrigger value="mine">
+                {t("app.templates.tabs.mine")}
+              </TabsTrigger>
             </TabsList>
           </Tabs>
           <Link
             href="/app/templates/editor/new"
             className={buttonVariants({ size: "sm" })}
           >
-            Tao template moi
+            {t("app.templates.createNew")}
           </Link>
         </div>
 
         {tab === "mine" ? (
           <MyTemplatesPanel />
         ) : !isLoaded ? (
-          <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)]">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {[1, 2, 3, 4].map((item) => (
-                <div key={item} className="h-52 animate-pulse rounded-2xl bg-muted" />
-              ))}
+          <>
+            <MarketplaceFilters
+              searchQuery={searchQuery}
+              onSearchQueryChange={setSearchQuery}
+              categoryFilter={categoryFilter}
+              onCategoryFilterChange={setCategoryFilter}
+              categories={availableCategories}
+            />
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)]">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {[1, 2, 3, 4].map((item) => (
+                  <div
+                    key={item}
+                    className="h-52 animate-pulse rounded-2xl bg-muted"
+                  />
+                ))}
+              </div>
+              <div className="h-[720px] animate-pulse rounded-3xl bg-muted" />
             </div>
-            <div className="h-[720px] animate-pulse rounded-3xl bg-muted" />
-          </div>
+          </>
         ) : templates.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {templates.map((template) => (
-                <TemplateCard
-                  key={template.id}
-                  template={template}
-                  isActive={template.id === selectedTemplateId}
-                  onSelect={(nextTemplate) => setSelectedTemplateId(nextTemplate.id)}
-                />
-              ))}
-            </div>
+          <>
+            <MarketplaceFilters
+              searchQuery={searchQuery}
+              onSearchQueryChange={setSearchQuery}
+              categoryFilter={categoryFilter}
+              onCategoryFilterChange={setCategoryFilter}
+              categories={availableCategories}
+            />
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {templates.map((template) => (
+                  <TemplateCard
+                    key={template.id}
+                    template={template}
+                    isActive={template.id === selectedTemplateId}
+                    onSelect={(nextTemplate) =>
+                      setSelectedTemplateId(nextTemplate.id)
+                    }
+                  />
+                ))}
+              </div>
 
-            <TemplateDetailPane template={selectedTemplate} />
-          </div>
+              <TemplateDetailPane template={selectedTemplate} />
+            </div>
+          </>
         ) : (
-          <div className="rounded-xl border border-dashed border-border px-6 py-12 text-center text-muted-foreground">
-            <InboxIcon className="mx-auto mb-3 size-8 text-muted-foreground/50" />
-            <p className="text-sm font-medium">Chua co template nao</p>
-            <p className="mt-1 text-xs">
-              Template se xuat hien o day khi duoc them vao he thong.
-            </p>
-          </div>
+          <>
+            <MarketplaceFilters
+              searchQuery={searchQuery}
+              onSearchQueryChange={setSearchQuery}
+              categoryFilter={categoryFilter}
+              onCategoryFilterChange={setCategoryFilter}
+              categories={availableCategories}
+            />
+            <div className="rounded-xl border border-dashed border-border px-6 py-12 text-center text-muted-foreground">
+              <InboxIcon className="mx-auto mb-3 size-8 text-muted-foreground/50" />
+              <p className="text-sm font-medium">
+                {t("app.templates.empty.title")}
+              </p>
+              <p className="mt-1 text-xs">
+                {t("app.templates.empty.description")}
+              </p>
+            </div>
+          </>
         )}
       </section>
     </ScrollArea>

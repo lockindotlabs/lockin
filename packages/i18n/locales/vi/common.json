@@ -525,5 +525,451 @@
         }
       }
     }
+  },
+  "app": {
+    "nav": {
+      "home": "Trang chủ",
+      "plans": "Kế hoạch",
+      "focus": "Tập trung",
+      "askAi": "Hỏi AI",
+      "templates": "Mẫu",
+      "insights": "Thống kê",
+      "admin": "Quản trị",
+      "settings": "Cài đặt",
+      "subscription": "Gói dịch vụ",
+      "knowledgeHub": "Kho kiến thức"
+    },
+    "common": {
+      "loading": "Đang tải..."
+    },
+    "actions": {
+      "newPlan": "Kế hoạch mới",
+      "more": "Thêm",
+      "copyLink": "Sao chép liên kết",
+      "openInNewTab": "Mở trong tab mới",
+      "delete": "Xóa",
+      "rename": "Đổi tên"
+    },
+    "sidebar": {
+      "recentPlans": "Kế hoạch gần đây",
+      "noSavedPlans": "Chưa có kế hoạch đã lưu"
+    },
+    "search": {
+      "placeholder": "Nhập lệnh hoặc tìm kiếm...",
+      "quickActions": "Thao tác nhanh",
+      "chats": "Đoạn chat",
+      "plans": "Kế hoạch",
+      "loadingChats": "Đang tải chat...",
+      "loadingPlans": "Đang tải kế hoạch...",
+      "noResults": "Không tìm thấy kết quả.",
+      "unableToSearch": "Không thể tìm kiếm. Thử lại nhé.",
+      "createBlankPlan": "Tạo kế hoạch trống",
+      "currentPage": "Trang hiện tại",
+      "openPage": "Mở trang",
+      "messageCount_one": "{{count}} tin nhắn",
+      "messageCount_other": "{{count}} tin nhắn",
+      "stepCount_one": "{{count}} bước",
+      "stepCount_other": "{{count}} bước",
+      "shortcutPrefix": "Dùng",
+      "shortcutSuffix": "để mở bảng lệnh",
+      "filters": {
+        "all": "Tất cả",
+        "chats": "Chat",
+        "plans": "Kế hoạch"
+      }
+    },
+    "chat": {
+      "newChat": "Chat mới",
+      "renamePrompt": "Đổi tên chat",
+      "recent": "Gần đây",
+      "noRecent": "Chưa có chat gần đây",
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua",
+      "previousSevenDays": "7 ngày trước",
+      "older": "Cũ hơn"
+    },
+    "plan": {
+      "untitled": "Kế hoạch chưa đặt tên",
+      "current": "Kế hoạch hiện tại"
+    },
+    "plans": {
+      "recently": "Gần đây",
+      "noTasks": "Chưa có task",
+      "taskProgress": "{{completed}}/{{total}} task",
+      "filterAria": "Lọc kế hoạch theo trạng thái",
+      "toggleViewAria": "Đổi kiểu hiển thị",
+      "deleteAria": "Xóa {{name}}",
+      "noPlansFound": "Không tìm thấy kế hoạch",
+      "noPlansInCategory": "Không có kế hoạch nào trong nhóm \"{{category}}\".",
+      "emptyTitle": "Bạn chưa có kế hoạch đã lưu",
+      "emptyDescription": "Tạo một kế hoạch để xem tại đây.",
+      "tabs": {
+        "all": "Tất cả kế hoạch"
+      },
+      "status": {
+        "overdue": "Quá hạn",
+        "dueToday": "Hạn hôm nay",
+        "onTrack": "Đúng tiến độ",
+        "completed": "Hoàn thành"
+      },
+      "table": {
+        "planTitle": "Tên kế hoạch",
+        "status": "Trạng thái",
+        "tasks": "Task",
+        "lastOpened": "Mở gần nhất"
+      }
+    },
+    "templates": {
+      "title": "Mẫu",
+      "subtitle": "Mỗi mẫu không chỉ là tên lưu sẵn. Bạn có thể xem mẫu sẽ làm gì, việc nào đưa vào sprint được, việc nào cần theo dõi lâu hơn, rồi trả lời các câu hỏi khởi tạo trước khi AI lập bản nháp kế hoạch.",
+      "createNew": "Tạo mẫu mới",
+      "tabs": {
+        "aria": "Khu vực mẫu",
+        "marketplace": "Kho mẫu",
+        "mine": "Mẫu của tôi"
+      },
+      "filters": {
+        "searchPlaceholder": "Tìm theo tên, mô tả, tag...",
+        "allCategories": "Tất cả danh mục"
+      },
+      "badges": {
+        "academic": "Học thuật",
+        "document": "Tài liệu",
+        "skillPractice": "Luyện tập",
+        "project": "Dự án",
+        "group": "Nhóm",
+        "teamBased": "Theo nhóm"
+      },
+      "duration": {
+        "minutes_one": "{{count}} phút",
+        "minutes_other": "{{count}} phút",
+        "hours_one": "{{count}} giờ",
+        "hours_other": "{{count}} giờ",
+        "hoursMinutes": "{{hours}}h{{minutes}}p"
+      },
+      "stats": {
+        "steps_one": "{{count}} bước",
+        "steps_other": "{{count}} bước",
+        "installs_one": "{{count}} cài đặt",
+        "installs_other": "{{count}} cài đặt",
+        "coreSteps_one": "{{count}} bước cốt lõi",
+        "coreSteps_other": "{{count}} bước cốt lõi",
+        "questions_one": "{{count}} câu hỏi",
+        "questions_other": "{{count}} câu hỏi"
+      },
+      "detail": {
+        "empty": "Chọn một mẫu để xem workflow, câu hỏi khởi tạo và cách công việc sẽ được chia nhỏ.",
+        "heading": "Chi tiết mẫu",
+        "fallbackOverview": "Khung quy trình cho mẫu này.",
+        "author": "Tác giả: {{author}}",
+        "workflowSize": "Quy mô workflow",
+        "totalEstimate": "Ước tính tổng",
+        "scaffoldQuestions": "Câu hỏi khởi tạo",
+        "sections": {
+          "whatItDoes": "Mẫu này giúp làm gì",
+          "sprintable": "Việc có thể đưa vào sprint",
+          "longRunning": "Việc cần theo dõi lâu hơn sprint",
+          "deliverables": "Sản phẩm bàn giao cuối cùng",
+          "saveWhen": "Chỉ nên lưu kế hoạch khi..."
+        }
+      },
+      "scaffold": {
+        "title": "Câu hỏi khởi tạo",
+        "description": "Trả lời ngắn gọn các câu hỏi này trước. AI sẽ dùng chúng để lập kế hoạch đúng theo mẫu, thay vì trả lời chung chung."
+      },
+      "start": {
+        "title": "Tạo bản nháp kế hoạch với mẫu này",
+        "description": "Nút lưu kế hoạch chỉ xuất hiện sau khi AI có đủ ngữ cảnh và lập đủ 3 phase.",
+        "opening": "Đang mở chat",
+        "button": "Tạo bản nháp"
+      },
+      "toast": {
+        "installFailed": "Không thể ghi nhận lượt cài đặt mẫu. Chat vẫn sẽ được mở."
+      },
+      "empty": {
+        "title": "Chưa có mẫu nào",
+        "description": "Mẫu sẽ xuất hiện ở đây khi được thêm vào hệ thống."
+      },
+      "mine": {
+        "loading": "Đang tải mẫu của bạn...",
+        "emptyTitle": "Bạn chưa có mẫu nào",
+        "emptyDescription": "Tạo từ đầu hoặc chụp lại một kế hoạch có sẵn để bắt đầu.",
+        "summary": "{{category}} • {{count}} bước",
+        "rejectionReason": "Lý do từ chối: {{reason}}",
+        "edit": "Sửa",
+        "submit": "Gửi duyệt",
+        "unpublish": "Gỡ đăng",
+        "delete": "Xóa",
+        "status": {
+          "draft": "Nháp",
+          "pendingReview": "Chờ duyệt",
+          "approved": "Đã đăng",
+          "rejected": "Bị từ chối"
+        }
+      }
+    },
+    "editor": {
+      "close": "Đóng trình chỉnh sửa"
+    },
+    "focus": {
+      "focusedToday": "{{duration}} tập trung hôm nay",
+      "dueTodayPlans_one": "{{count}} kế hoạch có bước hạn hôm nay.",
+      "dueTodayPlans_other": "{{count}} kế hoạch có bước hạn hôm nay.",
+      "pickPlan": "Chọn một kế hoạch và bắt đầu Sprint.",
+      "emptyTitle": "Chưa có gì sẵn sàng để Sprint",
+      "emptyDescription": "Tạo một kế hoạch để bắt đầu.",
+      "createPlan": "Tạo kế hoạch",
+      "nextStep": "Tiếp theo:",
+      "allStepsCompleted": "Tất cả bước đã hoàn thành",
+      "stepCount_one": "{{count}} bước",
+      "stepCount_other": "{{count}} bước",
+      "stepUnit_one": "bước",
+      "stepUnit_other": "bước",
+      "dueTodayCount_one": "{{count}} hạn hôm nay",
+      "dueTodayCount_other": "{{count}} hạn hôm nay",
+      "sprint": "Sprint",
+      "recentSprints": "Sprint gần đây",
+      "noSprints": "Chưa có Sprint nào.",
+      "session": {
+        "sprintFallback": "Sprint",
+        "loading": "Đang tải phiên tập trung...",
+        "sprintLabel": "Sprint",
+        "completeLabel": "{{percent}}% hoàn thành",
+        "overtime": "Quá giờ",
+        "paused": "Đang tạm dừng",
+        "taskProgress": "Tiến độ task",
+        "resume": "Tiếp tục",
+        "pause": "Tạm dừng",
+        "saving": "Đang lưu...",
+        "allDoneEndSprint": "Đã xong - Kết thúc Sprint",
+        "endSprint": "Kết thúc Sprint",
+        "steps": "Các bước",
+        "scrollTop": "Cuộn lên đầu danh sách bước",
+        "scrollBottom": "Cuộn xuống cuối danh sách bước",
+        "nowWorkingOn": "Đang làm",
+        "overBy": "+{{duration}} quá giờ",
+        "howTo": "Cách làm",
+        "allStepsDone": "Tất cả bước đã xong",
+        "pickStepHint": "Chọn hoặc bắt đầu một bước để xem gợi ý.",
+        "leaveWarning": "Bạn chắc chắn muốn rời đi? Sprint đang chạy.",
+        "endModal": {
+          "title": "Kết thúc Sprint tập trung",
+          "subtitle": "Xử lý mọi bước chưa xong bên dưới trước khi kết thúc.",
+          "tooEarlyTitle": "Bạn đang kết thúc Sprint quá sớm!",
+          "unfinishedTitle": "Bạn chưa hoàn thành mọi thứ!",
+          "tooEarlyDescription": "Vẫn còn thời gian và bước chưa xong. Hãy xử lý từng bước bên dưới - \"Tôi đã xong\" hoặc \"Tôi chưa xong\" - hoặc tiếp tục Sprint.",
+          "unfinishedDescription": "Xử lý các bước còn lại bên dưới trước khi kết thúc.",
+          "completed": "Đã hoàn thành",
+          "markedNotDone": "Đã đánh dấu là chưa xong",
+          "estimate": "Ước tính:",
+          "spent": " (đã dùng {{minutes}}p)",
+          "extensionSummary": " · đã xin thêm +{{minutes}}p ({{count}}x)",
+          "notDoneButton": "Tôi chưa xong",
+          "doneButton": "Tôi đã xong",
+          "honesty": "Bạn chịu trách nhiệm cho hành động của mình - hãy trung thực với phần đã thật sự hoàn thành.",
+          "timeElapsed": "Thời gian đã dùng:",
+          "remainingTime": "Thời gian Sprint còn lại:",
+          "continueSprint": "Tiếp tục Sprint",
+          "cancel": "Hủy",
+          "resolveFirst": "Xử lý thêm {{count}} bước trước",
+          "ending": "Đang kết thúc...",
+          "saveAndEnd": "Lưu & kết thúc",
+          "resolveMore": "Xử lý thêm {{count}} bước"
+        }
+      },
+      "coach": {
+        "title": "Hỏi Coach",
+        "remaining": "Còn {{remaining}}/{{total}} lượt",
+        "emptyPrefix": "Kẹt ở bước này? Hỏi",
+        "approach": "cách tiếp cận",
+        "emptySuffix": "- Coach gợi ý hướng làm, không đưa lời giải sẵn.",
+        "thinking": "Coach đang nghĩ...",
+        "limitReached": "Bạn đã dùng hết {{total}} lượt hỏi cho bước này - giờ là lúc bắt tay vào làm.",
+        "placeholder": "Mình nên bắt đầu bước này thế nào?",
+        "sendAria": "Gửi câu hỏi cho Coach",
+        "replyError": "Không tạo được phản hồi.",
+        "genericError": "Có lỗi xảy ra."
+      },
+      "overtime": {
+        "taskTitle": "Task này đang lâu hơn dự kiến",
+        "sprintTitle": "Hết thời gian Sprint",
+        "taskDescription": "Hãy xử lý task này trước khi tiếp tục - không bỏ qua phần quá giờ.",
+        "sprintDescription": "Các bước này chưa xong. Hãy xử lý từng bước để kết thúc Sprint.",
+        "overEstimate": "+{{duration}} quá ước tính",
+        "extensionCount_one": "Đã xin thêm thời gian {{count}} lần",
+        "extensionCount_other": "Đã xin thêm thời gian {{count}} lần",
+        "notOnTimeWarning": "- Sprint sẽ được tính là không đúng giờ",
+        "giveUp": "Tôi bỏ cuộc",
+        "markDone": "Tôi thật sự đã xong",
+        "honesty": "Bạn chịu trách nhiệm cho hành động của mình - hãy trung thực với phần đã thật sự hoàn thành."
+      }
+    },
+    "language": {
+      "current": "{{locale}}"
+    },
+    "confirm": {
+      "delete": "Xóa \"{{name}}\"?"
+    },
+    "assistant": {
+      "suggestions": {
+        "plan": {
+          "smaller": "Chia nhỏ hơn.",
+          "fortyFiveMinutes": "Tôi chỉ có 45 phút.",
+          "easiestStep": "Bắt đầu bằng bước dễ nhất.",
+          "lowEnergy": "Điều chỉnh cho lúc ít năng lượng."
+        },
+        "onboarding": {
+          "uxCaseStudy": "Hoàn thành case study UX",
+          "finals": "Ôn thi cuối kỳ",
+          "cleanRoom": "Dọn phòng",
+          "portfolio": "Xây portfolio"
+        }
+      }
+    },
+    "aiTools": {
+      "answered": "Đã trả lời",
+      "submitted": "Đã gửi",
+      "skipped": "Đã bỏ qua",
+      "thinkingQuestion": "Đang nghĩ câu hỏi...",
+      "thinkingQuestions": "Đang nghĩ các câu hỏi...",
+      "clarifyingQuestion": "Câu hỏi làm rõ",
+      "clarifyingQuestions": "Các câu hỏi làm rõ",
+      "questionNumber": "Câu {{number}}",
+      "of": "trên",
+      "dismissQuestion": "Đóng câu hỏi",
+      "skipQuestion": "Bỏ qua câu hỏi",
+      "writeOwnAnswer": "Viết câu trả lời riêng",
+      "somethingElse": "Câu trả lời khác...",
+      "send": "Gửi",
+      "set": "Chọn",
+      "skip": "Bỏ qua",
+      "back": "Quay lại",
+      "next": "Tiếp",
+      "planningScaffold": "Khung lập kế hoạch",
+      "preparingScaffold": "Đang chuẩn bị khung...",
+      "scaffoldHint": "Điền khung này để kế hoạch được tạo từ đúng ngữ cảnh thật.",
+      "wordCount_one": "{{count}} từ",
+      "wordCount_other": "{{count}} từ",
+      "needWords": "cần {{count}}+",
+      "required": "Bắt buộc",
+      "canSubmitAddDetail": "Có thể gửi, nhưng thêm chi tiết sẽ tốt hơn",
+      "ready": "Sẵn sàng",
+      "answerRequired": "Vui lòng trả lời mục này trước khi tiếp tục.",
+      "shortAnswerHint": "Câu trả lời ngắn vẫn được chấp nhận, nhưng thêm một chút chi tiết sẽ giúp kế hoạch chính xác hơn.",
+      "submitScaffold": "Gửi khung"
+    },
+    "status": {
+      "comingSoon": "Sắp ra mắt"
+    },
+    "feedback": {
+      "title": "Góp ý",
+      "placeholder": "Nhập góp ý của bạn ở đây...",
+      "note": "Chúng tôi không phản hồi từng góp ý, nhưng luôn đọc kỹ tất cả.",
+      "submit": "Gửi"
+    },
+    "guide": {
+      "cardTitle": "Bắt đầu",
+      "cardDescription": "Xem cách LockIn biến việc quá tải thành kế hoạch Sprint có thể hành động.",
+      "viewGuide": "Xem hướng dẫn",
+      "dialogTitle": "Bắt đầu với LockIn",
+      "dialogDescription": "Hướng dẫn từng bước để bắt đầu dùng LockIn.",
+      "getStarted": "Bắt đầu",
+      "stepCounter": "Bước {{step}} trên {{total}}",
+      "start": "Bắt đầu",
+      "steps": {
+        "0": {
+          "title": "Chào mừng đến với LockIn",
+          "body1": "Hầu hết ứng dụng năng suất giúp bạn sắp xếp công việc. LockIn giúp bạn thật sự bắt đầu.",
+          "body2": "Những việc lớn và mơ hồ dễ dẫn đến trì hoãn vì rất khó bắt đầu. LockIn giúp biến phần việc quá tải thành các bước rõ ràng, có thể làm ngay."
+        },
+        "1": {
+          "title": "Bắt đầu bằng bất kỳ việc nào",
+          "body1": "Chỉ cần mô tả điều bạn cần hoàn thành bằng lời của chính bạn.",
+          "body2": "LockIn được thiết kế để xử lý những việc lộn xộn, mơ hồ và dễ gây quá tải."
+        },
+        "2": {
+          "title": "Để AI tạo bản nháp đầu tiên",
+          "body1": "Thay vì tự loay hoay tìm điểm bắt đầu, hãy để LockIn tạo kế hoạch cho bạn.",
+          "body2": "AI chia việc lớn thành các bước nhỏ hơn và ước lượng thời gian cho từng bước."
+        },
+        "3": {
+          "title": "Xem lại trước khi bắt tay làm",
+          "body1": "Gợi ý của AI chỉ là điểm xuất phát.",
+          "body2": "Trước khi bắt đầu, bạn có thể sửa bước, chỉnh thời lượng, sắp xếp lại và thêm bước của riêng mình."
+        },
+        "4": {
+          "title": "Vào chế độ Sprint",
+          "body1": "Khi đã sẵn sàng, hãy bắt đầu một Sprint.",
+          "body2": "Sprint Mode giảm xao nhãng và giữ sự chú ý của bạn vào từng bước một."
+        },
+        "5": {
+          "title": "Tiến độ được xây từng bước",
+          "body1": "Bạn không cần hoàn thành mọi thứ trong hôm nay. Mỗi Sprint hoàn thành đều đẩy dự án tiến lên.",
+          "body2": "Khi Sprint kết thúc, LockIn tóm tắt tiến độ và giúp bạn quyết định bước tiếp theo."
+        },
+        "6": {
+          "title": "Sẵn sàng bắt đầu?",
+          "body1": "Hãy nghĩ đến một việc bạn đã trì hoãn.",
+          "body2": "LockIn sẽ giúp bạn biến nó thành một kế hoạch có thể bắt đầu thật sự."
+        }
+      }
+    },
+    "insights": {
+      "title": "Thống kê",
+      "subtitle": "Cách các Sprint của bạn thực sự diễn ra - hoàn thành, đúng giờ và trì hoãn.",
+      "empty": "Chưa có Sprint nào hoàn thành - hoàn thành một phiên tập trung để xem thống kê tại đây.",
+      "sprintFallback": "Sprint",
+      "stepsProgress": "{{done}}/{{total}} bước",
+      "heatmapCell": "{{date}} · {{count}} Sprint · {{onTime}} đúng giờ · {{late}} không đúng giờ",
+      "heatmapEmptyCell": "{{date}} · chưa có Sprint",
+      "metrics": {
+        "totalSprints": "Tổng Sprint",
+        "onTimeRate": "Tỷ lệ đúng giờ",
+        "onTimeRateDescription": "Gia hạn thời gian quá 2 lần trong một task sẽ tính Sprint đó là không đạt",
+        "totalFocusTime": "Tổng thời gian tập trung",
+        "avgProcrastination": "Mức trì hoãn TB"
+      },
+      "sections": {
+        "completionBreakdown": "Phân tích hoàn thành",
+        "whenYouFocus": "Khi bạn tập trung",
+        "recentSprints": "Sprint gần đây"
+      },
+      "aria": {
+        "completionBreakdown": "Phân tích hoàn thành Sprint"
+      },
+      "completion": {
+        "onTime": "Đúng giờ",
+        "notOnTime": "Không đúng giờ",
+        "completedLate": "Hoàn thành trễ",
+        "overtime": "Quá giờ",
+        "endedEarly": "Kết thúc sớm"
+      },
+      "procrastination": {
+        "none": "Không có",
+        "mild": "Nhẹ",
+        "moderate": "Vừa",
+        "severe": "Nặng",
+        "label": "Trì hoãn {{value}}"
+      },
+      "days": {
+        "mon": "T2",
+        "wed": "T4",
+        "fri": "T6"
+      },
+      "months": {
+        "0": "Th1",
+        "1": "Th2",
+        "2": "Th3",
+        "3": "Th4",
+        "4": "Th5",
+        "5": "Th6",
+        "6": "Th7",
+        "7": "Th8",
+        "8": "Th9",
+        "9": "Th10",
+        "10": "Th11",
+        "11": "Th12"
+      }
+    }
   }
 }

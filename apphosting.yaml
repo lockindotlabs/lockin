@@ -1,9 +1,6 @@
 runConfig:
   runtime: nodejs22
 
-buildConfig:
-  buildCommand: npx prisma migrate deploy --schema apps/api/prisma/schema.prisma && npx prisma generate --schema apps/api/prisma/schema.prisma && pnpm run build:web
-
 env:
   - variable: NODE_ENV
     value: production

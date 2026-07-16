@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@workspace/ui/components/button"
 import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar"
 import { ArrowLeftIcon, InboxIcon, ListCheckIcon } from "lucide-react"
@@ -75,39 +76,57 @@ function getPlanCategory(plan: {
   return "ON_TRACK"
 }
 
-function getPlanTimestamp(plan: RecentlyOpenedPlan) {
+function getPlanTimestamp(
+  plan: RecentlyOpenedPlan,
+  t: ReturnType<typeof useTranslation>["t"]
+) {
   const timestamp = plan.lastOpenedAt ?? plan.updatedAt
 
   if (!timestamp) {
-    return "Recently"
+    return t("app.plans.recently", { defaultValue: "Recently" })
   }
 
   try {
     return formatDistanceToNow(new Date(timestamp), { addSuffix: true })
   } catch (e) {
-    return "Recently"
+    return t("app.plans.recently", { defaultValue: "Recently" })
   }
 }
 
-function getPlanProgress(plan: RecentlyOpenedPlan) {
+function getPlanProgress(
+  plan: RecentlyOpenedPlan,
+  t: ReturnType<typeof useTranslation>["t"]
+) {
   const steps = plan.steps || []
   const total = steps.length
-  if (total === 0) return "No tasks"
+  if (total === 0) {
+    return t("app.plans.noTasks", { defaultValue: "No tasks" })
+  }
   const completed = steps.filter((s) => s.isCompleted).length
-  return `${completed}/${total} tasks`
+  return t("app.plans.taskProgress", {
+    completed,
+    total,
+    defaultValue: `${completed}/${total} tasks`,
+  })
 }
 
 function CategoryBadge({ category }: { category: string }) {
+  const { t } = useTranslation()
+
   switch (category) {
     case "OVERDUE":
-      return <Badge variant="destructive">Overdue</Badge>
+      return (
+        <Badge variant="destructive">
+          {t("app.plans.status.overdue", { defaultValue: "Overdue" })}
+        </Badge>
+      )
     case "DUE_TODAY":
       return (
         <Badge
           variant="secondary"
           className="bg-amber-100 font-semibold text-amber-800 dark:bg-amber-950/40 dark:text-amber-300"
         >
-          Due Today
+          {t("app.plans.status.dueToday", { defaultValue: "Due Today" })}
         </Badge>
       )
     case "ON_TRACK":
@@ -116,7 +135,7 @@ function CategoryBadge({ category }: { category: string }) {
           variant="secondary"
           className="bg-emerald-100 font-semibold text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
         >
-          On Track
+          {t("app.plans.status.onTrack", { defaultValue: "On Track" })}
         </Badge>
       )
     case "COMPLETED":
@@ -125,15 +144,20 @@ function CategoryBadge({ category }: { category: string }) {
           variant="secondary"
           className="bg-blue-100 font-semibold text-blue-800 dark:bg-blue-950/40 dark:text-blue-300"
         >
-          Completed
+          {t("app.plans.status.completed", { defaultValue: "Completed" })}
         </Badge>
       )
     default:
-      return <Badge variant="outline">On Track</Badge>
+      return (
+        <Badge variant="outline">
+          {t("app.plans.status.onTrack", { defaultValue: "On Track" })}
+        </Badge>
+      )
   }
 }
 
 export default function PlansPage() {
+  const { t } = useTranslation()
   const { plans, isLoaded } = usePlanSummaries()
   const recentlyOpenedPlans = useRecentlyOpenedPlans(plans)
   const [activeTab, setActiveTab] = React.useState<
@@ -142,8 +166,15 @@ export default function PlansPage() {
   const [viewMode, setViewMode] = React.useState<"CARD" | "LIST">("CARD")
 
   const handleDeletePlan = async (plan: RecentlyOpenedPlan) => {
-    const planTitle = plan.title.trim() || "Untitled Plan"
-    const shouldDelete = window.confirm(`Delete "${planTitle}"?`)
+    const planTitle =
+      plan.title.trim() ||
+      t("app.plan.untitled", { defaultValue: "Untitled Plan" })
+    const shouldDelete = window.confirm(
+      t("app.confirm.delete", {
+        name: planTitle,
+        defaultValue: `Delete "${planTitle}"?`,
+      })
+    )
 
     if (!shouldDelete) {
       return
@@ -172,11 +203,31 @@ export default function PlansPage() {
   })
 
   const tabs = [
-    { id: "ALL", label: "All Plans", count: countAll },
-    { id: "OVERDUE", label: "Overdue", count: countOverdue },
-    { id: "DUE_TODAY", label: "Due Today", count: countDueToday },
-    { id: "ON_TRACK", label: "On Track", count: countOnTrack },
-    { id: "COMPLETED", label: "Completed", count: countCompleted },
+    {
+      id: "ALL",
+      label: t("app.plans.tabs.all", { defaultValue: "All Plans" }),
+      count: countAll,
+    },
+    {
+      id: "OVERDUE",
+      label: t("app.plans.status.overdue", { defaultValue: "Overdue" }),
+      count: countOverdue,
+    },
+    {
+      id: "DUE_TODAY",
+      label: t("app.plans.status.dueToday", { defaultValue: "Due Today" }),
+      count: countDueToday,
+    },
+    {
+      id: "ON_TRACK",
+      label: t("app.plans.status.onTrack", { defaultValue: "On Track" }),
+      count: countOnTrack,
+    },
+    {
+      id: "COMPLETED",
+      label: t("app.plans.status.completed", { defaultValue: "Completed" }),
+      count: countCompleted,
+    },
   ]
 
   return (
@@ -190,7 +241,7 @@ export default function PlansPage() {
             <div className="mb-5 flex items-center gap-3">
               <div className="min-w-0">
                 <h1 className="truncate text-2xl font-medium tracking-tight">
-                  Plans
+                  {t("app.nav.plans", { defaultValue: "Plans" })}
                 </h1>
               </div>
             </div>
@@ -225,7 +276,7 @@ export default function PlansPage() {
             <div className="mb-5 flex items-center gap-3">
               <div className="min-w-0">
                 <h1 className="truncate text-2xl font-medium tracking-tight">
-                  Plans
+                  {t("app.nav.plans", { defaultValue: "Plans" })}
                 </h1>
               </div>
             </div>
@@ -240,7 +291,11 @@ export default function PlansPage() {
                 }}
                 className="mb-6"
               >
-                <TabsList aria-label="Filter plans by status">
+                <TabsList
+                  aria-label={t("app.plans.filterAria", {
+                    defaultValue: "Filter plans by status",
+                  })}
+                >
                   {tabs.map((tab) => (
                     <TabsTrigger
                       key={tab.id}
@@ -267,7 +322,11 @@ export default function PlansPage() {
                   }
                 }}
               >
-                <TabsList aria-label="Toggle layout view">
+                <TabsList
+                  aria-label={t("app.plans.toggleViewAria", {
+                    defaultValue: "Toggle layout view",
+                  })}
+                >
                   <TabsTrigger value="CARD">
                     <LayoutGrid01 />
                   </TabsTrigger>
@@ -288,19 +347,37 @@ export default function PlansPage() {
                 <Table>
                   <TableHeader>
                     <TableRow className="*:text-muted-foreground hover:bg-background">
-                      <TableHead className="w-[45%]">Plan Title</TableHead>
-                      <TableHead className="w-[20%]">Status</TableHead>
-                      <TableHead className="w-[15%]">Tasks</TableHead>
-                      <TableHead className="w-[15%]">Last Opened</TableHead>
+                      <TableHead className="w-[45%]">
+                        {t("app.plans.table.planTitle", {
+                          defaultValue: "Plan Title",
+                        })}
+                      </TableHead>
+                      <TableHead className="w-[20%]">
+                        {t("app.plans.table.status", {
+                          defaultValue: "Status",
+                        })}
+                      </TableHead>
+                      <TableHead className="w-[15%]">
+                        {t("app.plans.table.tasks", { defaultValue: "Tasks" })}
+                      </TableHead>
+                      <TableHead className="w-[15%]">
+                        {t("app.plans.table.lastOpened", {
+                          defaultValue: "Last Opened",
+                        })}
+                      </TableHead>
                       <TableHead className="w-[5%] text-right"></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredPlans.map((plan) => {
-                      const planTitle = plan.title.trim() || "Untitled Plan"
+                      const planTitle =
+                        plan.title.trim() ||
+                        t("app.plan.untitled", {
+                          defaultValue: "Untitled Plan",
+                        })
                       const category = getPlanCategory(plan)
-                      const progress = getPlanProgress(plan)
-                      const timestamp = getPlanTimestamp(plan)
+                      const progress = getPlanProgress(plan, t)
+                      const timestamp = getPlanTimestamp(plan, t)
 
                       return (
                         <>
@@ -330,7 +407,10 @@ export default function PlansPage() {
                                 type="button"
                                 variant="ghost"
                                 size="icon-sm"
-                                aria-label={`Delete ${planTitle}`}
+                                aria-label={t("app.plans.deleteAria", {
+                                  name: planTitle,
+                                  defaultValue: `Delete ${planTitle}`,
+                                })}
                                 className="opacity-0 transition-opacity group-hover/row:opacity-100 hover:text-destructive"
                                 onClick={() => handleDeletePlan(plan)}
                               >
@@ -347,10 +427,16 @@ export default function PlansPage() {
             ) : (
               <div className="rounded-xl border border-dashed border-border px-6 py-12 text-center text-muted-foreground">
                 <InboxIcon className="mx-auto mb-3 size-8 text-muted-foreground/50" />
-                <p className="text-sm font-medium">No plans found</p>
+                <p className="text-sm font-medium">
+                  {t("app.plans.noPlansFound", {
+                    defaultValue: "No plans found",
+                  })}
+                </p>
                 <p className="mt-1 text-xs">
-                  There are no plans categorized under "
-                  {tabs.find((t) => t.id === activeTab)?.label}".
+                  {t("app.plans.noPlansInCategory", {
+                    category: tabs.find((tab) => tab.id === activeTab)?.label,
+                    defaultValue: `There are no plans categorized under "${tabs.find((tab) => tab.id === activeTab)?.label}".`,
+                  })}
                 </p>
               </div>
             )}
@@ -360,12 +446,20 @@ export default function PlansPage() {
             <InboxIcon className="size-10" strokeWidth={1.25} />
             <div>
               <h1 className="font-medium">
-                You don't have any saved plans yet
+                {t("app.plans.emptyTitle", {
+                  defaultValue: "You don't have any saved plans yet",
+                })}
               </h1>
-              <p>Create a plan to see it here.</p>
+              <p>
+                {t("app.plans.emptyDescription", {
+                  defaultValue: "Create a plan to see it here.",
+                })}
+              </p>
               <Button className={"mt-4"}>
                 <Plus data-icon="inline-start" />
-                <span>New Plan</span>
+                <span>
+                  {t("app.actions.newPlan", { defaultValue: "New Plan" })}
+                </span>
               </Button>
             </div>
           </section>

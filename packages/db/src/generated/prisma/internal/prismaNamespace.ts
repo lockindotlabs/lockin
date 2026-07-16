@@ -1894,28 +1894,28 @@ export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof Json
  * Reference to a field of type 'String'
  */
 export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
-
+    
 
 
 /**
  * Reference to a field of type 'String[]'
  */
 export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
-
+    
 
 
 /**
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-
+    
 
 
 /**
  * Reference to a field of type 'BillingTier'
  */
 export type EnumBillingTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BillingTier'>
-
+    
 
 
 /**
@@ -1999,28 +1999,28 @@ export type ListEnumWorkflowOutputTypeFieldRefInput<$PrismaModel> = FieldRefInpu
  * Reference to a field of type 'TemplateStatus'
  */
 export type EnumTemplateStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TemplateStatus'>
-
+    
 
 
 /**
  * Reference to a field of type 'TemplateStatus[]'
  */
 export type ListEnumTemplateStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TemplateStatus[]'>
-
+    
 
 
 /**
  * Reference to a field of type 'ScaffoldQuestionPurpose'
  */
 export type EnumScaffoldQuestionPurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScaffoldQuestionPurpose'>
-
+    
 
 
 /**
  * Reference to a field of type 'ScaffoldQuestionPurpose[]'
  */
 export type ListEnumScaffoldQuestionPurposeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScaffoldQuestionPurpose[]'>
-
+    
 
 
 /**
@@ -2391,3 +2391,4 @@ export type PrismaAction =
  * `PrismaClient` proxy available in interactive transactions.
  */
 export type TransactionClient = Omit<DefaultPrismaClient, runtime.ITXClientDenyList>
+

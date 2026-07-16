@@ -19,9 +19,9 @@ export default async function RootLayout({
       <RightSidebarPortalProvider>
         <SidebarProvider>
           <AppSidebar variant="inset" />
-          <SidebarInset className="min-h-svh overflow-hidden">
+          <SidebarInset className="overflow-hidden">
             <GlobalHeader />
-            <div className="min-h-0 flex-1 overflow-auto">{children}</div>
+            {children}
           </SidebarInset>
           <RightSidebarWrapper />
         </SidebarProvider>

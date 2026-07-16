@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { ScrollArea } from "@workspace/ui/components/scroll-area"
 import { formatDuration } from "@/lib/focus/focus-api"
 import { MetricCard } from "@/components/admin/analytics/MetricCard"
 import { DistributionDonutChart } from "@/components/admin/analytics/DistributionDonutChart"
@@ -84,7 +85,10 @@ export default function InsightsPage() {
     : []
 
   return (
-    <main className="flex h-full flex-col overflow-y-auto bg-background pt-12 text-foreground">
+    <ScrollArea className="flex h-[calc(100vh-1rem)] flex-col overflow-y-auto bg-background/50 text-foreground">
+      <div className="relative mt-12 max-h-[88px] min-h-[20px] w-full overflow-hidden">
+        <div className="relative w-full pb-0 xl:pb-[calc(50%-576px)]" />
+      </div>
       <div className="mx-auto w-full max-w-3xl px-4 pb-16">
         <h1 className="mb-1 text-xl font-semibold tracking-tight">Insights</h1>
         <p className="mb-8 text-sm text-muted-foreground">
@@ -173,6 +177,6 @@ export default function InsightsPage() {
           </>
         )}
       </div>
-    </main>
+    </ScrollArea>
   )
 }

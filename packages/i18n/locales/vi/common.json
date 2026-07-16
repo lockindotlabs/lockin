@@ -1,293 +1,159 @@
 {
   "landing": {
     "nav": {
-      "product": "Sản phẩm",
-      "extension": "Tiện ích",
+      "home": "Trang chủ",
+      "features": "Tính năng",
+      "resources": "Tài nguyên",
       "pricing": "Bảng giá",
-      "faq": "Hỏi đáp",
-      "manifesto": "Tuyên ngôn"
-    },
-    "auth": {
-      "signIn": "Đăng nhập",
-      "getStarted": "Bắt đầu",
+      "help": "Trợ giúp",
+      "login": "Đăng nhập",
       "goToApp": "Vào ứng dụng"
     },
     "hero": {
-      "badge": "LockIn · v1.0 đã ra mắt!",
-      "title": {
-        "own": "Làm chủ",
-        "yourOne": "thời",
-        "time": "gian,",
-        "build": "xây",
-        "yourTwo": "đời",
-        "life": "mình."
-      },
-      "description": "LockIn chia nhỏ việc bạn thật sự cần làm, dẫn bạn qua một phiên tập trung, và chặn những tab kéo bạn ra khỏi dòng làm việc. Một không gian thực thi có AI — không phải thêm một danh sách việc cần làm.",
+      "badge": "Mới: Giao diện cải tiến và Phân tích chuyên sâu cho kế hoạch",
+      "titleOne": "Biến công việc ngợp đầu",
+      "titleTwo": "thành kế hoạch hành động.",
+      "description": "LockIn là trợ lý hành động AI giúp bạn chia nhỏ công việc ngợp đầu thành các bước dễ quản lý, sau đó dẫn dắt bạn hoàn thành qua các phiên tập trung không xao nhãng.",
+      "getStarted": "Bắt đầu",
       "watchDemo": "Xem demo",
-      "running": "2.481 phiên tập trung đang chạy",
-      "mock": {
-        "today": "HÔM NAY · THỨ BA 24",
-        "headingOne": "Hôm nay có ba việc quan trọng.",
-        "headingTwo": "Phần còn lại để sau.",
-        "inSprint": "Đang sprint",
-        "taskTwo": "Rà soát nội dung portfolio",
-        "taskThree": "Refactor /auth handler",
-        "taskFour": "Ghi chú standup buổi sáng"
-      }
+      "demoAlt": "Ứng dụng LockIn hiển thị một kế hoạch được chia nhỏ thành các nhiệm vụ có mốc thời gian cụ thể"
     },
-    "mock": {
-      "taskPrimary": "Soạn chương 3 luận văn — mở bài",
-      "taskShort": "Chương 3 mở bài",
-      "taskShortLower": "chương 3 mở bài",
-      "sprint142": "SPRINT #142",
-      "sprint42": "SPRINT #42",
-      "left": "CÒN LẠI",
-      "hard": "Cứng",
-      "soft": "Mềm",
-      "blocked": "ĐÃ CHẶN",
-      "steps": {
-        "outline": "Lập 3 luận điểm chính",
-        "hook": "Viết đoạn mở đầu",
-        "revise": "Chỉnh theo phản hồi",
-        "statement": "Viết câu luận đề",
-        "bridge": "Chuyển sang chương 4"
-      },
-      "actions": {
-        "addFive": "+5 phút",
-        "addFiveShort": "+5p",
-        "pause": "Tạm dừng",
-        "endSprint": "Kết thúc"
-      }
+    "introducing": {
+      "eyebrow": "Giới thiệu LockIn",
+      "title": "Bạn biết mình cần làm gì. Vậy tại sao bắt đầu lại khó khăn đến thế?",
+      "description": "Công việc lớn tạo cảm giác quá tải. Các ứng dụng to-do truyền thống giúp bạn sắp xếp chúng, nhưng lại không chỉ ra bạn cần làm gì đầu tiên. Khi mỗi nhiệm vụ đều như một ngọn núi, trì hoãn trở thành lựa chọn dễ dàng nhất."
     },
-    "cards": {
-      "sprint": {
-        "label": "02 · SPRINT MODE",
-        "headingOne": "Tập trung",
-        "headingTwo": "đúng nghĩa.",
-        "description": "Sprint Mode làm mờ mọi thứ khác và chỉ giữ lại việc trước mắt.",
-        "statusActive": "● Sprint đang chạy",
-        "statusReady": "● Sẵn sàng bắt đầu"
+    "steps": {
+      "title": "Từ ý tưởng đến hành động qua\nba bước đơn giản.",
+      "step1": {
+        "num": "01",
+        "title": "Lập kế hoạch bằng AI",
+        "description": "Mô tả những gì bạn cần hoàn thành bằng ngôn ngữ tự nhiên. LockIn biến các mục tiêu mơ hồ thành kế hoạch hành động có cấu trúc với các bước và ước tính thời gian thực tế.",
+        "cta": "Thử ngay",
+        "demo": "Xem demo",
+        "alt": "Mẫu Lập kế hoạch bằng AI hiển thị hộp thoại tạo cấu trúc nhiệm vụ"
       },
-      "hud": {
-        "label": "03 · ĐỒNG BỘ TAB",
-        "headingOne": "Một tài khoản.",
-        "headingTwo": "Mọi tab.",
-        "description": "Web app và tiện ích trình duyệt chia sẻ cùng trạng thái sprint trực tiếp. Bắt đầu ở đâu cũng thấy ở đó."
+      "step2": {
+        "num": "02",
+        "title": "Cá nhân hóa kế hoạch",
+        "description": "Xem xét, sắp xếp lại hoặc điều chỉnh từng bước. AI cung cấp cho bạn điểm xuất phát — bạn vẫn là người kiểm soát.",
+        "alt": "Mẫu Cá nhân hóa kế hoạch hiển thị danh sách nhiệm vụ có thể chỉnh sửa với thời lượng và tiêu chí hoàn thành"
       },
-      "blocklist": {
-        "label": "DANH SÁCH CHẶN",
-        "headingOne": "Luật của bạn,",
-        "headingTwo": "trang của bạn.",
-        "description": "Chọn danh mục hoặc tên miền cụ thể. Đặt chặn cứng / nhắc mềm cho từng trang và lưu thành preset."
-      },
-      "breakdown": {
-        "label": "01 · AI CHIA NHỎ",
-        "headingOne": "Việc mơ hồ thành",
-        "headingTwo": "các bước làm được.",
-        "description": "Nhập “Dọn căn hộ” hoặc “Ôn thi thuật toán giữa kỳ.” AI chia việc thành các bước có thời lượng thực tế — bạn vẫn có thể kéo, sửa, hoặc ghi đè bất cứ lúc nào."
-      },
-      "shield": {
-        "label": "04 · LÁ CHẮN XAO NHÃNG",
-        "headingOne": "Xao nhãng,",
-        "headingTwo": "khóa lại.",
-        "description": "Chặn cứng thứ cuốn bạn vào. Nhắc mềm vùng lưng chừng. Quyền quyết định là của bạn."
-      }
-    },
-    "breakdown": {
-      "query": "“Ôn thi thuật toán giữa kỳ vào thứ Sáu”",
-      "aiPrefix": "Đây là kế hoạch 4 bước — khoảng",
-      "aiSuffix": "Muốn mình chia nhỏ bước đầu hơn không?",
-      "steps": {
-        "problemSets": "Làm lại problem set 4 + 5",
-        "cheatSheet": "Làm tờ nhắc Big-O một trang",
-        "review": "Ôn ghi chú BFS / DFS",
-        "practice": "Làm một đề luyện timed"
-      },
-      "actions": {
-        "start": "Bắt đầu sprint ✓",
-        "smaller": "Chia nhỏ hơn",
-        "edit": "Sửa"
-      }
-    },
-    "product": {
-      "eyebrow": "Khoảng cách giữa kế hoạch và thực thi",
-      "headingOne": "Đừng chìm trong to-do.",
-      "headingTwo": "Bắt đầu hoàn thành.",
-      "description": "Hầu hết app chỉ lưu việc. LockIn giúp bạn bắt đầu, tập trung, và hoàn thành — bằng cách chia nhỏ việc, bảo vệ sự chú ý, và đi theo bạn qua mọi tab."
-    },
-    "blocked": {
-      "eyebrow": "CHẶN CỨNG · sprint đang chạy",
-      "headingPrefix": "Vẫn",
-      "headingEmphasis": "lock in",
-      "description": "Twitter tạm nghỉ cho đến khi sprint kết thúc. Quay lại khi hết giờ — nó vẫn ở đó thôi.",
-      "workingOn": "Đang làm",
-      "sprintLength": "Thời lượng sprint",
-      "timeLeft": "Còn lại"
-    },
-    "extension": {
-      "eyebrow": "Tiện ích trình duyệt",
-      "headingOne": "Tập trung không nên mất",
-      "headingTwo": "khi bạn đóng tab.",
-      "description": "Tiện ích LockIn là lớp mỏng nối với tài khoản của bạn. Bắt đầu sprint ở bất cứ đâu, xem trạng thái trên mọi trang, và được kéo về nhẹ nhàng khi bạn trượt nhịp.",
-      "popup": {
-        "label": "POPUP THANH CÔNG CỤ",
-        "headingOne": "Popup một chạm,",
-        "headingTwo": "cùng trạng thái live.",
-        "description": "Popup hiển thị sprint hiện tại, bước bạn đang làm, và số lần LockIn đã hấp thụ xao nhãng giúp bạn."
-      },
-      "pairing": {
-        "label": "GHÉP NỐI",
-        "headingOne": "Cài một lần,",
-        "headingTwo": "đăng nhập mọi nơi.",
-        "description": "Không cần mật khẩu thứ hai. Tiện ích ghép với tài khoản web trong hai lần chạm — và không hỏi lại thông tin đăng nhập.",
-        "confirm": "Xác nhận mã ghép nối",
-        "expires": "hết hạn sau 2:31"
-      },
-      "ambient": {
-        "label": "AMBIENT HUD",
-        "headingOne": "Luôn",
-        "headingTwo": "trong tầm mắt.",
-        "description": "Một pill kéo thả trên mọi trang để bộ đếm giờ không biến mất vào tab bị quên."
-      },
-      "slip": {
-        "label": "PHÁT HIỆN TRƯỢT NHỊP",
-        "headingOne": "Nhắc nhẹ,",
-        "headingTwo": "không phán xét.",
-        "description": "Nếu bạn lạc sang trang nhắc mềm, LockIn cho thấy cái giá — không làm bạn thấy tệ.",
-        "prompt": "Ở lại reddit.com?",
-        "costPrefix": "Thêm 5 phút sẽ tốn",
-        "costStrong": "~1 bước",
-        "costSuffix": "trong sprint này.",
-        "back": "← quay lại làm việc",
-        "fiveMin": "5 phút"
-      },
-      "patterns": {
-        "label": "NHỊP ĐỘ",
-        "headingOne": "Bạn làm được nhiều hơn",
-        "headingTwo": "sau 10 giờ.",
-        "description": "LockIn âm thầm học nhịp của bạn — khi nào bạn tập trung tốt nhất, khi nào dễ trượt, và kích cỡ việc nào bạn hay hoàn thành."
-      },
-      "heatmap": {
-        "label": "HEATMAP TẬP TRUNG 12 TUẦN",
-        "headingOne": "Nhịp độ",
-        "headingTwo": "hiện ra rõ.",
-        "ago": "12 tuần trước",
-        "today": "hôm nay"
+      "step3": {
+        "num": "03",
+        "title": "Giữ vững sự tập trung",
+        "description": "Bắt đầu một phiên Sprint và giải quyết từng bước một trong không gian làm việc không xao nhãng được thiết kế để tập trung sâu.",
+        "alt": "Mẫu Giữ vững sự tập trung hiển thị bộ đếm giờ sprint tập trung với các nút trạng thái"
       }
     },
     "pricing": {
-      "eyebrow": "Bảng giá",
-      "headingOne": "Giá đơn giản.",
-      "headingTwo": "Lock in khi bạn sẵn sàng.",
-      "description": "Bắt đầu miễn phí. Nâng cấp để chặn cứng, sprint dài hơn, và workspace cho đội nhóm.",
-      "monthly": "Hàng tháng",
-      "annually": "Hàng năm",
-        "tiers": [
-        {
+      "title": "Bảng giá",
+      "subtitle": "Chọn gói dịch vụ phù hợp với bạn.",
+      "cta": "Bắt đầu",
+      "perMonth": "/tháng",
+      "plans": {
+        "free": {
           "name": "Miễn phí",
-          "desc": "Tất cả những gì bạn cần để thử LockIn.",
           "price": "0₫",
-          "per": "/mãi mãi",
-          "billed": "Không cần thẻ tín dụng",
           "features": [
-            "2 credit/ngày với mô hình AI Pro",
+            "20 credits/ngày với các mô hình AI Pro\n(tối đa 200 credits/tháng)",
             "3 kế hoạch với AI Planner",
             "3 dự án",
             "Giao diện LockIn Mode cơ bản",
-            "Giới hạn tải lên (hình ảnh, tài liệu, ghi âm)"
-          ],
-          "cta": "Bắt đầu miễn phí"
+            "Tải lên giới hạn (hình ảnh, tài liệu, bản ghi âm)"
+          ]
         },
-        {
+        "plus": {
           "name": "Plus",
-          "tag": "Phổ biến nhất",
-          "desc": "Tất cả trong gói Miễn phí, cộng thêm nhiều credit AI và tính năng.",
           "price": "79.000₫",
-          "per": "/tháng",
-          "billed": "Giá tốt nhất cho cá nhân",
           "features": [
-            "Tất cả trong gói Miễn phí",
-            "100 credit/tháng với mô hình AI Pro",
-            "Số lượng kế hoạch không giới hạn với AI Planner",
+            "Mọi tính năng ở gói Miễn phí",
+            "1000 credits/tháng với mô hình AI Pro",
+            "Không giới hạn kế hoạch với AI Planner",
             "50 dự án",
-            "Truy cập sớm các tính năng mới",
-            "Tùy chỉnh giao diện",
-            "Chế độ xem thống kê",
-            "Chặn mạnh hơn cho LockIn Mode",
-            "Nhiều khả năng tải lên hơn (hình ảnh, tài liệu, ghi âm)",
-            "Phần thưởng thêm"
-          ],
-          "cta": "Chọn Plus"
+            "Trải nghiệm sớm các tính năng mới",
+            "Tùy chỉnh và cá nhân hóa giao diện",
+            "Xem số liệu thống kê",
+            "Chặn xao nhãng nghiêm ngặt hơn cho LockIn Mode",
+            "Tải lên nhiều hơn (hình ảnh, tài liệu, bản ghi âm)",
+            "Phần thưởng bonus"
+          ]
         },
-        {
+        "pro": {
           "name": "Pro",
-          "desc": "Dành cho người dùng chuyên sâu và chuyên gia.",
           "price": "189.000₫",
-          "per": "/tháng",
-          "billed": "Tính năng cao cấp & hỗ trợ ưu tiên",
           "features": [
-            "Tất cả trong gói Plus",
-            "300 credit/tháng với mô hình Pro",
-            "Số lượng kế hoạch không giới hạn với AI Planner",
-            "Dự án không giới hạn",
-            "Tải lên không giới hạn (hình ảnh, tài liệu, ghi âm)",
-            "Thêm phần thưởng"
-          ],
-          "cta": "Chọn Pro"
+            "Mọi tính năng ở gói Plus",
+            "3000 credits/tháng với mô hình AI Pro",
+            "Không giới hạn kế hoạch với AI Planner",
+            "Không giới hạn dự án",
+            "Không giới hạn tải lên (hình ảnh, tài liệu, bản ghi âm)",
+            "Nhiều phần thưởng bonus hơn"
+          ]
         }
-      ]
+      }
     },
     "faq": {
-      "headingLight": "Câu hỏi",
-      "headingRest": "thường gặp.",
-      "subPrefix": "Còn gì nữa? Email",
-      "subSuffix": "và tụi mình sẽ trả lời sớm.",
-      "items": [
-        {
-          "question": "LockIn thật sự làm gì khác một app to-do thông thường?",
-          "answer": "LockIn không được xây để lưu task — nó được xây để giúp bạn thực thi. AI chia việc mơ hồ thành bước có thể làm, Sprint Mode dẫn bạn qua bộ đếm tập trung, và tiện ích trình duyệt chặn xao nhãng trong lúc bạn làm. Phần lớn app dừng ở danh sách; tụi mình bắt đầu từ đó."
+      "title": "Câu hỏi thường gặp",
+      "subtitle": "Mọi điều bạn cần biết về LockIn.",
+      "items": {
+        "faq-1": {
+          "question": "LockIn thực sự làm được gì mà các ứng dụng to-do thông thường không làm được?",
+          "answer": "LockIn không được thiết kế chỉ để lưu trữ nhiệm vụ — nó được xây dựng để giúp bạn thực thi chúng. AI chia nhỏ công việc mơ hồ thành các bước hành động, Sprint Mode đồng hành cùng bạn qua bộ đếm giờ tập trung, và tiện ích trình duyệt sẽ chặn các trang web gây xao nhãng trong lúc làm. Hầu hết các ứng dụng dừng lại sau khi lập danh sách; chúng tôi bắt đầu từ đó."
         },
-        {
-          "question": "Tiện ích này khác Cold Turkey hay Freedom thế nào?",
-          "answer": "Những công cụ đó là blocker thuần. Tiện ích LockIn kết nối với task của bạn — khi bạn bắt đầu sprint “Soạn chương 3,” nó biết cần chặn trang nào, trong bao lâu, và hiện các bước con trong popup. Cấu hình nằm trong web app, không phải trong một trang cài đặt tiện ích bé xíu."
+        "faq-2": {
+          "question": "Tiện ích mở rộng này có gì khác biệt so với Cold Turkey hay Freedom?",
+          "answer": "Đó là những công cụ chỉ thuần chặn web. Tiện ích của LockIn liên kết chặt chẽ với nhiệm vụ của bạn — khi bạn bắt đầu sprint cho việc \"Soạn chương 3 luận văn\", nó sẽ tự biết cần chặn những trang web nào, chặn trong bao lâu, và hiển thị các bước nhỏ của bạn trong cửa sổ popup. Việc cấu hình diễn ra ngay trên ứng dụng web chứ không phải trong trang cài đặt tiện ích nhỏ bé."
         },
-        {
-          "question": "Mình có phải dùng AI cho mọi thứ không?",
-          "answer": "Không. LockIn vẫn hoạt động hoàn toàn thủ công — bỏ qua gợi ý AI, tự viết bước, tự đặt thời lượng. AI là trợ lý, không phải người ra lệnh."
+        "faq-3": {
+          "question": "Tôi có bắt buộc phải sử dụng AI cho mọi việc không?",
+          "answer": "Không. LockIn hoạt động hoàn toàn thủ công — bạn có thể bỏ qua gợi ý của AI, tự viết các bước và đặt thời gian theo ý mình. AI chỉ đóng vai trò hỗ trợ, không quyết định thay bạn."
         },
-        {
-          "question": "Còn quyền riêng tư thì sao? LockIn có theo dõi mọi trang mình vào không?",
-          "answer": "Tiện ích chỉ theo dõi điều hướng đến các trang trong blocklist của chính bạn, và chỉ khi có sprint đang chạy. Duyệt web ngoài sprint là vô hình với tụi mình. Lịch sử AI tắt mặc định và không bao giờ được đẩy sang tiện ích. Bạn có thể xóa dữ liệu phân tích bất cứ lúc nào."
+        "faq-4": {
+          "question": "Vấn đề bảo mật thì sao? LockIn có theo dõi mọi trang web tôi truy cập không?",
+          "answer": "Tiện ích mở rộng chỉ theo dõi khi bạn truy cập vào các trang nằm trong danh sách chặn do chính bạn thiết lập, và chỉ trong thời gian một phiên sprint đang diễn ra. Lịch sử duyệt web ngoài thời gian sprint hoàn toàn ẩn danh đối với chúng tôi. Lịch sử AI được tắt theo mặc định và không bao giờ được gửi tới tiện ích. Bạn có thể xóa dữ liệu phân tích của mình bất kỳ lúc nào."
         },
-        {
-          "question": "Hiện hỗ trợ trình duyệt nào?",
-          "answer": "Chrome, Edge, Brave, và Arc hiện đã hỗ trợ. Firefox đang beta. Safari nằm trong roadmap khi Apple hoàn thiện phần Web Extensions API tụi mình cần."
+        "faq-5": {
+          "question": "Những trình duyệt nào được hỗ trợ?",
+          "answer": "Hiện tại hỗ trợ Chrome, Edge, Brave và Arc. Firefox đang thử nghiệm (beta). Safari nằm trong lộ trình phát triển sau khi Apple hoàn thiện Web Extensions API mà chúng tôi cần."
         },
-        {
-          "question": "Mình có thể thử Pro trước khi trả tiền không?",
-          "answer": "Có. Bạn có 14 ngày dùng thử Pro khi đăng ký — không cần thẻ. Nếu không nâng cấp, tài khoản sẽ quay lại Free."
+        "faq-6": {
+          "question": "Tôi có thể dùng thử gói Pro trước khi thanh toán không?",
+          "answer": "Có. Bạn sẽ có 14 ngày dùng thử Pro khi đăng ký tài khoản — không yêu cầu thẻ tín dụng. Gói của bạn sẽ tự động chuyển về bản Miễn phí nếu bạn không nâng cấp."
         },
-        {
-          "question": "Có app mobile không?",
-          "answer": "App iOS và Android đang ở private beta. Chúng mirror trạng thái sprint live từ web app để bạn có thể tạm dừng bằng điện thoại hoặc chỉ liếc qua timer."
+        "faq-7": {
+          "question": "Đã có ứng dụng di động chưa?",
+          "answer": "Ứng dụng iOS và Android đang trong giai đoạn thử nghiệm giới hạn. Chúng đồng bộ trạng thái sprint trực tiếp từ ứng dụng web để bạn có thể tạm dừng từ điện thoại hoặc đơn giản là liếc nhìn bộ đếm giờ."
         }
-      ]
+      }
     },
     "footer": {
-      "tagline": "Làm chủ thời gian, xây đời mình.",
-      "product": "Sản phẩm",
-      "webApp": "Web app",
-      "browserExtension": "Tiện ích trình duyệt",
-      "changelog": "Nhật ký thay đổi",
-      "roadmap": "Roadmap",
-      "compare": "So sánh",
-      "company": "Công ty",
-      "blog": "Blog",
-      "brand": "Thương hiệu",
-      "pressKit": "Press kit",
-      "privacy": "Quyền riêng tư",
-      "terms": "Điều khoản",
-      "security": "Bảo mật"
+      "columns": {
+        "features": {
+          "title": "Tính năng",
+          "aiAssistant": "Trợ lý AI",
+          "sprintMode": "Chế độ Sprint",
+          "browserExtension": "Tiện ích trình duyệt"
+        },
+        "resources": {
+          "title": "Tài nguyên",
+          "blog": "Blog",
+          "changelog": "Nhật ký thay đổi",
+          "docs": "Tài liệu",
+          "community": "Cộng đồng"
+        },
+        "company": {
+          "title": "Công ty",
+          "about": "Giới thiệu",
+          "careers": "Tuyển dụng"
+        },
+        "trust": {
+          "title": "Pháp lý",
+          "terms": "Điều khoản dịch vụ",
+          "privacy": "Chính sách bảo mật"
+        }
+      },
+      "copyright": "© 2026 LockIn Labs, Inc."
     }
   },
   "trust": {

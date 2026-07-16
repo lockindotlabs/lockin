@@ -16,6 +16,22 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@workspace/ui/components/accordion"
+import { useTranslation } from "react-i18next"
+import { useRouter } from "next/navigation"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@workspace/ui/components/dropdown-menu"
+import { ChevronDown, LanguagesIcon } from "lucide-react"
+import {
+  getLocaleDisplayName,
+  I18N_COOKIE_NAME,
+  SUPPORTED_LOCALES,
+  type AppLocale,
+} from "@workspace/i18n"
 
 /* On-load hero reveal: each element enters slightly after the previous one */
 const heroReveal = (delay = 0) => ({
@@ -24,144 +40,17 @@ const heroReveal = (delay = 0) => ({
   transition: { duration: 0.6, ease: revealEase, delay },
 })
 
-const NAV_LINKS = [
-  { label: "Home", href: "/", active: true },
-  { label: "Features", href: "/#features", active: false },
-  { label: "Resources", href: "/#resources", active: false },
-  { label: "Pricing", href: "/#pricing", active: false },
-  { label: "Help", href: "/#help", active: false },
-]
-
-const STICKY_LINKS = [
-  { label: "Home", href: "/", active: true },
-  { label: "Features", href: "/#features", active: false },
-  { label: "Resources", href: "/#resources", active: false },
-  { label: "Pricing", href: "/#pricing", active: false },
-  { label: "Help", href: "/#help", active: false },
-]
-
-const PRICING_PLANS = [
-  {
-    name: "Free",
-    price: "0₫",
-    features: [
-      "20 credits/day with Pro AI models\n(200 credits max/month)",
-      "3 plans with AI Planner",
-      "3 projects",
-      "Basic LockIn Mode interface",
-      "Limited uploads (images, documents, recordings)",
-    ],
-  },
-  {
-    name: "Plus",
-    price: "79.000₫",
-    features: [
-      "Everything in Free",
-      "1000 credits/month with Pro AI model",
-      "Unlimited plans with AI Planner",
-      "50 projects",
-      "Early access to new features",
-      "Customize and personalize the interface",
-      "Statistics view",
-      "Harder blocking for LockIn Mode",
-      "More uploads (images, documents, recordings)",
-      "Bonus rewards",
-    ],
-  },
-  {
-    name: "Pro",
-    price: "189.000₫",
-    features: [
-      "Everything in Plus",
-      "3000 credits/month with Pro AI model",
-      "Unlimited plans with AI Planner",
-      "Unlimited projects",
-      "Unlimited uploads (images, documents, recordings)",
-      "More bonus rewards",
-    ],
-  },
-]
-
-const FAQ_ITEMS = [
-  {
-    value: "faq-1",
-    question: "What does LockIn actually do that a regular to-do app doesn't?",
-    answer:
-      "LockIn isn't built to store tasks — it's built to help you execute them. The AI breaks vague work into actionable steps, Sprint Mode walks you through them in a focused timer, and the browser extension blocks distractions while you do it. Most apps stop after the list view; we start there.",
-  },
-  {
-    value: "faq-2",
-    question: "How is the extension different from Cold Turkey or Freedom?",
-    answer:
-      'Those are pure blockers. LockIn\'s extension is connected to your tasks — when you start a sprint on "Draft chapter 3," it knows which sites to block, for how long, and shows your sub-steps in the popup. Configuration lives in the web app, not in a tiny extension settings page.',
-  },
-  {
-    value: "faq-3",
-    question: "Do I have to use the AI for everything?",
-    answer:
-      "No. LockIn works fully manually — ignore AI suggestions, write your own steps, set your own durations. The AI is assistive, not authoritative.",
-  },
-  {
-    value: "faq-4",
-    question: "What about privacy? Does LockIn track every site I visit?",
-    answer:
-      "The extension only tracks navigation to sites on your own blocklist, and only during an active sprint. Off-sprint browsing is invisible to us. AI history is off by default and never pushed to the extension. You can wipe analytics data anytime.",
-  },
-  {
-    value: "faq-5",
-    question: "Which browsers are supported?",
-    answer:
-      "Chrome, Edge, Brave, and Arc today. Firefox is in beta. Safari is on the roadmap once Apple finishes the Web Extensions API we need.",
-  },
-  {
-    value: "faq-6",
-    question: "Can I try Pro before paying?",
-    answer:
-      "Yes. 14-day Pro trial when you sign up — no credit card required. You'll drop back to Free if you don't upgrade.",
-  },
-  {
-    value: "faq-7",
-    question: "Is there a mobile app?",
-    answer:
-      "iOS and Android apps are in private beta. They mirror live sprint state from the web app so you can pause from your phone or just glance at the timer.",
-  },
-]
-
-export const FOOTER_COLUMNS = [
-  {
-    title: "Features",
-    links: [
-      { label: "AI Assistant", href: "#" },
-      { label: "Sprint Mode", href: "#" },
-      { label: "Browser Extension", href: "#" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { label: "Blog", href: "#" },
-      { label: "Changelog", href: "#", external: true },
-      { label: "Docs", href: "#", external: true },
-      { label: "Community", href: "#", external: true },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { label: "About", href: "#" },
-      { label: "Careers", href: "#", external: true },
-    ],
-  },
-  {
-    title: "Pricing",
-    links: [
-      { label: "Terms of Service", href: "/trust/terms-of-service" },
-      { label: "Privacy Policy", href: "/trust/privacy-policy" },
-    ],
-  },
-]
-
 export function StickyHeader({ showSticky }: { showSticky?: boolean }) {
+  const { t } = useTranslation()
+
+  const STICKY_LINKS = [
+    { label: t("landing.nav.home"), href: "/", active: true },
+    { label: t("landing.nav.features"), href: "/#features", active: false },
+    { label: t("landing.nav.resources"), href: "/#resources", active: false },
+    { label: t("landing.nav.pricing"), href: "/#pricing", active: false },
+    { label: t("landing.nav.help"), href: "/#help", active: false },
+  ]
+
   return (
     <AnimatePresence>
       {showSticky && (
@@ -200,7 +89,7 @@ export function StickyHeader({ showSticky }: { showSticky?: boolean }) {
                       "will-change-tranform rounded-full bg-neutral-900 text-white hover:bg-neutral-800"
                     }
                   >
-                    Go to app
+                    {t("landing.nav.goToApp")}
                   </Button>
                 </Link>
               </Show>
@@ -213,6 +102,16 @@ export function StickyHeader({ showSticky }: { showSticky?: boolean }) {
 }
 
 function HeroSection() {
+  const { t } = useTranslation()
+
+  const NAV_LINKS = [
+    { label: t("landing.nav.home"), href: "/", active: true },
+    { label: t("landing.nav.features"), href: "/#features", active: false },
+    { label: t("landing.nav.resources"), href: "/#resources", active: false },
+    { label: t("landing.nav.pricing"), href: "/#pricing", active: false },
+    { label: t("landing.nav.help"), href: "/#help", active: false },
+  ]
+
   return (
     <div
       id="main-section"
@@ -294,7 +193,7 @@ function HeroSection() {
                 "will-change-tranform rounded-full bg-neutral-900 text-white hover:bg-neutral-800"
               }
             >
-              Log in
+              {t("landing.nav.login")}
             </Button>
           </Link>
         </Show>
@@ -305,7 +204,7 @@ function HeroSection() {
           <motion.div {...heroReveal(0)}>
             <Badge variant={"outline"} className="px-3 py-3">
               <span className="text-xs leading-4 font-medium text-[rgba(17,17,17,0.9)] opacity-80">
-                New: Revamped interface and Insights for your plans
+                {t("landing.hero.badge")}
               </span>
               <ChevronRight className="size-4" />
             </Badge>
@@ -316,17 +215,15 @@ function HeroSection() {
               className="text-[28px] leading-[34px] font-medium tracking-[-0.01em] text-[rgba(17,17,17,0.9)] sm:text-4xl sm:leading-10"
               {...heroReveal(0.08)}
             >
-              Turn overwhelming tasks
+              {t("landing.hero.titleOne")}
               <br />
-              into actionable plans.
+              {t("landing.hero.titleTwo")}
             </motion.h1>
             <motion.p
               className="w-full max-w-lg text-base leading-relaxed font-[450] text-[rgba(17,17,17,0.6)]"
               {...heroReveal(0.16)}
             >
-              LockIn is an AI action assistant that helps you break down
-              overwhelming work into manageable steps, then guides you through
-              them with distraction-free focus sessions.
+              {t("landing.hero.description")}
             </motion.p>
           </div>
         </div>
@@ -343,7 +240,7 @@ function HeroSection() {
                   "rounded-full bg-neutral-900 text-white will-change-transform hover:bg-neutral-800"
                 }
               >
-                Get started
+                {t("landing.hero.getStarted")}
               </Button>
             </Link>
             <Link href="#">
@@ -352,7 +249,7 @@ function HeroSection() {
                 variant="outline"
                 className="rounded-full will-change-transform"
               >
-                Watch demo
+                {t("landing.hero.watchDemo")}
               </Button>
             </Link>
           </Show>
@@ -365,7 +262,7 @@ function HeroSection() {
                   "rounded-full bg-neutral-900 text-white will-change-transform hover:bg-neutral-800"
                 }
               >
-                Go to app
+                {t("landing.nav.goToApp")}
               </Button>
             </Link>
           </Show>
@@ -382,7 +279,7 @@ function HeroSection() {
           <div className="w-[150%] lg:w-full">
             <Image
               src="/product-demo-white.svg"
-              alt="The LockIn app showing a plan broken down into scheduled, time-boxed tasks"
+              alt={t("landing.hero.demoAlt")}
               width={1440}
               height={1024}
               priority
@@ -396,6 +293,8 @@ function HeroSection() {
 }
 
 function IntroducingSection() {
+  const { t } = useTranslation()
+
   return (
     <section className="mx-auto max-w-7xl px-6 py-24 sm:px-8 md:py-32">
       <div className="flex flex-col gap-4 lg:flex-row lg:justify-between">
@@ -404,22 +303,19 @@ function IntroducingSection() {
           className="text-md shrink-0 leading-relaxed font-medium whitespace-nowrap text-[#9D6D00] lg:w-1/4"
           {...revealUp(0)}
         >
-          Introducing LockIn
+          {t("landing.introducing.eyebrow")}
         </motion.div>
 
         {/* Right column */}
         <div className="flex max-w-[660px] flex-col gap-1">
           <motion.h2 className="text-lg font-medium" {...revealUp(0.08)}>
-            You know what needs to be done. So why is it so hard to start?
+            {t("landing.introducing.title")}
           </motion.h2>
           <motion.p
             className="text-md leading-relaxed font-normal text-muted-foreground opacity-80"
             {...revealUp(0.16)}
           >
-            Big tasks feel overwhelming. Traditional to-do apps help you
-            organize them, but they don't tell you what to do first. When every
-            task feels like a mountain, procrastination becomes the easiest
-            choice.
+            {t("landing.introducing.description")}
           </motion.p>
         </div>
       </div>
@@ -428,15 +324,17 @@ function IntroducingSection() {
 }
 
 function ThreeSimpleStepsSection() {
+  const { t } = useTranslation()
+
   return (
     <section className="mx-auto max-w-7xl border-t border-neutral-200/60 px-6 py-24 sm:px-8 md:py-32">
       {/* Header */}
       <div className="mb-20 sm:mb-24">
         <motion.h2
-          className="max-w-sm text-3xl font-medium tracking-tight text-[rgba(17,17,17,0.9)] sm:text-4xl lg:text-4xl"
+          className="max-w-lg text-3xl font-medium tracking-tight whitespace-pre-line text-[rgba(17,17,17,0.9)] sm:text-4xl lg:text-4xl"
           {...revealUp(0)}
         >
-          From idea to action in three simple steps.
+          {t("landing.steps.title")}
         </motion.h2>
       </div>
 
@@ -451,21 +349,19 @@ function ThreeSimpleStepsSection() {
                 className="mb-2 block font-mono text-sm tracking-wide text-muted-foreground/60"
                 {...revealUp(0)}
               >
-                01
+                {t("landing.steps.step1.num")}
               </motion.span>
               <motion.h3
                 className="mb-2 text-2xl font-medium tracking-tight text-[rgba(17,17,17,0.9)]"
                 {...revealUp(0.04)}
               >
-                Plan with AI
+                {t("landing.steps.step1.title")}
               </motion.h3>
               <motion.p
                 className="text-sm leading-relaxed text-[rgba(17,17,17,0.6)]"
                 {...revealUp(0.08)}
               >
-                Describe what you need to accomplish in plain language. LockIn
-                turns vague goals into a structured action plan with realistic
-                steps and time estimates.
+                {t("landing.steps.step1.description")}
               </motion.p>
             </div>
 
@@ -481,7 +377,7 @@ function ThreeSimpleStepsSection() {
                       "rounded-full bg-neutral-900 px-3 text-white will-change-transform hover:bg-neutral-800"
                     }
                   >
-                    Try it now
+                    {t("landing.steps.step1.cta")}
                   </Button>
                 </Link>
                 <Link href="#">
@@ -490,7 +386,7 @@ function ThreeSimpleStepsSection() {
                     variant="outline"
                     className="rounded-full px-3 will-change-transform"
                   >
-                    Watch demo
+                    {t("landing.steps.step1.demo")}
                   </Button>
                 </Link>
               </motion.div>
@@ -505,7 +401,7 @@ function ThreeSimpleStepsSection() {
             <div className="relative overflow-hidden">
               <Image
                 src="/plan-with-ai.svg"
-                alt="Plan with AI Mockup showing conversational chat generating a structured task breakdown"
+                alt={t("landing.steps.step1.alt")}
                 width={760}
                 height={404}
                 priority
@@ -527,20 +423,19 @@ function ThreeSimpleStepsSection() {
               className="mb-2 block font-mono text-sm tracking-wide text-muted-foreground/60"
               {...revealUp(0)}
             >
-              02
+              {t("landing.steps.step2.num")}
             </motion.span>
             <motion.h3
               className="mb-2 text-2xl font-medium tracking-tight text-[rgba(17,17,17,0.9)]"
               {...revealUp(0.04)}
             >
-              Make it yours
+              {t("landing.steps.step2.title")}
             </motion.h3>
             <motion.p
               className="text-base leading-relaxed text-[rgba(17,17,17,0.6)]"
               {...revealUp(0.08)}
             >
-              Review, reorder, or adjust every step. AI gives you a starting
-              point—you stay in control.
+              {t("landing.steps.step2.description")}
             </motion.p>
           </div>
 
@@ -552,7 +447,7 @@ function ThreeSimpleStepsSection() {
             <div className="relative overflow-hidden">
               <Image
                 src="/make-it-yours.svg"
-                alt="Make it yours Mockup showing editable task list with timelines, completion criteria, and custom steps"
+                alt={t("landing.steps.step2.alt")}
                 width={760}
                 height={404}
                 className="h-auto w-full object-contain"
@@ -574,20 +469,19 @@ function ThreeSimpleStepsSection() {
               className="mb-2 block font-mono text-sm tracking-wide text-muted-foreground/60"
               {...revealUp(0)}
             >
-              03
+              {t("landing.steps.step3.num")}
             </motion.span>
             <motion.h3
               className="mb-2 text-2xl font-medium tracking-tight text-[rgba(17,17,17,0.9)]"
               {...revealUp(0.04)}
             >
-              Stay in the zone
+              {t("landing.steps.step3.title")}
             </motion.h3>
             <motion.p
               className="text-base leading-relaxed text-[rgba(17,17,17,0.6)]"
               {...revealUp(0.08)}
             >
-              Start a Sprint and work on one step at a time in a
-              distraction-free workspace designed for deep focus.
+              {t("landing.steps.step3.description")}
             </motion.p>
           </div>
 
@@ -599,7 +493,7 @@ function ThreeSimpleStepsSection() {
             <div className="relative overflow-hidden">
               <Image
                 src="/stay-in-the-zone.svg"
-                alt="Stay in the zone Mockup showing focus mode sprint timer with active step and status controls"
+                alt={t("landing.steps.step3.alt")}
                 width={760}
                 height={404}
                 className="h-auto w-full object-contain"
@@ -618,6 +512,32 @@ function ThreeSimpleStepsSection() {
 }
 
 function PricingSection() {
+  const { t } = useTranslation()
+
+  const PRICING_PLANS = [
+    {
+      name: t("landing.pricing.plans.free.name"),
+      price: t("landing.pricing.plans.free.price"),
+      features: t("landing.pricing.plans.free.features", {
+        returnObjects: true,
+      }) as string[],
+    },
+    {
+      name: t("landing.pricing.plans.plus.name"),
+      price: t("landing.pricing.plans.plus.price"),
+      features: t("landing.pricing.plans.plus.features", {
+        returnObjects: true,
+      }) as string[],
+    },
+    {
+      name: t("landing.pricing.plans.pro.name"),
+      price: t("landing.pricing.plans.pro.price"),
+      features: t("landing.pricing.plans.pro.features", {
+        returnObjects: true,
+      }) as string[],
+    },
+  ]
+
   return (
     <section
       id="pricing"
@@ -629,13 +549,13 @@ function PricingSection() {
           className="text-3xl font-medium tracking-tight text-[rgba(17,17,17,0.9)] sm:text-4xl"
           {...revealUp(0)}
         >
-          Pricing
+          {t("landing.pricing.title")}
         </motion.h2>
         <motion.p
           className="mt-2 text-sm text-muted-foreground/80 sm:text-base"
           {...revealUp(0.04)}
         >
-          Choose a plan that works for you.
+          {t("landing.pricing.subtitle")}
         </motion.p>
       </div>
 
@@ -656,7 +576,7 @@ function PricingSection() {
                 <div className="mt-2 flex items-baseline gap-1 text-3xl tracking-tight text-neutral-900">
                   {plan.price}
                   <span className="text-sm font-normal tracking-normal text-neutral-400">
-                    /month
+                    {t("landing.pricing.perMonth")}
                   </span>
                 </div>
               </div>
@@ -665,7 +585,7 @@ function PricingSection() {
               <div className="mb-6">
                 <Link href="/app/sign-up" className="w-full">
                   <Button className="w-full rounded-full bg-neutral-900 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-800">
-                    Get started
+                    {t("landing.pricing.cta")}
                   </Button>
                 </Link>
               </div>
@@ -700,6 +620,46 @@ function PricingSection() {
 }
 
 function FAQSection() {
+  const { t } = useTranslation()
+
+  const FAQ_ITEMS = [
+    {
+      value: "faq-1",
+      question: t("landing.faq.items.faq-1.question"),
+      answer: t("landing.faq.items.faq-1.answer"),
+    },
+    {
+      value: "faq-2",
+      question: t("landing.faq.items.faq-2.question"),
+      answer: t("landing.faq.items.faq-2.answer"),
+    },
+    {
+      value: "faq-3",
+      question: t("landing.faq.items.faq-3.question"),
+      answer: t("landing.faq.items.faq-3.answer"),
+    },
+    {
+      value: "faq-4",
+      question: t("landing.faq.items.faq-4.question"),
+      answer: t("landing.faq.items.faq-4.answer"),
+    },
+    {
+      value: "faq-5",
+      question: t("landing.faq.items.faq-5.question"),
+      answer: t("landing.faq.items.faq-5.answer"),
+    },
+    {
+      value: "faq-6",
+      question: t("landing.faq.items.faq-6.question"),
+      answer: t("landing.faq.items.faq-6.answer"),
+    },
+    {
+      value: "faq-7",
+      question: t("landing.faq.items.faq-7.question"),
+      answer: t("landing.faq.items.faq-7.answer"),
+    },
+  ]
+
   return (
     <section
       id="faq"
@@ -711,13 +671,13 @@ function FAQSection() {
           className="text-3xl font-medium tracking-tight text-[rgba(17,17,17,0.9)] sm:text-4xl"
           {...revealUp(0)}
         >
-          Frequently Asked Questions
+          {t("landing.faq.title")}
         </motion.h2>
         <motion.p
           className="mt-2 text-sm text-muted-foreground/80 sm:text-base"
           {...revealUp(0.04)}
         >
-          Everything you need to know about LockIn.
+          {t("landing.faq.subtitle")}
         </motion.p>
       </div>
 
@@ -745,6 +705,76 @@ function FAQSection() {
 }
 
 export function FooterSection() {
+  const router = useRouter()
+  const { i18n, t } = useTranslation()
+  const currentLocale = i18n.language as AppLocale
+
+  const switchLocale = (locale: AppLocale) => {
+    setTimeout(() => {
+      window.document.cookie = `${I18N_COOKIE_NAME}=${locale}; path=/; max-age=31536000; samesite=lax`
+      router.refresh()
+    }, 0)
+  }
+
+  const FOOTER_COLUMNS = [
+    {
+      title: t("landing.footer.columns.features.title"),
+      links: [
+        { label: t("landing.footer.columns.features.aiAssistant"), href: "#" },
+        { label: t("landing.footer.columns.features.sprintMode"), href: "#" },
+        {
+          label: t("landing.footer.columns.features.browserExtension"),
+          href: "#",
+        },
+      ],
+    },
+    {
+      title: t("landing.footer.columns.resources.title"),
+      links: [
+        { label: t("landing.footer.columns.resources.blog"), href: "#" },
+        {
+          label: t("landing.footer.columns.resources.changelog"),
+          href: "#",
+          external: true,
+        },
+        {
+          label: t("landing.footer.columns.resources.docs"),
+          href: "#",
+          external: true,
+        },
+        {
+          label: t("landing.footer.columns.resources.community"),
+          href: "#",
+          external: true,
+        },
+      ],
+    },
+    {
+      title: t("landing.footer.columns.company.title"),
+      links: [
+        { label: t("landing.footer.columns.company.about"), href: "#" },
+        {
+          label: t("landing.footer.columns.company.careers"),
+          href: "#",
+          external: true,
+        },
+      ],
+    },
+    {
+      title: t("landing.footer.columns.trust.title"),
+      links: [
+        {
+          label: t("landing.footer.columns.trust.terms"),
+          href: "/trust/terms-of-service",
+        },
+        {
+          label: t("landing.footer.columns.trust.privacy"),
+          href: "/trust/privacy-policy",
+        },
+      ],
+    },
+  ]
+
   return (
     <footer className="mx-auto max-w-7xl border-t border-neutral-200/60 px-6 py-16 sm:px-8 md:py-24">
       <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-5">
@@ -770,11 +800,43 @@ export function FooterSection() {
         ))}
       </div>
 
-      {/* Bottom Copyright & Socials */}
+      {/* Bottom Copyright & Socials & Language Switcher */}
       <div className="mt-16 flex flex-col gap-4 border-t border-neutral-200/50 pt-8 sm:flex-row sm:items-center sm:justify-between">
         <span className="text-xs text-neutral-400">
-          © 2026 LockIn Labs, Inc.
+          {t("landing.footer.copyright")}
         </span>
+
+        {/* Dropdown Language Selector */}
+        <div className="flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  variant={"outline"}
+                  size={"sm"}
+                  className="h-8 rounded-full text-xs font-medium text-neutral-500 hover:text-neutral-900"
+                />
+              }
+            >
+              <LanguagesIcon className="mr-1.5 h-3.5 w-3.5" />
+              {getLocaleDisplayName(currentLocale)}
+              <ChevronDown className="ml-1.5 h-3 w-3 text-neutral-400" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-36">
+              <DropdownMenuGroup>
+                {SUPPORTED_LOCALES.map((locale) => (
+                  <DropdownMenuItem
+                    key={locale}
+                    onClick={() => switchLocale(locale)}
+                    className="text-xs font-medium"
+                  >
+                    {getLocaleDisplayName(locale)}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </footer>
   )

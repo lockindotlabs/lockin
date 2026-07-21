@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
+import prisma from "@workspace/db"
 
 const ADMIN_USER_IDS_ENV = "user_3Dkrex6deNDuV9ykg4bQCy2rqJC"
 
@@ -20,9 +21,30 @@ export function isAdminUserId(userId: string | null | undefined) {
 export async function getAdminAccess() {
   const { userId } = await auth()
 
+  if (!userId) {
+    return {
+      userId: null,
+      isAdmin: false,
+    }
+  }
+
+  // 1. Check hardcoded fallback first
+  if (isAdminUserId(userId)) {
+    return {
+      userId,
+      isAdmin: true,
+    }
+  }
+
+  // 2. Check the user's role in the database
+  const dbUser = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  })
+
   return {
     userId,
-    isAdmin: isAdminUserId(userId),
+    isAdmin: dbUser?.role === "admin",
   }
 }
 

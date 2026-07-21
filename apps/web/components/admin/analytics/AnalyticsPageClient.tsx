@@ -4,6 +4,7 @@ import { useState } from "react"
 
 import { useAdminData } from "@/lib/admin/use-admin-data"
 import type { AdminOverviewData, DateRangeOption } from "@/types/admin-analytics"
+import { ScrollArea } from "@workspace/ui/components/scroll-area"
 
 import {
   ActivityTrendChart,
@@ -32,35 +33,42 @@ export function AnalyticsPageClient() {
     (data?.activityTrendData.length ?? 0) > 0
 
   return (
-    <main className="flex min-h-svh flex-col bg-background text-foreground">
-      <AnalyticsHeader dateRange={dateRange} onDateRangeChange={setDateRange} />
-
-      {isLoading ? <AnalyticsLoadingState /> : null}
-      {!isLoading && error ? <AnalyticsErrorState /> : null}
-      {!isLoading && !error && !hasData ? <AnalyticsEmptyState /> : null}
-
-      {!isLoading && !error && data && hasData ? (
-        <div className="flex flex-col gap-8 px-4 pb-10 sm:px-6 lg:px-8">
-          <section className="flex flex-col gap-4">
-            <div>
-              <h2 className="text-xl font-semibold tracking-tight">Overview</h2>
-              <p className="text-sm text-muted-foreground">
-                Platform health across users, plans, focus sessions, and paid
-                access.
-              </p>
-            </div>
-            <MetricGrid metrics={data.overviewMetrics} />
-          </section>
-
-          <CoreFunnel data={data.funnelData} />
-
-          <ActivityTrendChart
-            data={data.activityTrendData}
-            activeSeries={activitySeries}
-            onActiveSeriesChange={setActivitySeries}
-          />
+    <>
+      <ScrollArea className="flex h-[calc(100vh-1rem)] flex-col overflow-y-auto bg-background/50 text-foreground">
+        <div className="relative mt-12 max-h-[88px] min-h-[20px] w-full overflow-hidden">
+          <div className="relative w-full pb-0 xl:pb-[calc(50%-576px)]" />
         </div>
-      ) : null}
-    </main>
+        <main className="flex flex-col bg-background text-foreground">
+          <AnalyticsHeader dateRange={dateRange} onDateRangeChange={setDateRange} />
+
+          {isLoading ? <AnalyticsLoadingState /> : null}
+          {!isLoading && error ? <AnalyticsErrorState /> : null}
+          {!isLoading && !error && !hasData ? <AnalyticsEmptyState /> : null}
+
+          {!isLoading && !error && data && hasData ? (
+            <div className="flex flex-col gap-8 px-4 pb-10 sm:px-6 lg:px-8">
+              <section className="flex flex-col gap-4">
+                <div>
+                  <h2 className="text-xl font-semibold tracking-tight">Overview</h2>
+                  <p className="text-sm text-muted-foreground">
+                    Platform health across users, plans, focus sessions, and paid
+                    access.
+                  </p>
+                </div>
+                <MetricGrid metrics={data.overviewMetrics} />
+              </section>
+
+              <CoreFunnel data={data.funnelData} />
+
+              <ActivityTrendChart
+                data={data.activityTrendData}
+                activeSeries={activitySeries}
+                onActiveSeriesChange={setActivitySeries}
+              />
+            </div>
+          ) : null}
+        </main>
+      </ScrollArea>
+    </>
   )
 }

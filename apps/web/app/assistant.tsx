@@ -12,8 +12,10 @@ import {
 } from "@assistant-ui/react-ai-sdk"
 import { lastAssistantMessageIsCompleteWithToolCalls, type UIMessage } from "ai"
 import { useEffect, useMemo, useRef } from "react"
+import { useTranslation } from "react-i18next"
 
 import { AskChoiceTool } from "@/components/ask-choice-tool-ui"
+import { AskScaffoldTool } from "@/components/ask-scaffold-tool-ui"
 import { Thread } from "@/components/thread"
 import { WebSearchAssistantToolUI } from "@/components/web-search-tool-ui"
 import {
@@ -41,6 +43,7 @@ export function Assistant({
   initialPrompt?: string
   initialMentions?: MentionRef[]
 }) {
+  const { t } = useTranslation()
   const chatIdRef = useRef(chatId)
   const ensureChatIdRef = useRef(ensureChatId)
   const ensureChatIdPromiseRef = useRef<Promise<string> | null>(null)
@@ -65,6 +68,9 @@ export function Assistant({
     onFinish: ({ messages }) => {
       if (!chatIdRef.current && !ensureChatIdRef.current) {
         saveChatMessages(sessionKey, messages)
+      }
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("lockin:ai-usage-summary-changed"))
       }
     },
     transport: new AssistantChatTransport({
@@ -105,16 +111,32 @@ export function Assistant({
     suggestions: Suggestions(
       mode === "plan"
         ? [
-            "Make it smaller.",
-            "I only have 45 minutes.",
-            "Start with the easiest step.",
-            "Make this for low energy.",
+            t("app.assistant.suggestions.plan.smaller", {
+              defaultValue: "Make it smaller.",
+            }),
+            t("app.assistant.suggestions.plan.fortyFiveMinutes", {
+              defaultValue: "I only have 45 minutes.",
+            }),
+            t("app.assistant.suggestions.plan.easiestStep", {
+              defaultValue: "Start with the easiest step.",
+            }),
+            t("app.assistant.suggestions.plan.lowEnergy", {
+              defaultValue: "Make this for low energy.",
+            }),
           ]
         : [
-            "Finish my UX case study",
-            "Study for finals",
-            "Clean my room",
-            "Build my portfolio",
+            t("app.assistant.suggestions.onboarding.uxCaseStudy", {
+              defaultValue: "Finish my UX case study",
+            }),
+            t("app.assistant.suggestions.onboarding.finals", {
+              defaultValue: "Study for finals",
+            }),
+            t("app.assistant.suggestions.onboarding.cleanRoom", {
+              defaultValue: "Clean my room",
+            }),
+            t("app.assistant.suggestions.onboarding.portfolio", {
+              defaultValue: "Build my portfolio",
+            }),
           ]
     ),
   })
@@ -122,11 +144,9 @@ export function Assistant({
   return (
     <AssistantRuntimeProvider key={sessionKey} runtime={runtime} aui={aui}>
       <InitialPromptSender prompt={initialPrompt} sessionKey={sessionKey} />
-      <PlanAssistantTools
-        chatSessionId={chatId}
-        ensureChatId={ensureChatId}
-      />
+      <PlanAssistantTools chatSessionId={chatId} ensureChatId={ensureChatId} />
       <AskChoiceTool />
+      <AskScaffoldTool />
       <WebSearchAssistantToolUI />
       <Thread mode={mode} initialMentions={initialMentions} />
       {/* <DevToolsFrame className="min-h-200 w-full" /> */}

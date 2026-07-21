@@ -13,6 +13,14 @@ import {
   BreadcrumbSeparator,
 } from "@workspace/ui/components/breadcrumb"
 import { Button } from "@workspace/ui/components/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@workspace/ui/components/dialog"
+import { Textarea } from "@workspace/ui/components/textarea"
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar"
 import PlanDetails from "./PlanDetails"
@@ -40,6 +48,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip"
+import { HeaderLeft, HeaderRight } from "@/components/header-context"
+import { cn } from "@/lib/utils"
+import { Asterisk01 } from "@untitledui/icons"
+import { PublishPlanAsTemplateDialog } from "@/components/templates/PublishPlanAsTemplateDialog"
 
 type PlanEditorProps = {
   planId: string
@@ -58,6 +70,8 @@ export type EditorTask = {
   dueDate: string
   durationMinutes: number
   isCompleted: boolean
+  guidance?: string | null
+  parentId?: string | null
 }
 
 function createId() {
@@ -80,7 +94,8 @@ function createTask(
   title: string,
   description: string,
   dueDate: string,
-  durationMinutes: number
+  durationMinutes: number,
+  parentId: string | null = null
 ): EditorTask {
   return {
     id: createId(),
@@ -89,6 +104,7 @@ function createTask(
     dueDate,
     durationMinutes,
     isCompleted: false,
+    parentId,
   }
 }
 
@@ -100,6 +116,8 @@ function toEditorTask(task: SavedPlanTask): EditorTask {
     dueDate: task.dueDate,
     durationMinutes: task.durationMinutes,
     isCompleted: task.isCompleted,
+    guidance: task.guidance ?? null,
+    parentId: task.parentId ?? null,
   }
 }
 
@@ -114,7 +132,7 @@ function isMeaningfulDraft(plan: EditorPlan, tasks: EditorTask[]) {
 
 function PlanEditorLoadingState({ state }: { state: string }) {
   return (
-    <div className="flex h-screen" data-plan-id="loading">
+    <div className="flex h-[calc(100vh-1rem)]" data-plan-id="loading">
       <div className="flex-1">
         <header className="flex h-12 shrink-0 items-center gap-2">
           <div className="flex flex-1 items-center gap-2 px-3">
@@ -161,9 +179,14 @@ function PlanEditorLoadingState({ state }: { state: string }) {
 
 export default function PlanEditor({ planId }: PlanEditorProps) {
   const router = useRouter()
-  const searchParams = useSearchParams()
+  const { toggleSidebarRight, openRight } = useSidebar()
   const { state } = useSidebar()
   const [persisted, setPersisted] = React.useState<EditorTask[]>([])
+  const [completionGate, setCompletionGate] = React.useState<{
+    index: number
+    stepId: string
+  } | null>(null)
+  const [reflectionNote, setReflectionNote] = React.useState("")
   const [persistedPlan, setPersistedPlan] =
     React.useState<EditorPlan>(createEmptyPlan)
   const [createdAt, setCreatedAt] = React.useState(() =>
@@ -275,6 +298,8 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
           dueDate: task.dueDate,
           durationMinutes: task.durationMinutes,
           isCompleted: task.isCompleted,
+          guidance: task.guidance ?? null,
+          parentId: task.parentId ?? null,
         })),
         createdAt,
         updatedAt,
@@ -338,15 +363,74 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
     markChanged()
   }
 
-  const updateTaskCompletion = (index: number, isCompleted: boolean) => {
+  const applyCompletion = (index: number, isCompleted: boolean) => {
     setPersisted((p) =>
       p.map((item, i) => (i === index ? { ...item, isCompleted } : item))
     )
     markChanged()
   }
 
+  const updateTaskCompletion = (index: number, isCompleted: boolean) => {
+    if (!isCompleted) {
+      applyCompletion(index, false)
+      return
+    }
+    const task = persisted[index]
+    if (!task) return
+    setReflectionNote("")
+    setCompletionGate({ index, stepId: task.id })
+  }
+
+  const handleReflectionSubmit = async (note: string) => {
+    if (!completionGate) return
+    applyCompletion(completionGate.index, true)
+    setCompletionGate(null)
+    setReflectionNote("")
+    if (note.trim()) {
+      try {
+        await fetch(`/api/plans/${planId}/steps/${completionGate.stepId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ completionNote: note.trim() }),
+        })
+      } catch {
+        // non-blocking — completion note is best-effort
+      }
+    }
+  }
+
   const deleteTask = (index: number) => {
-    setPersisted((p) => p.filter((_, i) => i !== index))
+    setPersisted((p) => {
+      const target = p[index]
+      if (!target) return p
+      // Deleting a parent also removes its subtasks
+      return p.filter((item, i) => i !== index && item.parentId !== target.id)
+    })
+    markChanged()
+  }
+
+  const addSubtask = (parentIndex: number) => {
+    setPersisted((p) => {
+      const parent = p[parentIndex]
+      if (!parent || parent.parentId) return p
+
+      // Insert after the parent's last consecutive subtask so display order
+      // (flat array) keeps children grouped under their parent
+      let insertAt = parentIndex + 1
+      while (insertAt < p.length && p[insertAt]?.parentId === parent.id) {
+        insertAt += 1
+      }
+
+      const child = createTask(
+        "",
+        "",
+        parent.dueDate || format(new Date(), "yyyy-MM-dd"),
+        15,
+        parent.id
+      )
+
+      return [...p.slice(0, insertAt), child, ...p.slice(insertAt)]
+    })
     markChanged()
   }
 
@@ -412,23 +496,6 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
     }
   }, [persisted])
 
-  const isAiPanelOpen = searchParams.get("ai") === "1"
-  const searchParamsString = searchParams.toString()
-
-  const toggleAiPlanner = React.useCallback(() => {
-    const nextParams = new URLSearchParams(searchParamsString)
-
-    nextParams.set("id", planId)
-
-    if (isAiPanelOpen) {
-      nextParams.delete("ai")
-    } else {
-      nextParams.set("ai", "1")
-    }
-
-    router.push(`/app/plan?${nextParams.toString()}`)
-  }, [isAiPanelOpen, planId, router, searchParamsString])
-
   const handleDeletePlan = React.useCallback(async () => {
     const planTitle = persistedPlan.savedTitle.trim() || "Untitled Plan"
     const action = hasSavedPlan ? "Delete" : "Discard"
@@ -458,234 +525,150 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
 
   return (
     <>
-      <div className="flex h-screen" data-plan-id={planId}>
-        <div className="flex-1">
-          <header className="flex h-12 shrink-0 items-center gap-2">
-            <div className="flex flex-1 items-center gap-4 px-3">
-              <SidebarTrigger
-                className={`${state == "expanded" && "pointer-events-none opacity-0"} transition-all`}
-              />
+      <HeaderLeft>
+        <Breadcrumb className="text-sm font-medium">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/app/plans">Plans</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="line-clamp-1">
+                {persistedPlan.savedTitle.trim().length === 0
+                  ? "New Plan"
+                  : persistedPlan.savedTitle || "Untitled Plan"}
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </HeaderLeft>
 
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href="/app/plans">Plans</BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage className="line-clamp-1">
-                      {persistedPlan.savedTitle.trim().length === 0
-                        ? "New Plan"
-                        : persistedPlan.savedTitle || "Untitled Plan"}
-                    </BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            </div>
-            <div className="ml-auto flex items-center gap-4 px-3">
-              {isHydrated && (
-                <Tooltip>
-                  <TooltipTrigger>
-                    <CloudCheckIcon className="size-4 text-muted-foreground" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <span>
-                      {lastSavedAt
-                        ? `Saved at ${format(lastSavedAt, "HH:mm:ss")}`
-                        : "Not saved yet"}
-                    </span>
-                  </TooltipContent>
-                </Tooltip>
-              )}
+      <HeaderRight>
+        {isHydrated && (
+          <Tooltip>
+            <TooltipTrigger>
+              <CloudCheckIcon className="size-4 text-muted-foreground" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <span>
+                {lastSavedAt
+                  ? `Saved at ${format(lastSavedAt, "HH:mm:ss")}`
+                  : "Not saved yet"}
+              </span>
+            </TooltipContent>
+          </Tooltip>
+        )}
 
-              <Button
-                variant={isAiPanelOpen ? "secondary" : "default"}
-                aria-pressed={isAiPanelOpen}
-                size="sm"
-                onClick={toggleAiPlanner}
-              >
-                <AiPlannerIcon data-icon="align-start" /> AI Planner
+        <NavActions
+          copyUrl={`/app/plan?id=${encodeURIComponent(planId)}`}
+          onDelete={handleDeletePlan}
+        />
+        <PublishPlanAsTemplateDialog planId={planId} />
+      </HeaderRight>
+
+      <ScrollArea
+        data-plan-id={planId}
+        className={
+          "relative flex max-h-[calc(100vh-1rem)] min-h-0 flex-1 flex-col px-8"
+        }
+      >
+        <PlanDetails
+          title={persistedPlan.savedTitle}
+          description={persistedPlan.savedDescription}
+          startDate={planSummary.startDate}
+          date={planSummary.dueDate}
+          steps={planSummary.steps}
+          completion={persistedPlan.savedCompletion}
+          onTitleChange={updatePlanTitle}
+          onDescriptionChange={updatePlanDescription}
+          onCompletionChange={updatePlanCompletion}
+        />
+
+        <TaskList
+          persisted={persisted}
+          onReorder={reorderTasks}
+          onTitleChange={updateTaskTitle}
+          onDescriptionChange={updateTaskDescription}
+          onDateChange={updateTaskDate}
+          onDurationChange={updateTaskDuration}
+          onCompletedChange={updateTaskCompletion}
+          onDeleteTask={deleteTask}
+          onAddTask={handleAddTask}
+          onAddSubtask={addSubtask}
+          emptyState={() => (
+            <section className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-start justify-center gap-4 pt-8">
+              <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                <ListTodoIcon aria-hidden="true" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <h2 className="text-base font-medium">No steps yet</h2>
+                <p className="text-sm text-muted-foreground">
+                  Start with one clear step, then add dates and durations as the
+                  plan takes shape.
+                </p>
+              </div>
+            </section>
+          )}
+        />
+
+        {(isPlanLoaded && !persistedPlan.savedTitle) ||
+        !persistedPlan.savedDescription ? (
+          <section className="absolute bottom-8 left-1/2 mx-auto flex w-full max-w-3xl flex-1 -translate-x-1/2 flex-col items-start justify-center gap-4">
+            <div className="flex flex-col gap-1">
+              <p className="mb-1 text-xs text-muted-foreground">
+                Get started with
+              </p>
+              <Button variant="secondary" onClick={toggleSidebarRight}>
+                <AiPlannerIcon />
+                <span className="text-xs">AI Planner</span>
               </Button>
-
-              <NavActions
-                copyUrl={`/app/plan?id=${encodeURIComponent(planId)}`}
-                onDelete={handleDeletePlan}
-              />
-
-              <Show when="signed-out">
-                <RedirectToSignIn />
-              </Show>
             </div>
-          </header>
+          </section>
+        ) : null}
 
-          <ScrollArea
-            className={
-              "relative flex h-[calc(100vh-3.5rem)] flex-col px-8 pt-6"
-            }
-          >
-            <PlanDetails
-              title={persistedPlan.savedTitle}
-              description={persistedPlan.savedDescription}
-              startDate={planSummary.startDate}
-              date={planSummary.dueDate}
-              steps={planSummary.steps}
-              completion={persistedPlan.savedCompletion}
-              onTitleChange={updatePlanTitle}
-              onDescriptionChange={updatePlanDescription}
-              onCompletionChange={updatePlanCompletion}
-            />
+        <Button
+          onClick={toggleSidebarRight}
+          variant={"default"}
+          size={"icon-lg"}
+          className={cn(
+            "absolute right-6 bottom-6 transition-opacity",
+            openRight && "pointer-events-none opacity-0"
+          )}
+        >
+          <Asterisk01 />
+        </Button>
+      </ScrollArea>
 
-            <TaskList
-              persisted={persisted}
-              onReorder={reorderTasks}
-              onTitleChange={updateTaskTitle}
-              onDescriptionChange={updateTaskDescription}
-              onDateChange={updateTaskDate}
-              onDurationChange={updateTaskDuration}
-              onCompletedChange={updateTaskCompletion}
-              onDeleteTask={deleteTask}
-              onAddTask={handleAddTask}
-              emptyState={() => (
-                <section className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-start justify-center gap-4 pt-8">
-                  <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
-                    <ListTodoIcon aria-hidden="true" />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <h2 className="text-base font-medium">No steps yet</h2>
-                    <p className="text-sm text-muted-foreground">
-                      Start with one clear step, then add dates and durations as
-                      the plan takes shape.
-                    </p>
-                  </div>
-                </section>
-              )}
-            />
-
-            {(isPlanLoaded && !persistedPlan.savedTitle) ||
-            !persistedPlan.savedDescription ? (
-              <section className="absolute bottom-8 left-1/2 mx-auto flex w-full max-w-3xl flex-1 -translate-x-1/2 flex-col items-start justify-center gap-4">
-                <div className="flex flex-col gap-1">
-                  <p className="mb-1 text-xs text-muted-foreground">
-                    Get started with
-                  </p>
-                  <Button variant="secondary" onClick={toggleAiPlanner}>
-                    <AiPlannerIcon />
-                    AI Planner
-                  </Button>
-                </div>
-              </section>
-            ) : null}
-
-            {/* <div className="pointer-events-none absolute bottom-4 left-1/2 flex -translate-x-1/2 justify-center">
-              <form
-                onSubmit={handleQuickPromptSubmit}
-                className="group transition-[height, width,border-color,box-shadow,transform] pointer-events-auto relative flex h-8 w-20 max-w-[min(48rem,calc(100vw-3.5rem))] items-center justify-center overflow-hidden rounded-full bg-yellow-500/30 backdrop-blur duration-300 ease-out focus-within:h-14 focus-within:w-[min(40rem,calc(100vw-3.5rem))] focus-within:border focus-within:bg-card focus-within:shadow-lg hover:h-14 hover:w-[min(40rem,calc(100vw-3.5rem))] hover:border hover:shadow-lg"
-                aria-label="Improve plan"
-              >
-                <div className="absolute inset-0 flex items-center justify-center transition-[opacity,transform] duration-150 ease-out group-focus-within:scale-95 group-focus-within:opacity-0 group-hover:scale-95 group-hover:opacity-0">
-                  <AiPlannerIcon
-                    aria-hidden="true"
-                    className="size-5 text-yellow-900"
-                  />
-                </div>
-
-                <div className="flex w-full items-center gap-2 overflow-hidden bg-card opacity-0 transition-[opacity,transform] duration-150 ease-out group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100">
-                  {isHydrated ? (
-                    <BorderBeam
-                      size="line"
-                      colorVariant="colorful"
-                      duration={3.96}
-                      strength={1}
-                      theme="auto"
-                      className="w-full rounded-full! px-2.5 py-2"
-                    >
-                      <div className="flex w-full items-center gap-2">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon-sm"
-                          className="rounded-full"
-                          aria-label="Add context"
-                        >
-                          <PlusIcon aria-hidden="true" />
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon-sm"
-                          className="rounded-full"
-                          aria-label="Prompt controls"
-                        >
-                          <SlidersHorizontalIcon aria-hidden="true" />
-                        </Button>
-                        <Input
-                          autoComplete="off"
-                          value={quickPrompt}
-                          onChange={(event) =>
-                            setQuickPrompt(event.target.value)
-                          }
-                          className="h-10 flex-1 border-0 bg-card! px-1 shadow-none focus-visible:ring-0"
-                          placeholder="Improve this plan..."
-                        />
-                        <Button
-                          type="submit"
-                          variant="ghost"
-                          size="icon-lg"
-                          className="rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground [&_svg]:size-5!"
-                          aria-label="Submit prompt"
-                        >
-                          <ArrowUpIcon aria-hidden="true" />
-                        </Button>
-                      </div>
-                    </BorderBeam>
-                  ) : (
-                    <div className="w-full rounded-full px-2.5 py-2">
-                      <div className="flex w-full items-center gap-2">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon-sm"
-                          className="rounded-full"
-                          aria-label="Add context"
-                        >
-                          <PlusIcon aria-hidden="true" />
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon-sm"
-                          className="rounded-full"
-                          aria-label="Prompt controls"
-                        >
-                          <SlidersHorizontalIcon aria-hidden="true" />
-                        </Button>
-                        <Input
-                          autoComplete="off"
-                          value={quickPrompt}
-                          onChange={(event) =>
-                            setQuickPrompt(event.target.value)
-                          }
-                          className="h-10 flex-1 border-0 bg-card! px-1 shadow-none focus-visible:ring-0"
-                          placeholder="Improve this plan..."
-                        />
-                        <Button
-                          type="submit"
-                          variant="ghost"
-                          size="icon-lg"
-                          className="rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground [&_svg]:size-5!"
-                          aria-label="Submit prompt"
-                        >
-                          <ArrowUpIcon aria-hidden="true" />
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </form>
-            </div> */}
-          </ScrollArea>
-        </div>
-      </div>
+      <Dialog
+        open={!!completionGate}
+        onOpenChange={(open) => {
+          if (!open) setCompletionGate(null)
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Bước này bạn đã làm được gì?</DialogTitle>
+          </DialogHeader>
+          <Textarea
+            placeholder="Viết ngắn gọn điều bạn học được hoặc kết quả cụ thể — không cần dài, 1-2 câu là đủ."
+            value={reflectionNote}
+            onChange={(e) => setReflectionNote(e.target.value)}
+            className="min-h-[80px] resize-none"
+            autoFocus
+          />
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="ghost"
+              onClick={() => void handleReflectionSubmit("")}
+            >
+              Bỏ qua
+            </Button>
+            <Button onClick={() => void handleReflectionSubmit(reflectionNote)}>
+              Xác nhận hoàn thành
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

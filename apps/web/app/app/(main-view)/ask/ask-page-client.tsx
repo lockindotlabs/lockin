@@ -13,7 +13,8 @@ import {
 } from "@workspace/ui/components/breadcrumb"
 import { RedirectToSignIn, Show } from "@clerk/nextjs"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar"
 import {
   clearChatMessages,
@@ -21,6 +22,8 @@ import {
   subscribeToChatChanges,
 } from "@/lib/chat/local-chat-persistence"
 import { consumePendingAskPrompt } from "@/lib/chat/pending-ask-prompt"
+import { useChatSummaries } from "@/lib/chat/use-chat-summaries"
+import { buildAskHref } from "@/lib/routing/ask-url"
 import {
   createDbChat,
   importDbChat,
@@ -38,16 +41,21 @@ import {
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from "@workspace/ui/components/dropdown-menu"
-import { ChevronDown, MoreHorizontalIcon, XIcon } from "lucide-react"
+import { ChevronDown, MoreHorizontalIcon, Plus, XIcon } from "lucide-react"
 import type { UIMessage } from "ai"
+import { HeaderLeft, HeaderRight } from "@/components/header-context"
+import { ClockRewind } from "@untitledui/icons"
 
 export function AskPageClient() {
+  const { t } = useTranslation()
   const router = useRouter()
   const searchParams = useSearchParams()
   const chatSessionId = searchParams.get("id") ?? searchParams.get("t")
   const planId = searchParams.get("p")
   const { state } = useSidebar()
-  const [chatTitle, setChatTitle] = useState("New chat")
+  const [chatTitle, setChatTitle] = useState(
+    t("app.chat.newChat", { defaultValue: "New chat" })
+  )
   const [createdDraftChatId, setCreatedDraftChatId] = useState<string>()
   const [initialMessages, setInitialMessages] = useState<UIMessage[] | null>(
     null
@@ -56,10 +64,55 @@ export function AskPageClient() {
   const createDraftChatPromiseRef = useRef<Promise<string> | null>(null)
   const effectiveChatId = chatSessionId ?? createdDraftChatId
 
+  const { chats } = useChatSummaries()
+
+  const handleChatSelect = (chatId: string) => {
+    router.push(buildAskHref({ chatSessionId: chatId }))
+  }
+
+  const { todayChats, yesterdayChats, previousSevenDaysChats, olderChats } =
+    useMemo(() => {
+      const now = new Date()
+      const todayStart = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+      ).getTime()
+      const yesterdayStart = todayStart - 24 * 60 * 60 * 1000
+      const sevenDaysAgoStart = todayStart - 7 * 24 * 60 * 60 * 1000
+
+      const today: typeof chats = []
+      const yesterday: typeof chats = []
+      const sevenDays: typeof chats = []
+      const older: typeof chats = []
+
+      chats.forEach((chat) => {
+        const time = chat.updatedAt ? new Date(chat.updatedAt).getTime() : 0
+        if (!time) {
+          older.push(chat)
+        } else if (time >= todayStart) {
+          today.push(chat)
+        } else if (time >= yesterdayStart) {
+          yesterday.push(chat)
+        } else if (time >= sevenDaysAgoStart) {
+          sevenDays.push(chat)
+        } else {
+          older.push(chat)
+        }
+      })
+
+      return {
+        todayChats: today,
+        yesterdayChats: yesterday,
+        previousSevenDaysChats: sevenDays,
+        olderChats: older,
+      }
+    }, [chats])
+
   useEffect(() => {
     if (!chatSessionId) {
       setInitialMessages([])
-      setChatTitle("New chat")
+      setChatTitle(t("app.chat.newChat", { defaultValue: "New chat" }))
       setInitialPrompt(undefined)
       return
     }
@@ -105,7 +158,7 @@ export function AskPageClient() {
     return () => {
       isActive = false
     }
-  }, [chatSessionId, router, searchParams])
+  }, [chatSessionId, router, searchParams, t])
 
   useEffect(() => {
     if (!effectiveChatId) {
@@ -173,7 +226,12 @@ export function AskPageClient() {
       return
     }
 
-    const nextTitle = window.prompt("Rename chat", chatTitle)?.trim()
+    const nextTitle = window
+      .prompt(
+        t("app.chat.renamePrompt", { defaultValue: "Rename chat" }),
+        chatTitle
+      )
+      ?.trim()
 
     if (!nextTitle) {
       return
@@ -188,7 +246,12 @@ export function AskPageClient() {
       return
     }
 
-    const shouldDelete = window.confirm(`Delete "${chatTitle}"?`)
+    const shouldDelete = window.confirm(
+      t("app.confirm.delete", {
+        name: chatTitle,
+        defaultValue: `Delete "${chatTitle}"?`,
+      })
+    )
 
     if (!shouldDelete) {
       return
@@ -202,13 +265,13 @@ export function AskPageClient() {
 
   if (planId) {
     return (
-      <div className="relative h-screen">
+      <div className="relative h-full">
         <Button
           type="button"
           variant="ghost"
           size="icon-sm"
           className="absolute top-2 left-2.5 z-20 bg-background"
-          aria-label="Close editor"
+          aria-label={t("app.editor.close", { defaultValue: "Close editor" })}
           onClick={closeEditor}
         >
           <XIcon />
@@ -219,13 +282,219 @@ export function AskPageClient() {
   }
 
   return (
-    <div className="flex flex-col">
+    <>
+      {effectiveChatId && (
+        <>
+          <HeaderLeft>
+            <Breadcrumb className="-translate-x-2">
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink
+                    render={
+                      <Button
+                        variant={"ghost"}
+                        size={"sm"}
+                        className={"h-8 px-2 font-normal"}
+                        onClick={() => {
+                          router.push("/app")
+                        }}
+                      />
+                    }
+                  >
+                    {t("app.nav.home", { defaultValue: "Home" })}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink
+                    render={
+                      <Button
+                        variant={"ghost"}
+                        size={"sm"}
+                        className={"h-8 px-2 font-normal"}
+                        onClick={() => {
+                          router.push("/app/ask")
+                        }}
+                      />
+                    }
+                  >
+                    {t("app.nav.askAi", { defaultValue: "Ask AI" })}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="line-clamp-1">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger
+                        render={
+                          <Button
+                            variant={"ghost"}
+                            size={"sm"}
+                            className={"h-8 px-2 font-normal"}
+                          >
+                            {chatTitle}
+                            <ChevronDown className="ml-1 size-3.5 opacity-70" />
+                          </Button>
+                        }
+                      />
+                      <DropdownMenuContent
+                        align="start"
+                        className="max-w-100 min-w-64"
+                      >
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem
+                            onClick={() => router.push(buildAskHref())}
+                            className="flex items-center gap-2 font-medium"
+                          >
+                            <Plus className="size-4" />
+                            {t("app.chat.newChat", {
+                              defaultValue: "New chat",
+                            })}
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+
+                        {chats.length === 0 ? (
+                          <>
+                            <DropdownMenuSeparator />
+                            <div className="px-3 py-2 text-center text-xs text-muted-foreground">
+                              {t("app.chat.noRecent", {
+                                defaultValue: "No recent chats",
+                              })}
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            {todayChats.length > 0 && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                  <DropdownMenuLabel>
+                                    {t("app.chat.today", {
+                                      defaultValue: "Today",
+                                    })}
+                                  </DropdownMenuLabel>
+                                  {todayChats.map((chat) => (
+                                    <DropdownMenuItem
+                                      key={chat.id}
+                                      onClick={() => handleChatSelect(chat.id)}
+                                      className="truncate"
+                                    >
+                                      {chat.title ||
+                                        t("app.chat.newChat", {
+                                          defaultValue: "New chat",
+                                        })}
+                                    </DropdownMenuItem>
+                                  ))}
+                                </DropdownMenuGroup>
+                              </>
+                            )}
+
+                            {yesterdayChats.length > 0 && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                  <DropdownMenuLabel>
+                                    {t("app.chat.yesterday", {
+                                      defaultValue: "Yesterday",
+                                    })}
+                                  </DropdownMenuLabel>
+                                  {yesterdayChats.map((chat) => (
+                                    <DropdownMenuItem
+                                      key={chat.id}
+                                      onClick={() => handleChatSelect(chat.id)}
+                                      className="truncate"
+                                    >
+                                      {chat.title ||
+                                        t("app.chat.newChat", {
+                                          defaultValue: "New chat",
+                                        })}
+                                    </DropdownMenuItem>
+                                  ))}
+                                </DropdownMenuGroup>
+                              </>
+                            )}
+
+                            {previousSevenDaysChats.length > 0 && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                  <DropdownMenuLabel>
+                                    {t("app.chat.previousSevenDays", {
+                                      defaultValue: "Previous 7 days",
+                                    })}
+                                  </DropdownMenuLabel>
+                                  {previousSevenDaysChats.map((chat) => (
+                                    <DropdownMenuItem
+                                      key={chat.id}
+                                      onClick={() => handleChatSelect(chat.id)}
+                                      className="truncate"
+                                    >
+                                      {chat.title ||
+                                        t("app.chat.newChat", {
+                                          defaultValue: "New chat",
+                                        })}
+                                    </DropdownMenuItem>
+                                  ))}
+                                </DropdownMenuGroup>
+                              </>
+                            )}
+
+                            {olderChats.length > 0 && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                  <DropdownMenuLabel>
+                                    {t("app.chat.older", {
+                                      defaultValue: "Older",
+                                    })}
+                                  </DropdownMenuLabel>
+                                  {olderChats.map((chat) => (
+                                    <DropdownMenuItem
+                                      key={chat.id}
+                                      onClick={() => handleChatSelect(chat.id)}
+                                      className="truncate"
+                                    >
+                                      {chat.title ||
+                                        t("app.chat.newChat", {
+                                          defaultValue: "New chat",
+                                        })}
+                                    </DropdownMenuItem>
+                                  ))}
+                                </DropdownMenuGroup>
+                              </>
+                            )}
+                          </>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={<Button variant="ghost" size="icon-xs" />}
+              >
+                <MoreHorizontalIcon className="size-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={renameChat}>
+                  {t("app.actions.rename", { defaultValue: "Rename" })}
+                </DropdownMenuItem>
+                <DropdownMenuItem variant="destructive" onClick={deleteChat}>
+                  {t("app.actions.delete", { defaultValue: "Delete" })}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </HeaderLeft>
+        </>
+      )}
       {/* Sidebar */}
-      <div className="flex h-12 shrink-0 items-center gap-2">
+      {/* <div className="flex h-12 shrink-0 items-center gap-2">
         <div className="flex flex-1 items-center justify-between px-2 transition-transform duration-150 ease-in-out">
           <div className="flex items-center gap-2">
             <SidebarTrigger
-              className={`${state == "expanded" && "pointer-events-none hidden opacity-0"} transition-all`}
+              className={`${state == "expanded" && "pointer-events-none hidden opacity-0"} transition-opacity`}
             />
             <Breadcrumb>
               <BreadcrumbList>
@@ -242,7 +511,7 @@ export function AskPageClient() {
                       />
                     }
                   >
-                    Home
+                    {t("app.nav.home", { defaultValue: "Home" })}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
@@ -259,7 +528,7 @@ export function AskPageClient() {
                       />
                     }
                   >
-                    Ask
+                    {t("app.nav.askAi", { defaultValue: "Ask AI" })}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
@@ -280,13 +549,19 @@ export function AskPageClient() {
                       />
                       <DropdownMenuContent align="start" className="max-w-80">
                         <DropdownMenuGroup>
-                          <DropdownMenuLabel>Previous 7 days</DropdownMenuLabel>
+                          <DropdownMenuLabel>
+                            {t("app.chat.previousSevenDays", {
+                              defaultValue: "Previous 7 days",
+                            })}
+                          </DropdownMenuLabel>
                           <DropdownMenuItem>{chatTitle}</DropdownMenuItem>
                           <DropdownMenuItem>Create a new page</DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                          <DropdownMenuLabel>Older</DropdownMenuLabel>
+                          <DropdownMenuLabel>
+                            {t("app.chat.older", { defaultValue: "Older" })}
+                          </DropdownMenuLabel>
                           <DropdownMenuItem>
                             Capabilities overview
                           </DropdownMenuItem>
@@ -308,9 +583,11 @@ export function AskPageClient() {
                 <MoreHorizontalIcon />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={renameChat}>Rename</DropdownMenuItem>
+                <DropdownMenuItem onClick={renameChat}>
+                  {t("app.actions.rename", { defaultValue: "Rename" })}
+                </DropdownMenuItem>
                 <DropdownMenuItem variant="destructive" onClick={deleteChat}>
-                  Delete
+                  {t("app.actions.delete", { defaultValue: "Delete" })}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -320,7 +597,7 @@ export function AskPageClient() {
         <Show when="signed-out">
           <RedirectToSignIn />
         </Show>
-      </div>
+      </div> */}
       <Assistant
         key={chatSessionId ?? "draft"}
         mode="onboarding"
@@ -330,6 +607,6 @@ export function AskPageClient() {
         initialMessages={initialMessages}
         initialPrompt={initialPrompt}
       />
-    </div>
+    </>
   )
 }

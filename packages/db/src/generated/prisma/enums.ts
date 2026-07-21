@@ -9,6 +9,26 @@
 * 🟢 You can import this file directly.
 */
 
+export const TemplateStatus = {
+  DRAFT: 'DRAFT',
+  PENDING_REVIEW: 'PENDING_REVIEW',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type TemplateStatus = (typeof TemplateStatus)[keyof typeof TemplateStatus]
+
+
+export const ScaffoldQuestionPurpose = {
+  ADJUST_GOAL: 'ADJUST_GOAL',
+  GENERATE_STEPS: 'GENERATE_STEPS',
+  ESTIMATE_TIMEBOX: 'ESTIMATE_TIMEBOX',
+  IDENTIFY_OBSTACLE: 'IDENTIFY_OBSTACLE'
+} as const
+
+export type ScaffoldQuestionPurpose = (typeof ScaffoldQuestionPurpose)[keyof typeof ScaffoldQuestionPurpose]
+
+
 export const CompletionType = {
   EARLY: 'EARLY',
   NORMAL: 'NORMAL',
@@ -120,3 +140,30 @@ export const SprintStatus = {
 } as const
 
 export type SprintStatus = (typeof SprintStatus)[keyof typeof SprintStatus]
+
+
+export const WorkflowOutputType = {
+  DOCUMENT: 'DOCUMENT',
+  SKILL_PRACTICE: 'SKILL_PRACTICE',
+  PROJECT: 'PROJECT'
+} as const
+
+export type WorkflowOutputType = (typeof WorkflowOutputType)[keyof typeof WorkflowOutputType]
+
+
+export const ExperienceLevel = {
+  FIRST_TIME: 'FIRST_TIME',
+  EXPERIENCED: 'EXPERIENCED'
+} as const
+
+export type ExperienceLevel = (typeof ExperienceLevel)[keyof typeof ExperienceLevel]
+
+
+export const AiUsageStatus = {
+  STARTED: 'STARTED',
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR',
+  BLOCKED: 'BLOCKED'
+} as const
+
+export type AiUsageStatus = (typeof AiUsageStatus)[keyof typeof AiUsageStatus]

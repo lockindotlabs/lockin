@@ -3,7 +3,7 @@ import { z } from "zod"
 import { getCurrentDbUser } from "@/lib/server/current-db-user"
 import { BILLING_TIERS, isPaidBillingTier } from "@/lib/billing/catalog"
 import { createPendingOrder } from "@/lib/billing/orders"
-import { getPayOSClient, getPublicWebUrl } from "@/lib/billing/payos"
+import { getPayOSClient, resolvePublicWebUrl } from "@/lib/billing/payos"
 import prisma from "@workspace/db"
 
 const CheckoutSchema = z.object({
@@ -25,7 +25,21 @@ export async function POST(req: Request) {
 
   const tier = parsed.data.tier
   const tierConfig = BILLING_TIERS[tier]
-  const publicWebUrl = getPublicWebUrl()
+  let publicWebUrl: string
+
+  try {
+    publicWebUrl = resolvePublicWebUrl(req)
+  } catch (error) {
+    console.error("[billing.checkout] could not resolve public web url", error)
+    return Response.json(
+      {
+        error:
+          "Billing is not configured yet. Set PUBLIC_WEB_URL or open the app from a stable origin.",
+      },
+      { status: 500 }
+    )
+  }
+
   const order = await createPendingOrder(user.id, tier)
   const payOS = getPayOSClient()
 

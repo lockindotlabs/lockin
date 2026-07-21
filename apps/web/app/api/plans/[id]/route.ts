@@ -1,6 +1,7 @@
 import { z } from "zod"
 
 import { getCurrentDbUser } from "@/lib/server/current-db-user"
+import { getAuthenticatedUser } from "@/lib/server/auth"
 import {
   getOwnedPlan,
   serializePlan,
@@ -15,6 +16,9 @@ const PlanStepSchema = z.object({
   dueDate: z.string(),
   durationMinutes: z.number().int().positive(),
   isCompleted: z.boolean(),
+  guidance: z.string().nullable().optional(),
+  completionNote: z.string().nullable().optional(),
+  parentId: z.string().nullable().optional(),
 })
 
 const UpdatePlanSchema = z.object({
@@ -30,14 +34,21 @@ const UpdatePlanSchema = z.object({
   breakdownIntensity: z
     .enum(["LOW_ENERGY", "NORMAL", "HIGH_ENERGY"])
     .optional(),
+  templateId: z.string().nullable().optional(),
+  rubricNotes: z.string().nullable().optional(),
+  draftReference: z.string().nullable().optional(),
+  experienceLevel: z.enum(["FIRST_TIME", "EXPERIENCED"]).nullable().optional(),
 })
 
 type RouteContext = {
   params: Promise<{ id: string }>
 }
 
-export async function GET(_req: Request, context: RouteContext) {
-  const user = await getCurrentDbUser()
+export async function GET(req: Request, context: RouteContext) {
+  // The Chrome extension reads plan steps (to mirror the task checklist) via
+  // its long-lived ExtensionToken, not a Clerk session — getCurrentDbUser()
+  // only recognizes Clerk cookies, so it always 401s for those requests.
+  const user = await getAuthenticatedUser(req)
 
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 })

@@ -128,7 +128,13 @@ export function UpgradeDialog({
       })
 
       if (!response.ok) {
-        throw new Error(`Checkout failed with status ${response.status}`)
+        const data = (await response.json().catch(() => null)) as
+          | { error?: string }
+          | null
+
+        throw new Error(
+          data?.error ?? `Checkout failed with status ${response.status}`
+        )
       }
 
       const data = (await response.json()) as { checkoutUrl?: string }
@@ -138,8 +144,12 @@ export function UpgradeDialog({
       }
 
       window.location.assign(data.checkoutUrl)
-    } catch {
-      setBillingError("Could not start checkout. Please try again.")
+    } catch (error) {
+      setBillingError(
+        error instanceof Error
+          ? error.message
+          : "Could not start checkout. Please try again."
+      )
       setCheckoutTier(null)
     }
   }

@@ -32,7 +32,7 @@ export function HeroInput() {
       <button
         type="button"
         onClick={handleSend}
-        className="absolute right-2.5 bottom-2.5 rounded-[20px] bg-[#f9b314] p-1 transition-colors hover:bg-[#e8a510]"
+        className="absolute right-2.5 bottom-2.5 rounded-full bg-[#f9b314] p-2 transition-colors hover:bg-[#e8a510] active:scale-[0.96] transition-transform"
       >
         <ArrowUp className="h-6 w-6 text-black" />
       </button>

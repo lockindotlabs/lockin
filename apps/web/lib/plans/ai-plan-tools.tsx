@@ -25,6 +25,7 @@ import {
   type SavedPlanTask,
 } from "@/lib/plans/plan-repository"
 import { buildAskHref } from "@/lib/routing/ask-url"
+import { getExe101FallbackTemplate } from "@/lib/templates/exe101-fallback"
 
 export const AI_PLAN_REWRITE_EVENT = "lockin:ai-plan-rewritten"
 
@@ -34,6 +35,8 @@ type PlanToolTaskInput = {
   dueDate?: string
   durationMinutes?: number
   isCompleted?: boolean
+  guidance?: string | null
+  parentId?: string | null
 }
 
 type PlanToolInput = {
@@ -41,6 +44,10 @@ type PlanToolInput = {
   description?: string
   completion?: string
   tasks?: PlanToolTaskInput[]
+  templateId?: string | null
+  rubricNotes?: string | null
+  draftReference?: string | null
+  experienceLevel?: "FIRST_TIME" | "EXPERIENCED" | null
 }
 
 type PlanToolResult =
@@ -81,6 +88,15 @@ const taskInputSchema = {
       type: "boolean" as const,
       description: "Whether this task is already complete.",
     },
+    guidance: {
+      type: "string" as const,
+      description:
+        "Personalized coaching guidance for this step (2-3 short sentences), shown to the user alone while they focus on it. Coach HOW to approach and start — prefer an if-then form grounded in the user's own dump, goal, and stated obstacle. Never write the answer, content, or code for them.",
+    },
+    parentId: {
+      type: "string" as const,
+      description: "Optional parent step id when this item is a sub-step.",
+    },
   },
   required: ["title"],
 }
@@ -105,6 +121,27 @@ const planInputSchema = {
       description: "Ordered list of concrete steps in the plan.",
       items: taskInputSchema,
     },
+    templateId: {
+      type: "string" as const,
+      description:
+        "Workflow template id when the plan is grounded on a selected template.",
+    },
+    rubricNotes: {
+      type: "string" as const,
+      description:
+        "Rubric or grading constraints that the plan should follow if the user supplied them.",
+    },
+    draftReference: {
+      type: "string" as const,
+      description:
+        "Summary of the user's existing draft or outline if the plan is based on revising existing work.",
+    },
+    experienceLevel: {
+      type: "string" as const,
+      enum: ["FIRST_TIME", "EXPERIENCED"],
+      description:
+        "Use FIRST_TIME for highly guided plans and EXPERIENCED for leaner plans.",
+    },
   },
   required: ["title", "description", "completion", "tasks"],
 }
@@ -121,7 +158,7 @@ function today() {
   return format(new Date(), "yyyy-MM-dd")
 }
 
-function normalizeText(value: string | undefined) {
+function normalizeText(value: string | null | undefined) {
   return value?.trim() ?? ""
 }
 
@@ -152,6 +189,8 @@ function normalizeTasks(tasks: PlanToolTaskInput[] | undefined) {
       dueDate: normalizeDueDate(task.dueDate),
       durationMinutes: normalizeDuration(task.durationMinutes),
       isCompleted: task.isCompleted ?? false,
+      guidance: normalizeText(task.guidance) || null,
+      parentId: normalizeText(task.parentId) || null,
     }))
 }
 
@@ -167,6 +206,22 @@ function buildPlan(input: PlanToolInput, existingPlan?: SavedPlan): SavedPlan {
     createdAt: existingPlan?.createdAt ?? now,
     updatedAt: now,
     version: 1,
+    templateId:
+      input.templateId !== undefined
+        ? normalizeText(input.templateId) || null
+        : existingPlan?.templateId ?? null,
+    rubricNotes:
+      input.rubricNotes !== undefined
+        ? normalizeText(input.rubricNotes) || null
+        : existingPlan?.rubricNotes ?? null,
+    draftReference:
+      input.draftReference !== undefined
+        ? normalizeText(input.draftReference) || null
+        : existingPlan?.draftReference ?? null,
+    experienceLevel:
+      input.experienceLevel !== undefined
+        ? input.experienceLevel
+        : existingPlan?.experienceLevel ?? null,
   }
 }
 
@@ -175,6 +230,29 @@ function getTaskTitles(tasks: SavedPlanTask[]) {
     .map((task) => task.title.trim())
     .filter(Boolean)
     .slice(0, 3)
+}
+
+function hasThinkExecuteReviewShape(tasks: SavedPlanTask[]) {
+  const titles = tasks.map((task) => task.title.toLowerCase())
+
+  const hasThinking = titles.some((title) =>
+    /(thinking|suy nghi|research|clarify|plan)/i.test(title)
+  )
+  const hasExecution = titles.some((title) =>
+    /(execution|thuc thi|draft|build|write|analy|design|model|prepare)/i.test(
+      title
+    )
+  )
+  const hasReview = titles.some((title) =>
+    /(review|tong ket|check|revise|final|submit|rehearse|validate)/i.test(title)
+  )
+
+  return hasThinking && hasExecution && hasReview
+}
+
+function normalizeTemplateIdForPersistence(templateId: string | null | undefined) {
+  if (!templateId) return null
+  return getExe101FallbackTemplate(templateId) ? null : templateId
 }
 
 function formatStepCount(count: number) {
@@ -400,6 +478,7 @@ export function PlanAssistantTools({
   const activePlanId =
     searchParams.get("p") ??
     (pathname === "/app/plan" ? searchParams.get("id") : null)
+  const selectedTemplateId = searchParams.get("template")
   const urlChatSessionId =
     pathname === "/app/ask"
       ? searchParams.get("id") ?? searchParams.get("t")
@@ -413,7 +492,29 @@ export function PlanAssistantTools({
         "Create and save a new LockIn plan, then open it in the plan editor.",
       parameters: planInputSchema,
       execute: async (input: PlanToolInput): Promise<PlanToolResult> => {
-        const plan = buildPlan(input)
+        const resolvedInput: PlanToolInput = {
+          ...input,
+          templateId: normalizeTemplateIdForPersistence(
+            input.templateId ?? selectedTemplateId ?? null
+          ),
+        }
+        const plan = {
+          ...buildPlan(resolvedInput),
+          source: "AI" as const,
+          aiMode: "ASSISTED" as const,
+        }
+
+        if (
+          plan.templateId &&
+          (!plan.tasks.some((task) => task.guidance?.trim()) ||
+            !hasThinkExecuteReviewShape(plan.tasks))
+        ) {
+          return {
+            ok: false,
+            reason:
+              "Template-based plans must include guided steps across Thinking, Execution, and Review stages before they can be saved.",
+          }
+        }
 
         await savePlan(plan)
 
@@ -452,7 +553,7 @@ export function PlanAssistantTools({
         />
       ),
     }),
-    [chatSessionId, ensureChatId, router]
+    [chatSessionId, ensureChatId, router, selectedTemplateId]
   )
 
   const rewriteActivePlanTool = React.useMemo(
@@ -480,7 +581,23 @@ export function PlanAssistantTools({
           }
         }
 
-        const plan = buildPlan(input, existingPlan)
+        const plan = {
+          ...buildPlan(input, existingPlan),
+          source: existingPlan.source,
+          aiMode: "ASSISTED" as const,
+        }
+
+        if (
+          plan.templateId &&
+          (!plan.tasks.some((task) => task.guidance?.trim()) ||
+            !hasThinkExecuteReviewShape(plan.tasks))
+        ) {
+          return {
+            ok: false,
+            reason:
+              "Template-based plans must keep guided Thinking, Execution, and Review stages.",
+          }
+        }
         await savePlan(plan)
         window.dispatchEvent(
           new CustomEvent(AI_PLAN_REWRITE_EVENT, {

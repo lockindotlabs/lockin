@@ -8,9 +8,8 @@ import { AssistantSidebar } from "@/components/assistant-ui/assistant-sidebar"
 export function PlanAssistantLayoutClient({ children }: PropsWithChildren) {
   const searchParams = useSearchParams()
   const planId = searchParams.get("id")
-  const isAiPanelOpen = searchParams.get("ai") === "1"
 
-  if (!planId || !isAiPanelOpen) {
+  if (!planId) {
     return children
   }
 

@@ -1,213 +1,74 @@
 {
   "landing": {
     "nav": {
-      "product": "Product",
-      "extension": "Extension",
+      "home": "Home",
+      "features": "Features",
+      "resources": "Resources",
       "pricing": "Pricing",
-      "faq": "FAQs",
-      "manifesto": "Manifesto"
-    },
-    "auth": {
-      "signIn": "Sign in",
-      "getStarted": "Get Started",
+      "help": "Help",
+      "login": "Log in",
       "goToApp": "Go to app"
     },
     "hero": {
-      "badge": "LockIn · v1.0 is live!",
-      "title": {
-        "own": "Own",
-        "yourOne": "your",
-        "time": "time,",
-        "build": "build",
-        "yourTwo": "your",
-        "life": "life."
-      },
-      "description": "LockIn breaks down what you actually need to do, walks you through a focus sprint, and blocks the tabs that drag you out of it. An AI-powered execution workspace — not another to-do list.",
+      "badge": "New: Revamped interface and Insights for your plans",
+      "titleOne": "Turn overwhelming tasks",
+      "titleTwo": "into actionable plans.",
+      "description": "LockIn is an AI action assistant that helps you break down overwhelming work into manageable steps, then guides you through them with distraction-free focus sessions.",
+      "getStarted": "Get started",
       "watchDemo": "Watch demo",
-      "running": "2,481 sprints running right now",
-      "mock": {
-        "today": "TODAY · TUE 24",
-        "headingOne": "Three things matter today.",
-        "headingTwo": "The rest can wait.",
-        "inSprint": "In sprint",
-        "taskTwo": "Review portfolio site copy",
-        "taskThree": "Refactor /auth handler",
-        "taskFour": "Morning standup notes"
-      }
+      "demoAlt": "The LockIn app showing a plan broken down into scheduled, time-boxed tasks"
     },
-    "mock": {
-      "taskPrimary": "Draft thesis chapter 3 — intro",
-      "taskShort": "Chapter 3 intro",
-      "taskShortLower": "chapter 3 intro",
-      "sprint142": "SPRINT #142",
-      "sprint42": "SPRINT #42",
-      "left": "LEFT",
-      "hard": "Hard",
-      "soft": "Soft",
-      "blocked": "BLOCKED",
-      "steps": {
-        "outline": "Outline 3 main claims",
-        "hook": "Draft hook paragraph",
-        "revise": "Revise based on feedback",
-        "statement": "Write thesis statement",
-        "bridge": "Bridge to chapter 4"
-      },
-      "actions": {
-        "addFive": "+5 min",
-        "addFiveShort": "+5m",
-        "pause": "Pause",
-        "endSprint": "End sprint"
-      }
+    "introducing": {
+      "eyebrow": "Introducing LockIn",
+      "title": "You know what needs to be done. So why is it so hard to start?",
+      "description": "Big tasks feel overwhelming. Traditional to-do apps help you organize them, but they don't tell you what to do first. When every task feels like a mountain, procrastination becomes the easiest choice."
     },
-    "cards": {
-      "sprint": {
-        "label": "02 · SPRINT MODE",
-        "headingOne": "Focus that",
-        "headingTwo": "feels like focus.",
-        "description": "Sprint Mode dims everything else and shows only the work in front of you.",
-        "statusActive": "● Sprint in progress",
-        "statusReady": "● Ready to begin"
+    "steps": {
+      "title": "From idea to action in\nthree simple steps.",
+      "step1": {
+        "num": "01",
+        "title": "Plan with AI",
+        "description": "Describe what you need to accomplish in plain language. LockIn turns vague goals into a structured action plan with realistic steps and time estimates.",
+        "cta": "Try it now",
+        "demo": "Watch demo",
+        "alt": "Plan with AI Mockup showing conversational chat generating a structured task breakdown"
       },
-      "hud": {
-        "label": "03 · CROSS-TAB",
-        "headingOne": "Same account.",
-        "headingTwo": "Every tab.",
-        "description": "Web app and browser extension share one live sprint state. Start anywhere — see it everywhere."
+      "step2": {
+        "num": "02",
+        "title": "Make it yours",
+        "description": "Review, reorder, or adjust every step. AI gives you a starting point—you stay in control.",
+        "alt": "Make it yours Mockup showing editable task list with timelines, completion criteria, and custom steps"
       },
-      "blocklist": {
-        "label": "BLOCKLIST",
-        "headingOne": "Your rules,",
-        "headingTwo": "your sites.",
-        "description": "Pick categories or specific domains. Adjust hard / soft per site, save as presets."
-      },
-      "breakdown": {
-        "label": "01 · AI BREAKDOWN",
-        "headingOne": "Vague tasks become",
-        "headingTwo": "actionable steps.",
-        "description": "Drop in “Clean the apartment” or “Study for the algorithms midterm.” Our AI breaks it into steps with realistic durations — drag, edit, or override anything."
-      },
-      "shield": {
-        "label": "04 · DISTRACTION SHIELD",
-        "headingOne": "Distractions,",
-        "headingTwo": "locked.",
-        "description": "Hard-block what pulls you in. Soft-nudge the grey zone. Your call, your sites."
-      }
-    },
-    "breakdown": {
-      "query": "“Study for the algorithms midterm on Friday”",
-      "aiPrefix": "Here's a 4-step plan — about",
-      "aiSuffix": "Want me to break the first step down further?",
-      "steps": {
-        "problemSets": "Re-do problem sets 4 + 5",
-        "cheatSheet": "Make 1-page Big-O cheat sheet",
-        "review": "Review BFS / DFS notes",
-        "practice": "One timed practice exam"
-      },
-      "actions": {
-        "start": "Start sprint ✓",
-        "smaller": "Make smaller",
-        "edit": "Edit"
-      }
-    },
-    "product": {
-      "eyebrow": "The execution gap",
-      "headingOne": "Stop drowning in to-dos.",
-      "headingTwo": "Start finishing them.",
-      "description": "Most apps store your work. LockIn helps you actually start, focus, and finish it — by breaking it down, defending your attention, and following you across every tab."
-    },
-    "blocked": {
-      "eyebrow": "HARD-BLOCKED · sprint in progress",
-      "headingPrefix": "Still",
-      "headingEmphasis": "locked in",
-      "description": "Twitter is on pause until your sprint wraps. Come back when the timer's up — it'll still be there.",
-      "workingOn": "Working on",
-      "sprintLength": "Sprint length",
-      "timeLeft": "Time left"
-    },
-    "extension": {
-      "eyebrow": "Browser extension",
-      "headingOne": "Focus shouldn't end",
-      "headingTwo": "when you close the tab.",
-      "description": "The LockIn extension is a thin client of your account. Start a sprint anywhere, see status on every page, and get redirected gently when you slip.",
-      "popup": {
-        "label": "TOOLBAR POPUP",
-        "headingOne": "One-click popup,",
-        "headingTwo": "same live state.",
-        "description": "The toolbar popup shows your current sprint, the step you're on, and how many distractions LockIn already absorbed for you."
-      },
-      "pairing": {
-        "label": "PAIRING",
-        "headingOne": "Install once,",
-        "headingTwo": "signed in everywhere.",
-        "description": "No second password. The extension pairs with your web account in two taps — and never asks for credentials again.",
-        "confirm": "Confirm pairing code",
-        "expires": "expires in 2:31"
-      },
-      "ambient": {
-        "label": "AMBIENT HUD",
-        "headingOne": "Always",
-        "headingTwo": "in your eyeline.",
-        "description": "A draggable pill on every page so the timer never disappears into a forgotten tab."
-      },
-      "slip": {
-        "label": "SLIP DETECTION",
-        "headingOne": "Nudge,",
-        "headingTwo": "not shame.",
-        "description": "If you drift to a soft-listed site, LockIn shows the cost — never wags a finger.",
-        "prompt": "Stay on reddit.com?",
-        "costPrefix": "5 more min costs you",
-        "costStrong": "~1 step",
-        "costSuffix": "from this sprint.",
-        "back": "← back to work",
-        "fiveMin": "5 min"
-      },
-      "patterns": {
-        "label": "PATTERNS",
-        "headingOne": "You work more",
-        "headingTwo": "after 10am.",
-        "description": "LockIn quietly learns your rhythms — when you focus best, when you slip, what task sizes you finish."
-      },
-      "heatmap": {
-        "label": "12-WEEK FOCUS HEATMAP",
-        "headingOne": "Patterns",
-        "headingTwo": "that show up.",
-        "ago": "12 weeks ago",
-        "today": "today"
+      "step3": {
+        "num": "03",
+        "title": "Stay in the zone",
+        "description": "Start a Sprint and work on one step at a time in a distraction-free workspace designed for deep focus.",
+        "alt": "Stay in the zone Mockup showing focus mode sprint timer with active step and status controls"
       }
     },
     "pricing": {
-      "eyebrow": "Pricing",
-      "headingOne": "Simple pricing.",
-      "headingTwo": "Lock in when ready.",
-      "description": "Start free. Upgrade for hard-blocking, longer sprints, and the team workspace.",
-      "monthly": "Monthly",
-      "annually": "Annually",
-      "tiers": [
-        {
+      "title": "Pricing",
+      "subtitle": "Choose a plan that works for you.",
+      "cta": "Get started",
+      "perMonth": "/month",
+      "plans": {
+        "free": {
           "name": "Free",
-          "desc": "Everything you need to try LockIn properly.",
           "price": "0₫",
-          "per": "/forever",
-          "billed": "no credit card required",
           "features": [
-            "2 credits/day with Pro AI models",
+            "20 credits/day with Pro AI models\n(200 credits max/month)",
             "3 plans with AI Planner",
             "3 projects",
             "Basic LockIn Mode interface",
             "Limited uploads (images, documents, recordings)"
-          ],
-          "cta": "Start free"
+          ]
         },
-        {
+        "plus": {
           "name": "Plus",
-          "tag": "Most popular",
-          "desc": "Everything in Free, plus more AI credits and features.",
           "price": "79.000₫",
-          "per": "/Month",
-          "billed": "best value for individuals",
           "features": [
             "Everything in Free",
-            "100 credits/month with Pro AI model",
+            "1000 credits/month with Pro AI model",
             "Unlimited plans with AI Planner",
             "50 projects",
             "Early access to new features",
@@ -216,78 +77,899 @@
             "Harder blocking for LockIn Mode",
             "More uploads (images, documents, recordings)",
             "Bonus rewards"
-          ],
-          "cta": "Choose Plus"
+          ]
         },
-        {
+        "pro": {
           "name": "Pro",
-          "desc": "Designed for power users and professionals.",
           "price": "189.000₫",
-          "per": "/Month",
-          "billed": "premium features & priority support",
           "features": [
             "Everything in Plus",
-            "300 credits/month with Pro model",
+            "3000 credits/month with Pro AI model",
             "Unlimited plans with AI Planner",
             "Unlimited projects",
             "Unlimited uploads (images, documents, recordings)",
             "More bonus rewards"
-          ],
-          "cta": "Choose Pro"
+          ]
         }
-      ]
+      }
     },
     "faq": {
-      "headingLight": "Frequently",
-      "headingRest": "asked.",
-      "subPrefix": "Anything else? Email",
-      "subSuffix": "and we'll write back fast.",
-      "items": [
-        {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about LockIn.",
+      "items": {
+        "faq-1": {
           "question": "What does LockIn actually do that a regular to-do app doesn't?",
           "answer": "LockIn isn't built to store tasks — it's built to help you execute them. The AI breaks vague work into actionable steps, Sprint Mode walks you through them in a focused timer, and the browser extension blocks distractions while you do it. Most apps stop after the list view; we start there."
         },
-        {
+        "faq-2": {
           "question": "How is the extension different from Cold Turkey or Freedom?",
-          "answer": "Those are pure blockers. LockIn's extension is connected to your tasks — when you start a sprint on “Draft chapter 3,” it knows which sites to block, for how long, and shows your sub-steps in the popup. Configuration lives in the web app, not in a tiny extension settings page."
+          "answer": "Those are pure blockers. LockIn's extension is connected to your tasks — when you start a sprint on \"Draft chapter 3,\" it knows which sites to block, for how long, and shows your sub-steps in the popup. Configuration lives in the web app, not in a tiny extension settings page."
         },
-        {
+        "faq-3": {
           "question": "Do I have to use the AI for everything?",
           "answer": "No. LockIn works fully manually — ignore AI suggestions, write your own steps, set your own durations. The AI is assistive, not authoritative."
         },
-        {
+        "faq-4": {
           "question": "What about privacy? Does LockIn track every site I visit?",
           "answer": "The extension only tracks navigation to sites on your own blocklist, and only during an active sprint. Off-sprint browsing is invisible to us. AI history is off by default and never pushed to the extension. You can wipe analytics data anytime."
         },
-        {
+        "faq-5": {
           "question": "Which browsers are supported?",
           "answer": "Chrome, Edge, Brave, and Arc today. Firefox is in beta. Safari is on the roadmap once Apple finishes the Web Extensions API we need."
         },
-        {
+        "faq-6": {
           "question": "Can I try Pro before paying?",
           "answer": "Yes. 14-day Pro trial when you sign up — no credit card required. You'll drop back to Free if you don't upgrade."
         },
-        {
+        "faq-7": {
           "question": "Is there a mobile app?",
           "answer": "iOS and Android apps are in private beta. They mirror live sprint state from the web app so you can pause from your phone or just glance at the timer."
         }
-      ]
+      }
     },
     "footer": {
-      "tagline": "Own your time, build your life.",
-      "product": "Product",
-      "webApp": "Web app",
-      "browserExtension": "Browser extension",
-      "changelog": "Changelog",
-      "roadmap": "Roadmap",
-      "compare": "Compare",
-      "company": "Company",
-      "blog": "Blog",
-      "brand": "Brand",
-      "pressKit": "Press kit",
-      "privacy": "Privacy",
-      "terms": "Terms",
-      "security": "Security"
+      "columns": {
+        "features": {
+          "title": "Features",
+          "aiAssistant": "AI Assistant",
+          "sprintMode": "Sprint Mode",
+          "browserExtension": "Browser Extension"
+        },
+        "resources": {
+          "title": "Resources",
+          "blog": "Blog",
+          "changelog": "Changelog",
+          "docs": "Docs",
+          "community": "Community"
+        },
+        "company": {
+          "title": "Company",
+          "about": "About",
+          "careers": "Careers"
+        },
+        "trust": {
+          "title": "Trust",
+          "terms": "Terms of Service",
+          "privacy": "Privacy Policy"
+        }
+      },
+      "copyright": "© 2026 LockIn Labs, Inc."
+    }
+  },
+  "trust": {
+    "title": "Trust Center",
+    "policies": "LockIn Policies",
+    "lastUpdated": "Last updated: June 19, 2026",
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro1": "LockIn (\"we\", \"our\", or \"us\") is a productivity web application that helps users break down tasks, manage work, and complete focus sessions.",
+      "intro2": "This Privacy Policy explains what information we collect, how we use it, and what choices you have.",
+      "sections": {
+        "s1": {
+          "title": "Information We Collect",
+          "subtitle": "We may collect the following types of information:",
+          "account": {
+            "title": "Account Information",
+            "subtitle": "When you create an account, we may collect information such as:",
+            "items": [
+              "Name",
+              "Email address",
+              "Profile information provided through authentication providers",
+              "Account ID or user ID"
+            ]
+          },
+          "task": {
+            "title": "Task and Productivity Data",
+            "subtitle": "When you use LockIn, we may collect and store:",
+            "items": [
+              "Tasks, subtasks, projects, and goals you create",
+              "AI-generated task breakdowns",
+              "Sprint/focus session data",
+              "Task completion status",
+              "Estimated and actual focus durations",
+              "Due dates, priorities, and scheduling information"
+            ]
+          },
+          "ai": {
+            "title": "AI Input and Output Data",
+            "subtitle": "When you use AI-powered features, we may process:",
+            "items": [
+              "The task or prompt you enter",
+              "Context needed to generate a plan",
+              "AI-generated subtasks, durations, and recommendations"
+            ],
+            "note": "Do not enter highly sensitive personal information into AI planning features unless necessary."
+          },
+          "blocking": {
+            "title": "Website Blocking Data",
+            "subtitle": "If you use website blocking or focus protection features, we may store:",
+            "items": [
+              "URLs or domains you choose to block",
+              "Blocking preferences",
+              "Focus protection settings"
+            ]
+          },
+          "usage": {
+            "title": "Usage and Analytics Data",
+            "subtitle": "We may collect usage data to understand and improve the product, such as:",
+            "items": [
+              "Pages visited",
+              "Features used",
+              "Session activity",
+              "Error logs",
+              "Device and browser information",
+              "Approximate location based on IP address"
+            ]
+          },
+          "payment": {
+            "title": "Payment and Subscription Data",
+            "p1": "If you purchase a paid plan, payment processing may be handled by a third-party payment provider. We do not store full payment card details. We may store subscription status, plan type, renewal status, and payment-related identifiers."
+          }
+        },
+        "s2": {
+          "title": "How We Use Information",
+          "subtitle": "We use your information to:",
+          "items": [
+            "Provide and operate LockIn",
+            "Save your tasks, plans, and Sprint progress",
+            "Generate AI task breakdowns",
+            "Personalize task planning and focus recommendations",
+            "Manage accounts and authentication",
+            "Process subscriptions and enforce plan limits",
+            "Improve product performance and reliability",
+            "Analyze feature usage",
+            "Detect abuse, fraud, or technical issues",
+            "Communicate important product or account updates"
+          ]
+        },
+        "s3": {
+          "title": "AI Processing",
+          "p1": "LockIn uses AI features to help generate task breakdowns and planning suggestions.",
+          "p2": "Your prompts and related task data may be sent to third-party AI providers to generate responses. We only send the information needed to provide the feature.",
+          "p3": "AI-generated content may be inaccurate or incomplete. You are responsible for reviewing and editing AI-generated plans before using them."
+        },
+        "s4": {
+          "title": "Third-Party Services",
+          "p1": "We may use third-party services for authentication, database hosting, AI generation, analytics, error tracking, payment processing, email communication, and hosting/infrastructure.",
+          "p2": "These providers may process information on our behalf according to their own privacy policies and data processing terms. Examples include:",
+          "services": [
+            "<strong>Clerk</strong> for authentication",
+            "<strong>Supabase</strong> for database hosting",
+            "<strong>Google Gemini</strong> for AI capabilities",
+            "<strong>PostHog</strong> for analytics",
+            "<strong>PayOS</strong> for payment processing",
+            "<strong>Firebase</strong> for hosting and cloud infrastructure"
+          ]
+        },
+        "s5": {
+          "title": "Cookies and Tracking",
+          "subtitle": "We may use cookies or similar technologies to:",
+          "items": [
+            "Keep users signed in",
+            "Remember preferences",
+            "Improve app performance",
+            "Analyze product usage",
+            "Prevent abuse or unauthorized access"
+          ],
+          "p1": "You can control cookies through your browser settings, but some features may not work correctly if cookies are disabled."
+        },
+        "s6": {
+          "title": "Data Sharing",
+          "p1": "We do not sell your personal information.",
+          "p2": "We may share information with:",
+          "items": [
+            "Service providers who help us operate the app",
+            "Payment processors for subscription handling",
+            "AI providers for AI-powered features",
+            "Analytics and infrastructure providers",
+            "Legal authorities if required by law",
+            "A successor entity in case of merger, acquisition, or business transfer"
+          ]
+        },
+        "s7": {
+          "title": "Data Retention",
+          "p1": "We keep personal information only as long as necessary to provide the service, comply with legal obligations, resolve disputes, and enforce agreements.",
+          "p2": "You may request deletion of your account and associated data by contacting us at {{email}}.",
+          "p3": "Some information may be retained for a limited period in backups, logs, payment records, or where required by law."
+        },
+        "s8": {
+          "title": "Data Security",
+          "p1": "We use reasonable technical and organizational measures to protect user data. However, no system is completely secure, and we cannot guarantee absolute security.",
+          "p2": "You are responsible for keeping your account credentials safe."
+        },
+        "s9": {
+          "title": "Your Rights and Choices",
+          "subtitle": "Depending on your location, you may have rights to:",
+          "items": [
+            "Access the personal information we hold about you",
+            "Correct inaccurate information",
+            "Delete your information",
+            "Export your information",
+            "Object to or restrict certain processing",
+            "Withdraw consent where processing is based on consent",
+            "Opt out of certain analytics or marketing communications"
+          ],
+          "p1": "To make a request, contact us at {{email}}."
+        },
+        "s10": {
+          "title": "Children’s Privacy",
+          "p1": "LockIn is not intended for children under 16. We do not knowingly collect personal information from children. If we learn that we have collected personal information from a child without appropriate consent, we will delete it."
+        },
+        "s11": {
+          "title": "International Users",
+          "p1": "Your information may be processed in countries other than your country of residence. These countries may have different data protection laws.",
+          "p2": "Where required, we use appropriate safeguards for international data transfers."
+        },
+        "s12": {
+          "title": "Changes to This Policy",
+          "p1": "We may update this Privacy Policy from time to time. If we make material changes, we will notify users through the app, by email, or by updating the date at the top of this page."
+        },
+        "s13": {
+          "title": "Contact Us",
+          "subtitle": "If you have questions about this Privacy Policy or your data, contact us at:",
+          "company": "LockIn Labs, Inc.",
+          "address": "Ho Chi Minh City, Vietnam"
+        }
+      }
+    },
+    "tos": {
+      "title": "Terms and Conditions",
+      "welcome": "Welcome to LockIn.",
+      "intro": "These Terms and Conditions (\"Terms\") govern your access to and use of LockIn, a productivity application that helps users break down tasks, manage work, and complete focus sessions. By using LockIn, you agree to these Terms. If you do not agree, do not use the service.",
+      "sections": {
+        "s1": {
+          "title": "The Service",
+          "items": [
+            "LockIn provides tools for task management, AI-assisted task breakdown, Sprint/focus sessions, productivity tracking, and related features.",
+            "Some features may be free, while others may require a paid subscription or usage credits.",
+            "We may update, modify, suspend, or discontinue parts of the service at any time."
+          ]
+        },
+        "s2": {
+          "title": "Accounts",
+          "p1": "To use certain features, you may need to create an account.",
+          "subtitle": "You agree to:",
+          "items": [
+            "Provide accurate account information",
+            "Keep your login credentials secure",
+            "Be responsible for activity under your account",
+            "Notify us if you suspect unauthorized access"
+          ],
+          "p2": "We may suspend or terminate accounts that violate these Terms or misuse the service."
+        },
+        "s3": {
+          "title": "User Content",
+          "items": [
+            "You may create, submit, or store content in LockIn, including tasks, subtasks, goals, projects, Sprint notes, blocked URLs, and AI prompts.",
+            "You retain ownership of your content.",
+            "By using LockIn, you give us permission to store, process, display, and use your content only as needed to provide, maintain, secure, and improve the service.",
+            "You are responsible for the content you submit. You agree not to submit content that is illegal, harmful, abusive, infringing, or violates the rights of others."
+          ]
+        },
+        "s4": {
+          "title": "AI Features",
+          "items": [
+            "LockIn may use AI to generate task breakdowns, estimated durations, planning suggestions, and productivity recommendations.",
+            "AI-generated output may be incomplete, inaccurate, or unsuitable for your situation. You are responsible for reviewing and editing AI-generated plans before relying on them.",
+            "LockIn does not provide medical, mental health, legal, financial, academic, or professional advice.",
+            "You should not rely on LockIn as your only source of planning, productivity, or decision-making support."
+          ]
+        },
+        "s5": {
+          "title": "Productivity and Focus Features",
+          "items": [
+            "LockIn may include Sprint sessions, timers, reminders, progress summaries, and website blocking or focus protection features.",
+            "These features are provided to support focus and productivity, but we do not guarantee that they will prevent distraction, improve productivity, or ensure task completion.",
+            "You remain responsible for your own work, deadlines, habits, and decisions."
+          ]
+        },
+        "s6": {
+          "title": "Paid Plans, Credits, and Billing",
+          "p1": "Some LockIn features may require a paid subscription, one-time payment, or usage credits.",
+          "subtitle": "Paid features may include, for example:",
+          "items": [
+            "Higher AI usage limits",
+            "Extended AI planning modes",
+            "Hard website blocking",
+            "Advanced analytics",
+            "Personalization features"
+          ],
+          "p2": "Pricing, quotas, limits, and included features will be shown before purchase.",
+          "p3": "By purchasing a paid plan, you authorize our payment provider to charge the applicable fees.",
+          "p4": "Unless stated otherwise, subscriptions renew automatically until canceled.",
+          "p5": "You can cancel your subscription according to the cancellation method provided in the app or by the payment provider.",
+          "p6": "Cancellation stops future renewals but does not automatically refund past payments unless required by law or stated in our refund policy."
+        },
+        "s7": {
+          "title": "Refunds",
+          "p1": "Refund eligibility depends on the payment method, subscription type, and applicable law.",
+          "p2": "Our refund policy:",
+          "p3": "Payments are non-refundable except where required by law."
+        },
+        "s8": {
+          "title": "Acceptable Use",
+          "subtitle": "You agree not to:",
+          "items": [
+            "Use LockIn for illegal, harmful, or abusive purposes",
+            "Attempt to access another user's account or data",
+            "Interfere with the security or operation of the service",
+            "Reverse engineer, scrape, copy, or exploit the service",
+            "Bypass usage limits, quotas, or payment restrictions",
+            "Submit malicious code, spam, or harmful content",
+            "Use AI features to generate illegal, harmful, or abusive content",
+            "Resell or redistribute access to LockIn without permission"
+          ],
+          "p1": "We may limit, suspend, or terminate access if we believe these rules are violated."
+        },
+        "s9": {
+          "title": "Third-Party Services",
+          "items": [
+            "LockIn may rely on third-party services for authentication, hosting, databases, AI generation, analytics, payments, email, and other infrastructure.",
+            "These services may have their own terms and policies.",
+            "We are not responsible for third-party services outside our control."
+          ]
+        },
+        "s10": {
+          "title": "Service Availability",
+          "items": [
+            "We aim to keep LockIn reliable, but we do not guarantee that the service will always be available, secure, error-free, or uninterrupted.",
+            "Features may change over time. Some features may be experimental, limited, or removed."
+          ]
+        },
+        "s11": {
+          "title": "Beta or Experimental Features",
+          "items": [
+            "Some features may be released as beta, preview, or experimental features.",
+            "These features may be unstable, inaccurate, incomplete, or changed without notice.",
+            "Use beta features at your own risk."
+          ]
+        },
+        "s12": {
+          "title": "Intellectual Property",
+          "items": [
+            "LockIn, including its design, branding, software, interface, and original content, belongs to us or our licensors.",
+            "You may not copy, modify, distribute, sell, or create derivative works from LockIn without permission.",
+            "You may use LockIn only as allowed by these Terms."
+          ]
+        },
+        "s13": {
+          "title": "Feedback",
+          "items": [
+            "If you send us feedback, suggestions, bug reports, or feature ideas, you allow us to use them without restriction or compensation.",
+            "This helps us improve LockIn."
+          ]
+        },
+        "s14": {
+          "title": "Termination",
+          "p1": "You may stop using LockIn at any time.",
+          "subtitle": "We may suspend or terminate your access if:",
+          "items": [
+            "You violate these Terms",
+            "You misuse the service",
+            "Required by law",
+            "Continuing to provide the service creates risk for us or others"
+          ],
+          "p2": "After termination, your access to the service may stop. Some data may be retained as described in our Privacy Policy."
+        },
+        "s15": {
+          "title": "Disclaimers",
+          "p1": "LockIn is provided \"as is\" and \"as available.\"",
+          "p2": "To the maximum extent permitted by law, we disclaim warranties of merchantability, fitness for a particular purpose, non-infringement, accuracy, availability, and reliability.",
+          "subtitle": "We do not guarantee that:",
+          "items": [
+            "AI outputs will be correct",
+            "Tasks will be completed",
+            "Focus sessions will improve productivity",
+            "Website blocking will work perfectly",
+            "The service will be uninterrupted or error-free"
+          ]
+        },
+        "s16": {
+          "title": "Limitation of Liability",
+          "items": [
+            "To the maximum extent permitted by law, LockIn and its creators will not be liable for indirect, incidental, special, consequential, or punitive damages, including loss of productivity, missed deadlines, lost data, lost profits, or reliance on AI-generated output.",
+            "Our total liability for any claim will not exceed the amount you paid to LockIn in the past 12 months, or $10, whichever is greater.",
+            "Some jurisdictions do not allow certain limitations, so some of these limits may not apply to you."
+          ]
+        },
+        "s17": {
+          "title": "Indemnification",
+          "subtitle": "You agree to defend and hold harmless LockIn and its creators from claims, damages, losses, liabilities, and expenses arising from:",
+          "items": [
+            "Your use of the service",
+            "Your content",
+            "Your violation of these Terms",
+            "Your violation of laws or third-party rights"
+          ]
+        },
+        "s18": {
+          "title": "Changes to These Terms",
+          "items": [
+            "We may update these Terms from time to time.",
+            "If changes are material, we may notify you through the app, by email, or by updating the date at the top of this page.",
+            "Your continued use of LockIn after changes means you accept the updated Terms."
+          ]
+        },
+        "s19": {
+          "title": "Governing Law",
+          "items": [
+            "These Terms are governed by the laws of Vietnam, unless otherwise required by applicable consumer protection law.",
+            "Any disputes will be handled in the courts of Ho Chi Minh City, Vietnam, unless applicable law gives you the right to bring claims elsewhere."
+          ]
+        },
+        "s20": {
+          "title": "Contact",
+          "subtitle": "If you have questions about these Terms, contact us at:",
+          "company": "LockIn Labs, Inc.",
+          "address": "Ho Chi Minh City, Vietnam"
+        }
+      }
+    }
+  },
+  "app": {
+    "nav": {
+      "home": "Home",
+      "plans": "Plans",
+      "focus": "Focus",
+      "askAi": "Ask AI",
+      "templates": "Templates",
+      "insights": "Insights",
+      "admin": "Admin",
+      "settings": "Settings",
+      "subscription": "Subscription",
+      "knowledgeHub": "Knowledge Hub"
+    },
+    "common": {
+      "loading": "Loading..."
+    },
+    "actions": {
+      "newPlan": "New Plan",
+      "more": "More",
+      "copyLink": "Copy Link",
+      "openInNewTab": "Open in New Tab",
+      "delete": "Delete",
+      "rename": "Rename"
+    },
+    "sidebar": {
+      "recentPlans": "Recent plans",
+      "noSavedPlans": "No saved plans yet"
+    },
+    "search": {
+      "placeholder": "Type a command or search...",
+      "quickActions": "Quick actions",
+      "chats": "Chats",
+      "plans": "Plans",
+      "loadingChats": "Loading chats...",
+      "loadingPlans": "Loading plans...",
+      "noResults": "No results found.",
+      "unableToSearch": "Unable to search. Try again.",
+      "createBlankPlan": "Create a blank plan",
+      "currentPage": "Current page",
+      "openPage": "Open page",
+      "messageCount_one": "{{count}} message",
+      "messageCount_other": "{{count}} messages",
+      "stepCount_one": "{{count}} step",
+      "stepCount_other": "{{count}} steps",
+      "shortcutPrefix": "Use",
+      "shortcutSuffix": "to open the command palette",
+      "filters": {
+        "all": "All",
+        "chats": "Chats",
+        "plans": "Plans"
+      }
+    },
+    "chat": {
+      "newChat": "New chat",
+      "renamePrompt": "Rename chat",
+      "recent": "Recent",
+      "noRecent": "No recent chats",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "previousSevenDays": "Previous 7 days",
+      "older": "Older"
+    },
+    "plan": {
+      "untitled": "Untitled Plan",
+      "current": "Current plan"
+    },
+    "plans": {
+      "recently": "Recently",
+      "noTasks": "No tasks",
+      "taskProgress": "{{completed}}/{{total}} tasks",
+      "filterAria": "Filter plans by status",
+      "toggleViewAria": "Toggle layout view",
+      "deleteAria": "Delete {{name}}",
+      "noPlansFound": "No plans found",
+      "noPlansInCategory": "There are no plans categorized under \"{{category}}\".",
+      "emptyTitle": "You don't have any saved plans yet",
+      "emptyDescription": "Create a plan to see it here.",
+      "tabs": {
+        "all": "All Plans"
+      },
+      "status": {
+        "overdue": "Overdue",
+        "dueToday": "Due Today",
+        "onTrack": "On Track",
+        "completed": "Completed"
+      },
+      "table": {
+        "planTitle": "Plan Title",
+        "status": "Status",
+        "tasks": "Tasks",
+        "lastOpened": "Last Opened"
+      }
+    },
+    "templates": {
+      "title": "Templates",
+      "subtitle": "Each template is more than a saved name. You can inspect what it does, what can fit into a sprint, what needs longer follow-up, and answer scaffold questions before AI drafts the plan.",
+      "createNew": "Create template",
+      "tabs": {
+        "aria": "Template sections",
+        "marketplace": "Marketplace",
+        "mine": "My templates"
+      },
+      "filters": {
+        "searchPlaceholder": "Search by name, description, tag...",
+        "allCategories": "All categories"
+      },
+      "badges": {
+        "academic": "Academic",
+        "document": "Document",
+        "skillPractice": "Practice",
+        "project": "Project",
+        "group": "Group",
+        "teamBased": "Team-based"
+      },
+      "duration": {
+        "minutes_one": "{{count}} min",
+        "minutes_other": "{{count}} min",
+        "hours_one": "{{count}} hr",
+        "hours_other": "{{count}} hrs",
+        "hoursMinutes": "{{hours}}h{{minutes}}m"
+      },
+      "stats": {
+        "steps_one": "{{count}} step",
+        "steps_other": "{{count}} steps",
+        "installs_one": "{{count}} install",
+        "installs_other": "{{count}} installs",
+        "coreSteps_one": "{{count}} core step",
+        "coreSteps_other": "{{count}} core steps",
+        "questions_one": "{{count}} question",
+        "questions_other": "{{count}} questions"
+      },
+      "detail": {
+        "empty": "Select a template to inspect the workflow, scaffold questions, and how the work will be split.",
+        "heading": "Template detail",
+        "fallbackOverview": "Workflow frame for this template.",
+        "author": "Author: {{author}}",
+        "workflowSize": "Workflow size",
+        "totalEstimate": "Total estimate",
+        "scaffoldQuestions": "Scaffold questions",
+        "sections": {
+          "whatItDoes": "What this template helps with",
+          "sprintable": "Work that can fit into a sprint",
+          "longRunning": "Work that needs longer follow-up",
+          "deliverables": "Final deliverables",
+          "saveWhen": "Save the plan only when..."
+        }
+      },
+      "scaffold": {
+        "title": "Scaffold questions",
+        "description": "Answer these questions briefly first. AI will use them to build a template-based plan instead of a generic chat response."
+      },
+      "start": {
+        "title": "Create a draft plan with this template",
+        "description": "Save plan will appear only after AI has enough context and drafts all 3 phases.",
+        "opening": "Opening chat",
+        "button": "Create draft"
+      },
+      "toast": {
+        "installFailed": "Could not record the template install. Chat will still open."
+      },
+      "empty": {
+        "title": "No templates yet",
+        "description": "Templates will appear here when they are added to the system."
+      },
+      "mine": {
+        "loading": "Loading your templates...",
+        "emptyTitle": "You do not have any templates yet",
+        "emptyDescription": "Create one from scratch or snapshot an existing plan to begin.",
+        "summary": "{{category}} • {{count}} steps",
+        "rejectionReason": "Rejection reason: {{reason}}",
+        "edit": "Edit",
+        "submit": "Submit for review",
+        "unpublish": "Unpublish",
+        "delete": "Delete",
+        "status": {
+          "draft": "Draft",
+          "pendingReview": "Pending review",
+          "approved": "Published",
+          "rejected": "Rejected"
+        }
+      }
+    },
+    "editor": {
+      "close": "Close editor"
+    },
+    "focus": {
+      "focusedToday": "{{duration}} focused today",
+      "dueTodayPlans_one": "{{count}} plan with steps due today.",
+      "dueTodayPlans_other": "{{count}} plans with steps due today.",
+      "pickPlan": "Pick a plan and start a sprint.",
+      "emptyTitle": "Nothing ready to sprint on",
+      "emptyDescription": "Create a plan to get started.",
+      "createPlan": "Create a plan",
+      "nextStep": "Next:",
+      "allStepsCompleted": "All steps completed",
+      "stepCount_one": "{{count}} step",
+      "stepCount_other": "{{count}} steps",
+      "stepUnit_one": "step",
+      "stepUnit_other": "steps",
+      "dueTodayCount_one": "{{count}} due today",
+      "dueTodayCount_other": "{{count}} due today",
+      "sprint": "Sprint",
+      "recentSprints": "Recent Sprints",
+      "noSprints": "No sprints yet.",
+      "session": {
+        "sprintFallback": "Sprint",
+        "loading": "Loading session...",
+        "sprintLabel": "Sprint",
+        "completeLabel": "{{percent}}% complete",
+        "overtime": "Overtime",
+        "paused": "Paused",
+        "taskProgress": "Task progress",
+        "resume": "Resume",
+        "pause": "Pause",
+        "saving": "Saving...",
+        "allDoneEndSprint": "All done - End Sprint",
+        "endSprint": "End Sprint",
+        "steps": "Steps",
+        "scrollTop": "Scroll to the top of the steps list",
+        "scrollBottom": "Scroll to the bottom of the steps list",
+        "nowWorkingOn": "Now working on",
+        "overBy": "+{{duration}} over",
+        "howTo": "How to",
+        "allStepsDone": "All steps are done",
+        "pickStepHint": "Choose or start a step to see guidance.",
+        "leaveWarning": "Are you sure you want to leave? Your active sprint is in progress.",
+        "endModal": {
+          "title": "End Focus Sprint",
+          "subtitle": "Resolve every unfinished step below before you can end.",
+          "tooEarlyTitle": "You're ending this sprint too early!",
+          "unfinishedTitle": "You haven't finished everything yet!",
+          "tooEarlyDescription": "There's still time left and unfinished steps. Resolve each one below - \"I'm done\" or \"I haven't\" - or continue the sprint.",
+          "unfinishedDescription": "Resolve the remaining steps below before ending.",
+          "completed": "Completed",
+          "markedNotDone": "Marked as not done",
+          "estimate": "Estimate:",
+          "spent": " (spent {{minutes}}m)",
+          "extensionSummary": " · asked for +{{minutes}}m more ({{count}}x)",
+          "notDoneButton": "I haven't",
+          "doneButton": "I'm done",
+          "honesty": "You're responsible for your own actions - be honest about what's actually done.",
+          "timeElapsed": "Time elapsed:",
+          "remainingTime": "Remaining sprint time:",
+          "continueSprint": "Continue Sprint",
+          "cancel": "Cancel",
+          "resolveFirst": "Resolve {{count}} more step(s) first",
+          "ending": "Ending...",
+          "saveAndEnd": "Save & End",
+          "resolveMore": "Resolve {{count}} more"
+        }
+      },
+      "coach": {
+        "title": "Ask Coach",
+        "remaining": "{{remaining}}/{{total}} left",
+        "emptyPrefix": "Stuck on this step? Ask for",
+        "approach": "an approach",
+        "emptySuffix": "- Coach suggests a direction without giving you a ready-made answer.",
+        "thinking": "Coach is thinking...",
+        "limitReached": "You've used all {{total}} coach asks for this step - time to start doing.",
+        "placeholder": "How should I start this step?",
+        "sendAria": "Send question to Coach",
+        "replyError": "Could not create a response.",
+        "genericError": "Something went wrong."
+      },
+      "overtime": {
+        "taskTitle": "This task is taking longer",
+        "sprintTitle": "Sprint time is up",
+        "taskDescription": "Resolve this task before continuing - there's no skipping overtime.",
+        "sprintDescription": "These steps aren't done yet. Resolve each one to end the sprint.",
+        "overEstimate": "+{{duration}} over estimate",
+        "extensionCount_one": "Asked for more time {{count}} time",
+        "extensionCount_other": "Asked for more time {{count}} times",
+        "notOnTimeWarning": "- sprint will count as not on time",
+        "giveUp": "I give up",
+        "markDone": "I actually finished this",
+        "honesty": "You're responsible for your own actions - be honest about what's actually done."
+      }
+    },
+    "language": {
+      "current": "{{locale}}"
+    },
+    "confirm": {
+      "delete": "Delete \"{{name}}\"?"
+    },
+    "assistant": {
+      "suggestions": {
+        "plan": {
+          "smaller": "Make it smaller.",
+          "fortyFiveMinutes": "I only have 45 minutes.",
+          "easiestStep": "Start with the easiest step.",
+          "lowEnergy": "Make this for low energy."
+        },
+        "onboarding": {
+          "uxCaseStudy": "Finish my UX case study",
+          "finals": "Study for finals",
+          "cleanRoom": "Clean my room",
+          "portfolio": "Build my portfolio"
+        }
+      }
+    },
+    "aiTools": {
+      "answered": "Answered",
+      "submitted": "Submitted",
+      "skipped": "Skipped",
+      "thinkingQuestion": "Thinking of a question...",
+      "thinkingQuestions": "Thinking of questions...",
+      "clarifyingQuestion": "Clarifying question",
+      "clarifyingQuestions": "Clarifying questions",
+      "questionNumber": "Question {{number}}",
+      "of": "of",
+      "dismissQuestion": "Dismiss question",
+      "skipQuestion": "Skip question",
+      "writeOwnAnswer": "Write your own answer",
+      "somethingElse": "Something else...",
+      "send": "Send",
+      "set": "Set",
+      "skip": "Skip",
+      "back": "Back",
+      "next": "Next",
+      "planningScaffold": "Planning scaffold",
+      "preparingScaffold": "Preparing scaffold...",
+      "scaffoldHint": "Fill the scaffold so the plan can be built from real context.",
+      "wordCount_one": "{{count}} word",
+      "wordCount_other": "{{count}} words",
+      "needWords": "need {{count}}+",
+      "required": "Required",
+      "canSubmitAddDetail": "Can submit, but add detail if possible",
+      "ready": "Ready",
+      "answerRequired": "Please answer this field before continuing.",
+      "shortAnswerHint": "Short answers are allowed, but adding a little more detail will help the plan come out more accurate.",
+      "submitScaffold": "Submit scaffold"
+    },
+    "status": {
+      "comingSoon": "Coming soon"
+    },
+    "feedback": {
+      "title": "Feedback",
+      "placeholder": "Type your feedback here...",
+      "note": "We do not respond to submissions, but we read all of them carefully.",
+      "submit": "Submit"
+    },
+    "guide": {
+      "cardTitle": "Getting Started",
+      "cardDescription": "Learn how LockIn turns overwhelming tasks into actionable Sprint plans.",
+      "viewGuide": "View Guide",
+      "dialogTitle": "Getting Started with LockIn",
+      "dialogDescription": "A step-by-step guide to get started with LockIn.",
+      "getStarted": "Get started",
+      "stepCounter": "Step {{step}} of {{total}}",
+      "start": "Start",
+      "steps": {
+        "0": {
+          "title": "Welcome to LockIn",
+          "body1": "Most productivity apps help you organize your work. LockIn helps you actually start it.",
+          "body2": "Large, vague tasks often lead to procrastination because they are difficult to begin. LockIn helps you turn overwhelming work into clear, actionable steps."
+        },
+        "1": {
+          "title": "Start with any task",
+          "body1": "Just describe what you need to get done in your own words.",
+          "body2": "LockIn is designed to handle messy, overwhelming tasks."
+        },
+        "2": {
+          "title": "Let AI create the first draft",
+          "body1": "Instead of figuring out where to start, let LockIn generate a plan for you.",
+          "body2": "The AI breaks large tasks into smaller steps and estimates how long each step may take."
+        },
+        "3": {
+          "title": "Review before you commit",
+          "body1": "AI suggestions are only a starting point.",
+          "body2": "Before beginning, you can edit steps, adjust their time estimates, reorder, and add your own steps."
+        },
+        "4": {
+          "title": "Enter Sprint Mode",
+          "body1": "When you are ready, start a Sprint.",
+          "body2": "Sprint Mode removes distractions and focuses your attention on one step at a time."
+        },
+        "5": {
+          "title": "Progress is built one step at a time",
+          "body1": "You do not need to finish everything today. Each completed Sprint moves the project forward.",
+          "body2": "When a Sprint ends, LockIn summarizes your progress and helps you decide what to do next."
+        },
+        "6": {
+          "title": "Ready to start?",
+          "body1": "Think of something you have been putting off.",
+          "body2": "LockIn will help you turn it into a plan you can actually begin."
+        }
+      }
+    },
+    "insights": {
+      "title": "Insights",
+      "subtitle": "How your sprints actually went - completion, timing, and procrastination.",
+      "empty": "No completed sprints yet - finish a focus sprint to see your stats here.",
+      "sprintFallback": "Sprint",
+      "stepsProgress": "{{done}}/{{total}} steps",
+      "heatmapCell": "{{date}} · {{count}} sprint · {{onTime}} on time · {{late}} not on time",
+      "heatmapEmptyCell": "{{date}} · no sprints",
+      "metrics": {
+        "totalSprints": "Total sprints",
+        "onTimeRate": "On-time rate",
+        "onTimeRateDescription": ">2 time extensions on a task fails that sprint",
+        "totalFocusTime": "Total focus time",
+        "avgProcrastination": "Avg. procrastination"
+      },
+      "sections": {
+        "completionBreakdown": "Completion breakdown",
+        "whenYouFocus": "When you focus",
+        "recentSprints": "Recent sprints"
+      },
+      "aria": {
+        "completionBreakdown": "Sprint completion breakdown"
+      },
+      "completion": {
+        "onTime": "On time",
+        "notOnTime": "Not on time",
+        "completedLate": "Completed late",
+        "overtime": "Overtime",
+        "endedEarly": "Ended early"
+      },
+      "procrastination": {
+        "none": "None",
+        "mild": "Mild",
+        "moderate": "Moderate",
+        "severe": "Severe",
+        "label": "{{value}} procrastination"
+      },
+      "days": {
+        "mon": "Mon",
+        "wed": "Wed",
+        "fri": "Fri"
+      },
+      "months": {
+        "0": "Jan",
+        "1": "Feb",
+        "2": "Mar",
+        "3": "Apr",
+        "4": "May",
+        "5": "Jun",
+        "6": "Jul",
+        "7": "Aug",
+        "8": "Sep",
+        "9": "Oct",
+        "10": "Nov",
+        "11": "Dec"
+      }
     }
   }
 }

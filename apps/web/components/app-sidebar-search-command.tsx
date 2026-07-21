@@ -8,6 +8,7 @@ import {
   SearchIcon,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useTranslation } from "react-i18next"
 
 import type { ChatSummary } from "@/lib/chat/local-chat-persistence"
 import type { PlanSummary } from "@/lib/plans/plan-repository"
@@ -30,6 +31,7 @@ import {
 } from "@workspace/ui/components/command"
 import { Kbd } from "@workspace/ui/components/kbd"
 import { SidebarMenuButton } from "@workspace/ui/components/sidebar"
+import { SearchMd } from "@untitledui/icons"
 
 export type AppSidebarSearchNavItem = {
   title: string
@@ -70,18 +72,26 @@ type SearchResult = {
 
 const FILTERS: {
   id: SearchFilter
-  label: string
+  labelKey: string
+  defaultLabel: string
   icon: React.ReactNode
 }[] = [
-  { id: "all", label: "All", icon: <SearchIcon data-icon="inline-start" /> },
+  {
+    id: "all",
+    labelKey: "app.search.filters.all",
+    defaultLabel: "All",
+    icon: <SearchIcon data-icon="inline-start" />,
+  },
   {
     id: "chats",
-    label: "Chats",
+    labelKey: "app.search.filters.chats",
+    defaultLabel: "Chats",
     icon: <MessageCircleIcon data-icon="inline-start" />,
   },
   {
     id: "plans",
-    label: "Plans",
+    labelKey: "app.search.filters.plans",
+    defaultLabel: "Plans",
     icon: <ListCheckIcon data-icon="inline-start" />,
   },
 ]
@@ -98,11 +108,7 @@ function getSearchText(...parts: Array<string | undefined>) {
 }
 
 function getTerms(query: string) {
-  return query
-    .trim()
-    .toLowerCase()
-    .split(/\s+/)
-    .filter(Boolean)
+  return query.trim().toLowerCase().split(/\s+/).filter(Boolean)
 }
 
 function matchesQuery(result: SearchResult, query: string) {
@@ -132,11 +138,11 @@ function formatCount(count: number, singular: string) {
 }
 
 function getChatTitle(chat: ChatSummary) {
-  return chat.title.trim() || "New chat"
+  return chat.title.trim()
 }
 
 function getPlanTitle(plan: PlanSummary) {
-  return plan.title.trim() || "Untitled Plan"
+  return plan.title.trim()
 }
 
 function isQuickAction(result: SearchResult) {
@@ -160,6 +166,7 @@ export function AppSidebarSearchCommand({
   onCreatePlan,
 }: AppSidebarSearchCommandProps) {
   const router = useRouter()
+  const { t } = useTranslation()
   const [open, setOpen] = React.useState(false)
   const [query, setQuery] = React.useState("")
   const [filter, setFilter] = React.useState<SearchFilter>("all")
@@ -301,8 +308,10 @@ export function AppSidebarSearchCommand({
       {
         id: "action:new-plan",
         kind: "action",
-        title: "New Plan",
-        description: "Create a blank plan",
+        title: t("app.actions.newPlan", { defaultValue: "New Plan" }),
+        description: t("app.search.createBlankPlan", {
+          defaultValue: "Create a blank plan",
+        }),
         icon: <PlusIcon />,
         action: onCreatePlan,
         searchText: getSearchText("new plan", "create blank task action"),
@@ -313,7 +322,9 @@ export function AppSidebarSearchCommand({
       id: `nav:${item.url}`,
       kind: "nav",
       title: item.title,
-      description: item.isActive ? "Current page" : "Open page",
+      description: item.isActive
+        ? t("app.search.currentPage", { defaultValue: "Current page" })
+        : t("app.search.openPage", { defaultValue: "Open page" }),
       icon: item.icon,
       isActive: item.isActive,
       url: item.url,
@@ -321,13 +332,18 @@ export function AppSidebarSearchCommand({
     }))
 
     const chatResults = visibleChats.map<SearchResult>((chat) => {
-      const title = getChatTitle(chat)
+      const title =
+        getChatTitle(chat) ||
+        t("app.chat.newChat", { defaultValue: "New chat" })
 
       return {
         id: `chat:${chat.id}`,
         kind: "chat",
         title,
-        description: formatCount(chat.messageCount, "message"),
+        description: t("app.search.messageCount", {
+          count: chat.messageCount,
+          defaultValue: formatCount(chat.messageCount, "message"),
+        }),
         icon: <MessageCircleIcon />,
         url: buildAskHref({ chatSessionId: chat.id }),
         searchText: getSearchText(
@@ -339,13 +355,18 @@ export function AppSidebarSearchCommand({
     })
 
     const planResults = visiblePlans.map<SearchResult>((plan) => {
-      const title = getPlanTitle(plan)
+      const title =
+        getPlanTitle(plan) ||
+        t("app.plan.untitled", { defaultValue: "Untitled Plan" })
 
       return {
         id: `plan:${plan.id}`,
         kind: "plan",
         title,
-        description: formatCount(plan.taskCount, "step"),
+        description: t("app.search.stepCount", {
+          count: plan.taskCount,
+          defaultValue: formatCount(plan.taskCount, "step"),
+        }),
         icon: <ListCheckIcon />,
         url: buildPlanHref({ planId: plan.id }),
         searchText: getSearchText(
@@ -357,24 +378,19 @@ export function AppSidebarSearchCommand({
     })
 
     return [...actionResults, ...navResults, ...chatResults, ...planResults]
-  }, [navItems, onCreatePlan, visibleChats, visiblePlans])
+  }, [navItems, onCreatePlan, t, visibleChats, visiblePlans])
 
   const filteredResults = React.useMemo(
     () =>
       results.filter(
-        (result) =>
-          matchesFilter(result, filter) && matchesQuery(result, query)
+        (result) => matchesFilter(result, filter) && matchesQuery(result, query)
       ),
     [filter, query, results]
   )
 
   const quickResults = filteredResults.filter(isQuickAction)
-  const chatResults = filteredResults.filter(
-    (result) => result.kind === "chat"
-  )
-  const planResults = filteredResults.filter(
-    (result) => result.kind === "plan"
-  )
+  const chatResults = filteredResults.filter((result) => result.kind === "chat")
+  const planResults = filteredResults.filter((result) => result.kind === "plan")
   const shouldShowChats = filter === "all" || filter === "chats"
   const shouldShowPlans = filter === "all" || filter === "plans"
   const isAwaitingBackendResults =
@@ -388,8 +404,10 @@ export function AppSidebarSearchCommand({
   const hasVisibleResults = filteredResults.length > 0
   const emptyLabel =
     searchError && isBackendSearch
-      ? "Unable to search. Try again."
-      : "No results found."
+      ? t("app.search.unableToSearch", {
+          defaultValue: "Unable to search. Try again.",
+        })
+      : t("app.search.noResults", { defaultValue: "No results found." })
 
   const handleSelect = (result: SearchResult) => {
     handleOpenChange(false)
@@ -406,16 +424,23 @@ export function AppSidebarSearchCommand({
 
   return (
     <>
-      <SidebarMenuButton onClick={() => handleOpenChange(true)}>
-        <SearchIcon data-icon="inline-start" />
-        Search
-      </SidebarMenuButton>
+      <Button
+        variant={"outline"}
+        className="border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+        size={"sm"}
+        onClick={() => handleOpenChange(true)}
+      >
+        <SearchMd data-icon="inline-start" />
+        <Kbd>Ctrl K</Kbd>
+      </Button>
       <CommandDialog open={open} onOpenChange={handleOpenChange}>
         <Command shouldFilter={false}>
           <CommandInput
             value={query}
             onValueChange={handleQueryChange}
-            placeholder="Type a command or search..."
+            placeholder={t("app.search.placeholder", {
+              defaultValue: "Type a command or search...",
+            })}
           />
           <CommandList>
             <CommandGroup className="mt-1">
@@ -429,14 +454,18 @@ export function AppSidebarSearchCommand({
                     onClick={() => setFilter(item.id)}
                   >
                     {item.icon}
-                    {item.label}
+                    {t(item.labelKey, { defaultValue: item.defaultLabel })}
                   </Button>
                 ))}
               </div>
             </CommandGroup>
 
             {quickResults.length > 0 && (
-              <CommandGroup heading="Quick actions">
+              <CommandGroup
+                heading={t("app.search.quickActions", {
+                  defaultValue: "Quick actions",
+                })}
+              >
                 {quickResults.map((result) => (
                   <SearchCommandItem
                     key={result.id}
@@ -448,9 +477,15 @@ export function AppSidebarSearchCommand({
             )}
 
             {(chatResults.length > 0 || isLoadingChats) && (
-              <CommandGroup heading="Chats">
+              <CommandGroup
+                heading={t("app.search.chats", { defaultValue: "Chats" })}
+              >
                 {isLoadingChats ? (
-                  <LoadingItem label="Loading chats..." />
+                  <LoadingItem
+                    label={t("app.search.loadingChats", {
+                      defaultValue: "Loading chats...",
+                    })}
+                  />
                 ) : null}
                 {chatResults.map((result) => (
                   <SearchCommandItem
@@ -463,9 +498,15 @@ export function AppSidebarSearchCommand({
             )}
 
             {(planResults.length > 0 || isLoadingPlans) && (
-              <CommandGroup heading="Plans">
+              <CommandGroup
+                heading={t("app.search.plans", { defaultValue: "Plans" })}
+              >
                 {isLoadingPlans ? (
-                  <LoadingItem label="Loading plans..." />
+                  <LoadingItem
+                    label={t("app.search.loadingPlans", {
+                      defaultValue: "Loading plans...",
+                    })}
+                  />
                 ) : null}
                 {planResults.map((result) => (
                   <SearchCommandItem
@@ -484,7 +525,11 @@ export function AppSidebarSearchCommand({
         </Command>
         <div className="px-3 py-2 text-xs text-muted-foreground">
           <p className="text-xs text-muted-foreground">
-            Use <Kbd>Ctrl + K</Kbd> to open the command palette
+            {t("app.search.shortcutPrefix", { defaultValue: "Use" })}{" "}
+            <Kbd>Ctrl + K</Kbd>{" "}
+            {t("app.search.shortcutSuffix", {
+              defaultValue: "to open the command palette",
+            })}
           </p>
         </div>
       </CommandDialog>

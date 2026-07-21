@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../../../packages/db/src/generated/prisma"
+  provider            = "prisma-client"
+  output              = "../../../packages/db/src/generated/prisma"
+  importFileExtension = "ts"
 }
 
 datasource db {
@@ -9,6 +10,13 @@ datasource db {
 
 model User {
   id              String           @id // Clerk user ID
+  email           String?
+  firstName       String?
+  lastName        String?
+  imageUrl        String?
+  role            String           @default("user")
+  banned          Boolean          @default(false)
+  locked          Boolean          @default(false)
   isActive        Boolean          @default(true)
   planTier        BillingTier      @default(FREE)
   planExpiresAt   DateTime?
@@ -24,6 +32,8 @@ model User {
   extensionTokens ExtensionToken[]
   paymentOrders   PaymentOrder[]
   Sprint          Sprint[]
+  aiUsages        AiUsage[]
+  authoredTemplates WorkflowTemplate[] @relation("AuthoredTemplates")
 }
 
 model Chat {
@@ -81,12 +91,84 @@ model Project {
   @@index([userId])
 }
 
+enum TemplateStatus {
+  DRAFT
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum ScaffoldQuestionPurpose {
+  ADJUST_GOAL
+  GENERATE_STEPS
+  ESTIMATE_TIMEBOX
+  IDENTIFY_OBSTACLE
+}
+
+model WorkflowTemplate {
+  id                String                    @id @default(cuid())
+  slug              String                    @unique
+  title             String
+  category          String
+  isAcademic        Boolean                   @default(false)
+  domainTags        String[]                  @default([])
+  outputType        WorkflowOutputType
+  supportsGroupMode Boolean                   @default(false)
+  description       String?
+  goalTemplate      String?
+  customRequirements Json                     @default("[]")
+  authorId          String?
+  author            User?                     @relation("AuthoredTemplates", fields: [authorId], references: [id], onDelete: SetNull)
+  authorName        String?
+  status            TemplateStatus            @default(APPROVED)
+  installCount      Int                       @default(0)
+  priceVnd          Int?
+  rejectionReason   String?
+  publishedAt       DateTime?
+  submittedAt       DateTime?
+  sourcePlanId      String?
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+  steps             WorkflowTemplateStep[]
+  scaffoldQuestions WorkflowScaffoldQuestion[]
+  plans             Plan[]
+
+  @@index([status, category])
+  @@index([authorId, status])
+}
+
+model WorkflowTemplateStep {
+  id               String           @id @default(cuid())
+  templateId       String
+  template         WorkflowTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  order            Int
+  title            String
+  guidance         String?
+  estimatedMinutes Int              @default(30)
+
+  @@index([templateId, order])
+}
+
+model WorkflowScaffoldQuestion {
+  id         String           @id @default(cuid())
+  templateId String
+  template   WorkflowTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  order      Int
+  prompt     String
+  helperText String?
+  aiPurpose  ScaffoldQuestionPurpose @default(GENERATE_STEPS)
+
+  @@index([templateId, order])
+}
+
 model Plan {
   id                    String             @id @default(cuid())
   userId                String
   user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   projectId             String?
   project               Project?           @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  templateId            String?
+  template              WorkflowTemplate?  @relation(fields: [templateId], references: [id], onDelete: SetNull)
   name                  String
   description           String?
   goal                  String?
@@ -99,6 +181,9 @@ model Plan {
   startDate             DateTime?
   endDate               DateTime?
   deletedAt             DateTime?
+  rubricNotes           String?
+  draftReference        String?
+  experienceLevel       ExperienceLevel?
   steps                 PlanStep[]
   focusSessions         FocusSession[]
   createdAt             DateTime           @default(now())
@@ -119,12 +204,18 @@ model PlanStep {
   dueDate          DateTime?
   estimatedMinutes Int            @default(30)
   order            Int            @default(0)
+  guidance         String?
+  completionNote   String?
+  parentId         String?
+  parent           PlanStep?      @relation("PlanStepChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children         PlanStep[]     @relation("PlanStepChildren")
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
 
   @@index([userId])
   @@index([planId])
   @@index([planId, order])
+  @@index([parentId])
 }
 
 model Task {
@@ -276,4 +367,45 @@ enum SprintStatus {
   ACTIVE
   COMPLETED
   CANCELLED
+}
+
+enum WorkflowOutputType {
+  DOCUMENT
+  SKILL_PRACTICE
+  PROJECT
+}
+
+enum ExperienceLevel {
+  FIRST_TIME
+  EXPERIENCED
+}
+
+enum AiUsageStatus {
+  STARTED
+  SUCCESS
+  ERROR
+  BLOCKED
+}
+
+model AiUsage {
+  id               String        @id @default(cuid())
+  userId           String
+  chatId           String?
+  requestId        String
+  status           AiUsageStatus
+  modelName        String
+  capabilities     String[]      @default([])
+  promptTokens     Int?
+  completionTokens Int?
+  totalTokens      Int?
+  creditMultiplier Int
+  creditsCharged   Int
+  reason           String?
+  createdAt        DateTime      @default(now())
+
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@index([chatId, createdAt])
 }

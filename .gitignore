@@ -40,3 +40,4 @@ npm-debug.log*
 .claude
 .playwright-mcp
 docs
+skills-lock.json

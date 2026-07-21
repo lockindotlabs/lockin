@@ -154,9 +154,24 @@ export default function Aurora(props: AuroraProps) {
       renderer.setSize(width, height)
       if (program) {
         program.uniforms.uResolution.value = [width, height]
+        // renderer.setSize() resizes the <canvas>, which implicitly clears
+        // its drawing buffer. The next paint normally comes from the rAF
+        // loop below, but that can lag a frame behind a CSS-driven resize
+        // (e.g. the sidebar's collapse/expand transition firing many resize
+        // events in quick succession) — visible as a brief white flash since
+        // nothing opaque sits behind this layer. Repainting immediately here
+        // closes that gap.
+        renderer.render({ scene: mesh })
       }
     }
     window.addEventListener("resize", resize)
+    // The sidebar collapsing/expanding resizes this container via a CSS
+    // transition, not a window resize — the "resize" listener above never
+    // fires for that, so the canvas kept its old (narrower) dimensions and
+    // left the newly revealed area blank/white. ResizeObserver reacts to the
+    // container's own box size changing regardless of cause.
+    const resizeObserver = new ResizeObserver(resize)
+    resizeObserver.observe(ctn)
 
     const geometry = new Triangle(gl)
     if (geometry.attributes.uv) {
@@ -204,6 +219,7 @@ export default function Aurora(props: AuroraProps) {
     return () => {
       cancelAnimationFrame(animateId)
       window.removeEventListener("resize", resize)
+      resizeObserver.disconnect()
       if (ctn && gl.canvas.parentNode === ctn) {
         ctn.removeChild(gl.canvas)
       }

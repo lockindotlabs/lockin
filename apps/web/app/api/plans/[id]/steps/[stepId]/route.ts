@@ -3,7 +3,8 @@ import prisma from "@workspace/db"
 import { getAuthenticatedUser } from "@/lib/server/auth"
 
 const UpdateStepSchema = z.object({
-  status: z.enum(["TODO", "IN_PROGRESS", "DONE", "CANCELLED"]),
+  status: z.enum(["TODO", "IN_PROGRESS", "DONE", "CANCELLED"]).optional(),
+  completionNote: z.string().max(2000).optional(),
 })
 
 type RouteContext = {
@@ -38,9 +39,13 @@ export async function PATCH(req: Request, context: RouteContext) {
       )
     }
 
+    const updateData: { status?: "TODO" | "IN_PROGRESS" | "DONE" | "CANCELLED"; completionNote?: string } = {}
+    if (parsed.data.status !== undefined) updateData.status = parsed.data.status
+    if (parsed.data.completionNote !== undefined) updateData.completionNote = parsed.data.completionNote
+
     const result = await prisma.planStep.updateMany({
       where: { id: stepId, planId },
-      data: { status: parsed.data.status },
+      data: updateData,
     })
 
     if (result.count === 0) {

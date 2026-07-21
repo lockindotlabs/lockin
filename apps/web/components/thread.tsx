@@ -63,6 +63,11 @@ import GeminiLogo from "./logo-gemini"
 import { ContextDisplay } from "./context-display"
 import { CapabilitiesSelector } from "./capabilities-selector"
 import { getMentionKey, type MentionRef } from "@/lib/mentions/mention-types"
+import {
+  TemplateAutoClear,
+  TemplateConfigRegistrar,
+  TemplatePicker,
+} from "@/components/template-picker"
 import { motion } from "motion/react"
 import { AiPlannerIcon } from "./icons"
 import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
@@ -71,7 +76,8 @@ import Link from "next/link"
 import { PlanGrid } from "./plan-grid"
 import { Asterisk01, ClockRewind, Plus } from "@untitledui/icons"
 import { useChatSummaries } from "@/lib/chat/use-chat-summaries"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useTranslation } from "react-i18next"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -126,6 +132,7 @@ export const Thread: FC<{
   mode?: "onboarding" | "plan"
   initialMentions?: MentionRef[]
 }> = ({ mode = "onboarding", initialMentions }) => {
+  const { t } = useTranslation()
   const { plans, isLoaded } = usePlanSummaries()
   const recentlyOpenedPlans = useRecentlyOpenedPlans(plans)
   const homePlans = recentlyOpenedPlans.slice(0, 3)
@@ -191,7 +198,7 @@ export const Thread: FC<{
               render={
                 <Button variant={"outline"} size={"sm"} className={"text-xs"}>
                   <ClockRewind data-icon="inline-start" />
-                  Recent
+                  {t("app.chat.recent", { defaultValue: "Recent" })}
                 </Button>
               }
             />
@@ -200,7 +207,9 @@ export const Thread: FC<{
                 <>
                   <DropdownMenuSeparator />
                   <div className="px-3 py-2 text-center text-xs text-muted-foreground">
-                    No recent chats
+                    {t("app.chat.noRecent", {
+                      defaultValue: "No recent chats",
+                    })}
                   </div>
                 </>
               ) : (
@@ -209,14 +218,19 @@ export const Thread: FC<{
                     <>
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
-                        <DropdownMenuLabel>Today</DropdownMenuLabel>
+                        <DropdownMenuLabel>
+                          {t("app.chat.today", { defaultValue: "Today" })}
+                        </DropdownMenuLabel>
                         {todayChats.map((chat) => (
                           <DropdownMenuItem
                             key={chat.id}
                             onClick={() => handleChatSelect(chat.id)}
                             className="truncate"
                           >
-                            {chat.title || "New chat"}
+                            {chat.title ||
+                              t("app.chat.newChat", {
+                                defaultValue: "New chat",
+                              })}
                           </DropdownMenuItem>
                         ))}
                       </DropdownMenuGroup>
@@ -227,14 +241,21 @@ export const Thread: FC<{
                     <>
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
-                        <DropdownMenuLabel>Yesterday</DropdownMenuLabel>
+                        <DropdownMenuLabel>
+                          {t("app.chat.yesterday", {
+                            defaultValue: "Yesterday",
+                          })}
+                        </DropdownMenuLabel>
                         {yesterdayChats.map((chat) => (
                           <DropdownMenuItem
                             key={chat.id}
                             onClick={() => handleChatSelect(chat.id)}
                             className="truncate"
                           >
-                            {chat.title || "New chat"}
+                            {chat.title ||
+                              t("app.chat.newChat", {
+                                defaultValue: "New chat",
+                              })}
                           </DropdownMenuItem>
                         ))}
                       </DropdownMenuGroup>
@@ -245,14 +266,21 @@ export const Thread: FC<{
                     <>
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
-                        <DropdownMenuLabel>Previous 7 days</DropdownMenuLabel>
+                        <DropdownMenuLabel>
+                          {t("app.chat.previousSevenDays", {
+                            defaultValue: "Previous 7 days",
+                          })}
+                        </DropdownMenuLabel>
                         {previousSevenDaysChats.map((chat) => (
                           <DropdownMenuItem
                             key={chat.id}
                             onClick={() => handleChatSelect(chat.id)}
                             className="truncate"
                           >
-                            {chat.title || "New chat"}
+                            {chat.title ||
+                              t("app.chat.newChat", {
+                                defaultValue: "New chat",
+                              })}
                           </DropdownMenuItem>
                         ))}
                       </DropdownMenuGroup>
@@ -263,14 +291,19 @@ export const Thread: FC<{
                     <>
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
-                        <DropdownMenuLabel>Older</DropdownMenuLabel>
+                        <DropdownMenuLabel>
+                          {t("app.chat.older", { defaultValue: "Older" })}
+                        </DropdownMenuLabel>
                         {olderChats.map((chat) => (
                           <DropdownMenuItem
                             key={chat.id}
                             onClick={() => handleChatSelect(chat.id)}
                             className="truncate"
                           >
-                            {chat.title || "New chat"}
+                            {chat.title ||
+                              t("app.chat.newChat", {
+                                defaultValue: "New chat",
+                              })}
                           </DropdownMenuItem>
                         ))}
                       </DropdownMenuGroup>
@@ -448,7 +481,7 @@ const ThreadPlanWelcome: FC = () => {
       >
         <Asterisk01 />
       </motion.div>
-      <h1 className="aui-thread-plan-welcome-title mb-4 font-medium tracking-normal text-foreground text-balance">
+      <h1 className="aui-thread-plan-welcome-title mb-4 font-medium tracking-normal text-balance text-foreground">
         How can I help with your plan?
       </h1>
     </div>
@@ -507,6 +540,10 @@ const Composer: FC<{
   onSelectedCapabilityChange,
 }) => {
   const [mentions, setMentions] = useState<MentionRef[]>(initialMentions)
+  const templateSearchParams = useSearchParams()
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
+    () => templateSearchParams.get("template")
+  )
   const initialMentionSignature = useMemo(
     () =>
       initialMentions
@@ -566,6 +603,8 @@ const Composer: FC<{
       resetMentions={initialMentions}
       setMentions={setMentions}
     >
+      <TemplateConfigRegistrar templateId={selectedTemplateId} />
+      <TemplateAutoClear onClear={() => setSelectedTemplateId(null)} />
       <ComposerPrimitive.Root className="aui-composer-root relative flex w-full flex-col">
         <ComposerPrimitive.AttachmentDropzone
           render={
@@ -593,6 +632,8 @@ const Composer: FC<{
             onSelectedModelChange={onSelectedModelChange}
             selectedCapabilityId={selectedCapabilityId}
             onSelectedCapabilityChange={onSelectedCapabilityChange}
+            selectedTemplateId={selectedTemplateId}
+            onSelectedTemplateChange={setSelectedTemplateId}
           />
         </ComposerPrimitive.AttachmentDropzone>
       </ComposerPrimitive.Root>
@@ -605,11 +646,15 @@ const ComposerAction: FC<{
   onSelectedModelChange: (value: string) => void
   selectedCapabilityId: string | undefined
   onSelectedCapabilityChange: (value: string | undefined) => void
+  selectedTemplateId: string | null
+  onSelectedTemplateChange: (id: string | null) => void
 }> = ({
   selectedModelId,
   onSelectedModelChange,
   selectedCapabilityId,
   onSelectedCapabilityChange,
+  selectedTemplateId,
+  onSelectedTemplateChange,
 }) => {
   return (
     <div className="aui-composer-action-wrapper relative flex items-center justify-between">
@@ -621,6 +666,10 @@ const ComposerAction: FC<{
           onValueChange={onSelectedCapabilityChange}
           variant="ghost"
           size="sm"
+        />
+        <TemplatePicker
+          selectedTemplateId={selectedTemplateId}
+          onSelect={onSelectedTemplateChange}
         />
       </div>
 

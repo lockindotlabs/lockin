@@ -9,7 +9,9 @@ export type AppLocale = (typeof SUPPORTED_LOCALES)[number]
 
 export type TranslationResources = Record<string, unknown>
 
-export function isSupportedLocale(locale: string | undefined): locale is AppLocale {
+export function isSupportedLocale(
+  locale: string | undefined
+): locale is AppLocale {
   return SUPPORTED_LOCALES.includes(locale as AppLocale)
 }
 

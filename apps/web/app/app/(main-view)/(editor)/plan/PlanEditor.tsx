@@ -13,6 +13,14 @@ import {
   BreadcrumbSeparator,
 } from "@workspace/ui/components/breadcrumb"
 import { Button } from "@workspace/ui/components/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@workspace/ui/components/dialog"
+import { Textarea } from "@workspace/ui/components/textarea"
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar"
 import PlanDetails from "./PlanDetails"
@@ -43,6 +51,7 @@ import {
 import { HeaderLeft, HeaderRight } from "@/components/header-context"
 import { cn } from "@/lib/utils"
 import { Asterisk01 } from "@untitledui/icons"
+import { PublishPlanAsTemplateDialog } from "@/components/templates/PublishPlanAsTemplateDialog"
 
 type PlanEditorProps = {
   planId: string
@@ -61,6 +70,8 @@ export type EditorTask = {
   dueDate: string
   durationMinutes: number
   isCompleted: boolean
+  guidance?: string | null
+  parentId?: string | null
 }
 
 function createId() {
@@ -83,7 +94,8 @@ function createTask(
   title: string,
   description: string,
   dueDate: string,
-  durationMinutes: number
+  durationMinutes: number,
+  parentId: string | null = null
 ): EditorTask {
   return {
     id: createId(),
@@ -92,6 +104,7 @@ function createTask(
     dueDate,
     durationMinutes,
     isCompleted: false,
+    parentId,
   }
 }
 
@@ -103,6 +116,8 @@ function toEditorTask(task: SavedPlanTask): EditorTask {
     dueDate: task.dueDate,
     durationMinutes: task.durationMinutes,
     isCompleted: task.isCompleted,
+    guidance: task.guidance ?? null,
+    parentId: task.parentId ?? null,
   }
 }
 
@@ -167,6 +182,11 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
   const { toggleSidebarRight, openRight } = useSidebar()
   const { state } = useSidebar()
   const [persisted, setPersisted] = React.useState<EditorTask[]>([])
+  const [completionGate, setCompletionGate] = React.useState<{
+    index: number
+    stepId: string
+  } | null>(null)
+  const [reflectionNote, setReflectionNote] = React.useState("")
   const [persistedPlan, setPersistedPlan] =
     React.useState<EditorPlan>(createEmptyPlan)
   const [createdAt, setCreatedAt] = React.useState(() =>
@@ -278,6 +298,8 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
           dueDate: task.dueDate,
           durationMinutes: task.durationMinutes,
           isCompleted: task.isCompleted,
+          guidance: task.guidance ?? null,
+          parentId: task.parentId ?? null,
         })),
         createdAt,
         updatedAt,
@@ -341,15 +363,74 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
     markChanged()
   }
 
-  const updateTaskCompletion = (index: number, isCompleted: boolean) => {
+  const applyCompletion = (index: number, isCompleted: boolean) => {
     setPersisted((p) =>
       p.map((item, i) => (i === index ? { ...item, isCompleted } : item))
     )
     markChanged()
   }
 
+  const updateTaskCompletion = (index: number, isCompleted: boolean) => {
+    if (!isCompleted) {
+      applyCompletion(index, false)
+      return
+    }
+    const task = persisted[index]
+    if (!task) return
+    setReflectionNote("")
+    setCompletionGate({ index, stepId: task.id })
+  }
+
+  const handleReflectionSubmit = async (note: string) => {
+    if (!completionGate) return
+    applyCompletion(completionGate.index, true)
+    setCompletionGate(null)
+    setReflectionNote("")
+    if (note.trim()) {
+      try {
+        await fetch(`/api/plans/${planId}/steps/${completionGate.stepId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ completionNote: note.trim() }),
+        })
+      } catch {
+        // non-blocking — completion note is best-effort
+      }
+    }
+  }
+
   const deleteTask = (index: number) => {
-    setPersisted((p) => p.filter((_, i) => i !== index))
+    setPersisted((p) => {
+      const target = p[index]
+      if (!target) return p
+      // Deleting a parent also removes its subtasks
+      return p.filter((item, i) => i !== index && item.parentId !== target.id)
+    })
+    markChanged()
+  }
+
+  const addSubtask = (parentIndex: number) => {
+    setPersisted((p) => {
+      const parent = p[parentIndex]
+      if (!parent || parent.parentId) return p
+
+      // Insert after the parent's last consecutive subtask so display order
+      // (flat array) keeps children grouped under their parent
+      let insertAt = parentIndex + 1
+      while (insertAt < p.length && p[insertAt]?.parentId === parent.id) {
+        insertAt += 1
+      }
+
+      const child = createTask(
+        "",
+        "",
+        parent.dueDate || format(new Date(), "yyyy-MM-dd"),
+        15,
+        parent.id
+      )
+
+      return [...p.slice(0, insertAt), child, ...p.slice(insertAt)]
+    })
     markChanged()
   }
 
@@ -482,6 +563,7 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
           copyUrl={`/app/plan?id=${encodeURIComponent(planId)}`}
           onDelete={handleDeletePlan}
         />
+        <PublishPlanAsTemplateDialog planId={planId} />
       </HeaderRight>
 
       <ScrollArea
@@ -512,6 +594,7 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
           onCompletedChange={updateTaskCompletion}
           onDeleteTask={deleteTask}
           onAddTask={handleAddTask}
+          onAddSubtask={addSubtask}
           emptyState={() => (
             <section className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-start justify-center gap-4 pt-8">
               <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
@@ -555,6 +638,37 @@ export default function PlanEditor({ planId }: PlanEditorProps) {
           <Asterisk01 />
         </Button>
       </ScrollArea>
+
+      <Dialog
+        open={!!completionGate}
+        onOpenChange={(open) => {
+          if (!open) setCompletionGate(null)
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Bước này bạn đã làm được gì?</DialogTitle>
+          </DialogHeader>
+          <Textarea
+            placeholder="Viết ngắn gọn điều bạn học được hoặc kết quả cụ thể — không cần dài, 1-2 câu là đủ."
+            value={reflectionNote}
+            onChange={(e) => setReflectionNote(e.target.value)}
+            className="min-h-[80px] resize-none"
+            autoFocus
+          />
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="ghost"
+              onClick={() => void handleReflectionSubmit("")}
+            >
+              Bỏ qua
+            </Button>
+            <Button onClick={() => void handleReflectionSubmit(reflectionNote)}>
+              Xác nhận hoàn thành
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

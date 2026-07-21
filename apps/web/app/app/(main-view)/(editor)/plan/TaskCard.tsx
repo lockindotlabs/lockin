@@ -26,7 +26,14 @@ import {
   TimerIcon,
   MoreVerticalIcon,
   Trash2Icon,
+  ChevronDownIcon,
+  ListPlusIcon,
 } from "lucide-react"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@workspace/ui/components/collapsible"
 
 export interface TaskCardProps {
   taskTitle?: string
@@ -36,12 +43,15 @@ export interface TaskCardProps {
   isCompleted?: boolean
   savedTitle?: string
   savedDescription?: string
+  guidance?: string | null
   onTitleChange?: (title: string) => void
   onDescriptionChange?: (description: string) => void
   onDateChange?: (date: string) => void
   onDurationChange?: (durationMinutes: number) => void
   onCompletedChange?: (isCompleted: boolean) => void
   onDelete?: () => void
+  isSubtask?: boolean
+  onAddSubtask?: () => void
 }
 
 const durationOptions = [15, 30, 45, 60, 90, 120]
@@ -69,12 +79,15 @@ export default function TaskCard({
   isCompleted,
   savedTitle,
   savedDescription,
+  guidance,
   onTitleChange,
   onDescriptionChange,
   onDateChange,
   onDurationChange,
   onCompletedChange,
   onDelete,
+  isSubtask,
+  onAddSubtask,
 }: TaskCardProps) {
   const parseDate = (d?: string | Date) => {
     if (!d) return undefined
@@ -186,6 +199,23 @@ export default function TaskCard({
             className="field-sizing-content min-w-100 resize-none overflow-hidden bg-transparent text-sm leading-6 text-muted-foreground focus-visible:outline-none active:outline-none"
           />
         </div>
+
+        {/* Guidance collapsible — only shown if step has template guidance */}
+        {guidance && (
+          <Collapsible className="w-full">
+            <CollapsibleTrigger className="flex w-full items-center gap-1.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground">
+              <span className="rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase">
+                Cách làm
+              </span>
+              <ChevronDownIcon className="size-3 transition-transform [[data-state=open]_&]:rotate-180" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="pb-2">
+              <p className="text-xs leading-relaxed whitespace-pre-line text-muted-foreground">
+                {guidance}
+              </p>
+            </CollapsibleContent>
+          </Collapsible>
+        )}
 
         {/* Metadata badges */}
         <div className="-ml-1.5 flex w-full items-center gap-2">
@@ -300,6 +330,12 @@ export default function TaskCard({
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-40" align="end">
           <DropdownMenuGroup>
+            {onAddSubtask && (
+              <DropdownMenuItem onClick={onAddSubtask}>
+                <ListPlusIcon />
+                Add subtask
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem>
               <ArchiveIcon />
               Archive

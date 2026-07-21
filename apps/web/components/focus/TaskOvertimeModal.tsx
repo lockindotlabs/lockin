@@ -2,6 +2,7 @@
 
 import { Button } from "@workspace/ui/components/button"
 import { CircleIcon } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import type { PlanStep } from "@/lib/focus/focus-api"
 
 const EXTENSION_PRESETS = [5, 10, 15]
@@ -33,17 +34,21 @@ export function TaskOvertimeModal({
   onGiveMoreTime,
   onMarkDone,
 }: TaskOvertimeModalProps) {
+  const { t } = useTranslation()
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
       <div className="relative z-10 w-full max-w-md rounded-2xl border border-border/70 bg-background/95 p-6 text-foreground shadow-2xl backdrop-blur-lg">
         <h3 className="text-lg font-semibold tracking-tight text-foreground">
-          {mode === "task" ? "This task is taking longer" : "Sprint time is up"}
+          {mode === "task"
+            ? t("app.focus.overtime.taskTitle")
+            : t("app.focus.overtime.sprintTitle")}
         </h3>
         <p className="mt-1.5 text-xs text-muted-foreground">
           {mode === "task"
-            ? "Resolve this task before continuing — there's no skipping overtime."
-            : "These steps aren't done yet. Resolve each one to end the sprint."}
+            ? t("app.focus.overtime.taskDescription")
+            : t("app.focus.overtime.sprintDescription")}
         </p>
 
         <div className="mt-4 max-h-[50vh] space-y-3 overflow-y-auto pr-1">
@@ -59,15 +64,18 @@ export function TaskOvertimeModal({
                     {step.title}
                   </p>
                   <p className="mt-0.5 font-mono text-xs text-rose-500">
-                    +{fmtOvertime(overtimeSeconds)} over estimate
+                    {t("app.focus.overtime.overEstimate", {
+                      duration: fmtOvertime(overtimeSeconds),
+                    })}
                   </p>
                   {extensionCount > 0 && (
                     <p className="mt-0.5 text-[10px] text-muted-foreground">
-                      Asked for more time {extensionCount}{" "}
-                      {extensionCount === 1 ? "time" : "times"}
+                      {t("app.focus.overtime.extensionCount", {
+                        count: extensionCount,
+                      })}
                       {extensionCount > 2 && (
                         <span className="ml-1 font-semibold text-rose-500">
-                          — sprint will count as not on time
+                          {t("app.focus.overtime.notOnTimeWarning")}
                         </span>
                       )}
                     </p>
@@ -96,18 +104,18 @@ export function TaskOvertimeModal({
                   className="flex-1 text-muted-foreground hover:bg-muted"
                   onClick={() => onGiveUp(step.id)}
                 >
-                  I give up
+                  {t("app.focus.overtime.giveUp")}
                 </Button>
                 <Button
                   size="sm"
                   className="flex-1 bg-emerald-600 text-white hover:bg-emerald-700"
                   onClick={() => onMarkDone(step.id)}
                 >
-                  I actually done this
+                  {t("app.focus.overtime.markDone")}
                 </Button>
               </div>
               <p className="mt-1.5 text-[10px] text-muted-foreground/80">
-                You're responsible for your own actions — be honest about what's actually done.
+                {t("app.focus.overtime.honesty")}
               </p>
             </div>
           ))}

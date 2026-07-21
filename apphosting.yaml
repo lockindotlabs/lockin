@@ -1,9 +1,6 @@
 runConfig:
   runtime: nodejs22
 
-buildConfig:
-  buildCommand: pnpm run build:web
-
 env:
   - variable: NODE_ENV
     value: production

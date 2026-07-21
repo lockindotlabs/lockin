@@ -26,6 +26,13 @@ export type AggregateUser = {
 
 export type UserMinAggregateOutputType = {
   id: string | null
+  email: string | null
+  firstName: string | null
+  lastName: string | null
+  imageUrl: string | null
+  role: string | null
+  banned: boolean | null
+  locked: boolean | null
   isActive: boolean | null
   planTier: $Enums.BillingTier | null
   planExpiresAt: Date | null
@@ -35,6 +42,13 @@ export type UserMinAggregateOutputType = {
 
 export type UserMaxAggregateOutputType = {
   id: string | null
+  email: string | null
+  firstName: string | null
+  lastName: string | null
+  imageUrl: string | null
+  role: string | null
+  banned: boolean | null
+  locked: boolean | null
   isActive: boolean | null
   planTier: $Enums.BillingTier | null
   planExpiresAt: Date | null
@@ -44,6 +58,13 @@ export type UserMaxAggregateOutputType = {
 
 export type UserCountAggregateOutputType = {
   id: number
+  email: number
+  firstName: number
+  lastName: number
+  imageUrl: number
+  role: number
+  banned: number
+  locked: number
   isActive: number
   planTier: number
   planExpiresAt: number
@@ -55,6 +76,13 @@ export type UserCountAggregateOutputType = {
 
 export type UserMinAggregateInputType = {
   id?: true
+  email?: true
+  firstName?: true
+  lastName?: true
+  imageUrl?: true
+  role?: true
+  banned?: true
+  locked?: true
   isActive?: true
   planTier?: true
   planExpiresAt?: true
@@ -64,6 +92,13 @@ export type UserMinAggregateInputType = {
 
 export type UserMaxAggregateInputType = {
   id?: true
+  email?: true
+  firstName?: true
+  lastName?: true
+  imageUrl?: true
+  role?: true
+  banned?: true
+  locked?: true
   isActive?: true
   planTier?: true
   planExpiresAt?: true
@@ -73,6 +108,13 @@ export type UserMaxAggregateInputType = {
 
 export type UserCountAggregateInputType = {
   id?: true
+  email?: true
+  firstName?: true
+  lastName?: true
+  imageUrl?: true
+  role?: true
+  banned?: true
+  locked?: true
   isActive?: true
   planTier?: true
   planExpiresAt?: true
@@ -155,6 +197,13 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type UserGroupByOutputType = {
   id: string
+  email: string | null
+  firstName: string | null
+  lastName: string | null
+  imageUrl: string | null
+  role: string
+  banned: boolean
+  locked: boolean
   isActive: boolean
   planTier: $Enums.BillingTier
   planExpiresAt: Date | null
@@ -185,6 +234,13 @@ export type UserWhereInput = {
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.StringFilter<"User"> | string
+  email?: Prisma.StringNullableFilter<"User"> | string | null
+  firstName?: Prisma.StringNullableFilter<"User"> | string | null
+  lastName?: Prisma.StringNullableFilter<"User"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"User"> | string | null
+  role?: Prisma.StringFilter<"User"> | string
+  banned?: Prisma.BoolFilter<"User"> | boolean
+  locked?: Prisma.BoolFilter<"User"> | boolean
   isActive?: Prisma.BoolFilter<"User"> | boolean
   planTier?: Prisma.EnumBillingTierFilter<"User"> | $Enums.BillingTier
   planExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -201,10 +257,18 @@ export type UserWhereInput = {
   paymentOrders?: Prisma.PaymentOrderListRelationFilter
   Sprint?: Prisma.SprintListRelationFilter
   aiUsages?: Prisma.AiUsageListRelationFilter
+  authoredTemplates?: Prisma.WorkflowTemplateListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastName?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  role?: Prisma.SortOrder
+  banned?: Prisma.SortOrder
+  locked?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   planTier?: Prisma.SortOrder
   planExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -221,6 +285,7 @@ export type UserOrderByWithRelationInput = {
   paymentOrders?: Prisma.PaymentOrderOrderByRelationAggregateInput
   Sprint?: Prisma.SprintOrderByRelationAggregateInput
   aiUsages?: Prisma.AiUsageOrderByRelationAggregateInput
+  authoredTemplates?: Prisma.WorkflowTemplateOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -228,6 +293,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
+  email?: Prisma.StringNullableFilter<"User"> | string | null
+  firstName?: Prisma.StringNullableFilter<"User"> | string | null
+  lastName?: Prisma.StringNullableFilter<"User"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"User"> | string | null
+  role?: Prisma.StringFilter<"User"> | string
+  banned?: Prisma.BoolFilter<"User"> | boolean
+  locked?: Prisma.BoolFilter<"User"> | boolean
   isActive?: Prisma.BoolFilter<"User"> | boolean
   planTier?: Prisma.EnumBillingTierFilter<"User"> | $Enums.BillingTier
   planExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -244,10 +316,18 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   paymentOrders?: Prisma.PaymentOrderListRelationFilter
   Sprint?: Prisma.SprintListRelationFilter
   aiUsages?: Prisma.AiUsageListRelationFilter
+  authoredTemplates?: Prisma.WorkflowTemplateListRelationFilter
 }, "id">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastName?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  role?: Prisma.SortOrder
+  banned?: Prisma.SortOrder
+  locked?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   planTier?: Prisma.SortOrder
   planExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -263,6 +343,13 @@ export type UserScalarWhereWithAggregatesInput = {
   OR?: Prisma.UserScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
+  email?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  firstName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  lastName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  imageUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  role?: Prisma.StringWithAggregatesFilter<"User"> | string
+  banned?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  locked?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   planTier?: Prisma.EnumBillingTierWithAggregatesFilter<"User"> | $Enums.BillingTier
   planExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
@@ -272,6 +359,13 @@ export type UserScalarWhereWithAggregatesInput = {
 
 export type UserCreateInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -288,10 +382,18 @@ export type UserCreateInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -308,10 +410,18 @@ export type UserUncheckedCreateInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -328,10 +438,18 @@ export type UserUpdateInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -348,10 +466,18 @@ export type UserUncheckedUpdateInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateManyInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -361,6 +487,13 @@ export type UserCreateManyInput = {
 
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -370,6 +503,13 @@ export type UserUpdateManyMutationInput = {
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -379,6 +519,13 @@ export type UserUncheckedUpdateManyInput = {
 
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  role?: Prisma.SortOrder
+  banned?: Prisma.SortOrder
+  locked?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   planTier?: Prisma.SortOrder
   planExpiresAt?: Prisma.SortOrder
@@ -388,6 +535,13 @@ export type UserCountOrderByAggregateInput = {
 
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  role?: Prisma.SortOrder
+  banned?: Prisma.SortOrder
+  locked?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   planTier?: Prisma.SortOrder
   planExpiresAt?: Prisma.SortOrder
@@ -397,6 +551,13 @@ export type UserMaxOrderByAggregateInput = {
 
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  role?: Prisma.SortOrder
+  banned?: Prisma.SortOrder
+  locked?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   planTier?: Prisma.SortOrder
   planExpiresAt?: Prisma.SortOrder
@@ -409,8 +570,17 @@ export type UserScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput
 }
 
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type BoolFieldUpdateOperationsInput = {
@@ -483,6 +653,22 @@ export type UserUpdateOneRequiredWithoutProjectsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutProjectsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProjectsInput, Prisma.UserUpdateWithoutProjectsInput>, Prisma.UserUncheckedUpdateWithoutProjectsInput>
+}
+
+export type UserCreateNestedOneWithoutAuthoredTemplatesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAuthoredTemplatesInput, Prisma.UserUncheckedCreateWithoutAuthoredTemplatesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuthoredTemplatesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutAuthoredTemplatesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAuthoredTemplatesInput, Prisma.UserUncheckedCreateWithoutAuthoredTemplatesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuthoredTemplatesInput
+  upsert?: Prisma.UserUpsertWithoutAuthoredTemplatesInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuthoredTemplatesInput, Prisma.UserUpdateWithoutAuthoredTemplatesInput>, Prisma.UserUncheckedUpdateWithoutAuthoredTemplatesInput>
 }
 
 export type UserCreateNestedOneWithoutPlansInput = {
@@ -585,6 +771,13 @@ export type UserUpdateOneRequiredWithoutAiUsagesNestedInput = {
 
 export type UserCreateWithoutChatsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -600,10 +793,18 @@ export type UserCreateWithoutChatsInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutChatsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -619,6 +820,7 @@ export type UserUncheckedCreateWithoutChatsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutChatsInput = {
@@ -639,6 +841,13 @@ export type UserUpdateToOneWithWhereWithoutChatsInput = {
 
 export type UserUpdateWithoutChatsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -654,10 +863,18 @@ export type UserUpdateWithoutChatsInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChatsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -673,10 +890,18 @@ export type UserUncheckedUpdateWithoutChatsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutExtensionTokensInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -692,10 +917,18 @@ export type UserCreateWithoutExtensionTokensInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutExtensionTokensInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -711,6 +944,7 @@ export type UserUncheckedCreateWithoutExtensionTokensInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutExtensionTokensInput = {
@@ -731,6 +965,13 @@ export type UserUpdateToOneWithWhereWithoutExtensionTokensInput = {
 
 export type UserUpdateWithoutExtensionTokensInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -746,10 +987,18 @@ export type UserUpdateWithoutExtensionTokensInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExtensionTokensInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -765,10 +1014,18 @@ export type UserUncheckedUpdateWithoutExtensionTokensInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutSettingsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -784,10 +1041,18 @@ export type UserCreateWithoutSettingsInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutSettingsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -803,6 +1068,7 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutSettingsInput = {
@@ -823,6 +1089,13 @@ export type UserUpdateToOneWithWhereWithoutSettingsInput = {
 
 export type UserUpdateWithoutSettingsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -838,10 +1111,18 @@ export type UserUpdateWithoutSettingsInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSettingsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -857,10 +1138,18 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutProjectsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -876,10 +1165,18 @@ export type UserCreateWithoutProjectsInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutProjectsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -895,6 +1192,7 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutProjectsInput = {
@@ -915,6 +1213,13 @@ export type UserUpdateToOneWithWhereWithoutProjectsInput = {
 
 export type UserUpdateWithoutProjectsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -930,10 +1235,18 @@ export type UserUpdateWithoutProjectsInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProjectsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -949,10 +1262,142 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
+}
+
+export type UserCreateWithoutAuthoredTemplatesInput = {
+  id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
+  isActive?: boolean
+  planTier?: $Enums.BillingTier
+  planExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
+  plans?: Prisma.PlanCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
+  aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAuthoredTemplatesInput = {
+  id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
+  isActive?: boolean
+  planTier?: $Enums.BillingTier
+  planExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
+  plans?: Prisma.PlanUncheckedCreateNestedManyWithoutUserInput
+  planSteps?: Prisma.PlanStepUncheckedCreateNestedManyWithoutUserInput
+  chats?: Prisma.ChatUncheckedCreateNestedManyWithoutUserInput
+  tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
+  focusSessions?: Prisma.FocusSessionUncheckedCreateNestedManyWithoutUserInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
+  aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAuthoredTemplatesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAuthoredTemplatesInput, Prisma.UserUncheckedCreateWithoutAuthoredTemplatesInput>
+}
+
+export type UserUpsertWithoutAuthoredTemplatesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAuthoredTemplatesInput, Prisma.UserUncheckedUpdateWithoutAuthoredTemplatesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAuthoredTemplatesInput, Prisma.UserUncheckedCreateWithoutAuthoredTemplatesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAuthoredTemplatesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAuthoredTemplatesInput, Prisma.UserUncheckedUpdateWithoutAuthoredTemplatesInput>
+}
+
+export type UserUpdateWithoutAuthoredTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
+  plans?: Prisma.PlanUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
+  aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAuthoredTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
+  plans?: Prisma.PlanUncheckedUpdateManyWithoutUserNestedInput
+  planSteps?: Prisma.PlanStepUncheckedUpdateManyWithoutUserNestedInput
+  chats?: Prisma.ChatUncheckedUpdateManyWithoutUserNestedInput
+  tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
+  focusSessions?: Prisma.FocusSessionUncheckedUpdateManyWithoutUserNestedInput
+  extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
+  paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
+  Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
+  aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPlansInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -968,10 +1413,18 @@ export type UserCreateWithoutPlansInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutPlansInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -987,6 +1440,7 @@ export type UserUncheckedCreateWithoutPlansInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutPlansInput = {
@@ -1007,6 +1461,13 @@ export type UserUpdateToOneWithWhereWithoutPlansInput = {
 
 export type UserUpdateWithoutPlansInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1022,10 +1483,18 @@ export type UserUpdateWithoutPlansInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPlansInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1041,10 +1510,18 @@ export type UserUncheckedUpdateWithoutPlansInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutPlanStepsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1060,10 +1537,18 @@ export type UserCreateWithoutPlanStepsInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutPlanStepsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1079,6 +1564,7 @@ export type UserUncheckedCreateWithoutPlanStepsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutPlanStepsInput = {
@@ -1099,6 +1585,13 @@ export type UserUpdateToOneWithWhereWithoutPlanStepsInput = {
 
 export type UserUpdateWithoutPlanStepsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1114,10 +1607,18 @@ export type UserUpdateWithoutPlanStepsInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPlanStepsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1133,10 +1634,18 @@ export type UserUncheckedUpdateWithoutPlanStepsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutTasksInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1152,10 +1661,18 @@ export type UserCreateWithoutTasksInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutTasksInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1171,6 +1688,7 @@ export type UserUncheckedCreateWithoutTasksInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutTasksInput = {
@@ -1191,6 +1709,13 @@ export type UserUpdateToOneWithWhereWithoutTasksInput = {
 
 export type UserUpdateWithoutTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1206,10 +1731,18 @@ export type UserUpdateWithoutTasksInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTasksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1225,10 +1758,18 @@ export type UserUncheckedUpdateWithoutTasksInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutFocusSessionsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1244,10 +1785,18 @@ export type UserCreateWithoutFocusSessionsInput = {
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutFocusSessionsInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1263,6 +1812,7 @@ export type UserUncheckedCreateWithoutFocusSessionsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutFocusSessionsInput = {
@@ -1283,6 +1833,13 @@ export type UserUpdateToOneWithWhereWithoutFocusSessionsInput = {
 
 export type UserUpdateWithoutFocusSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1298,10 +1855,18 @@ export type UserUpdateWithoutFocusSessionsInput = {
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFocusSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1317,10 +1882,18 @@ export type UserUncheckedUpdateWithoutFocusSessionsInput = {
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutPaymentOrdersInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1336,10 +1909,18 @@ export type UserCreateWithoutPaymentOrdersInput = {
   extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutPaymentOrdersInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1355,6 +1936,7 @@ export type UserUncheckedCreateWithoutPaymentOrdersInput = {
   extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutPaymentOrdersInput = {
@@ -1375,6 +1957,13 @@ export type UserUpdateToOneWithWhereWithoutPaymentOrdersInput = {
 
 export type UserUpdateWithoutPaymentOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1390,10 +1979,18 @@ export type UserUpdateWithoutPaymentOrdersInput = {
   extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1409,10 +2006,18 @@ export type UserUncheckedUpdateWithoutPaymentOrdersInput = {
   extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutSprintInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1428,10 +2033,18 @@ export type UserCreateWithoutSprintInput = {
   extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutSprintInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1447,6 +2060,7 @@ export type UserUncheckedCreateWithoutSprintInput = {
   extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   aiUsages?: Prisma.AiUsageUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutSprintInput = {
@@ -1467,6 +2081,13 @@ export type UserUpdateToOneWithWhereWithoutSprintInput = {
 
 export type UserUpdateWithoutSprintInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1482,10 +2103,18 @@ export type UserUpdateWithoutSprintInput = {
   extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSprintInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1501,10 +2130,18 @@ export type UserUncheckedUpdateWithoutSprintInput = {
   extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   aiUsages?: Prisma.AiUsageUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutAiUsagesInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1520,10 +2157,18 @@ export type UserCreateWithoutAiUsagesInput = {
   extensionTokens?: Prisma.ExtensionTokenCreateNestedManyWithoutUserInput
   paymentOrders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutAiUsagesInput = {
   id: string
+  email?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  imageUrl?: string | null
+  role?: string
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: $Enums.BillingTier
   planExpiresAt?: Date | string | null
@@ -1539,6 +2184,7 @@ export type UserUncheckedCreateWithoutAiUsagesInput = {
   extensionTokens?: Prisma.ExtensionTokenUncheckedCreateNestedManyWithoutUserInput
   paymentOrders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   Sprint?: Prisma.SprintUncheckedCreateNestedManyWithoutUserInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutAiUsagesInput = {
@@ -1559,6 +2205,13 @@ export type UserUpdateToOneWithWhereWithoutAiUsagesInput = {
 
 export type UserUpdateWithoutAiUsagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1574,10 +2227,18 @@ export type UserUpdateWithoutAiUsagesInput = {
   extensionTokens?: Prisma.ExtensionTokenUpdateManyWithoutUserNestedInput
   paymentOrders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAiUsagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   planTier?: Prisma.EnumBillingTierFieldUpdateOperationsInput | $Enums.BillingTier
   planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1593,6 +2254,7 @@ export type UserUncheckedUpdateWithoutAiUsagesInput = {
   extensionTokens?: Prisma.ExtensionTokenUncheckedUpdateManyWithoutUserNestedInput
   paymentOrders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   Sprint?: Prisma.SprintUncheckedUpdateManyWithoutUserNestedInput
+  authoredTemplates?: Prisma.WorkflowTemplateUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 
@@ -1611,6 +2273,7 @@ export type UserCountOutputType = {
   paymentOrders: number
   Sprint: number
   aiUsages: number
+  authoredTemplates: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1624,6 +2287,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   paymentOrders?: boolean | UserCountOutputTypeCountPaymentOrdersArgs
   Sprint?: boolean | UserCountOutputTypeCountSprintArgs
   aiUsages?: boolean | UserCountOutputTypeCountAiUsagesArgs
+  authoredTemplates?: boolean | UserCountOutputTypeCountAuthoredTemplatesArgs
 }
 
 /**
@@ -1706,9 +2370,23 @@ export type UserCountOutputTypeCountAiUsagesArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.AiUsageWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAuthoredTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WorkflowTemplateWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  email?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  imageUrl?: boolean
+  role?: boolean
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: boolean
   planExpiresAt?: boolean
@@ -1725,11 +2403,19 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   paymentOrders?: boolean | Prisma.User$paymentOrdersArgs<ExtArgs>
   Sprint?: boolean | Prisma.User$SprintArgs<ExtArgs>
   aiUsages?: boolean | Prisma.User$aiUsagesArgs<ExtArgs>
+  authoredTemplates?: boolean | Prisma.User$authoredTemplatesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  email?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  imageUrl?: boolean
+  role?: boolean
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: boolean
   planExpiresAt?: boolean
@@ -1739,6 +2425,13 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  email?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  imageUrl?: boolean
+  role?: boolean
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: boolean
   planExpiresAt?: boolean
@@ -1748,6 +2441,13 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type UserSelectScalar = {
   id?: boolean
+  email?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  imageUrl?: boolean
+  role?: boolean
+  banned?: boolean
+  locked?: boolean
   isActive?: boolean
   planTier?: boolean
   planExpiresAt?: boolean
@@ -1755,7 +2455,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "isActive" | "planTier" | "planExpiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "firstName" | "lastName" | "imageUrl" | "role" | "banned" | "locked" | "isActive" | "planTier" | "planExpiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
@@ -1768,6 +2468,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   paymentOrders?: boolean | Prisma.User$paymentOrdersArgs<ExtArgs>
   Sprint?: boolean | Prisma.User$SprintArgs<ExtArgs>
   aiUsages?: boolean | Prisma.User$aiUsagesArgs<ExtArgs>
+  authoredTemplates?: boolean | Prisma.User$authoredTemplatesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1787,9 +2488,17 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     paymentOrders: Prisma.$PaymentOrderPayload<ExtArgs>[]
     Sprint: Prisma.$SprintPayload<ExtArgs>[]
     aiUsages: Prisma.$AiUsagePayload<ExtArgs>[]
+    authoredTemplates: Prisma.$WorkflowTemplatePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    email: string | null
+    firstName: string | null
+    lastName: string | null
+    imageUrl: string | null
+    role: string
+    banned: boolean
+    locked: boolean
     isActive: boolean
     planTier: $Enums.BillingTier
     planExpiresAt: Date | null
@@ -2200,6 +2909,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   paymentOrders<T extends Prisma.User$paymentOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   Sprint<T extends Prisma.User$SprintArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$SprintArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SprintPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aiUsages<T extends Prisma.User$aiUsagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiUsagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  authoredTemplates<T extends Prisma.User$authoredTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$authoredTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkflowTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2230,6 +2940,13 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
+  readonly email: Prisma.FieldRef<"User", 'String'>
+  readonly firstName: Prisma.FieldRef<"User", 'String'>
+  readonly lastName: Prisma.FieldRef<"User", 'String'>
+  readonly imageUrl: Prisma.FieldRef<"User", 'String'>
+  readonly role: Prisma.FieldRef<"User", 'String'>
+  readonly banned: Prisma.FieldRef<"User", 'Boolean'>
+  readonly locked: Prisma.FieldRef<"User", 'Boolean'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
   readonly planTier: Prisma.FieldRef<"User", 'BillingTier'>
   readonly planExpiresAt: Prisma.FieldRef<"User", 'DateTime'>
@@ -2884,6 +3601,30 @@ export type User$aiUsagesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.AiUsageScalarFieldEnum | Prisma.AiUsageScalarFieldEnum[]
+}
+
+/**
+ * User.authoredTemplates
+ */
+export type User$authoredTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WorkflowTemplate
+   */
+  select?: Prisma.WorkflowTemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WorkflowTemplate
+   */
+  omit?: Prisma.WorkflowTemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorkflowTemplateInclude<ExtArgs> | null
+  where?: Prisma.WorkflowTemplateWhereInput
+  orderBy?: Prisma.WorkflowTemplateOrderByWithRelationInput | Prisma.WorkflowTemplateOrderByWithRelationInput[]
+  cursor?: Prisma.WorkflowTemplateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WorkflowTemplateScalarFieldEnum | Prisma.WorkflowTemplateScalarFieldEnum[]
 }
 
 /**

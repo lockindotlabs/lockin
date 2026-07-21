@@ -46,6 +46,9 @@ export type PlanStepMinAggregateOutputType = {
   dueDate: Date | null
   estimatedMinutes: number | null
   order: number | null
+  guidance: string | null
+  completionNote: string | null
+  parentId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -60,6 +63,9 @@ export type PlanStepMaxAggregateOutputType = {
   dueDate: Date | null
   estimatedMinutes: number | null
   order: number | null
+  guidance: string | null
+  completionNote: string | null
+  parentId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -74,6 +80,9 @@ export type PlanStepCountAggregateOutputType = {
   dueDate: number
   estimatedMinutes: number
   order: number
+  guidance: number
+  completionNote: number
+  parentId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -100,6 +109,9 @@ export type PlanStepMinAggregateInputType = {
   dueDate?: true
   estimatedMinutes?: true
   order?: true
+  guidance?: true
+  completionNote?: true
+  parentId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -114,6 +126,9 @@ export type PlanStepMaxAggregateInputType = {
   dueDate?: true
   estimatedMinutes?: true
   order?: true
+  guidance?: true
+  completionNote?: true
+  parentId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -128,6 +143,9 @@ export type PlanStepCountAggregateInputType = {
   dueDate?: true
   estimatedMinutes?: true
   order?: true
+  guidance?: true
+  completionNote?: true
+  parentId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -229,6 +247,9 @@ export type PlanStepGroupByOutputType = {
   dueDate: Date | null
   estimatedMinutes: number
   order: number
+  guidance: string | null
+  completionNote: string | null
+  parentId: string | null
   createdAt: Date
   updatedAt: Date
   _count: PlanStepCountAggregateOutputType | null
@@ -266,10 +287,15 @@ export type PlanStepWhereInput = {
   dueDate?: Prisma.DateTimeNullableFilter<"PlanStep"> | Date | string | null
   estimatedMinutes?: Prisma.IntFilter<"PlanStep"> | number
   order?: Prisma.IntFilter<"PlanStep"> | number
+  guidance?: Prisma.StringNullableFilter<"PlanStep"> | string | null
+  completionNote?: Prisma.StringNullableFilter<"PlanStep"> | string | null
+  parentId?: Prisma.StringNullableFilter<"PlanStep"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PlanStep"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlanStep"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   plan?: Prisma.XOR<Prisma.PlanScalarRelationFilter, Prisma.PlanWhereInput>
+  parent?: Prisma.XOR<Prisma.PlanStepNullableScalarRelationFilter, Prisma.PlanStepWhereInput> | null
+  children?: Prisma.PlanStepListRelationFilter
 }
 
 export type PlanStepOrderByWithRelationInput = {
@@ -282,10 +308,15 @@ export type PlanStepOrderByWithRelationInput = {
   dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
   estimatedMinutes?: Prisma.SortOrder
   order?: Prisma.SortOrder
+  guidance?: Prisma.SortOrderInput | Prisma.SortOrder
+  completionNote?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   plan?: Prisma.PlanOrderByWithRelationInput
+  parent?: Prisma.PlanStepOrderByWithRelationInput
+  children?: Prisma.PlanStepOrderByRelationAggregateInput
 }
 
 export type PlanStepWhereUniqueInput = Prisma.AtLeast<{
@@ -301,10 +332,15 @@ export type PlanStepWhereUniqueInput = Prisma.AtLeast<{
   dueDate?: Prisma.DateTimeNullableFilter<"PlanStep"> | Date | string | null
   estimatedMinutes?: Prisma.IntFilter<"PlanStep"> | number
   order?: Prisma.IntFilter<"PlanStep"> | number
+  guidance?: Prisma.StringNullableFilter<"PlanStep"> | string | null
+  completionNote?: Prisma.StringNullableFilter<"PlanStep"> | string | null
+  parentId?: Prisma.StringNullableFilter<"PlanStep"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PlanStep"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlanStep"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   plan?: Prisma.XOR<Prisma.PlanScalarRelationFilter, Prisma.PlanWhereInput>
+  parent?: Prisma.XOR<Prisma.PlanStepNullableScalarRelationFilter, Prisma.PlanStepWhereInput> | null
+  children?: Prisma.PlanStepListRelationFilter
 }, "id">
 
 export type PlanStepOrderByWithAggregationInput = {
@@ -317,6 +353,9 @@ export type PlanStepOrderByWithAggregationInput = {
   dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
   estimatedMinutes?: Prisma.SortOrder
   order?: Prisma.SortOrder
+  guidance?: Prisma.SortOrderInput | Prisma.SortOrder
+  completionNote?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PlanStepCountOrderByAggregateInput
@@ -339,6 +378,9 @@ export type PlanStepScalarWhereWithAggregatesInput = {
   dueDate?: Prisma.DateTimeNullableWithAggregatesFilter<"PlanStep"> | Date | string | null
   estimatedMinutes?: Prisma.IntWithAggregatesFilter<"PlanStep"> | number
   order?: Prisma.IntWithAggregatesFilter<"PlanStep"> | number
+  guidance?: Prisma.StringNullableWithAggregatesFilter<"PlanStep"> | string | null
+  completionNote?: Prisma.StringNullableWithAggregatesFilter<"PlanStep"> | string | null
+  parentId?: Prisma.StringNullableWithAggregatesFilter<"PlanStep"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PlanStep"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PlanStep"> | Date | string
 }
@@ -351,10 +393,14 @@ export type PlanStepCreateInput = {
   dueDate?: Date | string | null
   estimatedMinutes?: number
   order?: number
+  guidance?: string | null
+  completionNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPlanStepsInput
   plan: Prisma.PlanCreateNestedOneWithoutStepsInput
+  parent?: Prisma.PlanStepCreateNestedOneWithoutChildrenInput
+  children?: Prisma.PlanStepCreateNestedManyWithoutParentInput
 }
 
 export type PlanStepUncheckedCreateInput = {
@@ -367,8 +413,12 @@ export type PlanStepUncheckedCreateInput = {
   dueDate?: Date | string | null
   estimatedMinutes?: number
   order?: number
+  guidance?: string | null
+  completionNote?: string | null
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  children?: Prisma.PlanStepUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type PlanStepUpdateInput = {
@@ -379,10 +429,14 @@ export type PlanStepUpdateInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  guidance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPlanStepsNestedInput
   plan?: Prisma.PlanUpdateOneRequiredWithoutStepsNestedInput
+  parent?: Prisma.PlanStepUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.PlanStepUpdateManyWithoutParentNestedInput
 }
 
 export type PlanStepUncheckedUpdateInput = {
@@ -395,8 +449,12 @@ export type PlanStepUncheckedUpdateInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  guidance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.PlanStepUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type PlanStepCreateManyInput = {
@@ -409,6 +467,9 @@ export type PlanStepCreateManyInput = {
   dueDate?: Date | string | null
   estimatedMinutes?: number
   order?: number
+  guidance?: string | null
+  completionNote?: string | null
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -421,6 +482,8 @@ export type PlanStepUpdateManyMutationInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  guidance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -435,6 +498,9 @@ export type PlanStepUncheckedUpdateManyInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  guidance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -449,6 +515,11 @@ export type PlanStepOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type PlanStepNullableScalarRelationFilter = {
+  is?: Prisma.PlanStepWhereInput | null
+  isNot?: Prisma.PlanStepWhereInput | null
+}
+
 export type PlanStepCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -459,6 +530,9 @@ export type PlanStepCountOrderByAggregateInput = {
   dueDate?: Prisma.SortOrder
   estimatedMinutes?: Prisma.SortOrder
   order?: Prisma.SortOrder
+  guidance?: Prisma.SortOrder
+  completionNote?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -478,6 +552,9 @@ export type PlanStepMaxOrderByAggregateInput = {
   dueDate?: Prisma.SortOrder
   estimatedMinutes?: Prisma.SortOrder
   order?: Prisma.SortOrder
+  guidance?: Prisma.SortOrder
+  completionNote?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -492,6 +569,9 @@ export type PlanStepMinOrderByAggregateInput = {
   dueDate?: Prisma.SortOrder
   estimatedMinutes?: Prisma.SortOrder
   order?: Prisma.SortOrder
+  guidance?: Prisma.SortOrder
+  completionNote?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -585,8 +665,66 @@ export type PlanStepUncheckedUpdateManyWithoutPlanNestedInput = {
   deleteMany?: Prisma.PlanStepScalarWhereInput | Prisma.PlanStepScalarWhereInput[]
 }
 
+export type PlanStepCreateNestedOneWithoutChildrenInput = {
+  create?: Prisma.XOR<Prisma.PlanStepCreateWithoutChildrenInput, Prisma.PlanStepUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.PlanStepCreateOrConnectWithoutChildrenInput
+  connect?: Prisma.PlanStepWhereUniqueInput
+}
+
+export type PlanStepCreateNestedManyWithoutParentInput = {
+  create?: Prisma.XOR<Prisma.PlanStepCreateWithoutParentInput, Prisma.PlanStepUncheckedCreateWithoutParentInput> | Prisma.PlanStepCreateWithoutParentInput[] | Prisma.PlanStepUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.PlanStepCreateOrConnectWithoutParentInput | Prisma.PlanStepCreateOrConnectWithoutParentInput[]
+  createMany?: Prisma.PlanStepCreateManyParentInputEnvelope
+  connect?: Prisma.PlanStepWhereUniqueInput | Prisma.PlanStepWhereUniqueInput[]
+}
+
+export type PlanStepUncheckedCreateNestedManyWithoutParentInput = {
+  create?: Prisma.XOR<Prisma.PlanStepCreateWithoutParentInput, Prisma.PlanStepUncheckedCreateWithoutParentInput> | Prisma.PlanStepCreateWithoutParentInput[] | Prisma.PlanStepUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.PlanStepCreateOrConnectWithoutParentInput | Prisma.PlanStepCreateOrConnectWithoutParentInput[]
+  createMany?: Prisma.PlanStepCreateManyParentInputEnvelope
+  connect?: Prisma.PlanStepWhereUniqueInput | Prisma.PlanStepWhereUniqueInput[]
+}
+
 export type EnumPlanStepStatusFieldUpdateOperationsInput = {
   set?: $Enums.PlanStepStatus
+}
+
+export type PlanStepUpdateOneWithoutChildrenNestedInput = {
+  create?: Prisma.XOR<Prisma.PlanStepCreateWithoutChildrenInput, Prisma.PlanStepUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.PlanStepCreateOrConnectWithoutChildrenInput
+  upsert?: Prisma.PlanStepUpsertWithoutChildrenInput
+  disconnect?: Prisma.PlanStepWhereInput | boolean
+  delete?: Prisma.PlanStepWhereInput | boolean
+  connect?: Prisma.PlanStepWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlanStepUpdateToOneWithWhereWithoutChildrenInput, Prisma.PlanStepUpdateWithoutChildrenInput>, Prisma.PlanStepUncheckedUpdateWithoutChildrenInput>
+}
+
+export type PlanStepUpdateManyWithoutParentNestedInput = {
+  create?: Prisma.XOR<Prisma.PlanStepCreateWithoutParentInput, Prisma.PlanStepUncheckedCreateWithoutParentInput> | Prisma.PlanStepCreateWithoutParentInput[] | Prisma.PlanStepUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.PlanStepCreateOrConnectWithoutParentInput | Prisma.PlanStepCreateOrConnectWithoutParentInput[]
+  upsert?: Prisma.PlanStepUpsertWithWhereUniqueWithoutParentInput | Prisma.PlanStepUpsertWithWhereUniqueWithoutParentInput[]
+  createMany?: Prisma.PlanStepCreateManyParentInputEnvelope
+  set?: Prisma.PlanStepWhereUniqueInput | Prisma.PlanStepWhereUniqueInput[]
+  disconnect?: Prisma.PlanStepWhereUniqueInput | Prisma.PlanStepWhereUniqueInput[]
+  delete?: Prisma.PlanStepWhereUniqueInput | Prisma.PlanStepWhereUniqueInput[]
+  connect?: Prisma.PlanStepWhereUniqueInput | Prisma.PlanStepWhereUniqueInput[]
+  update?: Prisma.PlanStepUpdateWithWhereUniqueWithoutParentInput | Prisma.PlanStepUpdateWithWhereUniqueWithoutParentInput[]
+  updateMany?: Prisma.PlanStepUpdateManyWithWhereWithoutParentInput | Prisma.PlanStepUpdateManyWithWhereWithoutParentInput[]
+  deleteMany?: Prisma.PlanStepScalarWhereInput | Prisma.PlanStepScalarWhereInput[]
+}
+
+export type PlanStepUncheckedUpdateManyWithoutParentNestedInput = {
+  create?: Prisma.XOR<Prisma.PlanStepCreateWithoutParentInput, Prisma.PlanStepUncheckedCreateWithoutParentInput> | Prisma.PlanStepCreateWithoutParentInput[] | Prisma.PlanStepUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.PlanStepCreateOrConnectWithoutParentInput | Prisma.PlanStepCreateOrConnectWithoutParentInput[]
+  upsert?: Prisma.PlanStepUpsertWithWhereUniqueWithoutParentInput | Prisma.PlanStepUpsertWithWhereUniqueWithoutParentInput[]
+  createMany?: Prisma.PlanStepCreateManyParentInputEnvelope
+  set?: Prisma.PlanStepWhereUniqueInput | Prisma.PlanStepWhereUniqueInput[]
+  disconnect?: Prisma.PlanStepWhereUniqueInput | Prisma.PlanStepWhereUniqueInput[]
+  delete?: Prisma.PlanStepWhereUniqueInput | Prisma.PlanStepWhereUniqueInput[]
+  connect?: Prisma.PlanStepWhereUniqueInput | Prisma.PlanStepWhereUniqueInput[]
+  update?: Prisma.PlanStepUpdateWithWhereUniqueWithoutParentInput | Prisma.PlanStepUpdateWithWhereUniqueWithoutParentInput[]
+  updateMany?: Prisma.PlanStepUpdateManyWithWhereWithoutParentInput | Prisma.PlanStepUpdateManyWithWhereWithoutParentInput[]
+  deleteMany?: Prisma.PlanStepScalarWhereInput | Prisma.PlanStepScalarWhereInput[]
 }
 
 export type PlanStepCreateWithoutUserInput = {
@@ -597,9 +735,13 @@ export type PlanStepCreateWithoutUserInput = {
   dueDate?: Date | string | null
   estimatedMinutes?: number
   order?: number
+  guidance?: string | null
+  completionNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   plan: Prisma.PlanCreateNestedOneWithoutStepsInput
+  parent?: Prisma.PlanStepCreateNestedOneWithoutChildrenInput
+  children?: Prisma.PlanStepCreateNestedManyWithoutParentInput
 }
 
 export type PlanStepUncheckedCreateWithoutUserInput = {
@@ -611,8 +753,12 @@ export type PlanStepUncheckedCreateWithoutUserInput = {
   dueDate?: Date | string | null
   estimatedMinutes?: number
   order?: number
+  guidance?: string | null
+  completionNote?: string | null
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  children?: Prisma.PlanStepUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type PlanStepCreateOrConnectWithoutUserInput = {
@@ -654,6 +800,9 @@ export type PlanStepScalarWhereInput = {
   dueDate?: Prisma.DateTimeNullableFilter<"PlanStep"> | Date | string | null
   estimatedMinutes?: Prisma.IntFilter<"PlanStep"> | number
   order?: Prisma.IntFilter<"PlanStep"> | number
+  guidance?: Prisma.StringNullableFilter<"PlanStep"> | string | null
+  completionNote?: Prisma.StringNullableFilter<"PlanStep"> | string | null
+  parentId?: Prisma.StringNullableFilter<"PlanStep"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PlanStep"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlanStep"> | Date | string
 }
@@ -666,9 +815,13 @@ export type PlanStepCreateWithoutPlanInput = {
   dueDate?: Date | string | null
   estimatedMinutes?: number
   order?: number
+  guidance?: string | null
+  completionNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPlanStepsInput
+  parent?: Prisma.PlanStepCreateNestedOneWithoutChildrenInput
+  children?: Prisma.PlanStepCreateNestedManyWithoutParentInput
 }
 
 export type PlanStepUncheckedCreateWithoutPlanInput = {
@@ -680,8 +833,12 @@ export type PlanStepUncheckedCreateWithoutPlanInput = {
   dueDate?: Date | string | null
   estimatedMinutes?: number
   order?: number
+  guidance?: string | null
+  completionNote?: string | null
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  children?: Prisma.PlanStepUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type PlanStepCreateOrConnectWithoutPlanInput = {
@@ -710,6 +867,150 @@ export type PlanStepUpdateManyWithWhereWithoutPlanInput = {
   data: Prisma.XOR<Prisma.PlanStepUpdateManyMutationInput, Prisma.PlanStepUncheckedUpdateManyWithoutPlanInput>
 }
 
+export type PlanStepCreateWithoutChildrenInput = {
+  id?: string
+  title: string
+  description?: string | null
+  status?: $Enums.PlanStepStatus
+  dueDate?: Date | string | null
+  estimatedMinutes?: number
+  order?: number
+  guidance?: string | null
+  completionNote?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutPlanStepsInput
+  plan: Prisma.PlanCreateNestedOneWithoutStepsInput
+  parent?: Prisma.PlanStepCreateNestedOneWithoutChildrenInput
+}
+
+export type PlanStepUncheckedCreateWithoutChildrenInput = {
+  id?: string
+  userId: string
+  planId: string
+  title: string
+  description?: string | null
+  status?: $Enums.PlanStepStatus
+  dueDate?: Date | string | null
+  estimatedMinutes?: number
+  order?: number
+  guidance?: string | null
+  completionNote?: string | null
+  parentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PlanStepCreateOrConnectWithoutChildrenInput = {
+  where: Prisma.PlanStepWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlanStepCreateWithoutChildrenInput, Prisma.PlanStepUncheckedCreateWithoutChildrenInput>
+}
+
+export type PlanStepCreateWithoutParentInput = {
+  id?: string
+  title: string
+  description?: string | null
+  status?: $Enums.PlanStepStatus
+  dueDate?: Date | string | null
+  estimatedMinutes?: number
+  order?: number
+  guidance?: string | null
+  completionNote?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutPlanStepsInput
+  plan: Prisma.PlanCreateNestedOneWithoutStepsInput
+  children?: Prisma.PlanStepCreateNestedManyWithoutParentInput
+}
+
+export type PlanStepUncheckedCreateWithoutParentInput = {
+  id?: string
+  userId: string
+  planId: string
+  title: string
+  description?: string | null
+  status?: $Enums.PlanStepStatus
+  dueDate?: Date | string | null
+  estimatedMinutes?: number
+  order?: number
+  guidance?: string | null
+  completionNote?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.PlanStepUncheckedCreateNestedManyWithoutParentInput
+}
+
+export type PlanStepCreateOrConnectWithoutParentInput = {
+  where: Prisma.PlanStepWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlanStepCreateWithoutParentInput, Prisma.PlanStepUncheckedCreateWithoutParentInput>
+}
+
+export type PlanStepCreateManyParentInputEnvelope = {
+  data: Prisma.PlanStepCreateManyParentInput | Prisma.PlanStepCreateManyParentInput[]
+  skipDuplicates?: boolean
+}
+
+export type PlanStepUpsertWithoutChildrenInput = {
+  update: Prisma.XOR<Prisma.PlanStepUpdateWithoutChildrenInput, Prisma.PlanStepUncheckedUpdateWithoutChildrenInput>
+  create: Prisma.XOR<Prisma.PlanStepCreateWithoutChildrenInput, Prisma.PlanStepUncheckedCreateWithoutChildrenInput>
+  where?: Prisma.PlanStepWhereInput
+}
+
+export type PlanStepUpdateToOneWithWhereWithoutChildrenInput = {
+  where?: Prisma.PlanStepWhereInput
+  data: Prisma.XOR<Prisma.PlanStepUpdateWithoutChildrenInput, Prisma.PlanStepUncheckedUpdateWithoutChildrenInput>
+}
+
+export type PlanStepUpdateWithoutChildrenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlanStepStatusFieldUpdateOperationsInput | $Enums.PlanStepStatus
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  guidance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutPlanStepsNestedInput
+  plan?: Prisma.PlanUpdateOneRequiredWithoutStepsNestedInput
+  parent?: Prisma.PlanStepUpdateOneWithoutChildrenNestedInput
+}
+
+export type PlanStepUncheckedUpdateWithoutChildrenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlanStepStatusFieldUpdateOperationsInput | $Enums.PlanStepStatus
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  guidance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PlanStepUpsertWithWhereUniqueWithoutParentInput = {
+  where: Prisma.PlanStepWhereUniqueInput
+  update: Prisma.XOR<Prisma.PlanStepUpdateWithoutParentInput, Prisma.PlanStepUncheckedUpdateWithoutParentInput>
+  create: Prisma.XOR<Prisma.PlanStepCreateWithoutParentInput, Prisma.PlanStepUncheckedCreateWithoutParentInput>
+}
+
+export type PlanStepUpdateWithWhereUniqueWithoutParentInput = {
+  where: Prisma.PlanStepWhereUniqueInput
+  data: Prisma.XOR<Prisma.PlanStepUpdateWithoutParentInput, Prisma.PlanStepUncheckedUpdateWithoutParentInput>
+}
+
+export type PlanStepUpdateManyWithWhereWithoutParentInput = {
+  where: Prisma.PlanStepScalarWhereInput
+  data: Prisma.XOR<Prisma.PlanStepUpdateManyMutationInput, Prisma.PlanStepUncheckedUpdateManyWithoutParentInput>
+}
+
 export type PlanStepCreateManyUserInput = {
   id?: string
   planId: string
@@ -719,6 +1020,9 @@ export type PlanStepCreateManyUserInput = {
   dueDate?: Date | string | null
   estimatedMinutes?: number
   order?: number
+  guidance?: string | null
+  completionNote?: string | null
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -731,9 +1035,13 @@ export type PlanStepUpdateWithoutUserInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  guidance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   plan?: Prisma.PlanUpdateOneRequiredWithoutStepsNestedInput
+  parent?: Prisma.PlanStepUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.PlanStepUpdateManyWithoutParentNestedInput
 }
 
 export type PlanStepUncheckedUpdateWithoutUserInput = {
@@ -745,8 +1053,12 @@ export type PlanStepUncheckedUpdateWithoutUserInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  guidance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.PlanStepUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type PlanStepUncheckedUpdateManyWithoutUserInput = {
@@ -758,6 +1070,9 @@ export type PlanStepUncheckedUpdateManyWithoutUserInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  guidance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -771,6 +1086,9 @@ export type PlanStepCreateManyPlanInput = {
   dueDate?: Date | string | null
   estimatedMinutes?: number
   order?: number
+  guidance?: string | null
+  completionNote?: string | null
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -783,9 +1101,13 @@ export type PlanStepUpdateWithoutPlanInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  guidance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPlanStepsNestedInput
+  parent?: Prisma.PlanStepUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.PlanStepUpdateManyWithoutParentNestedInput
 }
 
 export type PlanStepUncheckedUpdateWithoutPlanInput = {
@@ -797,8 +1119,12 @@ export type PlanStepUncheckedUpdateWithoutPlanInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  guidance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.PlanStepUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type PlanStepUncheckedUpdateManyWithoutPlanInput = {
@@ -810,10 +1136,108 @@ export type PlanStepUncheckedUpdateManyWithoutPlanInput = {
   dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  guidance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type PlanStepCreateManyParentInput = {
+  id?: string
+  userId: string
+  planId: string
+  title: string
+  description?: string | null
+  status?: $Enums.PlanStepStatus
+  dueDate?: Date | string | null
+  estimatedMinutes?: number
+  order?: number
+  guidance?: string | null
+  completionNote?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PlanStepUpdateWithoutParentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlanStepStatusFieldUpdateOperationsInput | $Enums.PlanStepStatus
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  guidance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutPlanStepsNestedInput
+  plan?: Prisma.PlanUpdateOneRequiredWithoutStepsNestedInput
+  children?: Prisma.PlanStepUpdateManyWithoutParentNestedInput
+}
+
+export type PlanStepUncheckedUpdateWithoutParentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlanStepStatusFieldUpdateOperationsInput | $Enums.PlanStepStatus
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  guidance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.PlanStepUncheckedUpdateManyWithoutParentNestedInput
+}
+
+export type PlanStepUncheckedUpdateManyWithoutParentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlanStepStatusFieldUpdateOperationsInput | $Enums.PlanStepStatus
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estimatedMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  guidance?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  completionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type PlanStepCountOutputType
+ */
+
+export type PlanStepCountOutputType = {
+  children: number
+}
+
+export type PlanStepCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  children?: boolean | PlanStepCountOutputTypeCountChildrenArgs
+}
+
+/**
+ * PlanStepCountOutputType without action
+ */
+export type PlanStepCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlanStepCountOutputType
+   */
+  select?: Prisma.PlanStepCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PlanStepCountOutputType without action
+ */
+export type PlanStepCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlanStepWhereInput
+}
 
 
 export type PlanStepSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -826,10 +1250,16 @@ export type PlanStepSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   dueDate?: boolean
   estimatedMinutes?: boolean
   order?: boolean
+  guidance?: boolean
+  completionNote?: boolean
+  parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.PlanStep$parentArgs<ExtArgs>
+  children?: boolean | Prisma.PlanStep$childrenArgs<ExtArgs>
+  _count?: boolean | Prisma.PlanStepCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["planStep"]>
 
 export type PlanStepSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -842,10 +1272,14 @@ export type PlanStepSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   dueDate?: boolean
   estimatedMinutes?: boolean
   order?: boolean
+  guidance?: boolean
+  completionNote?: boolean
+  parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.PlanStep$parentArgs<ExtArgs>
 }, ExtArgs["result"]["planStep"]>
 
 export type PlanStepSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -858,10 +1292,14 @@ export type PlanStepSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   dueDate?: boolean
   estimatedMinutes?: boolean
   order?: boolean
+  guidance?: boolean
+  completionNote?: boolean
+  parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.PlanStep$parentArgs<ExtArgs>
 }, ExtArgs["result"]["planStep"]>
 
 export type PlanStepSelectScalar = {
@@ -874,22 +1312,30 @@ export type PlanStepSelectScalar = {
   dueDate?: boolean
   estimatedMinutes?: boolean
   order?: boolean
+  guidance?: boolean
+  completionNote?: boolean
+  parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PlanStepOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "planId" | "title" | "description" | "status" | "dueDate" | "estimatedMinutes" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["planStep"]>
+export type PlanStepOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "planId" | "title" | "description" | "status" | "dueDate" | "estimatedMinutes" | "order" | "guidance" | "completionNote" | "parentId" | "createdAt" | "updatedAt", ExtArgs["result"]["planStep"]>
 export type PlanStepInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.PlanStep$parentArgs<ExtArgs>
+  children?: boolean | Prisma.PlanStep$childrenArgs<ExtArgs>
+  _count?: boolean | Prisma.PlanStepCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PlanStepIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.PlanStep$parentArgs<ExtArgs>
 }
 export type PlanStepIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.PlanDefaultArgs<ExtArgs>
+  parent?: boolean | Prisma.PlanStep$parentArgs<ExtArgs>
 }
 
 export type $PlanStepPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -897,6 +1343,8 @@ export type $PlanStepPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     plan: Prisma.$PlanPayload<ExtArgs>
+    parent: Prisma.$PlanStepPayload<ExtArgs> | null
+    children: Prisma.$PlanStepPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -908,6 +1356,9 @@ export type $PlanStepPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     dueDate: Date | null
     estimatedMinutes: number
     order: number
+    guidance: string | null
+    completionNote: string | null
+    parentId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["planStep"]>
@@ -1306,6 +1757,8 @@ export interface Prisma__PlanStepClient<T, Null = never, ExtArgs extends runtime
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   plan<T extends Prisma.PlanDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlanDefaultArgs<ExtArgs>>): Prisma.Prisma__PlanClient<runtime.Types.Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  parent<T extends Prisma.PlanStep$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlanStep$parentArgs<ExtArgs>>): Prisma.Prisma__PlanStepClient<runtime.Types.Result.GetResult<Prisma.$PlanStepPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  children<T extends Prisma.PlanStep$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlanStep$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlanStepPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1344,6 +1797,9 @@ export interface PlanStepFieldRefs {
   readonly dueDate: Prisma.FieldRef<"PlanStep", 'DateTime'>
   readonly estimatedMinutes: Prisma.FieldRef<"PlanStep", 'Int'>
   readonly order: Prisma.FieldRef<"PlanStep", 'Int'>
+  readonly guidance: Prisma.FieldRef<"PlanStep", 'String'>
+  readonly completionNote: Prisma.FieldRef<"PlanStep", 'String'>
+  readonly parentId: Prisma.FieldRef<"PlanStep", 'String'>
   readonly createdAt: Prisma.FieldRef<"PlanStep", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PlanStep", 'DateTime'>
 }
@@ -1744,6 +2200,49 @@ export type PlanStepDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many PlanSteps to delete.
    */
   limit?: number
+}
+
+/**
+ * PlanStep.parent
+ */
+export type PlanStep$parentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlanStep
+   */
+  select?: Prisma.PlanStepSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlanStep
+   */
+  omit?: Prisma.PlanStepOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanStepInclude<ExtArgs> | null
+  where?: Prisma.PlanStepWhereInput
+}
+
+/**
+ * PlanStep.children
+ */
+export type PlanStep$childrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlanStep
+   */
+  select?: Prisma.PlanStepSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlanStep
+   */
+  omit?: Prisma.PlanStepOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlanStepInclude<ExtArgs> | null
+  where?: Prisma.PlanStepWhereInput
+  orderBy?: Prisma.PlanStepOrderByWithRelationInput | Prisma.PlanStepOrderByWithRelationInput[]
+  cursor?: Prisma.PlanStepWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PlanStepScalarFieldEnum | Prisma.PlanStepScalarFieldEnum[]
 }
 
 /**

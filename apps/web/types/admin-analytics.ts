@@ -101,9 +101,28 @@ export type AdminUsageData = {
   recentEvents: AdminActivityItem[]
 }
 
+export type AdminBillingTransaction = {
+  id: string
+  payosOrderCode: number
+  amount: number
+  currency: string
+  status: "PENDING" | "PAID" | "CANCELLED" | "FAILED" | "EXPIRED"
+  tier: "FREE" | "PLUS" | "PRO"
+  createdAt: string
+  paidAt: string | null
+  checkoutUrl: string | null
+  user: {
+    id: string
+    email: string | null
+    firstName: string | null
+    lastName: string | null
+  }
+}
+
 export type AdminBillingData = {
   subscriptionMetrics: MetricCardData[]
   planDistributionData: DistributionPoint[]
+  recentTransactions: AdminBillingTransaction[]
 }
 
 export type AnalyticsMockData = {

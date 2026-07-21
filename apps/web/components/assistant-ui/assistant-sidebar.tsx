@@ -3,19 +3,17 @@
 import type { PropsWithChildren } from "react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
+import { useTranslation } from "react-i18next"
 
 import { Assistant } from "@/app/assistant"
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator,
 } from "@workspace/ui/components/breadcrumb"
 import {
   SidebarTrigger,
-  useSidebar,
   SidebarHeader,
   SidebarContent,
 } from "@workspace/ui/components/sidebar"
@@ -47,7 +45,6 @@ import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
 import { ClockRewind, Plus } from "@untitledui/icons"
 import { useChatSummaries } from "@/lib/chat/use-chat-summaries"
 
-
 type AssistantSidebarProps = PropsWithChildren<{
   activePlanId?: string
 }>
@@ -60,9 +57,9 @@ export function AssistantSidebar({
   activePlanId,
   children,
 }: AssistantSidebarProps) {
+  const { t } = useTranslation()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const { state } = useSidebar()
   const urlChatSessionId = searchParams.get("id") ?? searchParams.get("t")
   const { chats } = useChatSummaries()
 
@@ -133,7 +130,9 @@ export function AssistantSidebar({
     return queryString ? `url:${pathname}?${queryString}` : `url:${pathname}`
   }, [dbChatSessionId, pathname, searchParams])
 
-  const [chatTitle, setChatTitle] = useState("New chat")
+  const [chatTitle, setChatTitle] = useState(
+    t("app.chat.newChat", { defaultValue: "New chat" })
+  )
   const [initialMessages, setInitialMessages] = useState<UIMessage[] | null>(
     null
   )
@@ -153,11 +152,13 @@ export function AssistantSidebar({
             {
               type: "current-plan",
               id: activePlanId,
-              label: activePlanTitle?.trim() || "Current plan",
+              label:
+                activePlanTitle?.trim() ||
+                t("app.plan.current", { defaultValue: "Current plan" }),
             },
           ]
         : [],
-    [activePlanId, activePlanTitle]
+    [activePlanId, activePlanTitle, t]
   )
 
   useEffect(() => {
@@ -214,13 +215,16 @@ export function AssistantSidebar({
         }
 
         setInitialMessages([])
-        setChatTitle("New chat")
+        setChatTitle(t("app.chat.newChat", { defaultValue: "New chat" }))
         return
       }
 
       const localMessages = loadChatMessages(sessionKey)
       setInitialMessages(localMessages)
-      setChatTitle(getChatTitle(localMessages))
+      setChatTitle(
+        getChatTitle(localMessages) ||
+          t("app.chat.newChat", { defaultValue: "New chat" })
+      )
     }
 
     setReadyDbChatId(null)
@@ -233,7 +237,7 @@ export function AssistantSidebar({
       isActive = false
       unsubscribe()
     }
-  }, [dbChatSessionId, sessionKey])
+  }, [dbChatSessionId, sessionKey, t])
 
   return (
     <>
@@ -269,7 +273,7 @@ export function AssistantSidebar({
                     className="flex items-center gap-2 font-medium"
                   >
                     <Plus className="size-4" />
-                    New chat
+                    {t("app.chat.newChat", { defaultValue: "New chat" })}
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
 
@@ -277,7 +281,9 @@ export function AssistantSidebar({
                   <>
                     <DropdownMenuSeparator />
                     <div className="px-3 py-2 text-center text-xs text-muted-foreground">
-                      No recent chats
+                      {t("app.chat.noRecent", {
+                        defaultValue: "No recent chats",
+                      })}
                     </div>
                   </>
                 ) : (
@@ -286,14 +292,19 @@ export function AssistantSidebar({
                       <>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                          <DropdownMenuLabel>Today</DropdownMenuLabel>
+                          <DropdownMenuLabel>
+                            {t("app.chat.today", { defaultValue: "Today" })}
+                          </DropdownMenuLabel>
                           {todayChats.map((chat) => (
                             <DropdownMenuItem
                               key={chat.id}
                               onClick={() => handleChatSelect(chat.id)}
                               className="truncate"
                             >
-                              {chat.title || "New chat"}
+                              {chat.title ||
+                                t("app.chat.newChat", {
+                                  defaultValue: "New chat",
+                                })}
                             </DropdownMenuItem>
                           ))}
                         </DropdownMenuGroup>
@@ -304,14 +315,21 @@ export function AssistantSidebar({
                       <>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                          <DropdownMenuLabel>Yesterday</DropdownMenuLabel>
+                          <DropdownMenuLabel>
+                            {t("app.chat.yesterday", {
+                              defaultValue: "Yesterday",
+                            })}
+                          </DropdownMenuLabel>
                           {yesterdayChats.map((chat) => (
                             <DropdownMenuItem
                               key={chat.id}
                               onClick={() => handleChatSelect(chat.id)}
                               className="truncate"
                             >
-                              {chat.title || "New chat"}
+                              {chat.title ||
+                                t("app.chat.newChat", {
+                                  defaultValue: "New chat",
+                                })}
                             </DropdownMenuItem>
                           ))}
                         </DropdownMenuGroup>
@@ -322,14 +340,21 @@ export function AssistantSidebar({
                       <>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                          <DropdownMenuLabel>Previous 7 days</DropdownMenuLabel>
+                          <DropdownMenuLabel>
+                            {t("app.chat.previousSevenDays", {
+                              defaultValue: "Previous 7 days",
+                            })}
+                          </DropdownMenuLabel>
                           {previousSevenDaysChats.map((chat) => (
                             <DropdownMenuItem
                               key={chat.id}
                               onClick={() => handleChatSelect(chat.id)}
                               className="truncate"
                             >
-                              {chat.title || "New chat"}
+                              {chat.title ||
+                                t("app.chat.newChat", {
+                                  defaultValue: "New chat",
+                                })}
                             </DropdownMenuItem>
                           ))}
                         </DropdownMenuGroup>
@@ -340,14 +365,19 @@ export function AssistantSidebar({
                       <>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                          <DropdownMenuLabel>Older</DropdownMenuLabel>
+                          <DropdownMenuLabel>
+                            {t("app.chat.older", { defaultValue: "Older" })}
+                          </DropdownMenuLabel>
                           {olderChats.map((chat) => (
                             <DropdownMenuItem
                               key={chat.id}
                               onClick={() => handleChatSelect(chat.id)}
                               className="truncate"
                             >
-                              {chat.title || "New chat"}
+                              {chat.title ||
+                                t("app.chat.newChat", {
+                                  defaultValue: "New chat",
+                                })}
                             </DropdownMenuItem>
                           ))}
                         </DropdownMenuGroup>

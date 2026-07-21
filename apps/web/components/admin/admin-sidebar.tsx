@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import type { ComponentProps } from "react"
 
-import { NavUser } from "@/components/nav-user"
+
 import { LogoAccent } from "@workspace/ui/components/logo-accent"
 import { cn } from "@workspace/ui/lib/utils"
 import {
@@ -22,10 +22,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
-import {
-  adminNavItems,
-  isAdminNavItemActive,
-} from "./admin-nav"
+import { adminNavItems, isAdminNavItemActive } from "./admin-nav"
 import { Badge } from "@workspace/ui/components/badge"
 
 // function AdminNavSection({
@@ -64,6 +61,7 @@ export function AdminSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       className="border-r-0 font-medium"
+      variant="inset"
       {...props}
       collapsible="offcanvas"
     >
@@ -109,7 +107,7 @@ export function AdminSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       <SidebarFooter>
-        <NavUser side="top" align="start" />
+        {/* Profile menu is rendered in GlobalHeader */}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

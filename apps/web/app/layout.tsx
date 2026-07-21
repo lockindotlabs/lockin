@@ -1,12 +1,12 @@
 import type { Metadata } from "next"
 import { cookies } from "next/headers"
 import {
-  Inter,
   Geist_Mono,
   Funnel_Display,
   Inter_Tight,
   IBM_Plex_Mono,
 } from "next/font/google"
+import localFont from "next/font/local"
 import "katex/dist/katex.min.css"
 ;("@workspace/ui/globals.css")
 import { Providers } from "@/components/providers"
@@ -17,10 +17,11 @@ import { I18N_COOKIE_NAME } from "@workspace/i18n"
 import { loadTranslations } from "@workspace/i18n/server"
 import { Toaster } from "@workspace/ui/components/sonner"
 
-const inter = Inter({
-  subsets: ["vietnamese"],
+const interVariable = localFont({
+  src: "../fonts/InterVariable.woff2",
   variable: "--font-inter",
-  weight: "variable",
+  weight: "100 900",
+  display: "swap",
 })
 
 const interTight = Inter_Tight({
@@ -70,7 +71,7 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={cn(
         "font-sans antialiased",
-        inter.variable,
+        interVariable.variable,
         fontMono.variable,
         funnelDisplay.variable,
         interTight.variable,

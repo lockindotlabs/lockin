@@ -1,293 +1,159 @@
 {
   "landing": {
     "nav": {
-      "product": "Sản phẩm",
-      "extension": "Tiện ích",
+      "home": "Trang chủ",
+      "features": "Tính năng",
+      "resources": "Tài nguyên",
       "pricing": "Bảng giá",
-      "faq": "Hỏi đáp",
-      "manifesto": "Tuyên ngôn"
-    },
-    "auth": {
-      "signIn": "Đăng nhập",
-      "getStarted": "Bắt đầu",
+      "help": "Trợ giúp",
+      "login": "Đăng nhập",
       "goToApp": "Vào ứng dụng"
     },
     "hero": {
-      "badge": "LockIn · v1.0 đã ra mắt!",
-      "title": {
-        "own": "Làm chủ",
-        "yourOne": "thời",
-        "time": "gian,",
-        "build": "xây",
-        "yourTwo": "đời",
-        "life": "mình."
-      },
-      "description": "LockIn chia nhỏ việc bạn thật sự cần làm, dẫn bạn qua một phiên tập trung, và chặn những tab kéo bạn ra khỏi dòng làm việc. Một không gian thực thi có AI — không phải thêm một danh sách việc cần làm.",
+      "badge": "Mới: Giao diện cải tiến và Phân tích chuyên sâu cho kế hoạch",
+      "titleOne": "Biến công việc ngợp đầu",
+      "titleTwo": "thành kế hoạch hành động.",
+      "description": "LockIn là trợ lý hành động AI giúp bạn chia nhỏ công việc ngợp đầu thành các bước dễ quản lý, sau đó dẫn dắt bạn hoàn thành qua các phiên tập trung không xao nhãng.",
+      "getStarted": "Bắt đầu",
       "watchDemo": "Xem demo",
-      "running": "2.481 phiên tập trung đang chạy",
-      "mock": {
-        "today": "HÔM NAY · THỨ BA 24",
-        "headingOne": "Hôm nay có ba việc quan trọng.",
-        "headingTwo": "Phần còn lại để sau.",
-        "inSprint": "Đang sprint",
-        "taskTwo": "Rà soát nội dung portfolio",
-        "taskThree": "Refactor /auth handler",
-        "taskFour": "Ghi chú standup buổi sáng"
-      }
+      "demoAlt": "Ứng dụng LockIn hiển thị một kế hoạch được chia nhỏ thành các nhiệm vụ có mốc thời gian cụ thể"
     },
-    "mock": {
-      "taskPrimary": "Soạn chương 3 luận văn — mở bài",
-      "taskShort": "Chương 3 mở bài",
-      "taskShortLower": "chương 3 mở bài",
-      "sprint142": "SPRINT #142",
-      "sprint42": "SPRINT #42",
-      "left": "CÒN LẠI",
-      "hard": "Cứng",
-      "soft": "Mềm",
-      "blocked": "ĐÃ CHẶN",
-      "steps": {
-        "outline": "Lập 3 luận điểm chính",
-        "hook": "Viết đoạn mở đầu",
-        "revise": "Chỉnh theo phản hồi",
-        "statement": "Viết câu luận đề",
-        "bridge": "Chuyển sang chương 4"
-      },
-      "actions": {
-        "addFive": "+5 phút",
-        "addFiveShort": "+5p",
-        "pause": "Tạm dừng",
-        "endSprint": "Kết thúc"
-      }
+    "introducing": {
+      "eyebrow": "Giới thiệu LockIn",
+      "title": "Bạn biết mình cần làm gì. Vậy tại sao bắt đầu lại khó khăn đến thế?",
+      "description": "Công việc lớn tạo cảm giác quá tải. Các ứng dụng to-do truyền thống giúp bạn sắp xếp chúng, nhưng lại không chỉ ra bạn cần làm gì đầu tiên. Khi mỗi nhiệm vụ đều như một ngọn núi, trì hoãn trở thành lựa chọn dễ dàng nhất."
     },
-    "cards": {
-      "sprint": {
-        "label": "02 · SPRINT MODE",
-        "headingOne": "Tập trung",
-        "headingTwo": "đúng nghĩa.",
-        "description": "Sprint Mode làm mờ mọi thứ khác và chỉ giữ lại việc trước mắt.",
-        "statusActive": "● Sprint đang chạy",
-        "statusReady": "● Sẵn sàng bắt đầu"
+    "steps": {
+      "title": "Từ ý tưởng đến hành động qua\nba bước đơn giản.",
+      "step1": {
+        "num": "01",
+        "title": "Lập kế hoạch bằng AI",
+        "description": "Mô tả những gì bạn cần hoàn thành bằng ngôn ngữ tự nhiên. LockIn biến các mục tiêu mơ hồ thành kế hoạch hành động có cấu trúc với các bước và ước tính thời gian thực tế.",
+        "cta": "Thử ngay",
+        "demo": "Xem demo",
+        "alt": "Mẫu Lập kế hoạch bằng AI hiển thị hộp thoại tạo cấu trúc nhiệm vụ"
       },
-      "hud": {
-        "label": "03 · ĐỒNG BỘ TAB",
-        "headingOne": "Một tài khoản.",
-        "headingTwo": "Mọi tab.",
-        "description": "Web app và tiện ích trình duyệt chia sẻ cùng trạng thái sprint trực tiếp. Bắt đầu ở đâu cũng thấy ở đó."
+      "step2": {
+        "num": "02",
+        "title": "Cá nhân hóa kế hoạch",
+        "description": "Xem xét, sắp xếp lại hoặc điều chỉnh từng bước. AI cung cấp cho bạn điểm xuất phát — bạn vẫn là người kiểm soát.",
+        "alt": "Mẫu Cá nhân hóa kế hoạch hiển thị danh sách nhiệm vụ có thể chỉnh sửa với thời lượng và tiêu chí hoàn thành"
       },
-      "blocklist": {
-        "label": "DANH SÁCH CHẶN",
-        "headingOne": "Luật của bạn,",
-        "headingTwo": "trang của bạn.",
-        "description": "Chọn danh mục hoặc tên miền cụ thể. Đặt chặn cứng / nhắc mềm cho từng trang và lưu thành preset."
-      },
-      "breakdown": {
-        "label": "01 · AI CHIA NHỎ",
-        "headingOne": "Việc mơ hồ thành",
-        "headingTwo": "các bước làm được.",
-        "description": "Nhập “Dọn căn hộ” hoặc “Ôn thi thuật toán giữa kỳ.” AI chia việc thành các bước có thời lượng thực tế — bạn vẫn có thể kéo, sửa, hoặc ghi đè bất cứ lúc nào."
-      },
-      "shield": {
-        "label": "04 · LÁ CHẮN XAO NHÃNG",
-        "headingOne": "Xao nhãng,",
-        "headingTwo": "khóa lại.",
-        "description": "Chặn cứng thứ cuốn bạn vào. Nhắc mềm vùng lưng chừng. Quyền quyết định là của bạn."
-      }
-    },
-    "breakdown": {
-      "query": "“Ôn thi thuật toán giữa kỳ vào thứ Sáu”",
-      "aiPrefix": "Đây là kế hoạch 4 bước — khoảng",
-      "aiSuffix": "Muốn mình chia nhỏ bước đầu hơn không?",
-      "steps": {
-        "problemSets": "Làm lại problem set 4 + 5",
-        "cheatSheet": "Làm tờ nhắc Big-O một trang",
-        "review": "Ôn ghi chú BFS / DFS",
-        "practice": "Làm một đề luyện timed"
-      },
-      "actions": {
-        "start": "Bắt đầu sprint ✓",
-        "smaller": "Chia nhỏ hơn",
-        "edit": "Sửa"
-      }
-    },
-    "product": {
-      "eyebrow": "Khoảng cách giữa kế hoạch và thực thi",
-      "headingOne": "Đừng chìm trong to-do.",
-      "headingTwo": "Bắt đầu hoàn thành.",
-      "description": "Hầu hết app chỉ lưu việc. LockIn giúp bạn bắt đầu, tập trung, và hoàn thành — bằng cách chia nhỏ việc, bảo vệ sự chú ý, và đi theo bạn qua mọi tab."
-    },
-    "blocked": {
-      "eyebrow": "CHẶN CỨNG · sprint đang chạy",
-      "headingPrefix": "Vẫn",
-      "headingEmphasis": "lock in",
-      "description": "Twitter tạm nghỉ cho đến khi sprint kết thúc. Quay lại khi hết giờ — nó vẫn ở đó thôi.",
-      "workingOn": "Đang làm",
-      "sprintLength": "Thời lượng sprint",
-      "timeLeft": "Còn lại"
-    },
-    "extension": {
-      "eyebrow": "Tiện ích trình duyệt",
-      "headingOne": "Tập trung không nên mất",
-      "headingTwo": "khi bạn đóng tab.",
-      "description": "Tiện ích LockIn là lớp mỏng nối với tài khoản của bạn. Bắt đầu sprint ở bất cứ đâu, xem trạng thái trên mọi trang, và được kéo về nhẹ nhàng khi bạn trượt nhịp.",
-      "popup": {
-        "label": "POPUP THANH CÔNG CỤ",
-        "headingOne": "Popup một chạm,",
-        "headingTwo": "cùng trạng thái live.",
-        "description": "Popup hiển thị sprint hiện tại, bước bạn đang làm, và số lần LockIn đã hấp thụ xao nhãng giúp bạn."
-      },
-      "pairing": {
-        "label": "GHÉP NỐI",
-        "headingOne": "Cài một lần,",
-        "headingTwo": "đăng nhập mọi nơi.",
-        "description": "Không cần mật khẩu thứ hai. Tiện ích ghép với tài khoản web trong hai lần chạm — và không hỏi lại thông tin đăng nhập.",
-        "confirm": "Xác nhận mã ghép nối",
-        "expires": "hết hạn sau 2:31"
-      },
-      "ambient": {
-        "label": "AMBIENT HUD",
-        "headingOne": "Luôn",
-        "headingTwo": "trong tầm mắt.",
-        "description": "Một pill kéo thả trên mọi trang để bộ đếm giờ không biến mất vào tab bị quên."
-      },
-      "slip": {
-        "label": "PHÁT HIỆN TRƯỢT NHỊP",
-        "headingOne": "Nhắc nhẹ,",
-        "headingTwo": "không phán xét.",
-        "description": "Nếu bạn lạc sang trang nhắc mềm, LockIn cho thấy cái giá — không làm bạn thấy tệ.",
-        "prompt": "Ở lại reddit.com?",
-        "costPrefix": "Thêm 5 phút sẽ tốn",
-        "costStrong": "~1 bước",
-        "costSuffix": "trong sprint này.",
-        "back": "← quay lại làm việc",
-        "fiveMin": "5 phút"
-      },
-      "patterns": {
-        "label": "NHỊP ĐỘ",
-        "headingOne": "Bạn làm được nhiều hơn",
-        "headingTwo": "sau 10 giờ.",
-        "description": "LockIn âm thầm học nhịp của bạn — khi nào bạn tập trung tốt nhất, khi nào dễ trượt, và kích cỡ việc nào bạn hay hoàn thành."
-      },
-      "heatmap": {
-        "label": "HEATMAP TẬP TRUNG 12 TUẦN",
-        "headingOne": "Nhịp độ",
-        "headingTwo": "hiện ra rõ.",
-        "ago": "12 tuần trước",
-        "today": "hôm nay"
+      "step3": {
+        "num": "03",
+        "title": "Giữ vững sự tập trung",
+        "description": "Bắt đầu một phiên Sprint và giải quyết từng bước một trong không gian làm việc không xao nhãng được thiết kế để tập trung sâu.",
+        "alt": "Mẫu Giữ vững sự tập trung hiển thị bộ đếm giờ sprint tập trung với các nút trạng thái"
       }
     },
     "pricing": {
-      "eyebrow": "Bảng giá",
-      "headingOne": "Giá đơn giản.",
-      "headingTwo": "Lock in khi bạn sẵn sàng.",
-      "description": "Bắt đầu miễn phí. Nâng cấp để chặn cứng, sprint dài hơn, và workspace cho đội nhóm.",
-      "monthly": "Hàng tháng",
-      "annually": "Hàng năm",
-        "tiers": [
-        {
+      "title": "Bảng giá",
+      "subtitle": "Chọn gói dịch vụ phù hợp với bạn.",
+      "cta": "Bắt đầu",
+      "perMonth": "/tháng",
+      "plans": {
+        "free": {
           "name": "Miễn phí",
-          "desc": "Tất cả những gì bạn cần để thử LockIn.",
           "price": "0₫",
-          "per": "/mãi mãi",
-          "billed": "Không cần thẻ tín dụng",
           "features": [
-            "2 credit/ngày với mô hình AI Pro",
+            "20 credits/ngày với các mô hình AI Pro\n(tối đa 200 credits/tháng)",
             "3 kế hoạch với AI Planner",
             "3 dự án",
             "Giao diện LockIn Mode cơ bản",
-            "Giới hạn tải lên (hình ảnh, tài liệu, ghi âm)"
-          ],
-          "cta": "Bắt đầu miễn phí"
+            "Tải lên giới hạn (hình ảnh, tài liệu, bản ghi âm)"
+          ]
         },
-        {
+        "plus": {
           "name": "Plus",
-          "tag": "Phổ biến nhất",
-          "desc": "Tất cả trong gói Miễn phí, cộng thêm nhiều credit AI và tính năng.",
           "price": "79.000₫",
-          "per": "/tháng",
-          "billed": "Giá tốt nhất cho cá nhân",
           "features": [
-            "Tất cả trong gói Miễn phí",
-            "100 credit/tháng với mô hình AI Pro",
-            "Số lượng kế hoạch không giới hạn với AI Planner",
+            "Mọi tính năng ở gói Miễn phí",
+            "1000 credits/tháng với mô hình AI Pro",
+            "Không giới hạn kế hoạch với AI Planner",
             "50 dự án",
-            "Truy cập sớm các tính năng mới",
-            "Tùy chỉnh giao diện",
-            "Chế độ xem thống kê",
-            "Chặn mạnh hơn cho LockIn Mode",
-            "Nhiều khả năng tải lên hơn (hình ảnh, tài liệu, ghi âm)",
-            "Phần thưởng thêm"
-          ],
-          "cta": "Chọn Plus"
+            "Trải nghiệm sớm các tính năng mới",
+            "Tùy chỉnh và cá nhân hóa giao diện",
+            "Xem số liệu thống kê",
+            "Chặn xao nhãng nghiêm ngặt hơn cho LockIn Mode",
+            "Tải lên nhiều hơn (hình ảnh, tài liệu, bản ghi âm)",
+            "Phần thưởng bonus"
+          ]
         },
-        {
+        "pro": {
           "name": "Pro",
-          "desc": "Dành cho người dùng chuyên sâu và chuyên gia.",
           "price": "189.000₫",
-          "per": "/tháng",
-          "billed": "Tính năng cao cấp & hỗ trợ ưu tiên",
           "features": [
-            "Tất cả trong gói Plus",
-            "300 credit/tháng với mô hình Pro",
-            "Số lượng kế hoạch không giới hạn với AI Planner",
-            "Dự án không giới hạn",
-            "Tải lên không giới hạn (hình ảnh, tài liệu, ghi âm)",
-            "Thêm phần thưởng"
-          ],
-          "cta": "Chọn Pro"
+            "Mọi tính năng ở gói Plus",
+            "3000 credits/tháng với mô hình AI Pro",
+            "Không giới hạn kế hoạch với AI Planner",
+            "Không giới hạn dự án",
+            "Không giới hạn tải lên (hình ảnh, tài liệu, bản ghi âm)",
+            "Nhiều phần thưởng bonus hơn"
+          ]
         }
-      ]
+      }
     },
     "faq": {
-      "headingLight": "Câu hỏi",
-      "headingRest": "thường gặp.",
-      "subPrefix": "Còn gì nữa? Email",
-      "subSuffix": "và tụi mình sẽ trả lời sớm.",
-      "items": [
-        {
-          "question": "LockIn thật sự làm gì khác một app to-do thông thường?",
-          "answer": "LockIn không được xây để lưu task — nó được xây để giúp bạn thực thi. AI chia việc mơ hồ thành bước có thể làm, Sprint Mode dẫn bạn qua bộ đếm tập trung, và tiện ích trình duyệt chặn xao nhãng trong lúc bạn làm. Phần lớn app dừng ở danh sách; tụi mình bắt đầu từ đó."
+      "title": "Câu hỏi thường gặp",
+      "subtitle": "Mọi điều bạn cần biết về LockIn.",
+      "items": {
+        "faq-1": {
+          "question": "LockIn thực sự làm được gì mà các ứng dụng to-do thông thường không làm được?",
+          "answer": "LockIn không được thiết kế chỉ để lưu trữ nhiệm vụ — nó được xây dựng để giúp bạn thực thi chúng. AI chia nhỏ công việc mơ hồ thành các bước hành động, Sprint Mode đồng hành cùng bạn qua bộ đếm giờ tập trung, và tiện ích trình duyệt sẽ chặn các trang web gây xao nhãng trong lúc làm. Hầu hết các ứng dụng dừng lại sau khi lập danh sách; chúng tôi bắt đầu từ đó."
         },
-        {
-          "question": "Tiện ích này khác Cold Turkey hay Freedom thế nào?",
-          "answer": "Những công cụ đó là blocker thuần. Tiện ích LockIn kết nối với task của bạn — khi bạn bắt đầu sprint “Soạn chương 3,” nó biết cần chặn trang nào, trong bao lâu, và hiện các bước con trong popup. Cấu hình nằm trong web app, không phải trong một trang cài đặt tiện ích bé xíu."
+        "faq-2": {
+          "question": "Tiện ích mở rộng này có gì khác biệt so với Cold Turkey hay Freedom?",
+          "answer": "Đó là những công cụ chỉ thuần chặn web. Tiện ích của LockIn liên kết chặt chẽ với nhiệm vụ của bạn — khi bạn bắt đầu sprint cho việc \"Soạn chương 3 luận văn\", nó sẽ tự biết cần chặn những trang web nào, chặn trong bao lâu, và hiển thị các bước nhỏ của bạn trong cửa sổ popup. Việc cấu hình diễn ra ngay trên ứng dụng web chứ không phải trong trang cài đặt tiện ích nhỏ bé."
         },
-        {
-          "question": "Mình có phải dùng AI cho mọi thứ không?",
-          "answer": "Không. LockIn vẫn hoạt động hoàn toàn thủ công — bỏ qua gợi ý AI, tự viết bước, tự đặt thời lượng. AI là trợ lý, không phải người ra lệnh."
+        "faq-3": {
+          "question": "Tôi có bắt buộc phải sử dụng AI cho mọi việc không?",
+          "answer": "Không. LockIn hoạt động hoàn toàn thủ công — bạn có thể bỏ qua gợi ý của AI, tự viết các bước và đặt thời gian theo ý mình. AI chỉ đóng vai trò hỗ trợ, không quyết định thay bạn."
         },
-        {
-          "question": "Còn quyền riêng tư thì sao? LockIn có theo dõi mọi trang mình vào không?",
-          "answer": "Tiện ích chỉ theo dõi điều hướng đến các trang trong blocklist của chính bạn, và chỉ khi có sprint đang chạy. Duyệt web ngoài sprint là vô hình với tụi mình. Lịch sử AI tắt mặc định và không bao giờ được đẩy sang tiện ích. Bạn có thể xóa dữ liệu phân tích bất cứ lúc nào."
+        "faq-4": {
+          "question": "Vấn đề bảo mật thì sao? LockIn có theo dõi mọi trang web tôi truy cập không?",
+          "answer": "Tiện ích mở rộng chỉ theo dõi khi bạn truy cập vào các trang nằm trong danh sách chặn do chính bạn thiết lập, và chỉ trong thời gian một phiên sprint đang diễn ra. Lịch sử duyệt web ngoài thời gian sprint hoàn toàn ẩn danh đối với chúng tôi. Lịch sử AI được tắt theo mặc định và không bao giờ được gửi tới tiện ích. Bạn có thể xóa dữ liệu phân tích của mình bất kỳ lúc nào."
         },
-        {
-          "question": "Hiện hỗ trợ trình duyệt nào?",
-          "answer": "Chrome, Edge, Brave, và Arc hiện đã hỗ trợ. Firefox đang beta. Safari nằm trong roadmap khi Apple hoàn thiện phần Web Extensions API tụi mình cần."
+        "faq-5": {
+          "question": "Những trình duyệt nào được hỗ trợ?",
+          "answer": "Hiện tại hỗ trợ Chrome, Edge, Brave và Arc. Firefox đang thử nghiệm (beta). Safari nằm trong lộ trình phát triển sau khi Apple hoàn thiện Web Extensions API mà chúng tôi cần."
         },
-        {
-          "question": "Mình có thể thử Pro trước khi trả tiền không?",
-          "answer": "Có. Bạn có 14 ngày dùng thử Pro khi đăng ký — không cần thẻ. Nếu không nâng cấp, tài khoản sẽ quay lại Free."
+        "faq-6": {
+          "question": "Tôi có thể dùng thử gói Pro trước khi thanh toán không?",
+          "answer": "Có. Bạn sẽ có 14 ngày dùng thử Pro khi đăng ký tài khoản — không yêu cầu thẻ tín dụng. Gói của bạn sẽ tự động chuyển về bản Miễn phí nếu bạn không nâng cấp."
         },
-        {
-          "question": "Có app mobile không?",
-          "answer": "App iOS và Android đang ở private beta. Chúng mirror trạng thái sprint live từ web app để bạn có thể tạm dừng bằng điện thoại hoặc chỉ liếc qua timer."
+        "faq-7": {
+          "question": "Đã có ứng dụng di động chưa?",
+          "answer": "Ứng dụng iOS và Android đang trong giai đoạn thử nghiệm giới hạn. Chúng đồng bộ trạng thái sprint trực tiếp từ ứng dụng web để bạn có thể tạm dừng từ điện thoại hoặc đơn giản là liếc nhìn bộ đếm giờ."
         }
-      ]
+      }
     },
     "footer": {
-      "tagline": "Làm chủ thời gian, xây đời mình.",
-      "product": "Sản phẩm",
-      "webApp": "Web app",
-      "browserExtension": "Tiện ích trình duyệt",
-      "changelog": "Nhật ký thay đổi",
-      "roadmap": "Roadmap",
-      "compare": "So sánh",
-      "company": "Công ty",
-      "blog": "Blog",
-      "brand": "Thương hiệu",
-      "pressKit": "Press kit",
-      "privacy": "Quyền riêng tư",
-      "terms": "Điều khoản",
-      "security": "Bảo mật"
+      "columns": {
+        "features": {
+          "title": "Tính năng",
+          "aiAssistant": "Trợ lý AI",
+          "sprintMode": "Chế độ Sprint",
+          "browserExtension": "Tiện ích trình duyệt"
+        },
+        "resources": {
+          "title": "Tài nguyên",
+          "blog": "Blog",
+          "changelog": "Nhật ký thay đổi",
+          "docs": "Tài liệu",
+          "community": "Cộng đồng"
+        },
+        "company": {
+          "title": "Công ty",
+          "about": "Giới thiệu",
+          "careers": "Tuyển dụng"
+        },
+        "trust": {
+          "title": "Pháp lý",
+          "terms": "Điều khoản dịch vụ",
+          "privacy": "Chính sách bảo mật"
+        }
+      },
+      "copyright": "© 2026 LockIn Labs, Inc."
     }
   },
   "trust": {
@@ -657,6 +523,452 @@
           "company": "LockIn Labs, Inc.",
           "address": "Thành phố Hồ Chí Minh, Việt Nam"
         }
+      }
+    }
+  },
+  "app": {
+    "nav": {
+      "home": "Trang chủ",
+      "plans": "Kế hoạch",
+      "focus": "Tập trung",
+      "askAi": "Hỏi AI",
+      "templates": "Mẫu",
+      "insights": "Thống kê",
+      "admin": "Quản trị",
+      "settings": "Cài đặt",
+      "subscription": "Gói dịch vụ",
+      "knowledgeHub": "Kho kiến thức"
+    },
+    "common": {
+      "loading": "Đang tải..."
+    },
+    "actions": {
+      "newPlan": "Kế hoạch mới",
+      "more": "Thêm",
+      "copyLink": "Sao chép liên kết",
+      "openInNewTab": "Mở trong tab mới",
+      "delete": "Xóa",
+      "rename": "Đổi tên"
+    },
+    "sidebar": {
+      "recentPlans": "Kế hoạch gần đây",
+      "noSavedPlans": "Chưa có kế hoạch đã lưu"
+    },
+    "search": {
+      "placeholder": "Nhập lệnh hoặc tìm kiếm...",
+      "quickActions": "Thao tác nhanh",
+      "chats": "Đoạn chat",
+      "plans": "Kế hoạch",
+      "loadingChats": "Đang tải chat...",
+      "loadingPlans": "Đang tải kế hoạch...",
+      "noResults": "Không tìm thấy kết quả.",
+      "unableToSearch": "Không thể tìm kiếm. Thử lại nhé.",
+      "createBlankPlan": "Tạo kế hoạch trống",
+      "currentPage": "Trang hiện tại",
+      "openPage": "Mở trang",
+      "messageCount_one": "{{count}} tin nhắn",
+      "messageCount_other": "{{count}} tin nhắn",
+      "stepCount_one": "{{count}} bước",
+      "stepCount_other": "{{count}} bước",
+      "shortcutPrefix": "Dùng",
+      "shortcutSuffix": "để mở bảng lệnh",
+      "filters": {
+        "all": "Tất cả",
+        "chats": "Chat",
+        "plans": "Kế hoạch"
+      }
+    },
+    "chat": {
+      "newChat": "Chat mới",
+      "renamePrompt": "Đổi tên chat",
+      "recent": "Gần đây",
+      "noRecent": "Chưa có chat gần đây",
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua",
+      "previousSevenDays": "7 ngày trước",
+      "older": "Cũ hơn"
+    },
+    "plan": {
+      "untitled": "Kế hoạch chưa đặt tên",
+      "current": "Kế hoạch hiện tại"
+    },
+    "plans": {
+      "recently": "Gần đây",
+      "noTasks": "Chưa có task",
+      "taskProgress": "{{completed}}/{{total}} task",
+      "filterAria": "Lọc kế hoạch theo trạng thái",
+      "toggleViewAria": "Đổi kiểu hiển thị",
+      "deleteAria": "Xóa {{name}}",
+      "noPlansFound": "Không tìm thấy kế hoạch",
+      "noPlansInCategory": "Không có kế hoạch nào trong nhóm \"{{category}}\".",
+      "emptyTitle": "Bạn chưa có kế hoạch đã lưu",
+      "emptyDescription": "Tạo một kế hoạch để xem tại đây.",
+      "tabs": {
+        "all": "Tất cả kế hoạch"
+      },
+      "status": {
+        "overdue": "Quá hạn",
+        "dueToday": "Hạn hôm nay",
+        "onTrack": "Đúng tiến độ",
+        "completed": "Hoàn thành"
+      },
+      "table": {
+        "planTitle": "Tên kế hoạch",
+        "status": "Trạng thái",
+        "tasks": "Task",
+        "lastOpened": "Mở gần nhất"
+      }
+    },
+    "templates": {
+      "title": "Mẫu",
+      "subtitle": "Mỗi mẫu không chỉ là tên lưu sẵn. Bạn có thể xem mẫu sẽ làm gì, việc nào đưa vào sprint được, việc nào cần theo dõi lâu hơn, rồi trả lời các câu hỏi khởi tạo trước khi AI lập bản nháp kế hoạch.",
+      "createNew": "Tạo mẫu mới",
+      "tabs": {
+        "aria": "Khu vực mẫu",
+        "marketplace": "Kho mẫu",
+        "mine": "Mẫu của tôi"
+      },
+      "filters": {
+        "searchPlaceholder": "Tìm theo tên, mô tả, tag...",
+        "allCategories": "Tất cả danh mục"
+      },
+      "badges": {
+        "academic": "Học thuật",
+        "document": "Tài liệu",
+        "skillPractice": "Luyện tập",
+        "project": "Dự án",
+        "group": "Nhóm",
+        "teamBased": "Theo nhóm"
+      },
+      "duration": {
+        "minutes_one": "{{count}} phút",
+        "minutes_other": "{{count}} phút",
+        "hours_one": "{{count}} giờ",
+        "hours_other": "{{count}} giờ",
+        "hoursMinutes": "{{hours}}h{{minutes}}p"
+      },
+      "stats": {
+        "steps_one": "{{count}} bước",
+        "steps_other": "{{count}} bước",
+        "installs_one": "{{count}} cài đặt",
+        "installs_other": "{{count}} cài đặt",
+        "coreSteps_one": "{{count}} bước cốt lõi",
+        "coreSteps_other": "{{count}} bước cốt lõi",
+        "questions_one": "{{count}} câu hỏi",
+        "questions_other": "{{count}} câu hỏi"
+      },
+      "detail": {
+        "empty": "Chọn một mẫu để xem workflow, câu hỏi khởi tạo và cách công việc sẽ được chia nhỏ.",
+        "heading": "Chi tiết mẫu",
+        "fallbackOverview": "Khung quy trình cho mẫu này.",
+        "author": "Tác giả: {{author}}",
+        "workflowSize": "Quy mô workflow",
+        "totalEstimate": "Ước tính tổng",
+        "scaffoldQuestions": "Câu hỏi khởi tạo",
+        "sections": {
+          "whatItDoes": "Mẫu này giúp làm gì",
+          "sprintable": "Việc có thể đưa vào sprint",
+          "longRunning": "Việc cần theo dõi lâu hơn sprint",
+          "deliverables": "Sản phẩm bàn giao cuối cùng",
+          "saveWhen": "Chỉ nên lưu kế hoạch khi..."
+        }
+      },
+      "scaffold": {
+        "title": "Câu hỏi khởi tạo",
+        "description": "Trả lời ngắn gọn các câu hỏi này trước. AI sẽ dùng chúng để lập kế hoạch đúng theo mẫu, thay vì trả lời chung chung."
+      },
+      "start": {
+        "title": "Tạo bản nháp kế hoạch với mẫu này",
+        "description": "Nút lưu kế hoạch chỉ xuất hiện sau khi AI có đủ ngữ cảnh và lập đủ 3 phase.",
+        "opening": "Đang mở chat",
+        "button": "Tạo bản nháp"
+      },
+      "toast": {
+        "installFailed": "Không thể ghi nhận lượt cài đặt mẫu. Chat vẫn sẽ được mở."
+      },
+      "empty": {
+        "title": "Chưa có mẫu nào",
+        "description": "Mẫu sẽ xuất hiện ở đây khi được thêm vào hệ thống."
+      },
+      "mine": {
+        "loading": "Đang tải mẫu của bạn...",
+        "emptyTitle": "Bạn chưa có mẫu nào",
+        "emptyDescription": "Tạo từ đầu hoặc chụp lại một kế hoạch có sẵn để bắt đầu.",
+        "summary": "{{category}} • {{count}} bước",
+        "rejectionReason": "Lý do từ chối: {{reason}}",
+        "edit": "Sửa",
+        "submit": "Gửi duyệt",
+        "unpublish": "Gỡ đăng",
+        "delete": "Xóa",
+        "status": {
+          "draft": "Nháp",
+          "pendingReview": "Chờ duyệt",
+          "approved": "Đã đăng",
+          "rejected": "Bị từ chối"
+        }
+      }
+    },
+    "editor": {
+      "close": "Đóng trình chỉnh sửa"
+    },
+    "focus": {
+      "focusedToday": "{{duration}} tập trung hôm nay",
+      "dueTodayPlans_one": "{{count}} kế hoạch có bước hạn hôm nay.",
+      "dueTodayPlans_other": "{{count}} kế hoạch có bước hạn hôm nay.",
+      "pickPlan": "Chọn một kế hoạch và bắt đầu Sprint.",
+      "emptyTitle": "Chưa có gì sẵn sàng để Sprint",
+      "emptyDescription": "Tạo một kế hoạch để bắt đầu.",
+      "createPlan": "Tạo kế hoạch",
+      "nextStep": "Tiếp theo:",
+      "allStepsCompleted": "Tất cả bước đã hoàn thành",
+      "stepCount_one": "{{count}} bước",
+      "stepCount_other": "{{count}} bước",
+      "stepUnit_one": "bước",
+      "stepUnit_other": "bước",
+      "dueTodayCount_one": "{{count}} hạn hôm nay",
+      "dueTodayCount_other": "{{count}} hạn hôm nay",
+      "sprint": "Sprint",
+      "recentSprints": "Sprint gần đây",
+      "noSprints": "Chưa có Sprint nào.",
+      "session": {
+        "sprintFallback": "Sprint",
+        "loading": "Đang tải phiên tập trung...",
+        "sprintLabel": "Sprint",
+        "completeLabel": "{{percent}}% hoàn thành",
+        "overtime": "Quá giờ",
+        "paused": "Đang tạm dừng",
+        "taskProgress": "Tiến độ task",
+        "resume": "Tiếp tục",
+        "pause": "Tạm dừng",
+        "saving": "Đang lưu...",
+        "allDoneEndSprint": "Đã xong - Kết thúc Sprint",
+        "endSprint": "Kết thúc Sprint",
+        "steps": "Các bước",
+        "scrollTop": "Cuộn lên đầu danh sách bước",
+        "scrollBottom": "Cuộn xuống cuối danh sách bước",
+        "nowWorkingOn": "Đang làm",
+        "overBy": "+{{duration}} quá giờ",
+        "howTo": "Cách làm",
+        "allStepsDone": "Tất cả bước đã xong",
+        "pickStepHint": "Chọn hoặc bắt đầu một bước để xem gợi ý.",
+        "leaveWarning": "Bạn chắc chắn muốn rời đi? Sprint đang chạy.",
+        "endModal": {
+          "title": "Kết thúc Sprint tập trung",
+          "subtitle": "Xử lý mọi bước chưa xong bên dưới trước khi kết thúc.",
+          "tooEarlyTitle": "Bạn đang kết thúc Sprint quá sớm!",
+          "unfinishedTitle": "Bạn chưa hoàn thành mọi thứ!",
+          "tooEarlyDescription": "Vẫn còn thời gian và bước chưa xong. Hãy xử lý từng bước bên dưới - \"Tôi đã xong\" hoặc \"Tôi chưa xong\" - hoặc tiếp tục Sprint.",
+          "unfinishedDescription": "Xử lý các bước còn lại bên dưới trước khi kết thúc.",
+          "completed": "Đã hoàn thành",
+          "markedNotDone": "Đã đánh dấu là chưa xong",
+          "estimate": "Ước tính:",
+          "spent": " (đã dùng {{minutes}}p)",
+          "extensionSummary": " · đã xin thêm +{{minutes}}p ({{count}}x)",
+          "notDoneButton": "Tôi chưa xong",
+          "doneButton": "Tôi đã xong",
+          "honesty": "Bạn chịu trách nhiệm cho hành động của mình - hãy trung thực với phần đã thật sự hoàn thành.",
+          "timeElapsed": "Thời gian đã dùng:",
+          "remainingTime": "Thời gian Sprint còn lại:",
+          "continueSprint": "Tiếp tục Sprint",
+          "cancel": "Hủy",
+          "resolveFirst": "Xử lý thêm {{count}} bước trước",
+          "ending": "Đang kết thúc...",
+          "saveAndEnd": "Lưu & kết thúc",
+          "resolveMore": "Xử lý thêm {{count}} bước"
+        }
+      },
+      "coach": {
+        "title": "Hỏi Coach",
+        "remaining": "Còn {{remaining}}/{{total}} lượt",
+        "emptyPrefix": "Kẹt ở bước này? Hỏi",
+        "approach": "cách tiếp cận",
+        "emptySuffix": "- Coach gợi ý hướng làm, không đưa lời giải sẵn.",
+        "thinking": "Coach đang nghĩ...",
+        "limitReached": "Bạn đã dùng hết {{total}} lượt hỏi cho bước này - giờ là lúc bắt tay vào làm.",
+        "placeholder": "Mình nên bắt đầu bước này thế nào?",
+        "sendAria": "Gửi câu hỏi cho Coach",
+        "replyError": "Không tạo được phản hồi.",
+        "genericError": "Có lỗi xảy ra."
+      },
+      "overtime": {
+        "taskTitle": "Task này đang lâu hơn dự kiến",
+        "sprintTitle": "Hết thời gian Sprint",
+        "taskDescription": "Hãy xử lý task này trước khi tiếp tục - không bỏ qua phần quá giờ.",
+        "sprintDescription": "Các bước này chưa xong. Hãy xử lý từng bước để kết thúc Sprint.",
+        "overEstimate": "+{{duration}} quá ước tính",
+        "extensionCount_one": "Đã xin thêm thời gian {{count}} lần",
+        "extensionCount_other": "Đã xin thêm thời gian {{count}} lần",
+        "notOnTimeWarning": "- Sprint sẽ được tính là không đúng giờ",
+        "giveUp": "Tôi bỏ cuộc",
+        "markDone": "Tôi thật sự đã xong",
+        "honesty": "Bạn chịu trách nhiệm cho hành động của mình - hãy trung thực với phần đã thật sự hoàn thành."
+      }
+    },
+    "language": {
+      "current": "{{locale}}"
+    },
+    "confirm": {
+      "delete": "Xóa \"{{name}}\"?"
+    },
+    "assistant": {
+      "suggestions": {
+        "plan": {
+          "smaller": "Chia nhỏ hơn.",
+          "fortyFiveMinutes": "Tôi chỉ có 45 phút.",
+          "easiestStep": "Bắt đầu bằng bước dễ nhất.",
+          "lowEnergy": "Điều chỉnh cho lúc ít năng lượng."
+        },
+        "onboarding": {
+          "uxCaseStudy": "Hoàn thành case study UX",
+          "finals": "Ôn thi cuối kỳ",
+          "cleanRoom": "Dọn phòng",
+          "portfolio": "Xây portfolio"
+        }
+      }
+    },
+    "aiTools": {
+      "answered": "Đã trả lời",
+      "submitted": "Đã gửi",
+      "skipped": "Đã bỏ qua",
+      "thinkingQuestion": "Đang nghĩ câu hỏi...",
+      "thinkingQuestions": "Đang nghĩ các câu hỏi...",
+      "clarifyingQuestion": "Câu hỏi làm rõ",
+      "clarifyingQuestions": "Các câu hỏi làm rõ",
+      "questionNumber": "Câu {{number}}",
+      "of": "trên",
+      "dismissQuestion": "Đóng câu hỏi",
+      "skipQuestion": "Bỏ qua câu hỏi",
+      "writeOwnAnswer": "Viết câu trả lời riêng",
+      "somethingElse": "Câu trả lời khác...",
+      "send": "Gửi",
+      "set": "Chọn",
+      "skip": "Bỏ qua",
+      "back": "Quay lại",
+      "next": "Tiếp",
+      "planningScaffold": "Khung lập kế hoạch",
+      "preparingScaffold": "Đang chuẩn bị khung...",
+      "scaffoldHint": "Điền khung này để kế hoạch được tạo từ đúng ngữ cảnh thật.",
+      "wordCount_one": "{{count}} từ",
+      "wordCount_other": "{{count}} từ",
+      "needWords": "cần {{count}}+",
+      "required": "Bắt buộc",
+      "canSubmitAddDetail": "Có thể gửi, nhưng thêm chi tiết sẽ tốt hơn",
+      "ready": "Sẵn sàng",
+      "answerRequired": "Vui lòng trả lời mục này trước khi tiếp tục.",
+      "shortAnswerHint": "Câu trả lời ngắn vẫn được chấp nhận, nhưng thêm một chút chi tiết sẽ giúp kế hoạch chính xác hơn.",
+      "submitScaffold": "Gửi khung"
+    },
+    "status": {
+      "comingSoon": "Sắp ra mắt"
+    },
+    "feedback": {
+      "title": "Góp ý",
+      "placeholder": "Nhập góp ý của bạn ở đây...",
+      "note": "Chúng tôi không phản hồi từng góp ý, nhưng luôn đọc kỹ tất cả.",
+      "submit": "Gửi"
+    },
+    "guide": {
+      "cardTitle": "Bắt đầu",
+      "cardDescription": "Xem cách LockIn biến việc quá tải thành kế hoạch Sprint có thể hành động.",
+      "viewGuide": "Xem hướng dẫn",
+      "dialogTitle": "Bắt đầu với LockIn",
+      "dialogDescription": "Hướng dẫn từng bước để bắt đầu dùng LockIn.",
+      "getStarted": "Bắt đầu",
+      "stepCounter": "Bước {{step}} trên {{total}}",
+      "start": "Bắt đầu",
+      "steps": {
+        "0": {
+          "title": "Chào mừng đến với LockIn",
+          "body1": "Hầu hết ứng dụng năng suất giúp bạn sắp xếp công việc. LockIn giúp bạn thật sự bắt đầu.",
+          "body2": "Những việc lớn và mơ hồ dễ dẫn đến trì hoãn vì rất khó bắt đầu. LockIn giúp biến phần việc quá tải thành các bước rõ ràng, có thể làm ngay."
+        },
+        "1": {
+          "title": "Bắt đầu bằng bất kỳ việc nào",
+          "body1": "Chỉ cần mô tả điều bạn cần hoàn thành bằng lời của chính bạn.",
+          "body2": "LockIn được thiết kế để xử lý những việc lộn xộn, mơ hồ và dễ gây quá tải."
+        },
+        "2": {
+          "title": "Để AI tạo bản nháp đầu tiên",
+          "body1": "Thay vì tự loay hoay tìm điểm bắt đầu, hãy để LockIn tạo kế hoạch cho bạn.",
+          "body2": "AI chia việc lớn thành các bước nhỏ hơn và ước lượng thời gian cho từng bước."
+        },
+        "3": {
+          "title": "Xem lại trước khi bắt tay làm",
+          "body1": "Gợi ý của AI chỉ là điểm xuất phát.",
+          "body2": "Trước khi bắt đầu, bạn có thể sửa bước, chỉnh thời lượng, sắp xếp lại và thêm bước của riêng mình."
+        },
+        "4": {
+          "title": "Vào chế độ Sprint",
+          "body1": "Khi đã sẵn sàng, hãy bắt đầu một Sprint.",
+          "body2": "Sprint Mode giảm xao nhãng và giữ sự chú ý của bạn vào từng bước một."
+        },
+        "5": {
+          "title": "Tiến độ được xây từng bước",
+          "body1": "Bạn không cần hoàn thành mọi thứ trong hôm nay. Mỗi Sprint hoàn thành đều đẩy dự án tiến lên.",
+          "body2": "Khi Sprint kết thúc, LockIn tóm tắt tiến độ và giúp bạn quyết định bước tiếp theo."
+        },
+        "6": {
+          "title": "Sẵn sàng bắt đầu?",
+          "body1": "Hãy nghĩ đến một việc bạn đã trì hoãn.",
+          "body2": "LockIn sẽ giúp bạn biến nó thành một kế hoạch có thể bắt đầu thật sự."
+        }
+      }
+    },
+    "insights": {
+      "title": "Thống kê",
+      "subtitle": "Cách các Sprint của bạn thực sự diễn ra - hoàn thành, đúng giờ và trì hoãn.",
+      "empty": "Chưa có Sprint nào hoàn thành - hoàn thành một phiên tập trung để xem thống kê tại đây.",
+      "sprintFallback": "Sprint",
+      "stepsProgress": "{{done}}/{{total}} bước",
+      "heatmapCell": "{{date}} · {{count}} Sprint · {{onTime}} đúng giờ · {{late}} không đúng giờ",
+      "heatmapEmptyCell": "{{date}} · chưa có Sprint",
+      "metrics": {
+        "totalSprints": "Tổng Sprint",
+        "onTimeRate": "Tỷ lệ đúng giờ",
+        "onTimeRateDescription": "Gia hạn thời gian quá 2 lần trong một task sẽ tính Sprint đó là không đạt",
+        "totalFocusTime": "Tổng thời gian tập trung",
+        "avgProcrastination": "Mức trì hoãn TB"
+      },
+      "sections": {
+        "completionBreakdown": "Phân tích hoàn thành",
+        "whenYouFocus": "Khi bạn tập trung",
+        "recentSprints": "Sprint gần đây"
+      },
+      "aria": {
+        "completionBreakdown": "Phân tích hoàn thành Sprint"
+      },
+      "completion": {
+        "onTime": "Đúng giờ",
+        "notOnTime": "Không đúng giờ",
+        "completedLate": "Hoàn thành trễ",
+        "overtime": "Quá giờ",
+        "endedEarly": "Kết thúc sớm"
+      },
+      "procrastination": {
+        "none": "Không có",
+        "mild": "Nhẹ",
+        "moderate": "Vừa",
+        "severe": "Nặng",
+        "label": "Trì hoãn {{value}}"
+      },
+      "days": {
+        "mon": "T2",
+        "wed": "T4",
+        "fri": "T6"
+      },
+      "months": {
+        "0": "Th1",
+        "1": "Th2",
+        "2": "Th3",
+        "3": "Th4",
+        "4": "Th5",
+        "5": "Th6",
+        "6": "Th7",
+        "7": "Th8",
+        "8": "Th9",
+        "9": "Th10",
+        "10": "Th11",
+        "11": "Th12"
       }
     }
   }

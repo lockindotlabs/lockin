@@ -67,6 +67,21 @@ export type UserSettings = Prisma.UserSettingsModel
  */
 export type Project = Prisma.ProjectModel
 /**
+ * Model WorkflowTemplate
+ * 
+ */
+export type WorkflowTemplate = Prisma.WorkflowTemplateModel
+/**
+ * Model WorkflowTemplateStep
+ * 
+ */
+export type WorkflowTemplateStep = Prisma.WorkflowTemplateStepModel
+/**
+ * Model WorkflowScaffoldQuestion
+ * 
+ */
+export type WorkflowScaffoldQuestion = Prisma.WorkflowScaffoldQuestionModel
+/**
  * Model Plan
  * 
  */

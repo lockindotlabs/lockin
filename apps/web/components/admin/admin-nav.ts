@@ -3,8 +3,10 @@ import {
   BarChart3Icon,
   CreditCardIcon,
   HomeIcon,
+  Layers3Icon,
   Settings2Icon,
   UsersIcon,
+  UserCog,
   type LucideIcon,
 } from "lucide-react"
 
@@ -57,6 +59,17 @@ export const adminNavSections: AdminNavSection[] = [
     ],
   },
   {
+    label: "Users",
+    items: [
+      {
+        title: "Users",
+        url: "/app/admin/users",
+        icon: UserCog,
+        match: "prefix",
+      },
+    ],
+  },
+  {
     label: "System",
     items: [
       {
@@ -101,6 +114,18 @@ export const adminNavItems: AdminNavItem[] = [
     title: "Billing",
     url: "/app/admin/billing",
     icon: CreditCardIcon,
+    match: "prefix",
+  },
+  {
+    title: "Templates",
+    url: "/app/admin/templates",
+    icon: Layers3Icon,
+    match: "prefix",
+  },
+  {
+    title: "Users",
+    url: "/app/admin/users",
+    icon: UserCog,
     match: "prefix",
   },
   {

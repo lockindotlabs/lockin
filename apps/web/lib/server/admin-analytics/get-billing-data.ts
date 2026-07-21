@@ -2,6 +2,7 @@ import prisma from "@workspace/db"
 
 import type {
   AdminBillingData,
+  AdminBillingTransaction,
   DistributionPoint,
   MetricCardData,
 } from "@/types/admin-analytics"
@@ -75,7 +76,7 @@ function createPlanDistribution(input: {
 }
 
 export async function getBillingData(): Promise<AdminBillingData> {
-  const [users, successfulPayments, failedPayments] = await Promise.all([
+  const [users, successfulPayments, failedPayments, recentTransactions] = await Promise.all([
     prisma.user.findMany({
       select: {
         planTier: true,
@@ -93,6 +94,22 @@ export async function getBillingData(): Promise<AdminBillingData> {
           in: ["FAILED", "CANCELLED", "EXPIRED"],
         },
       },
+    }),
+    prisma.paymentOrder.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+      take: 50,
     }),
   ])
 
@@ -121,5 +138,22 @@ export async function getBillingData(): Promise<AdminBillingData> {
       plusUsers: tierCounts.PLUS,
       proUsers: tierCounts.PRO,
     }),
+    recentTransactions: recentTransactions.map((tx) => ({
+      id: tx.id,
+      payosOrderCode: tx.payosOrderCode,
+      amount: tx.amount,
+      currency: tx.currency,
+      status: tx.status as AdminBillingTransaction["status"],
+      tier: tx.tier as AdminBillingTransaction["tier"],
+      createdAt: tx.createdAt.toISOString(),
+      paidAt: tx.paidAt?.toISOString() ?? null,
+      checkoutUrl: tx.checkoutUrl,
+      user: {
+        id: tx.user.id,
+        email: tx.user.email,
+        firstName: tx.user.firstName,
+        lastName: tx.user.lastName,
+      },
+    })),
   }
 }

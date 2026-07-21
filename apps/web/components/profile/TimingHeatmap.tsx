@@ -1,13 +1,10 @@
 "use client"
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import type { HeatmapCell } from "@/lib/server/me-stats"
 
-const DAY_ROW_LABELS = ["", "Mon", "", "Wed", "", "Fri", ""] // Sun..Sat, GitHub only labels Mon/Wed/Fri
-const MONTH_LABELS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-]
+const DAY_ROW_LABEL_KEYS = ["", "mon", "", "wed", "", "fri", ""] // Sun..Sat, GitHub only labels Mon/Wed/Fri
 const WEEKS_TO_SHOW = 53
 
 type DayCell = {
@@ -65,6 +62,7 @@ export function TimingHeatmap({
   cells: HeatmapCell[]
   maxVolume: number
 }) {
+  const { t } = useTranslation()
   const weeks = React.useMemo(() => buildWeeks(cells), [cells])
 
   let lastMonth = -1
@@ -74,7 +72,14 @@ export function TimingHeatmap({
     if (firstOfMonthDay) {
       const month = firstOfMonthDay.date.getMonth()
       if (month !== lastMonth) {
-        monthLabels.push({ weekIndex, label: MONTH_LABELS[month]! })
+        monthLabels.push({
+          weekIndex,
+          label: t(`app.insights.months.${month}`, {
+            defaultValue: new Intl.DateTimeFormat(undefined, {
+              month: "short",
+            }).format(firstOfMonthDay.date),
+          }),
+        })
         lastMonth = month
       }
     }
@@ -97,12 +102,16 @@ export function TimingHeatmap({
 
         <div className="flex w-full gap-1">
           <div className="flex w-7 shrink-0 flex-col gap-[2px]">
-            {DAY_ROW_LABELS.map((label, i) => (
+            {DAY_ROW_LABEL_KEYS.map((labelKey, i) => (
               <div
                 key={i}
                 className="flex h-[11px] items-center text-[9px] text-muted-foreground"
               >
-                {label}
+                {labelKey
+                  ? t(`app.insights.days.${labelKey}`, {
+                      defaultValue: labelKey,
+                    })
+                  : ""}
               </div>
             ))}
           </div>
@@ -115,12 +124,23 @@ export function TimingHeatmap({
                   const lvl = cell
                     ? Math.max(0.15, cell.volume / Math.max(1, maxVolume))
                     : 0
-                  const color = cell ? qualityColor(cell.avgQuality) : "120, 120, 120"
+                  const color = cell
+                    ? qualityColor(cell.avgQuality)
+                    : "120, 120, 120"
                   const title = isFuture
                     ? undefined
                     : cell
-                      ? `${dateKey(date)} · ${cell.volume} sprint${cell.volume === 1 ? "" : "s"} · ${cell.onTimeCount} on time · ${cell.lateCount} not on time`
-                      : `${dateKey(date)} · no sprints`
+                      ? t("app.insights.heatmapCell", {
+                          date: dateKey(date),
+                          count: cell.volume,
+                          onTime: cell.onTimeCount,
+                          late: cell.lateCount,
+                          defaultValue: `${dateKey(date)} · ${cell.volume} sprint${cell.volume === 1 ? "" : "s"} · ${cell.onTimeCount} on time · ${cell.lateCount} not on time`,
+                        })
+                      : t("app.insights.heatmapEmptyCell", {
+                          date: dateKey(date),
+                          defaultValue: `${dateKey(date)} · no sprints`,
+                        })
 
                   return (
                     <div

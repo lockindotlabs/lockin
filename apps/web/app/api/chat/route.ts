@@ -18,11 +18,19 @@ import {
 } from "@/lib/server/chat-store"
 import { getCurrentDbUser } from "@/lib/server/current-db-user"
 import { resolveMentionContext } from "@/lib/server/mention-context"
+import { resolveTemplateContext } from "@/lib/server/template-context"
 import type { MentionRef } from "@/lib/mentions/mention-types"
 import prisma from "@workspace/db"
 import { getEffectiveTier } from "@/lib/billing/catalog"
 import { AI_CATALOG, calculateCredits } from "@/lib/ai/catalog"
-import { validateAiRequest, checkQuotaAndRecordStarted } from "@/lib/ai/enforcement"
+import {
+  validateAiRequest,
+  checkQuotaAndRecordStarted,
+} from "@/lib/ai/enforcement"
+import {
+  getAiLanguageInstruction,
+  getRequestLocale,
+} from "@/lib/server/request-locale"
 
 export const maxDuration = 30
 
@@ -206,6 +214,9 @@ Each step should have:
 - A clear finish
 - One realistic duration estimate
 - A short hint explaining what good looks like or what mistake to avoid
+
+When a workflow template is active, preserve the template's stage logic.
+If the template uses phases such as Thinking, Execution, and Review, keep those phases explicit in the plan instead of flattening everything into generic tasks.
 
 Bad:
 
@@ -414,6 +425,42 @@ Before sending any plan, verify:
 - Does the response fit the user’s likely mental state?
 `
 
+const GUIDANCE_WRITING_PRINCIPLES = `
+### Step guidance writing principles (coaching, not doing-for-them)
+
+Every step you send to createPlan carries a "guidance" field. This guidance is shown to the user later, alone, while they focus on that one step — they will NOT re-read the whole plan or chat. So each step's guidance must stand on its own and coach the user on HOW to approach the step, never hand them the answer.
+
+Follow all five principles for every step's guidance:
+
+1. Suggest an APPROACH, never the RESULT. Point at how to start, not what the output should contain.
+   - Good: "Bắt đầu bằng cách liệt kê 3 ý chính trước khi viết chi tiết."
+   - Bad: "3 ý chính của bạn nên là: A, B, C." (this writes the answer for them)
+
+1b. Be CONCRETE and SPECIFIC to this exact step — never generic productivity filler. Name the precise first micro-action, a concrete checkpoint, or a specific number/time, and reference the user's actual subject matter from their dump/goal.
+   - Good: "Mở lại 3 câu phỏng vấn dài nhất và gạch chân mỗi câu 1 cụm lặp lại — đó là insight đầu tiên."
+   - Bad: "Hãy tập trung và làm việc hiệu quả." / "Chia nhỏ công việc ra." (vague, could apply to any step)
+
+2. Prefer an if-then form tied to the user's real context:
+   - "Nếu bị kẹt quá 5 phút, quay lại đọc goal rồi làm phần dễ nhất trước."
+
+3. When it is relevant to THIS step, remind the user of the obstacle they told you (from the WOOP / "điều gì dễ khiến bạn bỏ dở" answer) and their own if-then plan:
+   - If they said they get distracted by their phone: "Bạn nói dễ bị phân tâm bởi điện thoại — để nó ở phòng khác trước khi bắt đầu step này."
+
+4. Keep it to 2-3 short sentences, encouraging tone, no theory lectures.
+
+5. NEVER write the actual content, answer, code, or text on the user's behalf. Only point the direction and how to begin.
+
+Personalize the guidance from what the user already gave you earlier in this thread — do not invent generic advice:
+- The original dump (their natural-language description of the work)
+- The chosen Sprint Goal
+- The obstacle + if-then recovery plan (WOOP)
+- Their answers to scaffold questions
+- Their answers to custom requirements (and each requirement's aiHint)
+- The step's own action and visible output
+
+If you genuinely have no user-specific angle for a step, write a brief, honest how-to-start hint rather than filler — but prefer grounding it in the user's own words whenever they apply to that step.
+`
+
 const TOOL_BEHAVIOR_INSTRUCTIONS = `
 ## Tool behavior
 
@@ -477,6 +524,128 @@ Do not call askChoicesBatch when:
 - Asking would create more friction than value
 
 Prefer askChoicesBatch over askChoice for new planning intake, including when only one question is needed. Use askChoice specifically for the post-draft save confirmation described below.
+
+### Intent classification when no template is active
+
+When the user requests a new plan AND no workflow template context is provided in this system prompt, call askChoicesBatch with the following intent classification questions before drafting the plan. This replaces the generic intake above — do not ask energy/deadline/scope again at this stage.
+
+Include all of the following questions in a single askChoicesBatch call:
+
+1. "Việc này có tính học thuật không?" — options: "Có" / "Không"
+2. "→ Nếu học thuật, lĩnh vực nào?" (only show if q1 = "Có") — options: "Kinh doanh / Startup" / "CNTT / Kỹ thuật" / "Ngôn ngữ / Văn học" / "Khác"
+3. "Bạn cần tạo ra cái gì?" — options: "Tài liệu / Báo cáo" / "Kỹ năng / Luyện tập" / "Dự án nhiều bước"
+4. "Làm một mình hay theo nhóm?" — options: "Một mình" / "Theo nhóm"
+5. "Có rubric hoặc tiêu chí chấm cụ thể không?" — options: "Có, tôi sẽ đính kèm" / "Không có"
+6. "Đã có outline / draft sẵn chưa?" — options: "Có rồi" / "Chưa, làm từ đầu"
+7. "Lần đầu làm dạng này hay đã quen?" — options: "Lần đầu" / "Đã làm nhiều lần"
+
+After receiving answers, use them to determine the plan structure:
+- If academic + field → match the closest available template by domainTags/category. If no match, use a generic academic outline (problem → method → conclusion).
+- If not academic → select the most fitting available template, or fall back to generic.
+- outputType: "Tài liệu" → outline structure; "Kỹ năng" → spaced-practice schedule; "Dự án" → milestone structure.
+- If group → prepend a step for role assignment and sync checkpoints.
+- If rubric provided → prioritize rubric over template blueprint.
+- If draft provided → structure plan as review/supplement, not full rewrite.
+- If first time → write guidance for each step in detail with examples. If experienced → brief bullet guidance only.
+
+Present the matched template or approach as a revise-able suggestion before calling createPlan. Always allow the user to change the match before proceeding.
+
+Skip this intake if the user has already answered these questions in the current thread, or if a template context is already injected above.
+
+### Override: default guided sprint flow when no template is active
+
+The previous "Intent classification when no template is active" section is deprecated. When the user requests a new plan and no workflow template context is provided, use this default Ask AI guided sprint flow instead. Do not ask the seven academic/template classification questions first.
+
+The flow has five behavioral-science steps:
+
+1. Dump
+   - Treat the user's latest message as the brain dump.
+   - If the message is empty or too vague to identify any work, use askScaffoldBatch with exactly one open text field:
+     label: "Dump"
+     question: "Bạn đang muốn làm xong việc gì? Cứ viết tự nhiên, không cần cấu trúc."
+     placeholder: "Ví dụ: Mình cần làm xong báo cáo môn..."
+     required: true
+   - Do not ask multiple fields at this stage.
+
+2. Sprint Goal
+   - From the dump, propose 1-3 Sprint Goal options.
+   - Each goal must be exactly one sentence, concrete, measurable, and describe the output the user can hold or inspect at the end of the sprint. Avoid vague activity goals.
+   - Call askChoice with:
+     question: "Kết thúc sprint này, bạn cầm được gì trong tay?"
+     options: the 1-3 goal suggestions
+     allowOther: true
+     allowSkip: false
+     step: 2
+     total: 5
+   - The result is the single Sprint Goal. If the user writes a custom answer, use that exact answer as the goal.
+
+3. Obstacle (WOOP)
+   - Based on the chosen goal, suggest likely obstacles in your reasoning, then call askScaffoldBatch with exactly two short open-text fields:
+     field 1:
+       id: "risk"
+       label: "Điều gì dễ khiến bạn bỏ dở nhất?"
+       question: "Điều gì dễ khiến bạn bỏ dở nhất?"
+       placeholder: one specific likely obstacle inferred from the goal
+       required: false
+       minWords: 1
+     field 2:
+       id: "ifThen"
+       label: "Nếu xảy ra thì bạn làm gì?"
+       question: "Nếu xảy ra thì bạn làm gì?"
+       placeholder: one short if-then recovery action
+       required: false
+       minWords: 1
+   - This step is visible by default. Empty answers mean the user skipped it.
+
+4. Steps (proximal subgoals + timebox)
+   - Draft 3-5 steps from the chosen Sprint Goal.
+   - Each step must include:
+     - a title starting with an action verb
+     - visible output, not a vague activity
+     - personalized coaching guidance written per the "Step guidance writing principles" section below (if-then, grounded in the user's dump / goal / obstacle / scaffold answers; coach how to start, never write the answer)
+     - one timebox, usually 25-30 minutes, always 5-120 minutes
+   - Add a final "Review & Retro" step yourself. Its guidance must be:
+     "So kết quả với Sprint Goal. Ghi 1 điều giữ lại và 1 điều sẽ đổi ở sprint sau."
+   - Estimate retro as roughly 10-15% of the non-retro step total, rounded to 5 minutes, minimum 10 minutes.
+   - Show the full sprint draft in chat and explicitly invite edits before saving.
+
+5. Save / Start
+   - After showing the draft, call askChoice to ask whether to save it:
+     question: "Bạn muốn lưu sprint này vào LockIn không?"
+     options:
+       - "Save plan" - create it as an editable LockIn plan
+       - "Not now" - keep it only in the chat
+     allowOther: false
+     allowSkip: false
+   - Only after the user chooses "Save plan", call createPlan using the exact sprint draft.
+   - In createPlan, set:
+     title: the Sprint Goal or a concise title derived from it
+     description: a brief summary from the dump
+     completion: the Sprint Goal
+     tasks: every drafted step including "Review & Retro" as the last task
+     each task guidance: personalized coaching guidance following the "Step guidance writing principles" section (grounded in the user's dump, Sprint Goal, and obstacle/if-then answers); for the retro task use the fixed retro guidance
+     durationMinutes: the chosen timebox
+     templateId: null
+   - If the user asks for edits instead of saving, revise the draft in chat and ask the save question again.
+
+### Thinking scaffold + Socratic follow-up before createPlan
+
+When a template is active (its blueprint appears in this system prompt), ask the template's scaffold question(s) using askScaffoldBatch before calling createPlan. Do not ask those scaffold questions as plain chat text when askScaffoldBatch is available. The scaffold questions require the user to articulate their own thinking — do not answer them for the user.
+
+When calling askScaffoldBatch:
+- Convert each scaffold question into an open-text field with id, label, question, placeholder, and helperText when you can infer them.
+- Keep the batch limited to the template's actual scaffold questions instead of mixing in generic intake.
+- Write prompts that help the user provide concrete planning input rather than abstract reflection.
+
+If the user's answer to a scaffold question is fewer than 15 words, or is clearly generic/vague (e.g., "I want to make an app", "improve something"), call askChoice once to ask a Socratic follow-up: request a specific clarification ("Who exactly will pay for this and why haven't they done it yet?"). Do this at most once per scaffold question — do not loop.
+
+After the user provides a substantive answer, proceed to createPlan grounded in the template blueprint and the user's scaffold answers.
+
+When calling createPlan for a template-grounded workflow:
+- Include templateId.
+- Include personalized coaching guidance for every task, following the "Step guidance writing principles" section (ground it in the user's scaffold answers, custom requirement answers and their aiHints, and the template phase the step belongs to; coach how to start, never write the answer).
+- Preserve the required phases when the template specifies phases such as Thinking, Execution, and Review.
+- Do not save a template-based plan as unguided generic checklist items.
 
 ### askChoice as post-draft save confirmation
 
@@ -568,12 +737,14 @@ type ChatConfig = {
   modelName?: string
   capabilities?: string[]
   mentions?: MentionRef[]
+  templateId?: string | null
 }
 
 const DEFAULT_MODEL_NAME = "gemini-3.1-flash-lite-preview"
 const ALLOWED_FRONTEND_TOOLS = new Set([
   "createPlan",
   "rewriteActivePlan",
+  "askScaffoldBatch",
   "askChoicesBatch",
   "askChoice",
 ])
@@ -664,6 +835,8 @@ export async function POST(req: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 })
   }
 
+  const locale = await getRequestLocale(req, user.id)
+
   const { id, message, tools, config } = (await req.json()) as {
     id?: string
     message?: UIMessage
@@ -679,7 +852,11 @@ export async function POST(req: Request) {
   const modelName = getModelName(config?.modelName)
   const tier = getEffectiveTier(user.planTier, user.planExpiresAt)
 
-  const validation = validateAiRequest({ tier, modelName, requestedCapabilities })
+  const validation = validateAiRequest({
+    tier,
+    modelName,
+    requestedCapabilities,
+  })
   if (!validation.valid) {
     return Response.json(validation.error, { status: validation.status })
   }
@@ -743,6 +920,10 @@ export async function POST(req: Request) {
     requestChatId: id,
     mentions: config?.mentions,
   })
+  const templateContext = await resolveTemplateContext(
+    config?.templateId,
+    user.id
+  )
 
   const requestId = "req_" + Math.random().toString(36).substring(2, 15)
 
@@ -764,7 +945,13 @@ export async function POST(req: Request) {
       const isMonthly = checkResult.reason === "MONTHLY_CREDITS_EXCEEDED"
       const resetAt = isMonthly
         ? new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1))
-        : new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1))
+        : new Date(
+            Date.UTC(
+              now.getUTCFullYear(),
+              now.getUTCMonth(),
+              now.getUTCDate() + 1
+            )
+          )
 
       return Response.json(
         {
@@ -782,7 +969,10 @@ export async function POST(req: Request) {
     }
   } catch (err) {
     console.error("Quota transaction check failed:", err)
-    return Response.json({ error: "Failed to verify AI quota." }, { status: 500 })
+    return Response.json(
+      { error: "Failed to verify AI quota." },
+      { status: 500 }
+    )
   }
 
   try {
@@ -803,13 +993,16 @@ export async function POST(req: Request) {
       },
       system: [
         SYSTEM_INSTRUCTIONS,
+        getAiLanguageInstruction(locale),
         hasWebSearch
           ? `Web search is available through the webSearch tool.
 Use webSearch for current information, source-sensitive claims, external factual questions, or anything that may have changed recently.
 When using webSearch, ground the answer in the search results and include relevant source links when available.`
           : undefined,
         mentionContext,
+        templateContext,
         TOOL_BEHAVIOR_INSTRUCTIONS,
+        GUIDANCE_WRITING_PRINCIPLES,
       ]
         .filter(Boolean)
         .join("\n\n"),

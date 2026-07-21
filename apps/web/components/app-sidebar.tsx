@@ -1,6 +1,7 @@
 "use client"
 import * as React from "react"
 import { toast } from "sonner"
+import { useTranslation } from "react-i18next"
 import {
   AppSidebarSearchCommand,
   type AppSidebarSearchNavItem,
@@ -19,7 +20,6 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@workspace/ui/components/sidebar"
-import { deleteDbChat } from "@/lib/chat/db-chat-client"
 import { useChatSummaries } from "@/lib/chat/use-chat-summaries"
 import { deletePlan } from "@/lib/plans/plan-repository"
 import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
@@ -37,15 +37,12 @@ import {
   Home02,
   LineChartUp03,
   List,
-  MessageChatSquare,
   Plus,
-  SearchMd,
   Target05,
 } from "@untitledui/icons"
 import { FeedbackPopover } from "./feedback-popover"
-import PixelCard from "@/components/PixelCard"
-import { Kbd } from "@workspace/ui/components/kbd"
 import { GettingStartedGuide } from "./getting-started-guide"
+import { AppLanguageSwitcher } from "./app-language-switcher"
 
 type NavItem = AppSidebarSearchNavItem
 
@@ -57,6 +54,7 @@ function getPlanIdFromPath(pathname: string) {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter()
+  const { t } = useTranslation()
 
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -76,25 +74,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     }
   }, [pathname])
 
-  const currentChatId = searchParams.get("id") ?? searchParams.get("t")
   const currentPlanId = searchParams.get("p") ?? searchParams.get("id")
   const pathnamePlanId = getPlanIdFromPath(pathname)
 
   const navMain: NavItem[] = [
     {
-      title: "Home",
+      title: t("app.nav.home", { defaultValue: "Home" }),
       url: "/app",
       icon: <Home02 />,
       isActive: pathname === "/app",
     },
     {
-      title: "Plans",
+      title: t("app.nav.plans", { defaultValue: "Plans" }),
       url: "/app/plans",
       icon: <List />,
       isActive: pathname === "/app/plans",
     },
     {
-      title: "Focus",
+      title: t("app.nav.focus", { defaultValue: "Focus" }),
       url: activeSessionId
         ? `/app/focus/session/${activeSessionId}`
         : "/app/focus",
@@ -102,13 +99,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       isActive: pathname.startsWith("/app/focus"),
     },
     {
-      title: "Ask AI",
+      title: t("app.nav.askAi", { defaultValue: "Ask AI" }),
       url: buildAskHref(),
       icon: <Asterisk01 />,
       isActive: pathname === "/app/ask",
     },
     {
-      title: "Insights",
+      title: t("app.nav.templates", { defaultValue: "Templates" }),
+      url: "/app/templates",
+      icon: <BookOpen02 />,
+      isActive: pathname === "/app/templates",
+    },
+    {
+      title: t("app.nav.insights", { defaultValue: "Insights" }),
       url: "/app/insights",
       icon: <LineChartUp03 />,
       isActive: pathname.startsWith("/app/insights"),
@@ -117,25 +120,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   if (isAdmin) {
     navMain.push({
-      title: "Admin",
+      title: t("app.nav.admin", { defaultValue: "Admin" }),
       url: "/app/admin/overview",
       icon: <BarChart07 />,
       isActive: pathname.startsWith("/app/admin"),
     })
   }
 
-  const recentChats: FavoriteItem[] = chats.slice(0, 10).map((chat) => ({
-    id: chat.id,
-    name: chat.title,
-    url: buildAskHref({ chatSessionId: chat.id }),
-    isActive:
-      pathname === "/app/ask" &&
-      (currentChatId === chat.id || currentPlanId === chat.id),
-  }))
-
   const recentPlans: FavoriteItem[] = plans.slice(0, 10).map((plan) => ({
     id: plan.id,
-    name: plan.title.trim() || "Untitled Plan",
+    name:
+      plan.title.trim() ||
+      t("app.plan.untitled", { defaultValue: "Untitled Plan" }),
     url: buildPlanHref({ planId: plan.id }),
     isActive:
       (pathname === "/app/ask" && currentPlanId === plan.id) ||
@@ -148,7 +144,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }
 
   const handleDeletePlan = async (item: FavoriteItem) => {
-    const shouldDelete = window.confirm(`Delete "${item.name}"?`)
+    const shouldDelete = window.confirm(
+      t("app.confirm.delete", {
+        name: item.name,
+        defaultValue: `Delete "${item.name}"?`,
+      })
+    )
     if (!shouldDelete) {
       return
     }
@@ -161,19 +162,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       (pathname === "/app/plan" && searchParams.get("id") === item.id) ||
       pathname === `/app/plan/${item.id}`
     ) {
-      router.replace(buildAskHref())
-    }
-  }
-
-  const handleDeleteChat = async (item: FavoriteItem) => {
-    const shouldDelete = window.confirm(`Delete "${item.name}"?`)
-    if (!shouldDelete) {
-      return
-    }
-
-    await deleteDbChat(item.id)
-
-    if (pathname === "/app/ask" && searchParams.get("id") === item.id) {
       router.replace(buildAskHref())
     }
   }
@@ -206,7 +194,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               size={"sm"}
             >
               <Plus data-icon="inline-start" />
-              <span>New Plan</span>
+              <span>
+                {t("app.actions.newPlan", { defaultValue: "New Plan" })}
+              </span>
             </Button>
 
             <AppSidebarSearchCommand
@@ -231,8 +221,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             onDelete={handleDeleteChat}
           /> */}
           <NavFavorites
-            label="Recent plans"
-            emptyLabel="No saved plans yet"
+            label={t("app.sidebar.recentPlans", {
+              defaultValue: "Recent plans",
+            })}
+            emptyLabel={t("app.sidebar.noSavedPlans", {
+              defaultValue: "No saved plans yet",
+            })}
             favorites={recentPlans}
             isLoading={!arePlansLoaded}
             onDelete={handleDeletePlan}
@@ -243,16 +237,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenu>
             <GettingStartedGuide />
             <SidebarMenuItem>
+              <AppLanguageSwitcher />
+            </SidebarMenuItem>
+            <SidebarMenuItem>
               <FeedbackPopover />
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton
                 onClick={() => {
-                  toast("Coming soon")
+                  toast(
+                    t("app.status.comingSoon", { defaultValue: "Coming soon" })
+                  )
                 }}
               >
                 <BookOpen02 data-icon="inline-start" />
-                Knowledge Hub
+                {t("app.nav.knowledgeHub", { defaultValue: "Knowledge Hub" })}
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

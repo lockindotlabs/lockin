@@ -6,8 +6,8 @@ export const BILLING_TIERS = {
   },
   PLUS: {
     label: "Plus",
-    amount: 2000,
-    displayPrice: "2.000 VND",
+    amount: 79000,
+    displayPrice: "79.000 VND",
   },
   PRO: {
     label: "Pro",

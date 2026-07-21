@@ -1,7 +1,7 @@
 "use client"
 
 import { useAui, useAuiEvent, type ModelContext } from "@assistant-ui/react"
-import { BookOpenIcon, XIcon } from "lucide-react"
+import { BookOpenIcon, ChevronDownIcon, XIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Button } from "@workspace/ui/components/button"
 import {
@@ -64,11 +64,7 @@ export function TemplateConfigRegistrar({
   return null
 }
 
-export function TemplateAutoClear({
-  onClear,
-}: {
-  onClear: () => void
-}) {
+export function TemplateAutoClear({ onClear }: { onClear: () => void }) {
   useAuiEvent("thread.runStart", () => {
     window.setTimeout(onClear, 0)
   })
@@ -93,16 +89,16 @@ export function TemplatePicker({
       <DropdownMenuTrigger
         render={
           <Button
-            variant={selected ? "secondary" : "ghost"}
-            size="sm"
-            className="h-7 gap-1.5 text-xs"
-            aria-label="Select workflow template"
+            variant={"outline"}
+            size={"sm"}
+            className="h-8 text-xs font-medium text-neutral-500 hover:text-neutral-900"
           />
         }
       >
         <BookOpenIcon className="size-3.5" />
         <span>{selected ? selected.title : "Template"}</span>
-        {selected && (
+
+        {selected ? (
           <span
             role="button"
             aria-label="Remove template"
@@ -114,9 +110,12 @@ export function TemplatePicker({
           >
             <XIcon className="size-3" />
           </span>
+        ) : (
+          <ChevronDownIcon className="size-4 opacity-50" />
         )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-72">
+
+      <DropdownMenuContent align="start" className="w-72" sideOffset={12}>
         {templates.length === 0 ? (
           <div className="px-3 py-4 text-center text-xs text-muted-foreground">
             No templates available
@@ -130,10 +129,12 @@ export function TemplatePicker({
               {templates.map((t) => (
                 <DropdownMenuItem
                   key={t.id}
-                  onClick={() => onSelect(selectedTemplateId === t.id ? null : t.id)}
+                  onClick={() =>
+                    onSelect(selectedTemplateId === t.id ? null : t.id)
+                  }
                   className="flex flex-col items-start gap-0.5 py-2"
                 >
-                  <span className="flex items-center gap-2 font-medium leading-tight">
+                  <span className="flex items-center gap-2 leading-tight font-medium">
                     {t.title}
                     {isUnapprovedOwned(t) ? (
                       <span className="rounded-full bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-300">
@@ -142,7 +143,7 @@ export function TemplatePicker({
                     ) : null}
                   </span>
                   {t.description && (
-                    <span className="line-clamp-2 text-xs text-muted-foreground leading-snug">
+                    <span className="line-clamp-2 text-xs leading-snug text-muted-foreground">
                       {t.description}
                     </span>
                   )}

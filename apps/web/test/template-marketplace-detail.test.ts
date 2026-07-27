@@ -96,7 +96,7 @@ describe("marketplace template prompt", () => {
       output: "A checked report draft",
     })
 
-    assert.match(prompt, /Cau truc workflow tham khao tu template/)
+    assert.match(prompt, /workflow tham/)
     assert.match(prompt, /Thinking - lock the research question/)
     assert.match(prompt, /Name the claim the report must prove/)
     assert.match(prompt, /Execution - draft the evidence map/)

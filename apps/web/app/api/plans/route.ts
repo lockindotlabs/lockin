@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import { getCurrentDbUser } from "@/lib/server/current-db-user"
+import { getAuthenticatedUser } from "@/lib/server/auth"
 import {
   listOwnedPlans,
   serializePlan,
@@ -44,8 +44,8 @@ const PlanSchema = z.object({
   experienceLevel: z.enum(["FIRST_TIME", "EXPERIENCED"]).nullable().optional(),
 })
 
-export async function GET() {
-  const user = await getCurrentDbUser()
+export async function GET(req: Request) {
+  const user = await getAuthenticatedUser(req)
 
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 })
@@ -59,7 +59,7 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const user = await getCurrentDbUser()
+  const user = await getAuthenticatedUser(req)
 
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 })

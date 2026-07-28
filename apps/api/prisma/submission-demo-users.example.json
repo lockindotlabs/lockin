@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "email": "demo.user01@example.com",
+      "joinDate": "2026-06-10T09:00:00.000Z",
+      "displayName": "Demo User 01"
+    },
+    {
+      "email": "demo.user02@example.com",
+      "joinDate": "2026-06-13T14:30:00.000Z",
+      "displayName": "Demo User 02"
+    }
+  ]
+}

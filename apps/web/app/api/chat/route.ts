@@ -628,6 +628,16 @@ The flow has five behavioral-science steps:
      templateId: null
    - If the user asks for edits instead of saving, revise the draft in chat and ask the save question again.
 
+Updated override for the default guided sprint flow:
+- The older instructions above that ask for open-text scaffold fields are superseded.
+- Minimize manual typing. Prefer multiple-choice fields with 3-6 options.
+- Whenever askScaffoldBatch includes options, set allowOther: true so the UI always has an Other/custom input.
+- For vague or empty Dump, call askScaffoldBatch with one multiple-choice question and an Other field instead of a blank textarea.
+- For WOOP obstacle and if-then recovery, call askScaffoldBatch with two multiple-choice questions and Other fields instead of open text.
+- Before the final save prompt, call selectPlanTasks. Put the 3-5 recommended default steps in tasks so they are preselected. Put 2-4 useful but optional steps in suggestedTasks so they start unchecked. Set allowCustom: true.
+- The user may uncheck default tasks, check suggested tasks, and add custom tasks. After selectPlanTasks returns, use only selectedTasks plus custom tasks for the final plan.
+- Keep "Review & Retro" last when selected. If the selected task list has no review step, add a short "Review & Retro" step before saving.
+
 ### Thinking scaffold + Socratic follow-up before createPlan
 
 When a template is active (its blueprint appears in this system prompt), ask the template's scaffold question(s) using askScaffoldBatch before calling createPlan. Do not ask those scaffold questions as plain chat text when askScaffoldBatch is available. The scaffold questions require the user to articulate their own thinking — do not answer them for the user.
@@ -636,6 +646,7 @@ When calling askScaffoldBatch:
 - Convert each scaffold question into an open-text field with id, label, question, placeholder, and helperText when you can infer them.
 - Keep the batch limited to the template's actual scaffold questions instead of mixing in generic intake.
 - Write prompts that help the user provide concrete planning input rather than abstract reflection.
+- Updated rule: if a scaffold question can be answered from common presets, include 3-6 options and allowOther: true. Use open text only when the user's own detailed wording is essential.
 
 If the user's answer to a scaffold question is fewer than 15 words, or is clearly generic/vague (e.g., "I want to make an app", "improve something"), call askChoice once to ask a Socratic follow-up: request a specific clarification ("Who exactly will pay for this and why haven't they done it yet?"). Do this at most once per scaffold question — do not loop.
 
@@ -745,6 +756,7 @@ const ALLOWED_FRONTEND_TOOLS = new Set([
   "createPlan",
   "rewriteActivePlan",
   "askScaffoldBatch",
+  "selectPlanTasks",
   "askChoicesBatch",
   "askChoice",
 ])

@@ -43,6 +43,7 @@ import {
 import { FeedbackPopover } from "./feedback-popover"
 import { GettingStartedGuide } from "./getting-started-guide"
 import { AppLanguageSwitcher } from "./app-language-switcher"
+import { TryExtensionPopover } from "./try-extension-popover"
 
 type NavItem = AppSidebarSearchNavItem
 
@@ -236,6 +237,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarFooter>
           <SidebarMenu>
             <GettingStartedGuide />
+            <SidebarMenuItem>
+              <TryExtensionPopover />
+            </SidebarMenuItem>
             <SidebarMenuItem>
               <AppLanguageSwitcher />
             </SidebarMenuItem>

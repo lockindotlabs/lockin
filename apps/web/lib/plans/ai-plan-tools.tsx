@@ -11,6 +11,7 @@ import {
   CheckCircle2Icon,
   FileTextIcon,
   Loader2Icon,
+  PlayIcon,
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
@@ -370,6 +371,10 @@ function PlanToolResultCard({
             successResult?.chatSessionId ?? chatSessionId ?? undefined,
         })
       : undefined
+  const resolvedFocusPlanId = successResult?.planId ?? fallbackPlanId
+  const resolvedFocusHref = resolvedFocusPlanId
+    ? `/app/focus?plan=${encodeURIComponent(resolvedFocusPlanId)}`
+    : undefined
 
   return (
     <div
@@ -408,9 +413,21 @@ function PlanToolResultCard({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
+            {!failed && !isRunning && resolvedFocusHref && (
+              <Link
+                className={cn(
+                  buttonVariants({ size: "sm" }),
+                  "gradient-animation-card text-primary-foreground shadow-sm"
+                )}
+                href={resolvedFocusHref}
+              >
+                <PlayIcon data-icon="inline-start" />
+                <span>Start Focus</span>
+              </Link>
+            )}
             {!failed && !isRunning && resolvedPeekViewHref && (
               <Link
-                className={cn(buttonVariants({ size: "sm" }))}
+                className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
                 href={resolvedPeekViewHref}
               >
                 <span>Open plan</span>

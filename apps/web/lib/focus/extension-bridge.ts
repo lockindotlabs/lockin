@@ -120,11 +120,18 @@ function notifyExtension(message: Record<string, unknown>) {
   const chromeApi = getChromeApi()
 
   if (extId && chromeApi?.runtime?.sendMessage) {
-    chromeApi.runtime.sendMessage(extId, message, () => {
-      if (chromeApi.runtime?.lastError) {
+    try {
+      chromeApi.runtime.sendMessage(extId, message, () => {
+        try {
+          if (!chromeApi.runtime?.lastError) return
+        } catch {
+          // The extension can be reloaded while this callback is pending.
+        }
         window.dispatchEvent(new CustomEvent("lockin-app-to-extension", { detail: message }))
-      }
-    })
+      })
+    } catch {
+      window.dispatchEvent(new CustomEvent("lockin-app-to-extension", { detail: message }))
+    }
     return
   }
 

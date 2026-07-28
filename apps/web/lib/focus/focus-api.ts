@@ -2,8 +2,6 @@
 
 import type { FocusBlockSettings } from "@/lib/focus/block-settings"
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001"
-
 async function authHeaders(getToken: () => Promise<string | null>) {
   const token = await getToken()
   return {
@@ -178,7 +176,7 @@ export async function fetchFocusSessions(
 ): Promise<FocusSession[]> {
   try {
     const headers = await authHeaders(getToken)
-    const res = await fetch(`${API_BASE}/api/focus-sessions`, { headers })
+    const res = await fetch("/api/focus-sessions", { headers })
     if (!res.ok) return []
     const { data } = await res.json()
     return data ?? []
@@ -193,7 +191,7 @@ export async function fetchFocusSession(
 ): Promise<FocusSession | null> {
   try {
     const headers = await authHeaders(getToken)
-    const res = await fetch(`${API_BASE}/api/focus-sessions/${sessionId}`, {
+    const res = await fetch(`/api/focus-sessions/${sessionId}`, {
       headers,
     })
     if (!res.ok) return null
@@ -210,7 +208,7 @@ export async function startFocusSession(
 ): Promise<FocusSession | null> {
   try {
     const headers = await authHeaders(getToken)
-    const res = await fetch(`${API_BASE}/api/focus-sessions`, {
+    const res = await fetch("/api/focus-sessions", {
       method: "POST",
       headers,
       body: JSON.stringify(payload),
@@ -236,7 +234,7 @@ export async function endFocusSession(
 ): Promise<FocusSession | null> {
   try {
     const headers = await authHeaders(getToken)
-    const res = await fetch(`${API_BASE}/api/focus-sessions/${sessionId}/end`, {
+    const res = await fetch(`/api/focus-sessions/${sessionId}/end`, {
       method: "PATCH",
       headers,
       body: JSON.stringify(payload),
@@ -256,7 +254,7 @@ export async function fetchFocusBlockSettings(
 ): Promise<FocusBlockSettings> {
   try {
     const headers = await authHeaders(getToken)
-    const res = await fetch(`${API_BASE}/api/settings`, {
+    const res = await fetch("/api/settings", {
       headers,
       cache: "no-store",
     })
@@ -284,7 +282,7 @@ export async function saveFocusBlockSettings(
 ): Promise<FocusBlockSettings | null> {
   try {
     const headers = await authHeaders(getToken)
-    const res = await fetch(`${API_BASE}/api/settings`, {
+    const res = await fetch("/api/settings", {
       method: "PATCH",
       headers,
       body: JSON.stringify(settings),

@@ -2,22 +2,6 @@ import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import prisma from "@workspace/db"
 
-const ADMIN_USER_IDS_ENV = "user_3Dkrex6deNDuV9ykg4bQCy2rqJC"
-
-function getAdminUserIds() {
-  return ADMIN_USER_IDS_ENV.split(",")
-    .map((id) => id.trim())
-    .filter((id) => id)
-}
-
-export function isAdminUserId(userId: string | null | undefined) {
-  if (!userId) {
-    return false
-  }
-
-  return getAdminUserIds().includes(userId)
-}
-
 export async function getAdminAccess() {
   const { userId } = await auth()
 
@@ -28,15 +12,6 @@ export async function getAdminAccess() {
     }
   }
 
-  // 1. Check hardcoded fallback first
-  if (isAdminUserId(userId)) {
-    return {
-      userId,
-      isAdmin: true,
-    }
-  }
-
-  // 2. Check the user's role in the database
   const dbUser = await prisma.user.findUnique({
     where: { id: userId },
     select: { role: true },
@@ -52,12 +27,15 @@ export async function assertAdminPageAccess() {
   const { userId, redirectToSignIn } = await auth()
 
   if (!userId) {
-    redirectToSignIn()
+    return redirectToSignIn()
   }
 
-  const isAdmin = isAdminUserId(userId)
+  const dbUser = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  })
 
-  if (!isAdmin) {
+  if (dbUser?.role !== "admin") {
     redirect("/app")
   }
 }

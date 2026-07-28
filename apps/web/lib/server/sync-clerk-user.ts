@@ -1,6 +1,10 @@
 import { clerkClient } from "@clerk/nextjs/server"
 import prisma from "@workspace/db"
 
+function normalizeRole(value: unknown) {
+  return value === "admin" ? "admin" : "user"
+}
+
 export async function syncClerkUser(userId: string) {
   let email: string | null = null
   let firstName: string | null = null
@@ -18,7 +22,7 @@ export async function syncClerkUser(userId: string) {
     firstName = clerkUser.firstName ?? null
     lastName = clerkUser.lastName ?? null
     imageUrl = clerkUser.imageUrl ?? null
-    role = (clerkUser.publicMetadata?.role as string) ?? "user"
+    role = normalizeRole(clerkUser.publicMetadata?.role)
     banned = clerkUser.banned ?? false
     locked = clerkUser.locked ?? false
   } catch (error) {
@@ -32,7 +36,6 @@ export async function syncClerkUser(userId: string) {
       firstName,
       lastName,
       imageUrl,
-      role,
       banned,
       locked,
       isActive: !banned && !locked,

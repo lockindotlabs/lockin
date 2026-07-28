@@ -121,8 +121,13 @@ export function serializePlanSummary(plan: {
   updatedAt: Date
   steps: {
     id: string
+    title: string
+    description: string | null
     status: "TODO" | "IN_PROGRESS" | "DONE" | "CANCELLED"
     dueDate: Date | null
+    estimatedMinutes: number
+    order: number
+    guidance: string | null
   }[]
 }) {
   return {
@@ -132,8 +137,14 @@ export function serializePlanSummary(plan: {
     updatedAt: plan.updatedAt.toISOString(),
     steps: plan.steps.map((step) => ({
       id: step.id,
+      title: step.title,
+      description: step.description,
+      status: step.status,
       isCompleted: step.status === "DONE" || step.status === "CANCELLED",
       dueDate: step.dueDate ? step.dueDate.toISOString() : null,
+      estimatedMinutes: step.estimatedMinutes,
+      order: step.order,
+      guidance: step.guidance,
     })),
   }
 }
@@ -150,7 +161,21 @@ export async function listOwnedPlans(userId: string) {
     where: { userId, deletedAt: null },
     orderBy: { updatedAt: "desc" },
     take: 50,
-    include: { steps: { select: { id: true, status: true, dueDate: true } } },
+    include: {
+      steps: {
+        orderBy: { order: "asc" },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          status: true,
+          dueDate: true,
+          estimatedMinutes: true,
+          order: true,
+          guidance: true,
+        },
+      },
+    },
   })
 }
 

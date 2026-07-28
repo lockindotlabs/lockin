@@ -70,8 +70,13 @@ export async function GET(req: Request) {
           steps: {
             select: {
               id: true,
+              title: true,
+              description: true,
               status: true,
               dueDate: true,
+              estimatedMinutes: true,
+              order: true,
+              guidance: true,
             },
           },
         },

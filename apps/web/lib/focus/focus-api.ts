@@ -75,6 +75,16 @@ type StoredPlanSummary = {
   title: string
   taskCount: number
   updatedAt: string
+  steps: Array<{
+    id: string
+    title: string
+    description: string | null
+    status: PlanStep["status"]
+    dueDate: string | null
+    estimatedMinutes: number
+    order: number
+    guidance: string | null
+  }>
 }
 
 type StoredPlan = {
@@ -143,13 +153,29 @@ export async function fetchPlans(
     if (!res.ok) return []
     const { plans } = (await res.json()) as { plans?: StoredPlanSummary[] }
 
-    return (plans ?? []).map((plan) => ({
-      id: plan.id,
-      name: plan.title,
-      status: plan.taskCount > 0 ? "ACTIVE" : "PLANNING",
-      totalEstimatedMinutes: 0,
-      updatedAt: plan.updatedAt,
-    }))
+    return (plans ?? []).map((plan) => {
+      const steps = plan.steps ?? []
+
+      return {
+        id: plan.id,
+        name: plan.title,
+        status:
+          plan.taskCount === 0
+            ? "PLANNING"
+            : steps.every(
+                  (step) =>
+                    step.status === "DONE" || step.status === "CANCELLED"
+                )
+              ? "COMPLETED"
+              : "ACTIVE",
+        totalEstimatedMinutes: steps.reduce(
+          (total, step) => total + step.estimatedMinutes,
+          0
+        ),
+        updatedAt: plan.updatedAt,
+        steps,
+      }
+    })
   } catch {
     return []
   }

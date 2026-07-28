@@ -799,7 +799,7 @@ export default function FocusPage() {
       fetchPlans(getToken),
       fetchFocusSessions(getToken),
       fetchFocusBlockSettings(getToken),
-    ]).then(async ([rawPlans, rawSessions, loadedBlockSettings]) => {
+    ]).then(([rawPlans, rawSessions, loadedBlockSettings]) => {
       if (!active) return
       setBlockSettings(loadedBlockSettings)
 
@@ -810,15 +810,7 @@ export default function FocusPage() {
         return
       }
 
-      const withSteps = await Promise.all(
-        rawPlans.map((p) =>
-          fetchPlanWithSteps(p.id, getToken).then((full) => full ?? p)
-        )
-      )
-
-      if (!active) return
-
-      const sorted = withSteps.sort((a, b) => {
+      const sorted = rawPlans.sort((a, b) => {
         return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       })
 

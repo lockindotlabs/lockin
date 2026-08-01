@@ -46,6 +46,59 @@
         "alt": "Stay in the zone Mockup showing focus mode sprint timer with active step and status controls"
       }
     },
+    "extension": {
+      "title": "Focus shouldn't end when you close the tab.",
+      "description": "Start a Sprint and work on one step at a time in a distraction-free workspace designed for deep focus.",
+      "cards": {
+        "distractions": {
+          "bold": "Stay away from distractions.",
+          "text": "Block distracting websites during a Sprint so it's easier to stay committed to the work you've planned."
+        },
+        "pairing": {
+          "bold": "Install once, signed in everywhere.",
+          "text": "No second password. The extension pairs with your web account in two taps and never asks for credentials again.",
+          "confirm": "Confirm pairing code",
+          "expires": "expires in 2:31"
+        },
+        "eyeline": {
+          "bold": "Always in your eyeline.",
+          "text": "A draggable pill on every page so the timer never disappears into a forgotten tab.",
+          "timerLabel": "Focus Sprint"
+        },
+        "rules": {
+          "bold": "Your rules, your sites.",
+          "text": "Pick categories or specific domains. Adjust hard / soft per site, save as presets.",
+          "modes": {
+            "hard": "hard",
+            "soft": "soft"
+          }
+        },
+        "nudge": {
+          "bold": "Nudge, not shame.",
+          "text": "If you drift to a soft-listed site, LockIn shows the cost — never wags a finger.",
+          "title": "Stay on reddit.com?",
+          "description": "5 more min costs you ~1 step from this sprint.",
+          "backToWork": "Back to work",
+          "plusFiveMins": "+5 mins"
+        }
+      }
+    },
+    "mock": {
+      "sprint42": "Sprint #42",
+      "left": "left",
+      "taskShort": "Draft launch post for Twitter",
+      "steps": {
+        "outline": "Draft outline",
+        "hook": "Write hook",
+        "statement": "Write value statement",
+        "bridge": "Add CTA & link"
+      },
+      "actions": {
+        "addFiveShort": "+5m",
+        "pause": "Pause",
+        "endSprint": "End Sprint"
+      }
+    },
     "pricing": {
       "title": "Pricing",
       "subtitle": "Choose a plan that works for you.",

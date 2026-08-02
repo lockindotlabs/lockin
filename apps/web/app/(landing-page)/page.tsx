@@ -46,9 +46,9 @@ export function StickyHeader({ showSticky }: { showSticky?: boolean }) {
   const STICKY_LINKS = [
     { label: t("landing.nav.home"), href: "/", active: true },
     { label: t("landing.nav.features"), href: "/#features", active: false },
-    { label: t("landing.nav.resources"), href: "/#resources", active: false },
+    { label: t("landing.nav.resources"), href: "/#faq", active: false },
     { label: t("landing.nav.pricing"), href: "/#pricing", active: false },
-    { label: t("landing.nav.help"), href: "/#help", active: false },
+    { label: t("landing.nav.help"), href: "/#faq", active: false },
   ]
 
   return (
@@ -107,9 +107,9 @@ function HeroSection() {
   const NAV_LINKS = [
     { label: t("landing.nav.home"), href: "/", active: true },
     { label: t("landing.nav.features"), href: "/#features", active: false },
-    { label: t("landing.nav.resources"), href: "/#resources", active: false },
+    { label: t("landing.nav.resources"), href: "/#faq", active: false },
     { label: t("landing.nav.pricing"), href: "/#pricing", active: false },
-    { label: t("landing.nav.help"), href: "/#help", active: false },
+    { label: t("landing.nav.help"), href: "/#faq", active: false },
   ]
 
   return (
@@ -243,7 +243,7 @@ function HeroSection() {
                 {t("landing.hero.getStarted")}
               </Button>
             </Link>
-            <Link href="#">
+            <Link href="/#features">
               <Button
                 size={"lg"}
                 variant="outline"
@@ -327,7 +327,10 @@ function ThreeSimpleStepsSection() {
   const { t } = useTranslation()
 
   return (
-    <section className="mx-auto max-w-7xl border-t border-neutral-200/60 px-6 py-24 sm:px-8 md:py-32">
+    <section
+      id="features"
+      className="mx-auto max-w-7xl border-t border-neutral-200/60 px-6 py-24 sm:px-8 md:py-32"
+    >
       {/* Header */}
       <div className="mb-20 sm:mb-24">
         <motion.h2
@@ -380,7 +383,7 @@ function ThreeSimpleStepsSection() {
                     {t("landing.steps.step1.cta")}
                   </Button>
                 </Link>
-                <Link href="#">
+                <Link href="/#features">
                   <Button
                     size={"sm"}
                     variant="outline"
@@ -720,31 +723,37 @@ export function FooterSection() {
     {
       title: t("landing.footer.columns.features.title"),
       links: [
-        { label: t("landing.footer.columns.features.aiAssistant"), href: "#" },
-        { label: t("landing.footer.columns.features.sprintMode"), href: "#" },
+        {
+          label: t("landing.footer.columns.features.aiAssistant"),
+          href: "/#features",
+        },
+        {
+          label: t("landing.footer.columns.features.sprintMode"),
+          href: "/#features",
+        },
         {
           label: t("landing.footer.columns.features.browserExtension"),
-          href: "#",
+          href: "/#features",
         },
       ],
     },
     {
       title: t("landing.footer.columns.resources.title"),
       links: [
-        { label: t("landing.footer.columns.resources.blog"), href: "#" },
+        { label: t("landing.footer.columns.resources.blog"), href: "/#faq" },
         {
           label: t("landing.footer.columns.resources.changelog"),
-          href: "#",
+          href: "/app/roadmap",
           external: true,
         },
         {
           label: t("landing.footer.columns.resources.docs"),
-          href: "#",
+          href: "/#faq",
           external: true,
         },
         {
           label: t("landing.footer.columns.resources.community"),
-          href: "#",
+          href: "/#faq",
           external: true,
         },
       ],
@@ -752,10 +761,10 @@ export function FooterSection() {
     {
       title: t("landing.footer.columns.company.title"),
       links: [
-        { label: t("landing.footer.columns.company.about"), href: "#" },
+        { label: t("landing.footer.columns.company.about"), href: "/#faq" },
         {
           label: t("landing.footer.columns.company.careers"),
-          href: "#",
+          href: "/#faq",
           external: true,
         },
       ],

@@ -26,6 +26,7 @@ import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
 import { buildAskHref } from "@/lib/routing/ask-url"
 import { buildPlanHref } from "@/lib/routing/plan-url"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { RocketIcon } from "lucide-react"
 import type { FavoriteItem } from "@/components/nav-favorites"
 import { LogoAccent } from "@workspace/ui/components/logo-accent"
 import { Button } from "@workspace/ui/components/button"
@@ -110,6 +111,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       url: "/app/templates",
       icon: <BookOpen02 />,
       isActive: pathname === "/app/templates",
+    },
+    {
+      title: t("app.nav.roadmap", { defaultValue: "Roadmap" }),
+      url: "/app/roadmap",
+      icon: <RocketIcon />,
+      isActive: pathname.startsWith("/app/roadmap"),
     },
     {
       title: t("app.nav.insights", { defaultValue: "Insights" }),

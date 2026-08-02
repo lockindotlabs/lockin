@@ -72,7 +72,10 @@ export function NavWorkspaces({
             </Collapsible>
           ))}
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-sidebar-foreground/70">
+            <SidebarMenuButton
+              className="text-sidebar-foreground/70"
+              disabled
+            >
               <MoreHorizontalIcon />
               <span>More</span>
             </SidebarMenuButton>

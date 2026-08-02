@@ -336,9 +336,9 @@ export default function TaskCard({
                 Add subtask
               </DropdownMenuItem>
             )}
-            <DropdownMenuItem>
+            <DropdownMenuItem disabled>
               <ArchiveIcon />
-              Archive
+              Archive coming soon
             </DropdownMenuItem>
             <DropdownMenuItem variant="destructive" onClick={onDelete}>
               <Trash2Icon />

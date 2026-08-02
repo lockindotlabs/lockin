@@ -3,15 +3,14 @@
 import * as React from "react"
 import { useTranslation } from "react-i18next"
 import { Button } from "@workspace/ui/components/button"
-import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar"
-import { ArrowLeftIcon, InboxIcon, ListCheckIcon } from "lucide-react"
+import { InboxIcon } from "lucide-react"
 import Link from "next/link"
 
+import { AppPageShell } from "@/components/app-page-shell"
 import { PlanGrid, type RecentlyOpenedPlan } from "@/components/plan-grid"
 import { deletePlan } from "@/lib/plans/plan-repository"
 import { useRecentlyOpenedPlans } from "@/lib/plans/recently-opened-plans"
 import { usePlanSummaries } from "@/lib/plans/use-plan-summaries"
-import { cn } from "@/lib/utils"
 import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
 import { Badge } from "@workspace/ui/components/badge"
 import { LayoutGrid01, List, Plus } from "@untitledui/icons"
@@ -26,7 +25,6 @@ import {
 import { Trash2Icon } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 import { buildPlanHref } from "@/lib/routing/plan-url"
-import { ScrollArea } from "@workspace/ui/components/scroll-area"
 
 function getPlanCategory(plan: {
   steps?: {
@@ -231,240 +229,228 @@ export default function PlansPage() {
   ]
 
   return (
-    <>
-      <ScrollArea className="flex h-[calc(100vh-1rem)] flex-col overflow-y-auto bg-background/50 text-foreground">
-        <div className="relative mt-12 max-h-[88px] min-h-[20px] w-full overflow-hidden">
-          <div className="relative w-full pb-0 xl:pb-[calc(50%-576px)]" />
-        </div>
-        {!isLoaded ? (
-          <section className="mx-auto w-full max-w-6xl px-4 lg:py-0">
-            <div className="mb-5 flex items-center gap-3">
-              <div className="min-w-0">
-                <h1 className="truncate text-2xl font-medium tracking-tight">
-                  {t("app.nav.plans", { defaultValue: "Plans" })}
-                </h1>
-              </div>
-            </div>
-
-            <div className="mb-6 flex justify-between">
-              <div className="h-9 w-64 animate-pulse rounded bg-muted" />
-              <div className="h-9 w-20 animate-pulse rounded bg-muted" />
-            </div>
-
-            {viewMode === "CARD" ? (
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div
-                    key={i}
-                    className="h-40 animate-pulse rounded-xl bg-muted"
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div
-                    key={i}
-                    className="h-12 animate-pulse rounded-lg bg-muted"
-                  />
-                ))}
-              </div>
-            )}
-          </section>
-        ) : plans.length > 0 ? (
-          <section className="mx-auto w-full max-w-6xl px-4 lg:py-0">
-            <div className="mb-5 flex items-center gap-3">
-              <div className="min-w-0">
-                <h1 className="truncate text-2xl font-medium tracking-tight">
-                  {t("app.nav.plans", { defaultValue: "Plans" })}
-                </h1>
-              </div>
-            </div>
-
-            <div className="flex justify-between">
-              <Tabs
-                value={activeTab}
-                onValueChange={(val) => {
-                  if (val) {
-                    setActiveTab(val as any)
-                  }
-                }}
-                className="mb-6"
-              >
-                <TabsList
-                  aria-label={t("app.plans.filterAria", {
-                    defaultValue: "Filter plans by status",
-                  })}
-                >
-                  {tabs.map((tab) => (
-                    <TabsTrigger
-                      key={tab.id}
-                      value={tab.id}
-                      className="gap-1.5"
-                    >
-                      <span>{tab.label}</span>
-                      <Badge
-                        variant="secondary"
-                        className="h-4.5 rounded-full px-1.5 text-[10px] font-semibold"
-                      >
-                        {tab.count}
-                      </Badge>
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </Tabs>
-
-              <Tabs
-                value={viewMode}
-                onValueChange={(val) => {
-                  if (val) {
-                    setViewMode(val as any)
-                  }
-                }}
-              >
-                <TabsList
-                  aria-label={t("app.plans.toggleViewAria", {
-                    defaultValue: "Toggle layout view",
-                  })}
-                >
-                  <TabsTrigger value="CARD">
-                    <LayoutGrid01 />
-                  </TabsTrigger>
-                  <TabsTrigger value="LIST">
-                    <List />
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </div>
-
-            {filteredPlans.length > 0 ? (
-              viewMode === "CARD" ? (
-                <PlanGrid
-                  plans={filteredPlans}
-                  onDeletePlan={handleDeletePlan}
-                />
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow className="*:text-muted-foreground hover:bg-background">
-                      <TableHead className="w-[45%]">
-                        {t("app.plans.table.planTitle", {
-                          defaultValue: "Plan Title",
-                        })}
-                      </TableHead>
-                      <TableHead className="w-[20%]">
-                        {t("app.plans.table.status", {
-                          defaultValue: "Status",
-                        })}
-                      </TableHead>
-                      <TableHead className="w-[15%]">
-                        {t("app.plans.table.tasks", { defaultValue: "Tasks" })}
-                      </TableHead>
-                      <TableHead className="w-[15%]">
-                        {t("app.plans.table.lastOpened", {
-                          defaultValue: "Last Opened",
-                        })}
-                      </TableHead>
-                      <TableHead className="w-[5%] text-right"></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredPlans.map((plan) => {
-                      const planTitle =
-                        plan.title.trim() ||
-                        t("app.plan.untitled", {
-                          defaultValue: "Untitled Plan",
-                        })
-                      const category = getPlanCategory(plan)
-                      const progress = getPlanProgress(plan, t)
-                      const timestamp = getPlanTimestamp(plan, t)
-
-                      return (
-                        <>
-                          <TableRow
-                            key={plan.id}
-                            className="group/row transition-none!"
-                          >
-                            <TableCell className="font-medium">
-                              <Link
-                                href={buildPlanHref({ planId: plan.id })}
-                                className="block truncate py-2 hover:underline"
-                              >
-                                {planTitle}
-                              </Link>
-                            </TableCell>
-                            <TableCell>
-                              <CategoryBadge category={category} />
-                            </TableCell>
-                            <TableCell className="text-xs text-muted-foreground">
-                              {progress}
-                            </TableCell>
-                            <TableCell className="text-xs text-muted-foreground">
-                              {timestamp}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon-sm"
-                                aria-label={t("app.plans.deleteAria", {
-                                  name: planTitle,
-                                  defaultValue: `Delete ${planTitle}`,
-                                })}
-                                className="opacity-0 transition-opacity group-hover/row:opacity-100 hover:text-destructive"
-                                onClick={() => handleDeletePlan(plan)}
-                              >
-                                <Trash2Icon className="size-4" />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        </>
-                      )
-                    })}
-                  </TableBody>
-                </Table>
-              )
-            ) : (
-              <div className="rounded-xl border border-dashed border-border px-6 py-12 text-center text-muted-foreground">
-                <InboxIcon className="mx-auto mb-3 size-8 text-muted-foreground/50" />
-                <p className="text-sm font-medium">
-                  {t("app.plans.noPlansFound", {
-                    defaultValue: "No plans found",
-                  })}
-                </p>
-                <p className="mt-1 text-xs">
-                  {t("app.plans.noPlansInCategory", {
-                    category: tabs.find((tab) => tab.id === activeTab)?.label,
-                    defaultValue: `There are no plans categorized under "${tabs.find((tab) => tab.id === activeTab)?.label}".`,
-                  })}
-                </p>
-              </div>
-            )}
-          </section>
-        ) : (
-          <section className="mx-auto my-auto flex w-full max-w-2xl flex-col items-center gap-2 px-4 text-center text-sm text-muted-foreground">
-            <InboxIcon className="size-10" strokeWidth={1.25} />
-            <div>
-              <h1 className="font-medium">
-                {t("app.plans.emptyTitle", {
-                  defaultValue: "You don't have any saved plans yet",
-                })}
+    <AppPageShell>
+      {!isLoaded ? (
+        <>
+          <div className="mb-5 flex items-center gap-3">
+            <div className="min-w-0">
+              <h1 className="truncate text-2xl font-medium tracking-tight">
+                {t("app.nav.plans", { defaultValue: "Plans" })}
               </h1>
-              <p>
-                {t("app.plans.emptyDescription", {
-                  defaultValue: "Create a plan to see it here.",
+            </div>
+          </div>
+
+          <div className="mb-6 flex justify-between">
+            <div className="h-9 w-64 animate-pulse rounded bg-muted" />
+            <div className="h-9 w-20 animate-pulse rounded bg-muted" />
+          </div>
+
+          {viewMode === "CARD" ? (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div
+                  key={i}
+                  className="h-40 animate-pulse rounded-xl bg-muted"
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div
+                  key={i}
+                  className="h-12 animate-pulse rounded-lg bg-muted"
+                />
+              ))}
+            </div>
+          )}
+        </>
+      ) : plans.length > 0 ? (
+        <>
+          <div className="mb-5 flex items-center gap-3">
+            <div className="min-w-0">
+              <h1 className="truncate text-2xl font-medium tracking-tight">
+                {t("app.nav.plans", { defaultValue: "Plans" })}
+              </h1>
+            </div>
+          </div>
+
+          <div className="flex justify-between">
+            <Tabs
+              value={activeTab}
+              onValueChange={(val) => {
+                if (val) {
+                  setActiveTab(val as any)
+                }
+              }}
+              className="mb-6"
+            >
+              <TabsList
+                aria-label={t("app.plans.filterAria", {
+                  defaultValue: "Filter plans by status",
+                })}
+              >
+                {tabs.map((tab) => (
+                  <TabsTrigger key={tab.id} value={tab.id} className="gap-1.5">
+                    <span>{tab.label}</span>
+                    <Badge
+                      variant="secondary"
+                      className="h-4.5 rounded-full px-1.5 text-[10px] font-semibold"
+                    >
+                      {tab.count}
+                    </Badge>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+
+            <Tabs
+              value={viewMode}
+              onValueChange={(val) => {
+                if (val) {
+                  setViewMode(val as any)
+                }
+              }}
+            >
+              <TabsList
+                aria-label={t("app.plans.toggleViewAria", {
+                  defaultValue: "Toggle layout view",
+                })}
+              >
+                <TabsTrigger value="CARD">
+                  <LayoutGrid01 />
+                </TabsTrigger>
+                <TabsTrigger value="LIST">
+                  <List />
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+
+          {filteredPlans.length > 0 ? (
+            viewMode === "CARD" ? (
+              <PlanGrid plans={filteredPlans} onDeletePlan={handleDeletePlan} />
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow className="*:text-muted-foreground hover:bg-background">
+                    <TableHead className="w-[45%]">
+                      {t("app.plans.table.planTitle", {
+                        defaultValue: "Plan Title",
+                      })}
+                    </TableHead>
+                    <TableHead className="w-[20%]">
+                      {t("app.plans.table.status", {
+                        defaultValue: "Status",
+                      })}
+                    </TableHead>
+                    <TableHead className="w-[15%]">
+                      {t("app.plans.table.tasks", { defaultValue: "Tasks" })}
+                    </TableHead>
+                    <TableHead className="w-[15%]">
+                      {t("app.plans.table.lastOpened", {
+                        defaultValue: "Last Opened",
+                      })}
+                    </TableHead>
+                    <TableHead className="w-[5%] text-right"></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredPlans.map((plan) => {
+                    const planTitle =
+                      plan.title.trim() ||
+                      t("app.plan.untitled", {
+                        defaultValue: "Untitled Plan",
+                      })
+                    const category = getPlanCategory(plan)
+                    const progress = getPlanProgress(plan, t)
+                    const timestamp = getPlanTimestamp(plan, t)
+
+                    return (
+                      <>
+                        <TableRow
+                          key={plan.id}
+                          className="group/row transition-none!"
+                        >
+                          <TableCell className="font-medium">
+                            <Link
+                              href={buildPlanHref({ planId: plan.id })}
+                              className="block truncate py-2 hover:underline"
+                            >
+                              {planTitle}
+                            </Link>
+                          </TableCell>
+                          <TableCell>
+                            <CategoryBadge category={category} />
+                          </TableCell>
+                          <TableCell className="text-xs text-muted-foreground">
+                            {progress}
+                          </TableCell>
+                          <TableCell className="text-xs text-muted-foreground">
+                            {timestamp}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon-sm"
+                              aria-label={t("app.plans.deleteAria", {
+                                name: planTitle,
+                                defaultValue: `Delete ${planTitle}`,
+                              })}
+                              className="opacity-0 transition-opacity group-hover/row:opacity-100 hover:text-destructive"
+                              onClick={() => handleDeletePlan(plan)}
+                            >
+                              <Trash2Icon className="size-4" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      </>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            )
+          ) : (
+            <div className="rounded-xl border border-dashed border-border px-6 py-12 text-center text-muted-foreground">
+              <InboxIcon className="mx-auto mb-3 size-8 text-muted-foreground/50" />
+              <p className="text-sm font-medium">
+                {t("app.plans.noPlansFound", {
+                  defaultValue: "No plans found",
                 })}
               </p>
-              <Button className={"mt-4"}>
-                <Plus data-icon="inline-start" />
-                <span>
-                  {t("app.actions.newPlan", { defaultValue: "New Plan" })}
-                </span>
-              </Button>
+              <p className="mt-1 text-xs">
+                {t("app.plans.noPlansInCategory", {
+                  category: tabs.find((tab) => tab.id === activeTab)?.label,
+                  defaultValue: `There are no plans categorized under "${tabs.find((tab) => tab.id === activeTab)?.label}".`,
+                })}
+              </p>
             </div>
-          </section>
-        )}
-      </ScrollArea>
-    </>
+          )}
+        </>
+      ) : (
+        <div className="mx-auto flex w-full max-w-2xl flex-col items-center gap-2 py-16 text-center text-sm text-muted-foreground">
+          <InboxIcon className="size-10" strokeWidth={1.25} />
+          <div>
+            <h1 className="font-medium">
+              {t("app.plans.emptyTitle", {
+                defaultValue: "You don't have any saved plans yet",
+              })}
+            </h1>
+            <p>
+              {t("app.plans.emptyDescription", {
+                defaultValue: "Create a plan to see it here.",
+              })}
+            </p>
+            <Button className={"mt-4"} render={<Link href="/app/ask" />}>
+              <Plus data-icon="inline-start" />
+              <span>
+                {t("app.actions.newPlan", { defaultValue: "New Plan" })}
+              </span>
+            </Button>
+          </div>
+        </div>
+      )}
+    </AppPageShell>
   )
 }

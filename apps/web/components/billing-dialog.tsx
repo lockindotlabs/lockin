@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 
 import { Badge } from "@workspace/ui/components/badge"
 import { Button } from "@workspace/ui/components/button"
@@ -103,7 +104,9 @@ export function BillingDialog({
                     />
                     <DropdownMenuContent align="end">
                       <DropdownMenuGroup>
-                        <DropdownMenuItem>Switch plan</DropdownMenuItem>
+                        <DropdownMenuItem render={<Link href="/app/subscription" />}>
+                          Switch plan
+                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => void reloadBilling()}>
                           Refresh billing
                         </DropdownMenuItem>
@@ -140,11 +143,17 @@ export function BillingDialog({
                     </p>
                   </div>
                   <div className="flex flex-wrap items-center gap-3 md:justify-end">
-                    <Button variant="ghost" size="sm">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      render={<Link href="/app/subscription" />}
+                    >
                       View all plans
                     </Button>
                     {nextUpgradeTier ? (
-                      <Button size="sm">Upgrade now</Button>
+                      <Button size="sm" render={<Link href="/app/subscription" />}>
+                        Upgrade now
+                      </Button>
                     ) : null}
                   </div>
                 </div>

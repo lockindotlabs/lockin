@@ -104,7 +104,7 @@ export function NavActions({ copyUrl, onDelete }: NavActionsProps = {}) {
 
   return (
     <div className="flex items-center gap-2 text-sm">
-      <Button variant="ghost" size="icon" className="h-7 w-7">
+      <Button variant="ghost" size="icon" className="h-7 w-7" disabled>
         <StarIcon />
       </Button>
       <Popover open={isOpen} onOpenChange={setIsOpen}>

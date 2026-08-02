@@ -38,42 +38,48 @@ export function SiteHeader() {
             aria-label="Main"
             className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 text-sm font-medium text-muted-foreground *:hover:text-foreground md:flex"
           >
-            <Button variant="ghost" size="sm">
-              <Link href="/#product">{t("landing.nav.product")}</Link>
+            <Button variant="ghost" size="sm" render={<Link href="/#features" />}>
+              {t("landing.nav.product")}
             </Button>
-            <Button variant="ghost" size="sm">
-              <Link href="/#extension">{t("landing.nav.extension")}</Link>
+            <Button
+              variant="ghost"
+              size="sm"
+              render={<Link href="/connect-extension" />}
+            >
+              {t("landing.nav.extension")}
             </Button>
-            <Button variant="ghost" size="sm">
-              <Link href="/#pricing">{t("landing.nav.pricing")}</Link>
+            <Button variant="ghost" size="sm" render={<Link href="/#pricing" />}>
+              {t("landing.nav.pricing")}
             </Button>
-            <Button variant="ghost" size="sm">
-              <Link href="/#faq">{t("landing.nav.faq")}</Link>
+            <Button variant="ghost" size="sm" render={<Link href="/#faq" />}>
+              {t("landing.nav.faq")}
             </Button>
-            <Button variant="ghost" size="sm">
-              <Link href="/#manifesto">{t("landing.nav.manifesto")}</Link>
+            <Button
+              variant="ghost"
+              size="sm"
+              render={<Link href="/trust/terms-of-service" />}
+            >
+              {t("landing.nav.manifesto")}
             </Button>
           </nav>
 
           <div className="ml-auto flex items-center gap-2.5">
             <Show when={"signed-out"}>
-              <Button size={"lg"} variant="outline">
-                <Link className="text-sm font-medium" href="/app/sign-in">
-                  {t("landing.auth.signIn")}
-                </Link>
+              <Button
+                size={"lg"}
+                variant="outline"
+                render={<Link href="/app/sign-in" />}
+              >
+                {t("landing.auth.signIn")}
               </Button>
-              <Button size={"lg"}>
-                <Link className="text-sm font-medium" href="/app/sign-up">
-                  {t("landing.auth.getStarted")}
-                </Link>
+              <Button size={"lg"} render={<Link href="/app/sign-up" />}>
+                {t("landing.auth.getStarted")}
               </Button>
             </Show>
 
             <Show when={"signed-in"}>
-              <Button size={"lg"}>
-                <Link className="text-sm font-medium" href="/app">
-                  {t("landing.auth.goToApp")}
-                </Link>
+              <Button size={"lg"} render={<Link href="/app" />}>
+                {t("landing.auth.goToApp")}
               </Button>
             </Show>
           </div>
@@ -143,11 +149,13 @@ export function SiteFooter() {
           </div>
           <div className={footColClass}>
             <h4 className={footHeadClass}>{t("landing.footer.product")}</h4>
-            <a href="#">{t("landing.footer.webApp")}</a>
-            <a href="#">{t("landing.footer.browserExtension")}</a>
-            <a href="#pricing">{t("landing.nav.pricing")}</a>
-            <a href="#">{t("landing.footer.changelog")}</a>
-            <a href="#">{t("landing.footer.roadmap")}</a>
+            <Link href="/app">{t("landing.footer.webApp")}</Link>
+            <Link href="/connect-extension">
+              {t("landing.footer.browserExtension")}
+            </Link>
+            <Link href="/#pricing">{t("landing.nav.pricing")}</Link>
+            <Link href="/#features">{t("landing.footer.changelog")}</Link>
+            <Link href="/app/roadmap">{t("landing.footer.roadmap")}</Link>
           </div>
         </div>
         <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t pt-6 text-[13px] text-muted-foreground sm:flex-row sm:items-center">

@@ -101,13 +101,22 @@ export function NavFavorites({
                 align={isMobile ? "end" : "start"}
               >
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      const url = new URL(item.url, window.location.origin)
+                      void navigator.clipboard.writeText(url.toString())
+                    }}
+                  >
                     <LinkIcon className="text-muted-foreground" />
                     <span>
                       {t("app.actions.copyLink", { defaultValue: "Copy Link" })}
                     </span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      window.open(item.url, "_blank", "noopener,noreferrer")
+                    }}
+                  >
                     <ArrowUpRightIcon className="text-muted-foreground" />
                     <span>
                       {t("app.actions.openInNewTab", {
@@ -132,7 +141,7 @@ export function NavFavorites({
         ))}
         {favorites.length > 10 && (
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-sidebar-foreground/70">
+            <SidebarMenuButton className="text-sidebar-foreground/70" disabled>
               <MoreHorizontalIcon />
               <span>{t("app.actions.more", { defaultValue: "More" })}</span>
             </SidebarMenuButton>

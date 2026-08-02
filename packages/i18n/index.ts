@@ -18,3 +18,4 @@ export function isSupportedLocale(
 export function getLocaleDisplayName(locale: AppLocale) {
   return locale === "vi" ? "Tiếng Việt" : "English"
 }
+

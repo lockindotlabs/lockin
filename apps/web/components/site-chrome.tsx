@@ -38,25 +38,42 @@ export function SiteHeader() {
             aria-label="Main"
             className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 text-sm font-medium text-muted-foreground *:hover:text-foreground md:flex"
           >
-            <Button variant="ghost" size="sm" render={<Link href="/#features" />}>
+            <Button
+              variant="ghost"
+              size="sm"
+              nativeButton={false}
+              render={<Link href="/#features" />}
+            >
               {t("landing.nav.product")}
             </Button>
             <Button
               variant="ghost"
               size="sm"
+              nativeButton={false}
               render={<Link href="/connect-extension" />}
             >
               {t("landing.nav.extension")}
             </Button>
-            <Button variant="ghost" size="sm" render={<Link href="/#pricing" />}>
+            <Button
+              variant="ghost"
+              size="sm"
+              nativeButton={false}
+              render={<Link href="/#pricing" />}
+            >
               {t("landing.nav.pricing")}
             </Button>
-            <Button variant="ghost" size="sm" render={<Link href="/#faq" />}>
+            <Button
+              variant="ghost"
+              size="sm"
+              nativeButton={false}
+              render={<Link href="/#faq" />}
+            >
               {t("landing.nav.faq")}
             </Button>
             <Button
               variant="ghost"
               size="sm"
+              nativeButton={false}
               render={<Link href="/trust/terms-of-service" />}
             >
               {t("landing.nav.manifesto")}
@@ -68,17 +85,22 @@ export function SiteHeader() {
               <Button
                 size={"lg"}
                 variant="outline"
+                nativeButton={false}
                 render={<Link href="/app/sign-in" />}
               >
                 {t("landing.auth.signIn")}
               </Button>
-              <Button size={"lg"} render={<Link href="/app/sign-up" />}>
+              <Button
+                size={"lg"}
+                nativeButton={false}
+                render={<Link href="/app/sign-up" />}
+              >
                 {t("landing.auth.getStarted")}
               </Button>
             </Show>
 
             <Show when={"signed-in"}>
-              <Button size={"lg"} render={<Link href="/app" />}>
+              <Button size={"lg"} nativeButton={false} render={<Link href="/app" />}>
                 {t("landing.auth.goToApp")}
               </Button>
             </Show>

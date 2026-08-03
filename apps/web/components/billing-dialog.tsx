@@ -104,7 +104,10 @@ export function BillingDialog({
                     />
                     <DropdownMenuContent align="end">
                       <DropdownMenuGroup>
-                        <DropdownMenuItem render={<Link href="/app/subscription" />}>
+                        <DropdownMenuItem
+                          nativeButton={false}
+                          render={<Link href="/app/subscription" />}
+                        >
                           Switch plan
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => void reloadBilling()}>
@@ -146,12 +149,17 @@ export function BillingDialog({
                     <Button
                       variant="ghost"
                       size="sm"
+                      nativeButton={false}
                       render={<Link href="/app/subscription" />}
                     >
                       View all plans
                     </Button>
                     {nextUpgradeTier ? (
-                      <Button size="sm" render={<Link href="/app/subscription" />}>
+                      <Button
+                        size="sm"
+                        nativeButton={false}
+                        render={<Link href="/app/subscription" />}
+                      >
                         Upgrade now
                       </Button>
                     ) : null}

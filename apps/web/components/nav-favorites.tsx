@@ -74,13 +74,12 @@ export function NavFavorites({
         )}
         {favorites.map((item) => (
           <SidebarMenuItem key={item.id}>
-            <SidebarMenuButton
-              isActive={item.isActive}
-              render={<Link href={item.url} title={item.name} />}
-            >
-              {item.emoji && <span>{item.emoji}</span>}
-              <span>{item.name}</span>
-            </SidebarMenuButton>
+            <Link href={item.url} title={item.name}>
+              <SidebarMenuButton isActive={item.isActive}>
+                {item.emoji && <span>{item.emoji}</span>}
+                <span>{item.name}</span>
+              </SidebarMenuButton>
+            </Link>
             <DropdownMenu>
               <DropdownMenuTrigger
                 render={

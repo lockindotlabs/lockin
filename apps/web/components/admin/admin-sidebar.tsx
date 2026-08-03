@@ -92,13 +92,14 @@ export function AdminSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
             <SidebarMenu>
               {adminNavItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    isActive={isAdminNavItemActive(item, pathname)}
-                    render={<Link href={item.url} />}
-                  >
-                    <item.icon />
-                    <span>{item.title}</span>
-                  </SidebarMenuButton>
+                  <Link href={item.url}>
+                    <SidebarMenuButton
+                      isActive={isAdminNavItemActive(item, pathname)}
+                    >
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
+                  </Link>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

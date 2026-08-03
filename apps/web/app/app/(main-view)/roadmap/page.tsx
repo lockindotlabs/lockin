@@ -96,7 +96,7 @@ export default function RoadmapPage() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button render={<Link href={`/app/roadmap/${feature.id}`} />} className="w-full">
+                  <Button nativeButton={false} render={<Link href={`/app/roadmap/${feature.id}`} />} className="w-full">
                       Xem demo
                       <ArrowUpRightIcon data-icon="inline-end" />
                   </Button>
@@ -226,7 +226,7 @@ export default function RoadmapPage() {
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button render={<Link href={`/app/roadmap/${feature.id}`} />} variant="outline" className="w-full">
+                    <Button nativeButton={false} render={<Link href={`/app/roadmap/${feature.id}`} />} variant="outline" className="w-full">
                       Mở checkpoint demo
                       <ArrowUpRightIcon data-icon="inline-end" />
                     </Button>
@@ -256,7 +256,7 @@ export default function RoadmapPage() {
             </CardHeader>
             <CardContent><Progress value={76} /></CardContent>
             <CardFooter>
-              <Button render={<Link href="/app/roadmap/focus-guard" />} variant="outline">Mở Focus Guard demo<ArrowUpRightIcon data-icon="inline-end" /></Button>
+              <Button nativeButton={false} render={<Link href="/app/roadmap/focus-guard" />} variant="outline">Mở Focus Guard demo<ArrowUpRightIcon data-icon="inline-end" /></Button>
             </CardFooter>
           </Card>
         </section>

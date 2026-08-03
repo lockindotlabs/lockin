@@ -442,7 +442,11 @@ export default function PlansPage() {
                 defaultValue: "Create a plan to see it here.",
               })}
             </p>
-            <Button className={"mt-4"} render={<Link href="/app/ask" />}>
+            <Button
+              className={"mt-4"}
+              nativeButton={false}
+              render={<Link href="/app/ask" />}
+            >
               <Plus data-icon="inline-start" />
               <span>
                 {t("app.actions.newPlan", { defaultValue: "New Plan" })}

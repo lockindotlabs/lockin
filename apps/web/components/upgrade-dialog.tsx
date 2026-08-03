@@ -201,7 +201,11 @@ export function UpgradeDialog({
                   </FieldLabel>
                   <Progress value={66} id="credits-remaining" />
                 </Field>
-                <Button variant="outline" render={<Link href="/app/subscription" />}>
+                <Button
+                  variant="outline"
+                  nativeButton={false}
+                  render={<Link href="/app/subscription" />}
+                >
                   Top up
                 </Button>
               </div>

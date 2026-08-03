@@ -62,7 +62,7 @@ function DemoShell({ children }: { children: React.ReactNode }) {
   const feature = getRoadmapFeature(featureId)
 
   if (!feature) {
-    return <ScrollArea className="flex h-[calc(100vh-1rem)] flex-col overflow-y-auto"><main className="mx-auto mt-12 w-full max-w-3xl px-4 py-8"><Card><CardHeader><CardTitle>Demo không tồn tại</CardTitle></CardHeader><CardFooter><Button render={<Link href="/app/roadmap" />}>Quay lại roadmap</Button></CardFooter></Card></main></ScrollArea>
+    return <ScrollArea className="flex h-[calc(100vh-1rem)] flex-col overflow-y-auto"><main className="mx-auto mt-12 w-full max-w-3xl px-4 py-8"><Card><CardHeader><CardTitle>Demo không tồn tại</CardTitle></CardHeader><CardFooter><Button nativeButton={false} render={<Link href="/app/roadmap" />}>Quay lại roadmap</Button></CardFooter></Card></main></ScrollArea>
   }
 
   const Icon = feature.icon
@@ -84,7 +84,7 @@ function DemoShell({ children }: { children: React.ReactNode }) {
             <section className="min-w-0 p-4 sm:p-6">
               <div className="mb-6 flex flex-col gap-4 border-b pb-5 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3"><span className="flex size-9 items-center justify-center rounded-md bg-muted"><Icon /></span><div><div className="flex items-center gap-2"><h1 className="text-lg font-semibold">{feature.demoTitle}</h1><Badge variant={feature.stage === "Now" ? "default" : "outline"}>{feature.stage}</Badge></div><p className="mt-1 text-xs text-muted-foreground">{feature.demoSummary}</p></div></div>
-                <div className="flex items-center gap-3"><Button render={<Link href="/app/roadmap" />} variant="outline" size="sm"><ArrowLeftIcon data-icon="inline-start" />Roadmap</Button><div className="hidden min-w-28 sm:block"><div className="mb-1 flex justify-between text-xs text-muted-foreground"><span>Readiness</span><span>{feature.progress}%</span></div><Progress value={feature.progress} /></div></div>
+                <div className="flex items-center gap-3"><Button nativeButton={false} render={<Link href="/app/roadmap" />} variant="outline" size="sm"><ArrowLeftIcon data-icon="inline-start" />Roadmap</Button><div className="hidden min-w-28 sm:block"><div className="mb-1 flex justify-between text-xs text-muted-foreground"><span>Readiness</span><span>{feature.progress}%</span></div><Progress value={feature.progress} /></div></div>
               </div>
               {children}
               <section className="mt-6 border-t pt-5">

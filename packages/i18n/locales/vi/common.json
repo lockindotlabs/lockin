@@ -14,7 +14,7 @@
       "manifesto": "Tuyên ngôn"
     },
     "hero": {
-      "badge": "Mới: Giao diện cải tiến và Phân tích chuyên sâu cho kế hoạch",
+      "badge": "Mới: Giao diện mới và tính năng Phân tích",
       "titleOne": "Biến công việc ngợp đầu",
       "titleTwo": "thành kế hoạch hành động.",
       "description": "LockIn là trợ lý hành động AI giúp bạn chia nhỏ công việc ngợp đầu thành các bước dễ quản lý, sau đó dẫn dắt bạn hoàn thành qua các phiên tập trung không xao nhãng.",
@@ -48,6 +48,48 @@
         "title": "Giữ vững sự tập trung",
         "description": "Bắt đầu một phiên Sprint và giải quyết từng bước một trong không gian làm việc không xao nhãng được thiết kế để tập trung sâu.",
         "alt": "Mẫu Giữ vững sự tập trung hiển thị bộ đếm giờ sprint tập trung với các nút trạng thái"
+      }
+    },
+    "extension": {
+      "title": "Sự tập trung không nên dừng lại khi bạn đóng tab.",
+      "description": "Bắt đầu một phiên Sprint và giải quyết từng bước trong không gian làm việc tối ưu cho tập trung sâu.",
+      "cards": {
+        "distractions": {
+          "bold": "Tránh xa sự xao nhãng.",
+          "text": "Chặn các trang web gây xao nhãng trong phiên Sprint để dễ dàng giữ cam kết với kế hoạch của bạn."
+        },
+        "pairing": {
+          "bold": "Cài đặt một lần, đăng nhập mọi nơi.",
+          "text": "Không cần mật khẩu thứ hai. Tiện ích mở rộng kết nối với tài khoản web chỉ qua 2 chạm."
+        },
+        "eyeline": {
+          "bold": "Luôn trong tầm mắt.",
+          "text": "Nút kéo thả linh hoạt trên mọi trang web giúp đồng hồ đếm giờ không bị trôi mất."
+        },
+        "rules": {
+          "bold": "Quy tắc của bạn, trang web của bạn.",
+          "text": "Chọn danh mục hoặc tên miền cụ thể. Tùy chỉnh mức độ chặn cứng / mềm theo từng trang web."
+        },
+        "nudge": {
+          "bold": "Nhắc nhở, không chỉ trích.",
+          "text": "Nếu bạn ghé thăm trang web chặn mềm, LockIn sẽ nhắc bạn chi phí thời gian thay vì chỉ trích."
+        }
+      }
+    },
+    "mock": {
+      "sprint42": "Sprint #42",
+      "left": "còn lại",
+      "taskShort": "Soạn bài viết ra mắt trên Twitter",
+      "steps": {
+        "outline": "Phác thảo dàn bài",
+        "hook": "Viết câu mở đầu",
+        "statement": "Viết thông điệp giá trị",
+        "bridge": "Thêm kêu gọi hành động & liên kết"
+      },
+      "actions": {
+        "addFiveShort": "+5 phút",
+        "pause": "Tạm dừng",
+        "endSprint": "Kết thúc Sprint"
       }
     },
     "pricing": {

@@ -1,4 +1,6 @@
 import prisma, { Prisma } from "@workspace/db"
+import { getTemplateAccessState, type TemplateAccessState } from "@/lib/billing/entitlements"
+import type { BillingTier } from "@/lib/billing/catalog"
 
 type DbClient = typeof prisma
 
@@ -69,4 +71,28 @@ export async function incrementInstallCount(id: string, db: DbClient = prisma) {
   })
 
   return result.count > 0
+}
+
+export async function getTemplateAccessForUser({
+  userId,
+  templateId,
+  tier,
+  db = prisma,
+}: {
+  userId: string
+  templateId: string
+  tier: BillingTier
+  db?: DbClient
+}): Promise<TemplateAccessState | null> {
+  const template = await getInstallableTemplate(userId, templateId, db)
+  if (!template) return null
+
+  if (template.authorId === userId || template.status !== "APPROVED") {
+    return getTemplateAccessState({ tier, marketplaceIndex: 0, isOwned: true })
+  }
+
+  const marketTemplates = await listMarketTemplates({}, db)
+  const marketplaceIndex = marketTemplates.findIndex((item) => item.id === template.id)
+
+  return getTemplateAccessState({ tier, marketplaceIndex })
 }

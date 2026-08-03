@@ -1,7 +1,7 @@
 "use client"
 
 import { useAui, useAuiEvent, type ModelContext } from "@assistant-ui/react"
-import { BookOpenIcon, ChevronDownIcon, XIcon } from "lucide-react"
+import { BookOpenIcon, ChevronDownIcon, LockIcon, XIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Button } from "@workspace/ui/components/button"
 import {
@@ -24,6 +24,9 @@ export type WorkflowTemplateSummary = {
   isAcademic: boolean
   status?: "DRAFT" | "PENDING_REVIEW" | "APPROVED" | "REJECTED"
   isOwned?: boolean
+  locked?: boolean
+  requiredTier?: "PLUS" | "PRO" | null
+  lockReason?: string | null
 }
 
 function useWorkflowTemplates() {
@@ -129,13 +132,18 @@ export function TemplatePicker({
               {templates.map((t) => (
                 <DropdownMenuItem
                   key={t.id}
-                  onClick={() =>
+                  onClick={() => {
+                    if (t.locked) {
+                      window.location.assign("/app/billing")
+                      return
+                    }
                     onSelect(selectedTemplateId === t.id ? null : t.id)
-                  }
+                  }}
                   className="flex flex-col items-start gap-0.5 py-2"
                 >
                   <span className="flex items-center gap-2 leading-tight font-medium">
                     {t.title}
+                    {t.locked ? <LockIcon className="size-3 text-muted-foreground" /> : null}
                     {isUnapprovedOwned(t) ? (
                       <span className="rounded-full bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-300">
                         Chưa duyệt
@@ -147,6 +155,11 @@ export function TemplatePicker({
                       {t.description}
                     </span>
                   )}
+                  {t.locked ? (
+                    <span className="text-[10px] text-muted-foreground">
+                      {t.lockReason}
+                    </span>
+                  ) : null}
                   {selectedTemplateId === t.id && (
                     <span className="mt-0.5 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] text-primary">
                       Selected

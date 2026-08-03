@@ -7,10 +7,14 @@
       "pricing": "Bảng giá",
       "help": "Trợ giúp",
       "login": "Đăng nhập",
-      "goToApp": "Vào ứng dụng"
+      "goToApp": "Vào ứng dụng",
+      "product": "Sản phẩm",
+      "extension": "Extension",
+      "faq": "FAQ",
+      "manifesto": "Tuyên ngôn"
     },
     "hero": {
-      "badge": "Mới: Giao diện cải tiến và Phân tích chuyên sâu cho kế hoạch",
+      "badge": "Mới: Giao diện mới và tính năng Phân tích",
       "titleOne": "Biến công việc ngợp đầu",
       "titleTwo": "thành kế hoạch hành động.",
       "description": "LockIn là trợ lý hành động AI giúp bạn chia nhỏ công việc ngợp đầu thành các bước dễ quản lý, sau đó dẫn dắt bạn hoàn thành qua các phiên tập trung không xao nhãng.",
@@ -44,6 +48,48 @@
         "title": "Giữ vững sự tập trung",
         "description": "Bắt đầu một phiên Sprint và giải quyết từng bước một trong không gian làm việc không xao nhãng được thiết kế để tập trung sâu.",
         "alt": "Mẫu Giữ vững sự tập trung hiển thị bộ đếm giờ sprint tập trung với các nút trạng thái"
+      }
+    },
+    "extension": {
+      "title": "Sự tập trung không nên dừng lại khi bạn đóng tab.",
+      "description": "Bắt đầu một phiên Sprint và giải quyết từng bước trong không gian làm việc tối ưu cho tập trung sâu.",
+      "cards": {
+        "distractions": {
+          "bold": "Tránh xa sự xao nhãng.",
+          "text": "Chặn các trang web gây xao nhãng trong phiên Sprint để dễ dàng giữ cam kết với kế hoạch của bạn."
+        },
+        "pairing": {
+          "bold": "Cài đặt một lần, đăng nhập mọi nơi.",
+          "text": "Không cần mật khẩu thứ hai. Tiện ích mở rộng kết nối với tài khoản web chỉ qua 2 chạm."
+        },
+        "eyeline": {
+          "bold": "Luôn trong tầm mắt.",
+          "text": "Nút kéo thả linh hoạt trên mọi trang web giúp đồng hồ đếm giờ không bị trôi mất."
+        },
+        "rules": {
+          "bold": "Quy tắc của bạn, trang web của bạn.",
+          "text": "Chọn danh mục hoặc tên miền cụ thể. Tùy chỉnh mức độ chặn cứng / mềm theo từng trang web."
+        },
+        "nudge": {
+          "bold": "Nhắc nhở, không chỉ trích.",
+          "text": "Nếu bạn ghé thăm trang web chặn mềm, LockIn sẽ nhắc bạn chi phí thời gian thay vì chỉ trích."
+        }
+      }
+    },
+    "mock": {
+      "sprint42": "Sprint #42",
+      "left": "còn lại",
+      "taskShort": "Soạn bài viết ra mắt trên Twitter",
+      "steps": {
+        "outline": "Phác thảo dàn bài",
+        "hook": "Viết câu mở đầu",
+        "statement": "Viết thông điệp giá trị",
+        "bridge": "Thêm kêu gọi hành động & liên kết"
+      },
+      "actions": {
+        "addFiveShort": "+5 phút",
+        "pause": "Tạm dừng",
+        "endSprint": "Kết thúc Sprint"
       }
     },
     "pricing": {
@@ -153,7 +199,20 @@
           "privacy": "Chính sách bảo mật"
         }
       },
-      "copyright": "© 2026 LockIn Labs, Inc."
+      "copyright": "© 2026 LockIn Labs, Inc.",
+      "tagline": "Biến việc quá tải thành các Sprint tập trung và có thể hoàn thành.",
+      "product": "Sản phẩm",
+      "webApp": "Web app",
+      "browserExtension": "Browser extension",
+      "changelog": "Nhật ký thay đổi",
+      "roadmap": "Roadmap",
+      "privacy": "Quyền riêng tư",
+      "terms": "Điều khoản"
+    },
+    "auth": {
+      "signIn": "Đăng nhập",
+      "getStarted": "Bắt đầu",
+      "goToApp": "Vào app"
     }
   },
   "trust": {
@@ -537,7 +596,8 @@
       "admin": "Quản trị",
       "settings": "Cài đặt",
       "subscription": "Gói dịch vụ",
-      "knowledgeHub": "Kho kiến thức"
+      "knowledgeHub": "Kho kiến thức",
+      "roadmap": "Roadmap"
     },
     "common": {
       "loading": "Đang tải..."
@@ -548,7 +608,14 @@
       "copyLink": "Sao chép liên kết",
       "openInNewTab": "Mở trong tab mới",
       "delete": "Xóa",
-      "rename": "Đổi tên"
+      "rename": "Đổi tên",
+      "copy": "Sao chép",
+      "refresh": "Làm mới",
+      "edit": "Sửa",
+      "cancel": "Hủy",
+      "update": "Cập nhật",
+      "previous": "Trước",
+      "next": "Tiếp"
     },
     "sidebar": {
       "recentPlans": "Kế hoạch gần đây",
@@ -586,7 +653,19 @@
       "today": "Hôm nay",
       "yesterday": "Hôm qua",
       "previousSevenDays": "7 ngày trước",
-      "older": "Cũ hơn"
+      "older": "Cũ hơn",
+      "scrollToBottom": "Cuộn xuống cuối",
+      "welcomeTitle": "Bạn cần hoàn thành việc gì?",
+      "welcomeSubtitle": "Cứ đưa bản nháp lộn xộn vào. LockIn sẽ biến nó thành kế hoạch có thể bắt đầu ngay.",
+      "planWelcomeTitle": "Mình có thể giúp gì cho kế hoạch này?",
+      "inputPlaceholder": "Bạn cần hoàn thành việc gì?",
+      "planInputPlaceholder": "Điều chỉnh kế hoạch này bằng AI...",
+      "sendMessage": "Gửi tin nhắn",
+      "stopGenerating": "Dừng tạo",
+      "exportMarkdown": "Xuất dạng Markdown",
+      "createNewPage": "Tạo trang mới",
+      "capabilitiesOverview": "Tổng quan khả năng",
+      "previousChat": "Đoạn chat trước"
     },
     "plan": {
       "untitled": "Kế hoạch chưa đặt tên",
@@ -856,7 +935,17 @@
       "ready": "Sẵn sàng",
       "answerRequired": "Vui lòng trả lời mục này trước khi tiếp tục.",
       "shortAnswerHint": "Câu trả lời ngắn vẫn được chấp nhận, nhưng thêm một chút chi tiết sẽ giúp kế hoạch chính xác hơn.",
-      "submitScaffold": "Gửi khung"
+      "submitScaffold": "Gửi khung",
+      "optionSelected": "Đã chọn",
+      "chooseOption": "Chọn phương án",
+      "reviewPlanTasks": "Xem lại các task trong kế hoạch",
+      "choosePlanTasks": "Chọn những task cần đưa vào kế hoạch.",
+      "tasksSelected": "Đã chọn {{count}} task",
+      "preparingTasks": "Đang chuẩn bị task...",
+      "addAnotherTask": "Thêm task khác",
+      "addTask": "Thêm task",
+      "selectedTaskCount": "Đã chọn {{count}}",
+      "useSelectedTasks": "Dùng các task đã chọn"
     },
     "status": {
       "comingSoon": "Sắp ra mắt"
@@ -865,7 +954,41 @@
       "title": "Góp ý",
       "placeholder": "Nhập góp ý của bạn ở đây...",
       "note": "Chúng tôi không phản hồi từng góp ý, nhưng luôn đọc kỹ tất cả.",
-      "submit": "Gửi"
+      "submit": "Gửi",
+      "saved": "Cảm ơn bạn, góp ý đã được lưu.",
+      "saving": "Đang lưu...",
+      "error": "Chưa lưu được góp ý. Vui lòng thử lại."
+    },
+    "extensionSettings": {
+      "title": "Token extension",
+      "description": "Quản lý token kết nối Chrome extension với tài khoản của bạn.",
+      "newTokenWarning": "Token mới - hãy lưu ngay. Token sẽ không hiển thị lại.",
+      "copy": "Sao chép",
+      "createTitle": "Tạo token mới",
+      "namePlaceholder": "Tên token (ví dụ: Laptop cá nhân)",
+      "create": "Tạo",
+      "existingTitle": "Token hiện có",
+      "loading": "Đang tải...",
+      "empty": "Chưa có token nào.",
+      "created": "Tạo",
+      "lastUsed": "Dùng lần cuối",
+      "revoke": "Hủy",
+      "revokeConfirm": "Hủy token này?"
+    },
+    "connectExtension": {
+      "signInTitle": "Cần đăng nhập",
+      "signInDescription": "Bạn cần đăng nhập để kết nối extension.",
+      "signInButton": "Đăng nhập ->",
+      "connectingTitle": "Đang kết nối...",
+      "connectingDescription": "Đang tạo token và gửi đến extension.",
+      "successTitle": "Kết nối thành công!",
+      "successDescription": "Extension đã được liên kết. Tab này sẽ tự đóng.",
+      "errorTitle": "Kết nối thất bại",
+      "errorHint": "Hãy đảm bảo extension LockIn đã được cài và bật, rồi thử lại.",
+      "noExtensionTitle": "Không tìm thấy extension",
+      "openFromExtension": "Hãy mở trang này từ cài đặt extension, không truy cập trực tiếp.",
+      "noResponse": "Extension không phản hồi. Hãy cài đặt và reload từ chrome://extensions.",
+      "didNotRespond": "Extension không phản hồi"
     },
     "guide": {
       "cardTitle": "Bắt đầu",
@@ -970,6 +1093,52 @@
         "10": "Th11",
         "11": "Th12"
       }
+    },
+    "home": {
+      "quickActions": {
+        "createPlan": "Tạo kế hoạch",
+        "breakDown": "Chia nhỏ việc",
+        "reviewProgress": "Xem tiến độ",
+        "studySprint": "Sprint học tập"
+      },
+      "quickPrompts": {
+        "createPlan": "Tạo một kế hoạch Sprint tập trung cho ",
+        "breakDown": "Chia việc này thành các bước rõ ràng: ",
+        "reviewProgress": "Xem tiến độ hiện tại và gợi ý việc nên làm tiếp.",
+        "studySprint": "Lập một Sprint học tập 90 phút cho ",
+        "nextStep": "Xem các kế hoạch của tôi và cho biết bước tiếp theo tốt nhất."
+      },
+      "title": "Hôm nay bạn muốn hoàn thành gì?",
+      "subtitle": "Bắt đầu bằng một mục tiêu, tiếp tục kế hoạch cũ, hoặc biến việc rời rạc thành một Sprint tập trung.",
+      "inputPlaceholder": "Mô tả kết quả bạn muốn đạt được...",
+      "inputHint": "AI sẽ biến nội dung này thành kế hoạch có thể làm ngay.",
+      "stats": {
+        "activePlans": "Kế hoạch đang mở",
+        "dueToday": "Hạn hôm nay",
+        "openTasks": "Việc còn mở"
+      },
+      "today": {
+        "title": "Hôm nay",
+        "subtitle": "Bước tiếp theo hữu ích nhất.",
+        "dueMessage": "{{count}} việc cần được chú ý trong hôm nay",
+        "noDeadline": "Hôm nay chưa có áp lực deadline",
+        "continueHint": "Tiếp tục kế hoạch gần nhất hoặc nhờ AI chọn bước tiếp theo.",
+        "emptyHint": "Mô tả một mục tiêu, LockIn sẽ biến nó thành Sprint có thể bắt đầu."
+      },
+      "continue": {
+        "title": "Kế hoạch gần đây",
+        "viewAll": "Xem tất cả kế hoạch"
+      },
+      "nextStepButton": "Hỏi bước tiếp theo"
+    },
+    "extension": {
+      "try": "Dùng thử Extension",
+      "tryTitle": "LockIn Chrome Extension",
+      "tryDescription": "Đưa timer Sprint, tab guard và nhắc nhở website bị chặn vào trình duyệt.",
+      "pitchOne": "Giữ Sprint luôn hiển thị khi bạn duyệt web mà không cần quay lại app.",
+      "pitchTwo": "LockIn có thể nhắc khi bạn mất tập trung, chuyển hướng website bị chặn cứng và đồng bộ tiến độ task về Focus.",
+      "pitchThree": "Cài một lần, kết nối tài khoản, rồi bắt đầu Sprint từ web app.",
+      "openStore": "Mở Chrome Store"
     }
   }
 }

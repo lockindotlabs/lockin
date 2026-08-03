@@ -34,6 +34,24 @@ model User {
   Sprint          Sprint[]
   aiUsages        AiUsage[]
   authoredTemplates WorkflowTemplate[] @relation("AuthoredTemplates")
+  feedback        Feedback[]
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  message   String
+  status    String   @default("OPEN")
+  source    String   @default("APP")
+  path      String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdAt])
+  @@index([status, createdAt])
+  @@index([userId, createdAt])
 }
 
 model Chat {

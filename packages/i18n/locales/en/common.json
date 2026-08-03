@@ -2,11 +2,20 @@
   "landing": {
     "nav": {
       "home": "Home",
+      "product": "Product",
       "features": "Features",
+      "extension": "Extension",
       "resources": "Resources",
       "pricing": "Pricing",
+      "faq": "FAQ",
       "help": "Help",
+      "manifesto": "Manifesto",
       "login": "Log in",
+      "goToApp": "Go to app"
+    },
+    "auth": {
+      "signIn": "Sign in",
+      "getStarted": "Get started",
       "goToApp": "Go to app"
     },
     "hero": {
@@ -44,6 +53,59 @@
         "title": "Stay in the zone",
         "description": "Start a Sprint and work on one step at a time in a distraction-free workspace designed for deep focus.",
         "alt": "Stay in the zone Mockup showing focus mode sprint timer with active step and status controls"
+      }
+    },
+    "extension": {
+      "title": "Focus shouldn't end when you close the tab.",
+      "description": "Start a Sprint and work on one step at a time in a distraction-free workspace designed for deep focus.",
+      "cards": {
+        "distractions": {
+          "bold": "Stay away from distractions.",
+          "text": "Block distracting websites during a Sprint so it's easier to stay committed to the work you've planned."
+        },
+        "pairing": {
+          "bold": "Install once, signed in everywhere.",
+          "text": "No second password. The extension pairs with your web account in two taps and never asks for credentials again.",
+          "confirm": "Confirm pairing code",
+          "expires": "expires in 2:31"
+        },
+        "eyeline": {
+          "bold": "Always in your eyeline.",
+          "text": "A draggable pill on every page so the timer never disappears into a forgotten tab.",
+          "timerLabel": "Focus Sprint"
+        },
+        "rules": {
+          "bold": "Your rules, your sites.",
+          "text": "Pick categories or specific domains. Adjust hard / soft per site, save as presets.",
+          "modes": {
+            "hard": "hard",
+            "soft": "soft"
+          }
+        },
+        "nudge": {
+          "bold": "Nudge, not shame.",
+          "text": "If you drift to a soft-listed site, LockIn shows the cost — never wags a finger.",
+          "title": "Stay on reddit.com?",
+          "description": "5 more min costs you ~1 step from this sprint.",
+          "backToWork": "Back to work",
+          "plusFiveMins": "+5 mins"
+        }
+      }
+    },
+    "mock": {
+      "sprint42": "Sprint #42",
+      "left": "left",
+      "taskShort": "Draft launch post for Twitter",
+      "steps": {
+        "outline": "Draft outline",
+        "hook": "Write hook",
+        "statement": "Write value statement",
+        "bridge": "Add CTA & link"
+      },
+      "actions": {
+        "addFiveShort": "+5m",
+        "pause": "Pause",
+        "endSprint": "End Sprint"
       }
     },
     "pricing": {
@@ -128,6 +190,14 @@
       }
     },
     "footer": {
+      "tagline": "Turn overwhelming work into focused, finishable sprints.",
+      "product": "Product",
+      "webApp": "Web app",
+      "browserExtension": "Browser extension",
+      "changelog": "Changelog",
+      "roadmap": "Roadmap",
+      "privacy": "Privacy",
+      "terms": "Terms",
       "columns": {
         "features": {
           "title": "Features",
@@ -537,7 +607,8 @@
       "admin": "Admin",
       "settings": "Settings",
       "subscription": "Subscription",
-      "knowledgeHub": "Knowledge Hub"
+      "knowledgeHub": "Knowledge Hub",
+      "roadmap": "Roadmap"
     },
     "common": {
       "loading": "Loading..."
@@ -548,7 +619,14 @@
       "copyLink": "Copy Link",
       "openInNewTab": "Open in New Tab",
       "delete": "Delete",
-      "rename": "Rename"
+      "rename": "Rename",
+      "copy": "Copy",
+      "refresh": "Refresh",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "update": "Update",
+      "previous": "Previous",
+      "next": "Next"
     },
     "sidebar": {
       "recentPlans": "Recent plans",
@@ -586,7 +664,19 @@
       "today": "Today",
       "yesterday": "Yesterday",
       "previousSevenDays": "Previous 7 days",
-      "older": "Older"
+      "older": "Older",
+      "scrollToBottom": "Scroll to bottom",
+      "welcomeTitle": "What do you need to get done?",
+      "welcomeSubtitle": "Drop in the messy version. LockIn will turn it into a plan you can start.",
+      "planWelcomeTitle": "How can I help with your plan?",
+      "inputPlaceholder": "What do you need to get done?",
+      "planInputPlaceholder": "Adjust this plan with AI...",
+      "sendMessage": "Send message",
+      "stopGenerating": "Stop generating",
+      "exportMarkdown": "Export as Markdown",
+      "createNewPage": "Create a new page",
+      "capabilitiesOverview": "Capabilities overview",
+      "previousChat": "Previous chat"
     },
     "plan": {
       "untitled": "Untitled Plan",
@@ -856,7 +946,17 @@
       "ready": "Ready",
       "answerRequired": "Please answer this field before continuing.",
       "shortAnswerHint": "Short answers are allowed, but adding a little more detail will help the plan come out more accurate.",
-      "submitScaffold": "Submit scaffold"
+      "submitScaffold": "Submit scaffold",
+      "optionSelected": "Selected",
+      "chooseOption": "Choose option",
+      "reviewPlanTasks": "Review plan tasks",
+      "choosePlanTasks": "Choose which tasks to include.",
+      "tasksSelected": "{{count}} selected",
+      "preparingTasks": "Preparing tasks...",
+      "addAnotherTask": "Add another task",
+      "addTask": "Add task",
+      "selectedTaskCount": "{{count}} selected",
+      "useSelectedTasks": "Use selected tasks"
     },
     "status": {
       "comingSoon": "Coming soon"
@@ -865,7 +965,41 @@
       "title": "Feedback",
       "placeholder": "Type your feedback here...",
       "note": "We do not respond to submissions, but we read all of them carefully.",
-      "submit": "Submit"
+      "submit": "Submit",
+      "saved": "Thanks, your feedback was saved.",
+      "saving": "Saving...",
+      "error": "Could not save feedback. Please try again."
+    },
+    "extensionSettings": {
+      "title": "Extension tokens",
+      "description": "Manage tokens that connect the Chrome extension to your account.",
+      "newTokenWarning": "New token - save it now. It will not be shown again.",
+      "copy": "Copy",
+      "createTitle": "Create new token",
+      "namePlaceholder": "Token name (for example: Personal laptop)",
+      "create": "Create",
+      "existingTitle": "Existing tokens",
+      "loading": "Loading...",
+      "empty": "No tokens yet.",
+      "created": "Created",
+      "lastUsed": "Last used",
+      "revoke": "Revoke",
+      "revokeConfirm": "Revoke this token?"
+    },
+    "connectExtension": {
+      "signInTitle": "Sign in required",
+      "signInDescription": "You need to sign in to connect the extension.",
+      "signInButton": "Sign in ->",
+      "connectingTitle": "Connecting...",
+      "connectingDescription": "Creating a token and sending it to the extension.",
+      "successTitle": "Connected successfully!",
+      "successDescription": "The extension has been linked. This tab will close automatically.",
+      "errorTitle": "Connection failed",
+      "errorHint": "Make sure the LockIn extension is installed and enabled, then try again.",
+      "noExtensionTitle": "Extension not found",
+      "openFromExtension": "Open this page from the extension settings instead of visiting it directly.",
+      "noResponse": "The extension did not respond. Install it and reload from chrome://extensions.",
+      "didNotRespond": "Extension did not respond"
     },
     "guide": {
       "cardTitle": "Getting Started",
@@ -970,6 +1104,52 @@
         "10": "Nov",
         "11": "Dec"
       }
+    },
+    "home": {
+      "quickActions": {
+        "createPlan": "Create plan",
+        "breakDown": "Break it down",
+        "reviewProgress": "Review progress",
+        "studySprint": "Study Sprint"
+      },
+      "quickPrompts": {
+        "createPlan": "Create a focused Sprint plan for ",
+        "breakDown": "Break this work into clear steps: ",
+        "reviewProgress": "Review current progress and suggest what to do next.",
+        "studySprint": "Create a 90-minute study Sprint for ",
+        "nextStep": "Review my plans and tell me the best next step."
+      },
+      "title": "What do you want to finish today?",
+      "subtitle": "Start with a goal, continue an old plan, or turn scattered work into a focused Sprint.",
+      "inputPlaceholder": "Describe the outcome you want...",
+      "inputHint": "AI will turn this into a plan you can act on now.",
+      "stats": {
+        "activePlans": "Active plans",
+        "dueToday": "Due today",
+        "openTasks": "Open tasks"
+      },
+      "today": {
+        "title": "Today",
+        "subtitle": "The most useful next step.",
+        "dueMessage": "{{count}} item needs attention today",
+        "noDeadline": "No deadline pressure today",
+        "continueHint": "Continue the most recent plan or ask AI to choose the next step.",
+        "emptyHint": "Describe a goal and LockIn will turn it into a Sprint you can start."
+      },
+      "continue": {
+        "title": "Recent plans",
+        "viewAll": "View all plans"
+      },
+      "nextStepButton": "Ask for next step"
+    },
+    "extension": {
+      "try": "Try Extension",
+      "tryTitle": "LockIn Chrome Extension",
+      "tryDescription": "Bring your sprint timer, tab guard, and blocked-site reminders into the browser.",
+      "pitchOne": "Keep your sprint visible while you browse, without returning to the app.",
+      "pitchTwo": "LockIn can remind you when you drift, redirect hard-blocked sites, and sync task progress back to Focus.",
+      "pitchThree": "Install it once, connect your account, then start sprints from the web app.",
+      "openStore": "Open Chrome Store"
     }
   }
 }

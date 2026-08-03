@@ -16,6 +16,9 @@
 // browser closed, message dropped, etc).
 
 const EXT_ID_STORAGE_KEY = "lockin_ext_id"
+export const LOCKIN_EXTENSION_ID = "iljcddaihcbaldbimpgmecbllhblacol"
+export const LOCKIN_EXTENSION_STORE_URL =
+  "https://chromewebstore.google.com/detail/iljcddaihcbaldbimpgmecbllhblacol?utm_source=item-share-cb"
 
 function getChromeApi(): { runtime?: { sendMessage?: Function; lastError?: unknown } } | null {
   if (typeof window === "undefined") return null
@@ -40,6 +43,66 @@ function getRememberedExtensionId(): string | null {
   }
 }
 
+export function hasRememberedExtensionConnection() {
+  return getRememberedExtensionId() !== null
+}
+
+export function detectExtensionInstalled(timeoutMs = 800): Promise<boolean> {
+  if (typeof window === "undefined") return Promise.resolve(false)
+
+  const chromeApi = getChromeApi()
+  const extIds = [getRememberedExtensionId(), LOCKIN_EXTENSION_ID].filter(
+    Boolean
+  ) as string[]
+
+  const directPing = extIds.map(
+    (extId) =>
+      new Promise<boolean>((resolve) => {
+        if (!chromeApi?.runtime?.sendMessage) {
+          resolve(false)
+          return
+        }
+
+        try {
+          chromeApi.runtime.sendMessage(
+            extId,
+            { type: "lockin-extension-ping" },
+            (response: { ok?: boolean; type?: string } | undefined) => {
+              resolve(Boolean(response?.ok || response?.type === "lockin-extension-pong"))
+            }
+          )
+        } catch {
+          resolve(false)
+        }
+      })
+  )
+
+  const contentScriptPing = new Promise<boolean>((resolve) => {
+    const timer = window.setTimeout(() => {
+      window.removeEventListener("lockin-extension-detected", onDetected)
+      resolve(false)
+    }, timeoutMs)
+
+    const onDetected = () => {
+      window.clearTimeout(timer)
+      window.removeEventListener("lockin-extension-detected", onDetected)
+      resolve(true)
+    }
+
+    window.addEventListener("lockin-extension-detected", onDetected)
+    window.dispatchEvent(new CustomEvent("lockin-extension-detect"))
+  })
+
+  return Promise.race([
+    Promise.all([...directPing, contentScriptPing]).then((results) =>
+      results.some(Boolean)
+    ),
+    new Promise<boolean>((resolve) =>
+      window.setTimeout(() => resolve(hasRememberedExtensionConnection()), timeoutMs + 100)
+    ),
+  ])
+}
+
 /**
  * Best-effort push of a state-change message to the connected extension.
  * Tries a direct `chrome.runtime.sendMessage(extId, ...)` first — this
@@ -57,11 +120,18 @@ function notifyExtension(message: Record<string, unknown>) {
   const chromeApi = getChromeApi()
 
   if (extId && chromeApi?.runtime?.sendMessage) {
-    chromeApi.runtime.sendMessage(extId, message, () => {
-      if (chromeApi.runtime?.lastError) {
+    try {
+      chromeApi.runtime.sendMessage(extId, message, () => {
+        try {
+          if (!chromeApi.runtime?.lastError) return
+        } catch {
+          // The extension can be reloaded while this callback is pending.
+        }
         window.dispatchEvent(new CustomEvent("lockin-app-to-extension", { detail: message }))
-      }
-    })
+      })
+    } catch {
+      window.dispatchEvent(new CustomEvent("lockin-app-to-extension", { detail: message }))
+    }
     return
   }
 
@@ -102,6 +172,10 @@ export function notifyExtensionSessionPaused(sessionId: string) {
 
 export function notifyExtensionSessionResumed(sessionId: string) {
   notifyExtension({ type: "lockin-session-resume", sessionId })
+}
+
+export function notifyExtensionSessionExtended(sessionId: string, extraSeconds: number) {
+  notifyExtension({ type: "lockin-session-extend", sessionId, extraSeconds })
 }
 
 /** Push updated task list + adjusted remaining time to extension when a step is toggled. */

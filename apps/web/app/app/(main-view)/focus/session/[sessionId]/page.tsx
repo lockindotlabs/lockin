@@ -44,7 +44,7 @@ import {
 } from "@/lib/focus/step-guidance-panel"
 import { FocusCoachChat } from "@/components/focus/FocusCoachChat"
 
-// â”€â”€â”€ Timer display â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// - Timer display -
 
 function fmt(seconds: number): string {
   const s = Math.max(0, Math.round(seconds))
@@ -92,7 +92,7 @@ function computeProcrastinationScore(
     estimatedSec > 0
       ? Math.max(0, actualSpentSeconds - estimatedSec) / estimatedSec
       : 0
-  const extensionFactor = Math.min(extensionCount / 3, 1) // hits 1.0 at the 3rd request â€” same threshold as OVERTIME_FAILED
+  const extensionFactor = Math.min(extensionCount / 3, 1) // hits 1.0 at the 3rd request - same threshold as OVERTIME_FAILED
   return Math.min(1, extensionFactor * 0.6 + Math.min(overtimeRatio, 1) * 0.4)
 }
 
@@ -106,7 +106,7 @@ function computeCompletionType(
 }
 
 // Shared by the end-sprint summary modal and the Scenario B end-of-timer
-// actions â€” derives spent/remaining time per step from when each was ticked.
+// actions - derives spent/remaining time per step from when each was ticked.
 function computeStepDetails(
   steps: PlanStep[],
   completedIds: Set<string>,
@@ -158,7 +158,7 @@ function computeStepDetails(
 }
 
 // Always-visible how-to for the current step, shown inside the "Now working
-// on" card so the tip is right there while focusing â€” no expand needed.
+// on" card so the tip is right there while focusing - no expand needed.
 function StepGuidance({ guidance }: { guidance: string | null | undefined }) {
   const { t } = useTranslation()
 
@@ -169,7 +169,7 @@ function StepGuidance({ guidance }: { guidance: string | null | undefined }) {
   return (
     <div className="mt-3 border-t border-border/60 pt-3 text-left">
       <p className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
-        <span aria-hidden="true">ðŸ’¡</span>
+        <span aria-hidden="true">Tip</span>
         <span>{t("app.focus.session.howTo")}</span>
       </p>
       <p className={STEP_GUIDANCE_CONTENT_CLASS}>{guidance?.trim()}</p>
@@ -177,10 +177,10 @@ function StepGuidance({ guidance }: { guidance: string | null | undefined }) {
   )
 }
 
-// â”€â”€â”€ End Sprint Checklist Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// - End Sprint Checklist Modal -
 
 // Ending while there's still time and/or unfinished steps is a deliberate
-// commitment break â€” every incomplete step must be explicitly resolved as
+// commitment break - every incomplete step must be explicitly resolved as
 // "I'm done" (trusted, no penalty) or "I haven't" (counts as given up,
 // scored as procrastination) before the End button unlocks. No silent
 // free-toggle escape hatch.
@@ -242,7 +242,7 @@ function EndSprintSummaryModal({
         {hasIncomplete && (
           <div className="mt-3 space-y-1 rounded-lg border border-amber-200 bg-amber-50 p-3.5 text-xs text-amber-700 dark:border-amber-900/30 dark:bg-amber-950/20 dark:text-amber-300">
             <p className="flex items-center gap-1.5 font-semibold">
-              <span>âš ï¸</span>{" "}
+              <span>!</span>{" "}
               {isTooEarly
                 ? t("app.focus.session.endModal.tooEarlyTitle")
                 : t("app.focus.session.endModal.unfinishedTitle")}
@@ -422,7 +422,7 @@ function EndSprintSummaryModal({
   )
 }
 
-// â”€â”€â”€ Hooks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// - Hooks -
 
 function useTimer(
   sessionId: string,
@@ -512,7 +512,7 @@ function useTimer(
   }
 }
 
-// â”€â”€â”€ Session Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// - Session Page -
 
 export default function SessionPage() {
   const params = useParams<{ sessionId: string }>()
@@ -521,7 +521,7 @@ export default function SessionPage() {
   const { t } = useTranslation()
   const sessionId = params.sessionId
 
-  // Auto-collapse the sidebar while focusing â€” restore whatever it was set
+  // Auto-collapse the sidebar while focusing - restore whatever it was set
   // to before, on the way out, rather than always forcing it back open
   // (the user may have already had it closed).
   const { open: sidebarOpen, setOpen: setSidebarOpen } = useSidebar()
@@ -576,13 +576,13 @@ export default function SessionPage() {
   const [taskCompletedAt, setTaskCompletedAt] = React.useState<
     Record<string, string>
   >({})
-  // "Give me more time" usage per task â€” drives both the timing outcome and
+  // "Give me more time" usage per task - drives both the timing outcome and
   // whether the whole sprint counts as on-time (>2 requests on any one task
   // fails the sprint, per the commitment rule).
   const [perTaskExtensions, setPerTaskExtensions] = React.useState<
     Record<string, { count: number; totalSeconds: number }>
   >({})
-  // How a task's overtime modal was resolved â€” DONE or GAVE_UP. Once set to
+  // How a task's overtime modal was resolved - DONE or GAVE_UP. Once set to
   // GAVE_UP a task can't be reopened via the checklist.
   const [perTaskFinalAction, setPerTaskFinalAction] = React.useState<
     Record<string, TaskFinalAction>
@@ -676,7 +676,7 @@ export default function SessionPage() {
     session?.startedAt ?? null
   )
 
-  // A task once given up can't be reopened via the checklist â€” skip it when
+  // A task once given up can't be reopened via the checklist - skip it when
   // picking the "current" (first pending) step.
   const isStepPending = (s: PlanStep) =>
     !completedIds.has(s.id) && perTaskFinalAction[s.id] !== "GAVE_UP"
@@ -755,7 +755,7 @@ export default function SessionPage() {
     }
   }, [remaining, overtime, session])
 
-  // Per-task overtime â€” fires while the CURRENT step alone runs past its own
+  // Per-task overtime - fires while the CURRENT step alone runs past its own
   // estimate (plus any extensions already granted), independent of the
   // sprint's total remaining time. Suppressed once the sprint-end checklist
   // takes over (total time is up) so only one modal is ever active.
@@ -784,7 +784,7 @@ export default function SessionPage() {
     stepDetails,
   ])
 
-  // Sprint's total time is up â€” switch from per-task popups to a checklist
+  // Sprint's total time is up - switch from per-task popups to a checklist
   // covering every step that's still neither done nor given up. No "just
   // leave" exit: each one must be resolved via the same 3-action modal.
   React.useEffect(() => {
@@ -800,7 +800,7 @@ export default function SessionPage() {
   }, [remaining, loading, unresolvedSteps.length, showSprintEndChecklist])
 
   // Once every step in the sprint-end checklist has been resolved (done or
-  // given up), finalize and leave automatically â€” there's nothing left to ask.
+  // given up), finalize and leave automatically - there's nothing left to ask.
   React.useEffect(() => {
     if (!showSprintEndChecklist || unresolvedSteps.length > 0) return
     const sprintOnTime = steps.every(
@@ -835,7 +835,7 @@ export default function SessionPage() {
         totalSeconds: (prev[stepId]?.totalSeconds ?? 0) + minutes * 60,
       },
     }))
-    // Extensions feed the main timer too â€” the sprint clock actually grows,
+    // Extensions feed the main timer too - the sprint clock actually grows,
     // while the per-task overtime sub-timer keeps tracking that one step.
     setAddedSeconds((prev) => prev + minutes * 60)
     setActiveOvertimeTaskId(null)
@@ -1035,7 +1035,7 @@ export default function SessionPage() {
   const toggleStep = (id: string) => {
     const s = steps.find((step) => step.id === id)
     if (!s) return
-    // A given-up task can't be reopened from the checklist â€” it's resolved.
+    // A given-up task can't be reopened from the checklist - it's resolved.
     if (perTaskFinalAction[id] === "GAVE_UP") return
 
     const wasDone = completedIds.has(id)
@@ -1161,7 +1161,7 @@ export default function SessionPage() {
   }
 
   // Manual early-end path (EndSprintSummaryModal). Reads live state directly
-  // â€” every incomplete step must already be resolved (DONE or GAVE_UP) via
+  // - every incomplete step must already be resolved (DONE or GAVE_UP) via
   // the modal's per-task buttons before this can be invoked (gated by
   // `canEnd` in the modal itself).
   const handleManualEnd = () => {
@@ -1229,7 +1229,7 @@ export default function SessionPage() {
       </Show>
 
       <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl flex-col gap-4 px-4 pt-16 pb-5 max-lg:overflow-y-auto">
-        {/* â”€â”€ TOP: centered sprint header + timer + progress + controls â”€â”€ */}
+        {/* - TOP: centered sprint header + timer + progress + controls - */}
         <div className="mx-auto flex w-full max-w-md shrink-0 flex-col items-center">
           {/* Plan name */}
           <button
@@ -1355,7 +1355,7 @@ export default function SessionPage() {
                   const next = !p
                   // Pause/resume is local-only UI state (never persisted to the
                   // server), so pushing to the extension is the only way it can
-                  // find out â€” without this its timer keeps running regardless
+                  // find out - without this its timer keeps running regardless
                   // of what the app shows.
                   if (next) notifyExtensionSessionPaused(sessionId)
                   else notifyExtensionSessionResumed(sessionId)
@@ -1430,11 +1430,11 @@ export default function SessionPage() {
           }
         `}</style>
 
-        {/* â”€â”€ Columns: steps on the left, tip + coach on the right (equal top) â”€â”€ */}
+        {/* - Columns: steps on the left, tip + coach on the right (equal top) - */}
         <div className="flex min-h-0 w-full flex-1 flex-col gap-5 lg:flex-row lg:gap-8">
           {/* LEFT: steps only */}
           <div className="flex w-full flex-col lg:min-h-0 lg:w-1/2">
-            {/* Step checklist â€” scrolls inside its own area so the page stays put */}
+            {/* Step checklist - scrolls inside its own area so the page stays put */}
             {steps.length > 0 && (
               <section className="flex w-full flex-col overflow-hidden rounded-xl border border-border/70 bg-background/50 shadow-sm backdrop-blur-md">
                 <div className="flex items-center justify-between gap-2 px-4 py-3">
@@ -1512,7 +1512,7 @@ export default function SessionPage() {
             )}
           </div>
 
-          {/* â”€â”€ RIGHT: current step, how-to guidance, coach (top-aligned) â”€â”€ */}
+          {/* - RIGHT: current step, how-to guidance, coach (top-aligned) - */}
           <div className="flex w-full flex-col gap-4 lg:min-h-0 lg:w-1/2 lg:overflow-y-auto lg:pr-1">
             {currentStep ? (
               <>
@@ -1544,7 +1544,7 @@ export default function SessionPage() {
                   <StepGuidance guidance={currentStep.guidance} />
                 </div>
 
-                {/* AI coach â€” guides only (refuses solutions), capped at 2 asks per step */}
+                {/* AI coach - guides only (refuses solutions), capped at 2 asks per step */}
                 <FocusCoachChat
                   stepId={currentStep.id}
                   stepTitle={currentStep.title}
@@ -1604,7 +1604,7 @@ export default function SessionPage() {
         />
       )}
 
-      {/* Sprint's total time is up â€” resolve every step still pending */}
+      {/* Sprint's total time is up - resolve every step still pending */}
       {showSprintEndChecklist && unresolvedSteps.length > 0 && (
         <TaskOvertimeModal
           mode="sprint-end"

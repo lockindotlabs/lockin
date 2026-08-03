@@ -1,103 +1,48 @@
-![LockIn Logo Banner](https://iili.io/CCCJN99.png)
-
 # LockIn
 
-LockIn is a public MVP for an AI-powered productivity product. It helps users turn overwhelming tasks into focused action through AI task breakdown, editable planning, and **Sprint-based focus sessions**.
+LockIn is a Next.js monorepo for AI-assisted planning, editable sprint plans,
+focus sessions, and Chrome extension sync.
 
-The core product is live and usable today, while some features are still experimental and actively being improved through testing and feedback.
+## Structure
 
-> New here? Read [docs/PROJECT_OVERVIEW.md](docs/PROJECT_OVERVIEW.md) for the full product and architecture tour.
+- `apps/web` - Next.js app, UI, and API routes.
+- `apps/api/prisma` - Prisma schema, migrations, and seed data.
+- `packages/ui` - shared shadcn/ui components.
+- `packages/db` - generated Prisma client package.
+- `packages/i18n` - shared localization helpers and locale files.
 
-## Status
+The backend is intentionally kept in Next.js API routes under `apps/web/app/api`.
+There is no separate Express server in the current architecture.
 
-LockIn is currently in public MVP / beta development.
-
-The core product is live, but some features are still experimental and actively being improved based on testing and feedback.
-
-## Live Product
-
-Live site: [LockIn](https://lockinlabs.online)
-
-> [!NOTE]
-> LockIn is an active MVP. Some features may still be experimental as the product is being developed and tested.
-
-## Product concept
-
-LockIn is an early-stage productivity product that helps users move from vague intentions to focused action.
-
-It combines AI task breakdown, editable planning, Sprint-based focus sessions, and an optional browser extension for distraction blocking. The project demonstrates the core product concept, user flow, and technical implementation of an AI-powered focus assistant.
-
-## What this demonstrates
-
-- Product thinking and MVP scoping
-- Full-stack development across web, API, database, auth, billing, and analytics
-- AI-assisted workflow design using task breakdown and planning tools
-- UX/UI decisions for planning, focus sessions, and protected product flows
-- Real deployment experience across the public web app and backend API
-- Iteration on a usable product concept rather than a static demo
-
-## Stack
-
-- **Web** — Next.js 16 (App Router) · React 19 · Tailwind 4 · shadcn/ui · Vercel AI SDK v6 + assistant-ui · Google Gemini
-- **Device API** — Express 4 (serves the browser extension)
-- **Data** — PostgreSQL (Supabase) via Prisma 7
-- **Auth** — Clerk (web) + long-lived extension tokens (API)
-- **Payments** — PayOS · **Analytics** — PostHog + custom admin dashboard
-
-## Repository layout
-
-```
-apps/
-  web/        Next.js app — product UI + most server logic (AI chat, plans,
-              billing, admin) in app/api/* route handlers
-  api/        Express API for the browser extension (tokens, focus sessions,
-              settings) — also owns prisma/schema.prisma and migrations
-packages/
-  db/         Shared Prisma client (generated from apps/api/prisma)
-  ui/         Shared shadcn-based component library
-  i18n/       Localization resources
-  eslint-config/, typescript-config/
-docs/         Product flows, test plans, audit, deployment notes
-```
-
-Both apps share one Postgres database through `@workspace/db`.
-
-## Getting started
-
-Prerequisites: Node ≥ 20, pnpm 9 (`corepack enable`), a Postgres database, and a [Clerk](https://clerk.com) application.
+## Local Development
 
 ```bash
 pnpm install
-
-# 1. Environment
-#    apps/web/.env.local  and  apps/api/.env  (see table below)
-
-# 2. Database — run migrations and generate the client
-cd apps/api && pnpm exec prisma migrate dev && cd ../..
-
-# 3. Run everything (web :3000, api :3001)
-pnpm dev
+pnpm db:generate
+pnpm --filter web dev
 ```
 
-Alternatively run the services under PM2 (`pm2 start ecosystem.config.cjs`) — see [CLAUDE.md](CLAUDE.md) for the full PM2 cheat sheet.
+The web app runs on port `3001` by default.
 
-### Environment variables
+## Chrome Extension
 
-| Variable                                                                                                                                                               | Used by  | Purpose                                                                    |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | -------------------------------------------------------------------------- |
-| `DATABASE_URL` / `DIRECT_URL`                                                                                                                                          | both     | Postgres connection (pooled / direct)                                      |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`                                                                                                                | web, api | Clerk auth                                                                 |
-| `NEXT_PUBLIC_CLERK_SIGN_IN_URL`, `NEXT_PUBLIC_CLERK_SIGN_UP_URL`, `NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL`, `NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL` | web      | Clerk routing (`/app/sign-in`, `/app/sign-up`, `/app`, `/app`)             |
-| `CLERK_WEBHOOK_SECRET`                                                                                                                                                 | api      | Verifies the Clerk `user.deleted` webhook                                  |
-| `GOOGLE_GENERATIVE_AI_API_KEY`                                                                                                                                         | web      | Gemini models for the AI planner                                           |
-| `TAVILY_API_KEY`                                                                                                                                                       | web      | Web-search tool (optional)                                                 |
-| `LOCKIN_ENABLE_WEB_SEARCH`, `LOCKIN_ENABLE_COMPLEX_REASONING`                                                                                                          | web      | Feature flags (`"true"` to enable)                                         |
-| `PAYOS_CLIENT_ID`, `PAYOS_API_KEY`, `PAYOS_CHECKSUM_KEY`                                                                                                               | web      | PayOS billing                                                              |
-| `PUBLIC_WEB_URL`                                                                                                                                                       | web      | Absolute base URL for PayOS return/cancel links                            |
-| `NEXT_PUBLIC_API_URL`                                                                                                                                                  | web      | Express API origin (default `http://localhost:3001`)                       |
-| `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`, `NEXT_PUBLIC_POSTHOG_HOST`                                                                                                        | web      | PostHog analytics (optional)                                               |
-| `ALLOWED_ORIGINS`                                                                                                                                                      | api      | Comma-separated CORS whitelist (allows all when unset — set in production) |
-| `PORT`                                                                                                                                                                 | api      | API port (default 3001)                                                    |
+Load the unpacked extension from:
+
+```text
+../lockin-extv2/extension
+```
+
+Then connect it from the web app's extension connection/settings flow.
+
+## Shared UI Components
+
+Add shadcn components from the repository root with:
+
+```bash
+pnpm dlx shadcn@latest add button -c apps/web
+```
+
+Use shared components from the workspace package:
 
 ## Common commands
 

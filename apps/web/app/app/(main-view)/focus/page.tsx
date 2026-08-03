@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useTranslation } from "react-i18next"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "@clerk/nextjs"
 import { RedirectToSignIn, Show } from "@clerk/nextjs"
 import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar"
@@ -38,8 +38,13 @@ import {
   type PlanStep,
   type FocusSession,
 } from "@/lib/focus/focus-api"
-import { notifyExtensionSessionStarted } from "@/lib/focus/extension-bridge"
+import {
+  detectExtensionInstalled,
+  hasRememberedExtensionConnection,
+  notifyExtensionSessionStarted,
+} from "@/lib/focus/extension-bridge"
 import DurationMismatchNotice from "./DurationMismatchNotice"
+import { TryExtensionPopover } from "@/components/try-extension-popover"
 import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
 import { Badge } from "@workspace/ui/components/badge"
 import { LayoutGrid01, List } from "@untitledui/icons"
@@ -198,6 +203,21 @@ function SprintSetupModal({
   const [newDomainMode, setNewDomainMode] = React.useState<"hard" | "soft">(
     "hard"
   )
+  const [extensionInstalled, setExtensionInstalled] = React.useState<boolean>(
+    () => hasRememberedExtensionConnection()
+  )
+
+  React.useEffect(() => {
+    let active = true
+
+    detectExtensionInstalled().then((installed) => {
+      if (active) setExtensionInstalled(installed)
+    })
+
+    return () => {
+      active = false
+    }
+  }, [])
 
   const toggleStep = (id: string) => {
     setSelected((prev) => {
@@ -231,6 +251,8 @@ function SprintSetupModal({
     mode: "hard" | "soft",
     checked?: boolean
   ) => {
+    if (!extensionInstalled) return
+
     const normalized = normalizeDomain(domain)
     if (!normalized) return
 
@@ -254,6 +276,8 @@ function SprintSetupModal({
   }
 
   const addBlockedDomain = () => {
+    if (!extensionInstalled) return
+
     const normalized = normalizeDomain(newDomain)
     if (!normalized) return
     toggleBlockedDomain(normalized, newDomainMode, true)
@@ -390,7 +414,7 @@ function SprintSetupModal({
             </div>
           </div>
 
-          <div className="rounded-xl border border-border/70 bg-muted/20 p-3">
+          <div className="relative rounded-xl border border-border/70 bg-muted/20 p-3">
             <div className="mb-3 flex items-start justify-between gap-3">
               <div>
                 <p className="flex items-center gap-1.5 text-xs font-medium tracking-wider text-muted-foreground uppercase">
@@ -409,12 +433,14 @@ function SprintSetupModal({
             <button
               type="button"
               onClick={() =>
+                extensionInstalled &&
                 setBlockSettings((prev) => ({
                   ...prev,
                   tabGuard: !prev.tabGuard,
                 }))
               }
-              className="mb-3 flex w-full items-center justify-between rounded-lg border border-border bg-background px-3 py-2 text-left text-sm"
+              disabled={!extensionInstalled}
+              className="mb-3 flex w-full items-center justify-between rounded-lg border border-border bg-background px-3 py-2 text-left text-sm disabled:cursor-not-allowed disabled:opacity-60"
             >
               <span>
                 <span className="block font-medium">Tab guard</span>
@@ -442,6 +468,7 @@ function SprintSetupModal({
                         key={domain}
                         type="button"
                         onClick={() => toggleBlockedDomain(domain, "hard")}
+                        disabled={!extensionInstalled}
                         className={`flex w-full items-center gap-2 rounded-lg border px-2.5 py-2 text-left text-xs transition-colors ${
                           checked
                             ? "border-amber-300 bg-amber-50 text-foreground dark:border-amber-900/60 dark:bg-amber-950/20"
@@ -477,6 +504,7 @@ function SprintSetupModal({
                         key={domain}
                         type="button"
                         onClick={() => toggleBlockedDomain(domain, "soft")}
+                        disabled={!extensionInstalled}
                         className={`flex w-full items-center gap-2 rounded-lg border px-2.5 py-2 text-left text-xs transition-colors ${
                           checked
                             ? "border-primary/40 bg-primary/5 text-foreground"
@@ -506,6 +534,7 @@ function SprintSetupModal({
                 <GlobeIcon className="size-3.5 shrink-0 text-muted-foreground" />
                 <input
                   value={newDomain}
+                  disabled={!extensionInstalled}
                   onChange={(event) => setNewDomain(event.target.value)}
                   onKeyDown={(event) => {
                     if (event.key === "Enter") addBlockedDomain()
@@ -517,10 +546,12 @@ function SprintSetupModal({
               <button
                 type="button"
                 onClick={() =>
+                  extensionInstalled &&
                   setNewDomainMode((mode) =>
                     mode === "hard" ? "soft" : "hard"
                   )
                 }
+                disabled={!extensionInstalled}
                 className="rounded-lg border border-border px-2 text-[10px] font-bold uppercase"
               >
                 {newDomainMode}
@@ -531,6 +562,7 @@ function SprintSetupModal({
                 variant="outline"
                 className="px-2"
                 onClick={addBlockedDomain}
+                disabled={!extensionInstalled}
               >
                 <PlusIcon className="size-3.5" />
               </Button>
@@ -547,11 +579,32 @@ function SprintSetupModal({
                     blocklistSoft: [],
                   }))
                 }
+                disabled={!extensionInstalled}
                 className="mt-2 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
               >
                 <XIcon className="size-3" />
                 Clear blocked sites
               </button>
+            )}
+
+            {!extensionInstalled && (
+              <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-background/80 p-4 backdrop-blur-[2px]">
+                <div className="max-w-64 rounded-xl border bg-background p-4 text-center shadow-sm">
+                  <ShieldIcon className="mx-auto mb-2 size-5 text-primary" />
+                  <p className="text-sm font-medium">Try Extension</p>
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                    Blocked websites need the LockIn Chrome extension to run in
+                    your browser.
+                  </p>
+                  <TryExtensionPopover
+                    trigger={
+                      <Button type="button" size="sm" className="mt-3">
+                        Try Extension
+                      </Button>
+                    }
+                  />
+                </div>
+              </div>
             )}
           </div>
         </div>
@@ -572,9 +625,13 @@ function SprintSetupModal({
             disabled={selectedSteps.length === 0 || loading}
             onClick={() =>
               onStart(selectedSteps, chosenDuration, {
-                blocklistHard: uniqueDomains(blockSettings.blocklistHard),
-                blocklistSoft: uniqueDomains(blockSettings.blocklistSoft),
-                tabGuard: blockSettings.tabGuard,
+                blocklistHard: extensionInstalled
+                  ? uniqueDomains(blockSettings.blocklistHard)
+                  : [],
+                blocklistSoft: extensionInstalled
+                  ? uniqueDomains(blockSettings.blocklistSoft)
+                  : [],
+                tabGuard: extensionInstalled ? blockSettings.tabGuard : false,
               })
             }
           >
@@ -713,6 +770,8 @@ export default function FocusPage() {
   const { state } = useSidebar()
   const { getToken } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const autoOpenedPlanIdRef = React.useRef<string | null>(null)
 
   const [plans, setPlans] = React.useState<FocusPlan[]>([])
   const [sessions, setSessions] = React.useState<FocusSession[]>([])
@@ -774,14 +833,32 @@ export default function FocusPage() {
   }, [getToken])
 
   // Open sprint setup for a plan
-  const handleStartSprint = async (plan: FocusPlan) => {
+  const handleStartSprint = React.useCallback(async (plan: FocusPlan) => {
     setLoadingSteps(true)
     setSetupPlan(plan)
     const full = await fetchPlanWithSteps(plan.id, getToken)
     const steps = incompleteSteps(full?.steps ?? plan.steps ?? [])
     setSetupSteps(steps)
     setLoadingSteps(false)
-  }
+  }, [getToken])
+
+  React.useEffect(() => {
+    const requestedPlanId = searchParams.get("plan")
+    if (
+      !requestedPlanId ||
+      loading ||
+      setupPlan ||
+      autoOpenedPlanIdRef.current === requestedPlanId
+    ) {
+      return
+    }
+
+    const plan = plans.find((item) => item.id === requestedPlanId)
+    if (!plan) return
+
+    autoOpenedPlanIdRef.current = requestedPlanId
+    void handleStartSprint(plan)
+  }, [handleStartSprint, loading, plans, searchParams, setupPlan])
 
   // Create session and navigate
   const handleConfirmSprint = async (

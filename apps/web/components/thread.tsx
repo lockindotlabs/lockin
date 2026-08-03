@@ -437,11 +437,15 @@ const ThreadMessage: FC = () => {
 }
 
 const ThreadScrollToBottom: FC = () => {
+  const { t } = useTranslation()
+
   return (
     <ThreadPrimitive.ScrollToBottom
       render={
         <TooltipIconButton
-          tooltip="Scroll to bottom"
+          tooltip={t("app.chat.scrollToBottom", {
+            defaultValue: "Scroll to bottom",
+          })}
           variant="outline"
           className="aui-thread-scroll-to-bottom absolute -top-12 z-100 self-center rounded-full p-4 disabled:invisible dark:border-border dark:bg-background dark:hover:bg-accent"
         />
@@ -453,16 +457,22 @@ const ThreadScrollToBottom: FC = () => {
 }
 
 const ThreadWelcome: FC = () => {
+  const { t } = useTranslation()
+
   return (
     <div className="aui-thread-welcome-root my-auto flex grow flex-col space-y-12">
       <div className="aui-thread-welcome-center flex w-full grow flex-col items-center justify-center">
         <div className="aui-thread-welcome-message flex size-full flex-col justify-center px-4 text-center">
           <h1 className="aui-thread-welcome-message-inner mb-1 animate-in text-2xl font-medium tracking-tight delay-200 duration-200 fill-mode-both fade-in slide-in-from-bottom-1">
-            What do you need to get done?
+            {t("app.chat.welcomeTitle", {
+              defaultValue: "What do you need to get done?",
+            })}
           </h1>
           <p className="aui-thread-welcome-message-inner animate-in text-muted-foreground delay-75 duration-200 fill-mode-both fade-in slide-in-from-bottom-1">
-            Drop in the messy version. LockIn will turn it into a plan you can
-            start.
+            {t("app.chat.welcomeSubtitle", {
+              defaultValue:
+                "Drop in the messy version. LockIn will turn it into a plan you can start.",
+            })}
           </p>
         </div>
       </div>
@@ -471,6 +481,8 @@ const ThreadWelcome: FC = () => {
 }
 
 const ThreadPlanWelcome: FC = () => {
+  const { t } = useTranslation()
+
   return (
     <div className="aui-thread-plan-welcome-root mx-auto my-auto flex w-full grow flex-col justify-center">
       <motion.div
@@ -482,7 +494,9 @@ const ThreadPlanWelcome: FC = () => {
         <Asterisk01 />
       </motion.div>
       <h1 className="aui-thread-plan-welcome-title mb-4 font-medium tracking-normal text-balance text-foreground">
-        How can I help with your plan?
+        {t("app.chat.planWelcomeTitle", {
+          defaultValue: "How can I help with your plan?",
+        })}
       </h1>
     </div>
   )
@@ -539,6 +553,7 @@ const Composer: FC<{
   selectedCapabilityId,
   onSelectedCapabilityChange,
 }) => {
+  const { t } = useTranslation()
   const [mentions, setMentions] = useState<MentionRef[]>(initialMentions)
   const templateSearchParams = useSearchParams()
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
@@ -619,8 +634,12 @@ const Composer: FC<{
           <ComposerPrimitive.Input
             placeholder={
               mode === "plan"
-                ? "Adjust this plan with AI..."
-                : "What do you need to get done?"
+                ? t("app.chat.planInputPlaceholder", {
+                    defaultValue: "Adjust this plan with AI...",
+                  })
+                : t("app.chat.inputPlaceholder", {
+                    defaultValue: "What do you need to get done?",
+                  })
             }
             className="aui-composer-input max-h-32 min-h-10 w-full resize-none bg-transparent px-1.75 py-1 text-sm outline-none placeholder:text-muted-foreground/80"
             rows={1}
@@ -656,6 +675,8 @@ const ComposerAction: FC<{
   selectedTemplateId,
   onSelectedTemplateChange,
 }) => {
+  const { t } = useTranslation()
+
   return (
     <div className="aui-composer-action-wrapper relative flex items-center justify-between">
       <div className="flex gap-1">
@@ -686,13 +707,17 @@ const ComposerAction: FC<{
           <ComposerPrimitive.Send
             render={
               <TooltipIconButton
-                tooltip="Send message"
+                tooltip={t("app.chat.sendMessage", {
+                  defaultValue: "Send message",
+                })}
                 side="bottom"
                 type="button"
                 variant="default"
                 size="icon"
                 className="aui-composer-send size-8"
-                aria-label="Send message"
+                aria-label={t("app.chat.sendMessage", {
+                  defaultValue: "Send message",
+                })}
               />
             }
           >
@@ -707,7 +732,9 @@ const ComposerAction: FC<{
                 variant="default"
                 size="icon"
                 className="aui-composer-cancel size-8"
-                aria-label="Stop generating"
+                aria-label={t("app.chat.stopGenerating", {
+                  defaultValue: "Stop generating",
+                })}
               />
             }
           >
@@ -829,13 +856,21 @@ const ToolCallDisplay: FC<ToolCallMessagePartProps> = (part) => {
 }
 
 const AssistantActionBar: FC = () => {
+  const { t } = useTranslation()
+
   return (
     <ActionBarPrimitive.Root
       hideWhenRunning
       autohide="not-last"
       className="aui-assistant-action-bar-root col-start-3 row-start-2 -ms-1 flex gap-1 text-muted-foreground"
     >
-      <ActionBarPrimitive.Copy render={<TooltipIconButton tooltip="Copy" />}>
+      <ActionBarPrimitive.Copy
+        render={
+          <TooltipIconButton
+            tooltip={t("app.actions.copy", { defaultValue: "Copy" })}
+          />
+        }
+      >
         <AuiIf condition={(s) => s.message.isCopied}>
           <CheckIcon />
         </AuiIf>
@@ -844,7 +879,11 @@ const AssistantActionBar: FC = () => {
         </AuiIf>
       </ActionBarPrimitive.Copy>
       <ActionBarPrimitive.Reload
-        render={<TooltipIconButton tooltip="Refresh" />}
+        render={
+          <TooltipIconButton
+            tooltip={t("app.actions.refresh", { defaultValue: "Refresh" })}
+          />
+        }
       >
         <RefreshCwIcon />
       </ActionBarPrimitive.Reload>
@@ -852,7 +891,7 @@ const AssistantActionBar: FC = () => {
         <ActionBarMorePrimitive.Trigger
           render={
             <TooltipIconButton
-              tooltip="More"
+              tooltip={t("app.actions.more", { defaultValue: "More" })}
               className="data-[state=open]:bg-accent"
             />
           }
@@ -870,7 +909,9 @@ const AssistantActionBar: FC = () => {
             }
           >
             <DownloadIcon className="size-4" />
-            Export as Markdown
+            {t("app.chat.exportMarkdown", {
+              defaultValue: "Export as Markdown",
+            })}
           </ActionBarPrimitive.ExportMarkdown>
         </ActionBarMorePrimitive.Content>
       </ActionBarMorePrimitive.Root>
@@ -905,6 +946,8 @@ const UserMessage: FC = () => {
 }
 
 const UserActionBar: FC = () => {
+  const { t } = useTranslation()
+
   return (
     <ActionBarPrimitive.Root
       hideWhenRunning
@@ -914,7 +957,7 @@ const UserActionBar: FC = () => {
       <ActionBarPrimitive.Edit
         render={
           <TooltipIconButton
-            tooltip="Edit"
+            tooltip={t("app.actions.edit", { defaultValue: "Edit" })}
             className="aui-user-action-edit p-2.5 text-muted-foreground hover:text-foreground data-[state=open]:bg-accent"
           />
         }
@@ -926,6 +969,8 @@ const UserActionBar: FC = () => {
 }
 
 const EditComposer: FC = () => {
+  const { t } = useTranslation()
+
   return (
     <MessagePrimitive.Root
       data-slot="aui_edit-composer-wrapper"
@@ -940,10 +985,10 @@ const EditComposer: FC = () => {
           <ComposerPrimitive.Cancel
             render={<Button variant="ghost" size="sm" />}
           >
-            Cancel
+            {t("app.actions.cancel", { defaultValue: "Cancel" })}
           </ComposerPrimitive.Cancel>
           <ComposerPrimitive.Send render={<Button size="sm" />}>
-            Update
+            {t("app.actions.update", { defaultValue: "Update" })}
           </ComposerPrimitive.Send>
         </div>
       </ComposerPrimitive.Root>
@@ -955,6 +1000,8 @@ const BranchPicker: FC<BranchPickerPrimitive.Root.Props> = ({
   className,
   ...rest
 }) => {
+  const { t } = useTranslation()
+
   return (
     <BranchPickerPrimitive.Root
       hideWhenSingleBranch
@@ -965,14 +1012,24 @@ const BranchPicker: FC<BranchPickerPrimitive.Root.Props> = ({
       {...rest}
     >
       <BranchPickerPrimitive.Previous
-        render={<TooltipIconButton tooltip="Previous" />}
+        render={
+          <TooltipIconButton
+            tooltip={t("app.actions.previous", { defaultValue: "Previous" })}
+          />
+        }
       >
         <ChevronLeftIcon />
       </BranchPickerPrimitive.Previous>
       <span className="aui-branch-picker-state font-medium">
         <BranchPickerPrimitive.Number /> / <BranchPickerPrimitive.Count />
       </span>
-      <BranchPickerPrimitive.Next render={<TooltipIconButton tooltip="Next" />}>
+      <BranchPickerPrimitive.Next
+        render={
+          <TooltipIconButton
+            tooltip={t("app.actions.next", { defaultValue: "Next" })}
+          />
+        }
+      >
         <ChevronRightIcon />
       </BranchPickerPrimitive.Next>
     </BranchPickerPrimitive.Root>

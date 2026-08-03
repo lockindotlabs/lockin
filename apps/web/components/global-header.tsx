@@ -67,6 +67,14 @@ export default function GlobalHeader() {
       )
     }
 
+    if (pathname.startsWith("/app/roadmap")) {
+      return (
+        <div className="flex items-center gap-2 text-sm font-medium">
+          <span>{t("app.nav.roadmap", { defaultValue: "Roadmap" })}</span>
+        </div>
+      )
+    }
+
     if (pathname.startsWith("/app/settings")) {
       return (
         <div className="flex items-center gap-2 text-sm font-medium">

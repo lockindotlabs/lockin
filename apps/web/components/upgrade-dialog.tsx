@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 
 import { Button } from "@workspace/ui/components/button"
 import { Badge } from "@workspace/ui/components/badge"
@@ -200,7 +201,13 @@ export function UpgradeDialog({
                   </FieldLabel>
                   <Progress value={66} id="credits-remaining" />
                 </Field>
-                <Button variant="outline">Top up</Button>
+                <Button
+                  variant="outline"
+                  nativeButton={false}
+                  render={<Link href="/app/subscription" />}
+                >
+                  Top up
+                </Button>
               </div>
             </div>
           </section>

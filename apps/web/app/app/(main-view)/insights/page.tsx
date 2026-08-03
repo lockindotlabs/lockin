@@ -2,13 +2,14 @@
 
 import * as React from "react"
 import { useTranslation } from "react-i18next"
-import { ScrollArea } from "@workspace/ui/components/scroll-area"
-import { formatDuration } from "@/lib/focus/focus-api"
+
+import { AppPageShell } from "@/components/app-page-shell"
 import { MetricCard } from "@/components/admin/analytics/MetricCard"
 import { DistributionDonutChart } from "@/components/admin/analytics/DistributionDonutChart"
 import { TimingHeatmap } from "@/components/profile/TimingHeatmap"
-import type { MetricCardData } from "@/types/admin-analytics"
+import { formatDuration } from "@/lib/focus/focus-api"
 import type { MeStatsResponse, SprintInsight } from "@/lib/server/me-stats"
+import type { MetricCardData } from "@/types/admin-analytics"
 
 async function fetchMeStats(): Promise<MeStatsResponse | null> {
   try {
@@ -36,7 +37,7 @@ function completionTypeLabel(
       defaultValue: "Ended early",
     })
   }
-  return "—"
+  return "-"
 }
 
 function completionTypeClass(type: SprintInsight["completionType"]) {
@@ -133,11 +134,8 @@ export default function InsightsPage() {
   )
 
   return (
-    <ScrollArea className="flex h-[calc(100vh-1rem)] flex-col overflow-y-auto bg-background/50 text-foreground">
-      <div className="relative mt-12 max-h-[88px] min-h-[20px] w-full overflow-hidden">
-        <div className="relative w-full pb-0 xl:pb-[calc(50%-576px)]" />
-      </div>
-      <div className="mx-auto w-full max-w-3xl px-4 pb-16">
+    <AppPageShell>
+      <div className="w-full">
         <h1 className="mb-1 text-xl font-semibold tracking-tight">
           {t("app.insights.title", { defaultValue: "Insights" })}
         </h1>
@@ -247,16 +245,16 @@ export default function InsightsPage() {
                         })}
                     </p>
                     <p className="mt-0.5 text-xs text-muted-foreground">
-                      {new Date(sprint.startedAt).toLocaleString()} ·{" "}
+                      {new Date(sprint.startedAt).toLocaleString()} /{" "}
                       {t("app.insights.stepsProgress", {
                         done: sprint.doneCount,
                         total: sprint.totalSteps,
                         defaultValue: `${sprint.doneCount}/${sprint.totalSteps} steps`,
                       })}{" "}
-                      ·{" "}
+                      /{" "}
                       {sprint.duration != null
                         ? formatDuration(sprint.duration)
-                        : "—"}
+                        : "-"}
                     </p>
                   </div>
                   <div className="shrink-0 text-right">
@@ -273,7 +271,7 @@ export default function InsightsPage() {
                         : t("app.insights.completion.notOnTime", {
                             defaultValue: "Not on time",
                           })}{" "}
-                      ·{" "}
+                      /{" "}
                       {t("app.insights.procrastination.label", {
                         value: procrastinationLabel(
                           sprint.procrastinationIndex,
@@ -292,6 +290,6 @@ export default function InsightsPage() {
           </>
         )}
       </div>
-    </ScrollArea>
+    </AppPageShell>
   )
 }

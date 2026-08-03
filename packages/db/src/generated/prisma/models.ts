@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User.ts'
+export type * from './models/Feedback.ts'
 export type * from './models/Chat.ts'
 export type * from './models/ExtensionToken.ts'
 export type * from './models/UserSettings.ts'

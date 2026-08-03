@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  Feedback: 'Feedback',
   Chat: 'Chat',
   ExtensionToken: 'ExtensionToken',
   UserSettings: 'UserSettings',
@@ -101,6 +102,21 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const FeedbackScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  message: 'message',
+  status: 'status',
+  source: 'source',
+  path: 'path',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FeedbackScalarFieldEnum = (typeof FeedbackScalarFieldEnum)[keyof typeof FeedbackScalarFieldEnum]
 
 
 export const ChatScalarFieldEnum = {

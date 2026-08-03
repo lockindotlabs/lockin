@@ -4,6 +4,7 @@ import {
   CreditCardIcon,
   HomeIcon,
   Layers3Icon,
+  MessageSquareTextIcon,
   Settings2Icon,
   UsersIcon,
   UserCog,
@@ -67,6 +68,12 @@ export const adminNavSections: AdminNavSection[] = [
         icon: UserCog,
         match: "prefix",
       },
+      {
+        title: "Feedback",
+        url: "/app/admin/feedback",
+        icon: MessageSquareTextIcon,
+        match: "prefix",
+      },
     ],
   },
   {
@@ -126,6 +133,12 @@ export const adminNavItems: AdminNavItem[] = [
     title: "Users",
     url: "/app/admin/users",
     icon: UserCog,
+    match: "prefix",
+  },
+  {
+    title: "Feedback",
+    url: "/app/admin/feedback",
+    icon: MessageSquareTextIcon,
     match: "prefix",
   },
   {

@@ -13,9 +13,11 @@ import { Providers } from "@/components/providers"
 import { cn } from "@workspace/ui/lib/utils"
 import "@workspace/ui/styles/globals.css"
 import { AppRouterI18nProvider } from "@workspace/i18n/provider"
-import { I18N_COOKIE_NAME } from "@workspace/i18n"
+import { I18N_COOKIE_NAME, isSupportedLocale } from "@workspace/i18n"
 import { loadTranslations } from "@workspace/i18n/server"
 import { Toaster } from "@workspace/ui/components/sonner"
+import { auth } from "@clerk/nextjs/server"
+import prisma from "@workspace/db"
 
 const interVariable = localFont({
   src: "../fonts/InterVariable.woff2",
@@ -59,7 +61,18 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const cookieStore = await cookies()
-  const requestedLocale = cookieStore.get(I18N_COOKIE_NAME)?.value
+  const cookieLocale = cookieStore.get(I18N_COOKIE_NAME)?.value
+  const { userId } = await auth()
+  const settings = userId
+    ? await prisma.userSettings.findUnique({
+        where: { userId },
+        select: { language: true },
+      })
+    : null
+  const storedLocale = settings?.language ?? undefined
+  const requestedLocale = isSupportedLocale(storedLocale)
+    ? storedLocale
+    : cookieLocale
   const { locale, namespace, translations } = await loadTranslations(
     requestedLocale,
     "common"

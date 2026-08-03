@@ -1,0 +1,293 @@
+[browser] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview (https://primary-sole-74.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js:12:6133)
+[browser] Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template). 
+[browser] Uncaught Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <div className="absolute t...">
+      <div>
+      <Show>
+      <div className="flex items...">
+        <div>
+        <NotificationPopover>
+        <NavUser side="bottom" align="end" sideOffset={16}>
+          <DropdownMenu>
+            <MenuRoot data-slot="dropdown-menu">
+              <FloatingTree externalTree={{nodesRef:{...}, ...}}>
+                <DropdownMenuTrigger render={<button>}>
+                  <MenuTrigger data-slot="dropdown-m..." render={<button>}>
+                    <button className="size-8 cur..." onClick={function} onMouseDown={function} onKeyDown={function} ...>
+                      <withClerk(UserAvatar)>
+                        <UserAvatar getContainer={function} component="UserAvatar" clerk={{clerkjs:{...}, ...}}>
+                          <ClerkHostRenderer component="UserAvatar" mount={function} unmount={function} ...>
++                           <div ref={{current:null}} data-clerk-component="UserAvatar">
+                ...
+          ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at div (<anonymous>)
+    at NavUser (components/nav-user.tsx:72:15)
+    at GlobalHeader (components/global-header.tsx:148:9)
+    at RootLayout (app\app\(main-view)\layout.tsx:23:13)
+  70 |           render={
+  71 |             <button className="size-8 cursor-pointer outline-none">
+> 72 |               <UserAvatar />
+     |               ^
+  73 |             </button>
+  74 |           }
+  75 |         />
+[browser] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview (https://primary-sole-74.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js:12:6133)
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at http://localhost:3001/_next/static/chunks/_01ih1r.._.js:503:450
+    at Array.map (<anonymous>)
+    at RoadmapPage (http://localhost:3001/_next/static/chunks/_01ih1r.._.js:393:222)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at RoadmapPage (http://localhost:3001/_next/static/chunks/_01ih1r.._.js:645:450)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:526:420)
+    at FocusGuardDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:1036:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2110:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:745:450)
+    at FocusGuardDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:1036:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2110:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:526:420)
+    at AiPlanningDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:812:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2104:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:745:450)
+    at AiPlanningDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:812:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2104:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:526:420)
+    at InsightsDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:1526:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2122:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:745:450)
+    at InsightsDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:1526:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2122:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:526:420)
+    at CollaborationDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:1765:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2128:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:745:450)
+    at CollaborationDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:1765:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2128:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview (https://primary-sole-74.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js:12:6133)
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at http://localhost:3001/_next/static/chunks/_01ih1r.._.js:628:450
+    at Array.map (<anonymous>)
+    at RoadmapPage (http://localhost:3001/_next/static/chunks/_01ih1r.._.js:503:222)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at RoadmapPage (http://localhost:3001/_next/static/chunks/_01ih1r.._.js:770:450)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:636:420)
+    at AiPlanningDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:977:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2361:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:855:450)
+    at AiPlanningDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:977:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2361:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:636:420)
+    at FocusGuardDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:1260:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2367:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:855:450)
+    at FocusGuardDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:1260:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2367:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:636:420)
+    at MarketplaceDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:1558:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2373:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:855:450)
+    at MarketplaceDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:1558:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2373:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:636:420)
+    at CollaborationDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2022:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2385:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:855:450)
+    at CollaborationDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2022:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2385:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:175:420)
+    at FocusGuardDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:799:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:2314:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:394:450)
+    at FocusGuardDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:799:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:2314:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:175:420)
+    at AccountabilityDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:1901:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:2338:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:394:450)
+    at AccountabilityDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:1901:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:2338:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:175:420)
+    at CollaborationDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:1561:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:2332:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:394:450)
+    at CollaborationDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:1561:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:2332:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview (https://primary-sole-74.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js:12:6133)
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at http://localhost:3001/_next/static/chunks/_01ih1r.._.js:667:450
+    at Array.map (<anonymous>)
+    at RoadmapPage (http://localhost:3001/_next/static/chunks/_01ih1r.._.js:542:222)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at RoadmapPage (http://localhost:3001/_next/static/chunks/_01ih1r.._.js:809:450)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:877:456)
+    at AccountabilityDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2450:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2887:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:877:456)
+    at AiPlanningDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:1065:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2857:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:877:456)
+    at FocusGuardDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:1348:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2863:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:877:456)
+    at MarketplaceDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:1646:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2869:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:877:456)
+    at InsightsDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:1871:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js:2875:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at eval (http://localhost:3001/_next/static/chunks/_01ih1r.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:264:450)
+    at Array.map (<anonymous>)
+    at RoadmapPage (http://localhost:3001/_next/static/chunks/_01ih1r.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:139:222)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at eval (http://localhost:3001/_next/static/chunks/_01ih1r.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:456:458)
+    at Array.map (<anonymous>)
+    at RoadmapPage (http://localhost:3001/_next/static/chunks/_01ih1r.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:335:230)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at RoadmapPage (http://localhost:3001/_next/static/chunks/_01ih1r.._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:605:450)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:378:456)
+    at AiPlanningDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:790:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:2582:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:378:456)
+    at FocusGuardDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:1073:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:2588:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at DemoShell (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:378:456)
+    at MarketplaceDemo (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:1371:415)
+    at RoadmapFeaturePage (http://localhost:3001/_next/static/chunks/_0ltjqi7._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252F%255BfeatureId%255D%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:2594:423)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at eval (http://localhost:3001/_next/static/chunks/_0dgvbuv._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:278:450)
+    at Array.map (<anonymous>)
+    at RoadmapPage (http://localhost:3001/_next/static/chunks/_0dgvbuv._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:153:222)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at eval (http://localhost:3001/_next/static/chunks/_0dgvbuv._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:818:458)
+    at Array.map (<anonymous>)
+    at RoadmapPage (http://localhost:3001/_next/static/chunks/_0dgvbuv._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:697:230)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Base UI: A component that acts as a button expected a native <button> because the `nativeButton` prop is true. Rendering a non-<button> removes native button semantics, which can impact forms and accessibility. Use a real <button> in the `render` prop, or set `nativeButton` to `false`.
+    at Button (http://localhost:3001/_next/static/chunks/_0uj2uiu._.js:131:415)
+    at RoadmapPage (http://localhost:3001/_next/static/chunks/_0dgvbuv._.js?id=%255Bproject%255D%252Fapps%252Fweb%252Fapp%252Fapp%252F%2528main-view%2529%252Froadmap%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:967:450)
+    at ClientPageRoot (http://localhost:3001/_next/static/chunks/014s_next_11elwrz._.js:11791:50) 
+[browser] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview (https://primary-sole-74.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js:12:6133)

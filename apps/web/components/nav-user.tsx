@@ -132,9 +132,9 @@ export function NavUser({
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
+            <DropdownMenuItem disabled>
               <LifeBuoyIcon />
-              Support
+              Support coming soon
             </DropdownMenuItem>
             <DropdownMenuItem variant="destructive" onClick={() => signOut()}>
               <LogOut />

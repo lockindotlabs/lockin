@@ -23,13 +23,12 @@ export function NavMain({
     <>
       {items.map((item) => (
         <SidebarMenuItem key={item.title}>
-          <SidebarMenuButton
-            isActive={item.isActive}
-            render={<Link href={item.url} />}
-          >
-            {item.icon}
-            <span>{item.title}</span>
-          </SidebarMenuButton>
+          <Link href={item.url}>
+            <SidebarMenuButton isActive={item.isActive}>
+              {item.icon}
+              <span>{item.title}</span>
+            </SidebarMenuButton>
+          </Link>
           {item.badge && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}
         </SidebarMenuItem>
       ))}

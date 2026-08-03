@@ -30,6 +30,7 @@ function createOverviewMetrics(input: {
   aiCreditsUsed: number
   quotaBlocks: number
   failedGenerations: number
+  aiPlansCreated: number
   rangeLabel: string
 }): MetricCardData[] {
   return [
@@ -80,6 +81,12 @@ function createOverviewMetrics(input: {
       value: formatMetricNumber(input.successfulPayments),
       description: "all-time paid orders",
       icon: "successfulPayments",
+    },
+    {
+      label: "AI Plans Created",
+      value: formatMetricNumber(input.aiPlansCreated),
+      description: input.rangeLabel,
+      icon: "aiPlans",
     },
     {
       label: "AI Requests",
@@ -226,6 +233,7 @@ export async function getOverviewData(
     aiCreditsAggregate,
     quotaBlocks,
     failedGenerations,
+    aiPlansCreated,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.user.findMany({
@@ -421,6 +429,13 @@ export async function getOverviewData(
         },
       },
     }),
+    prisma.plan.count({
+      where: {
+        deletedAt: null,
+        createdAt: { gte: range.start, lte: range.end },
+        OR: [{ source: "AI" }, { aiMode: "ASSISTED" }],
+      },
+    }),
     prisma.aiUsage.count({
       where: {
         status: "ERROR",
@@ -471,6 +486,7 @@ export async function getOverviewData(
       aiCreditsUsed: aiCreditsAggregate._sum.creditsCharged ?? 0,
       quotaBlocks,
       failedGenerations,
+      aiPlansCreated,
       rangeLabel: range.label,
     }),
     funnelData: createFunnelSteps({

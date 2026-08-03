@@ -8,6 +8,7 @@ import {
   DatabaseIcon,
   GaugeIcon,
   GitBranchIcon,
+  MegaphoneIcon,
   PlugIcon,
   RocketIcon,
   ServerCogIcon,
@@ -30,6 +31,7 @@ import {
   roadmapCheckpointPlans,
   roadmapFeatures,
   roadmapFoundationAreas,
+  roadmapProductPhases,
   stageItems,
 } from "./mock-data"
 
@@ -39,6 +41,7 @@ const foundationIcons = [
   BotIcon,
   ServerCogIcon,
   GaugeIcon,
+  MegaphoneIcon,
   PlugIcon,
 ]
 
@@ -104,6 +107,47 @@ export default function RoadmapPage() {
               </Card>
             )
           })}
+        </section>
+
+        <section className="flex flex-col gap-4">
+          <div className="flex max-w-3xl flex-col gap-2">
+            <Badge variant="secondary" className="w-fit">Merged product roadmap</Badge>
+            <h2 className="text-xl font-semibold tracking-tight">Lộ trình sản phẩm sau khi gộp với roadmap team</h2>
+            <p className="text-sm leading-6 text-muted-foreground">
+              Section này đưa roadmap về format theo phase: MVP, sau MVP, mở rộng ngách và B2B/B2C. Nội dung đã gộp
+              các phần team bổ sung với cơ chế, AI, dữ liệu và accountability của app.
+            </p>
+          </div>
+          <div className="grid gap-4">
+            {roadmapProductPhases.map((phase) => (
+              <Card key={phase.phase} className="rounded-lg">
+                <CardHeader>
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="flex flex-col gap-2">
+                      <CardTitle className="text-base">{phase.phase}</CardTitle>
+                      <CardDescription className="max-w-4xl leading-5">{phase.goal}</CardDescription>
+                    </div>
+                    <Badge variant={phase.stage === "Now" ? "default" : "outline"}>{phase.stage}</Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="grid gap-4 lg:grid-cols-3">
+                  {phase.sections.map((section) => (
+                    <div key={section.title} className="rounded-md border bg-muted/20 p-4">
+                      <p className="mb-3 text-sm font-medium">{section.title}</p>
+                      <div className="flex flex-col gap-2">
+                        {section.bullets.map((item) => (
+                          <div key={item} className="flex items-start gap-2 text-sm leading-5">
+                            <CheckCircle2Icon className="mt-0.5 shrink-0 text-primary" />
+                            <span>{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </section>
 
         <section className="flex flex-col gap-4">

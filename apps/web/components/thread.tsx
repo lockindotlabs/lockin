@@ -121,6 +121,11 @@ const AI_CAPABILITIES = [
   },
 ]
 
+type AiEntitlements = {
+  allowedModels: string[]
+  allowedCapabilities: string[]
+}
+
 const DEFAULT_MODEL_ID = "gemini-3.1-flash-lite-preview"
 const DEFAULT_MODEL = GEMINI_MODELS[0]!
 
@@ -554,6 +559,44 @@ const Composer: FC<{
   onSelectedCapabilityChange,
 }) => {
   const { t } = useTranslation()
+  const [entitlements, setEntitlements] = useState<AiEntitlements | null>(null)
+
+  useEffect(() => {
+    let active = true
+    fetch("/api/ai/entitlements")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: AiEntitlements | null) => {
+        if (active) setEntitlements(data)
+      })
+      .catch(() => undefined)
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const models = GEMINI_MODELS.map((model) => ({
+    ...model,
+    disabled:
+      entitlements !== null && !entitlements.allowedModels.includes(model.id),
+    description:
+      entitlements !== null && !entitlements.allowedModels.includes(model.id)
+        ? "Requires Pro"
+        : model.description,
+  }))
+  const capabilities = AI_CAPABILITIES.map((capability) => ({
+    ...capability,
+    disabled:
+      entitlements !== null &&
+      !entitlements.allowedCapabilities.includes(capability.id),
+    description:
+      entitlements !== null &&
+      !entitlements.allowedCapabilities.includes(capability.id)
+        ? capability.id === "web-search"
+          ? "Requires Plus"
+          : "Requires Pro"
+        : undefined,
+  }))
   const [mentions, setMentions] = useState<MentionRef[]>(initialMentions)
   const templateSearchParams = useSearchParams()
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
@@ -653,6 +696,8 @@ const Composer: FC<{
             onSelectedCapabilityChange={onSelectedCapabilityChange}
             selectedTemplateId={selectedTemplateId}
             onSelectedTemplateChange={setSelectedTemplateId}
+            models={models}
+            capabilities={capabilities}
           />
         </ComposerPrimitive.AttachmentDropzone>
       </ComposerPrimitive.Root>
@@ -667,6 +712,8 @@ const ComposerAction: FC<{
   onSelectedCapabilityChange: (value: string | undefined) => void
   selectedTemplateId: string | null
   onSelectedTemplateChange: (id: string | null) => void
+  models: ThreadModelOption[]
+  capabilities: Array<(typeof AI_CAPABILITIES)[number] & { disabled?: boolean; description?: string }>
 }> = ({
   selectedModelId,
   onSelectedModelChange,
@@ -674,6 +721,8 @@ const ComposerAction: FC<{
   onSelectedCapabilityChange,
   selectedTemplateId,
   onSelectedTemplateChange,
+  models,
+  capabilities,
 }) => {
   const { t } = useTranslation()
 
@@ -682,7 +731,7 @@ const ComposerAction: FC<{
       <div className="flex gap-1">
         <ComposerAddAttachment />
         <CapabilitiesSelector
-          capabilities={AI_CAPABILITIES}
+          capabilities={capabilities}
           value={selectedCapabilityId}
           onValueChange={onSelectedCapabilityChange}
           variant="ghost"
@@ -696,7 +745,7 @@ const ComposerAction: FC<{
 
       <div className="flex gap-2">
         <ModelSelector
-          models={GEMINI_MODELS}
+          models={models}
           value={selectedModelId}
           onValueChange={onSelectedModelChange}
           variant={"ghost"}

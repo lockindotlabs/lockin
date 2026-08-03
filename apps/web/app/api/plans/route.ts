@@ -11,6 +11,7 @@ import {
 import prisma from "@workspace/db"
 import { getEffectiveTier } from "@/lib/billing/catalog"
 import { checkPlanCap } from "@/lib/ai/enforcement"
+import { getTemplateAccessForUser } from "@/lib/server/template-market-store"
 
 const PlanStepSchema = z.object({
   id: z.string().min(1),
@@ -83,6 +84,26 @@ export async function POST(req: Request) {
 
   if (!planCapCheck.allowed) {
     return Response.json(planCapCheck.error, { status: 403 })
+  }
+
+  if (parsed.data.templateId) {
+    const access = await getTemplateAccessForUser({
+      userId: user.id,
+      templateId: parsed.data.templateId,
+      tier,
+    })
+
+    if (!access || access.locked) {
+      return Response.json(
+        {
+          code: "TEMPLATE_REQUIRES_UPGRADE",
+          requiredTier: access?.requiredTier ?? "PLUS",
+          upgradeUrl: "/app/billing",
+          message: access?.lockReason ?? "This template requires a higher tier plan.",
+        },
+        { status: 403 }
+      )
+    }
   }
 
   const plan = await upsertOwnedPlan(user.id, parsed.data)

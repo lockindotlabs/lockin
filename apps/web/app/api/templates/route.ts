@@ -1,5 +1,7 @@
 import { getCurrentDbUser } from "@/lib/server/current-db-user"
 import { listMarketTemplates } from "@/lib/server/template-market-store"
+import { getEffectiveTier } from "@/lib/billing/catalog"
+import { getTemplateAccessState } from "@/lib/billing/entitlements"
 import { getExe101TemplateDetail } from "@/lib/templates/exe101-detail"
 import { EXE101_FALLBACK_TEMPLATES } from "@/lib/templates/exe101-fallback"
 
@@ -29,20 +31,31 @@ export async function GET(req: Request) {
       userId: user.id,
     })
 
+    const tier = getEffectiveTier(user.planTier, user.planExpiresAt)
+    const approvedTemplates = await listMarketTemplates({})
+    const approvedIndex = new Map(
+      approvedTemplates.map((template, index) => [template.id, index])
+    )
+
     return Response.json({
-      templates: templates.map((template) =>
-        withDetail({
-          ...template,
-          isOwned: template.authorId === user.id,
+      templates: templates.map((template) => {
+        const isOwned = template.authorId === user.id
+        const access = getTemplateAccessState({
+          tier,
+          marketplaceIndex: approvedIndex.get(template.id) ?? 0,
+          isOwned,
         })
-      ),
+
+        return withDetail({ ...template, isOwned, ...access })
+      }),
     })
   } catch {
     // Fall through to static EXE101 templates when the local DB is unavailable.
   }
 
+  const tier = getEffectiveTier(user.planTier, user.planExpiresAt)
   return Response.json({
-    templates: EXE101_FALLBACK_TEMPLATES.map((template) => ({
+    templates: EXE101_FALLBACK_TEMPLATES.map((template, marketplaceIndex) => ({
       id: template.id,
       slug: template.slug,
       title: template.title,
@@ -54,6 +67,7 @@ export async function GET(req: Request) {
       authorName: null,
       status: "APPROVED",
       isOwned: false,
+      ...getTemplateAccessState({ tier, marketplaceIndex }),
       installCount: 0,
       steps: template.steps.map((step) => ({
         id: step.id,

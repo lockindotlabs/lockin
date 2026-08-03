@@ -14,6 +14,7 @@ import {
   InboxIcon,
   ListChecksIcon,
   Loader2Icon,
+  LockIcon,
   RocketIcon,
   SendHorizonalIcon,
   TimerIcon,
@@ -87,6 +88,9 @@ type MarketTemplate = {
   steps: TemplateStep[]
   scaffoldQuestions: ScaffoldQuestion[]
   detail: TemplateDetail | null
+  locked?: boolean
+  requiredTier?: "PLUS" | "PRO" | null
+  lockReason?: string | null
 }
 
 const OUTPUT_TYPE_META: Record<
@@ -176,6 +180,12 @@ function TemplateCard({
             <Badge variant="secondary" className="gap-1 text-[10px]">
               <UsersIcon className="size-3" />
               {t("app.templates.badges.group")}
+            </Badge>
+          )}
+          {template.locked && (
+            <Badge variant="outline" className="gap-1 text-[10px]">
+              <LockIcon className="size-3" />
+              Plus
             </Badge>
           )}
         </div>
@@ -282,7 +292,7 @@ function TemplateDetailPane({ template }: { template: MarketTemplate | null }) {
     scaffoldFields.every((field) => (answers[field.id]?.trim().length ?? 0) > 0)
 
   const handleStart = async () => {
-    if (!allScaffoldsFilled || isStarting) {
+    if (!allScaffoldsFilled || isStarting || template.locked) {
       return
     }
 
@@ -296,7 +306,9 @@ function TemplateDetailPane({ template }: { template: MarketTemplate | null }) {
         }
       )
       if (!installResponse.ok) {
-        toast.error(t("app.templates.toast.installFailed"))
+        const payload = await installResponse.json().catch(() => null)
+        toast.error(payload?.message ?? t("app.templates.toast.installFailed"))
+        return
       }
 
       const chat = await createDbChat()
@@ -460,7 +472,7 @@ function TemplateDetailPane({ template }: { template: MarketTemplate | null }) {
           <Button
             size="sm"
             onClick={handleStart}
-            disabled={!allScaffoldsFilled || isStarting}
+            disabled={!allScaffoldsFilled || isStarting || template.locked}
             className="shrink-0"
           >
             {isStarting ? (
@@ -476,6 +488,15 @@ function TemplateDetailPane({ template }: { template: MarketTemplate | null }) {
             )}
           </Button>
         </div>
+        {template.locked ? (
+          <Link
+            href="/app/billing"
+            className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+          >
+            <LockIcon className="size-3" />
+            {template.lockReason ?? "Upgrade to unlock this template."}
+          </Link>
+        ) : null}
       </section>
     </div>
   )

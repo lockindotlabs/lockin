@@ -85,7 +85,7 @@ function createOverviewMetrics(input: {
     {
       label: "AI Plans Created",
       value: formatMetricNumber(input.aiPlansCreated),
-      description: input.rangeLabel,
+      description: "all-time AI-assisted plans",
       icon: "aiPlans",
     },
     {
@@ -429,13 +429,6 @@ export async function getOverviewData(
         },
       },
     }),
-    prisma.plan.count({
-      where: {
-        deletedAt: null,
-        createdAt: { gte: range.start, lte: range.end },
-        OR: [{ source: "AI" }, { aiMode: "ASSISTED" }],
-      },
-    }),
     prisma.aiUsage.count({
       where: {
         status: "ERROR",
@@ -443,6 +436,12 @@ export async function getOverviewData(
           gte: range.start,
           lte: range.end,
         },
+      },
+    }),
+    prisma.plan.count({
+      where: {
+        deletedAt: null,
+        OR: [{ source: "AI" }, { aiMode: "ASSISTED" }],
       },
     }),
   ])

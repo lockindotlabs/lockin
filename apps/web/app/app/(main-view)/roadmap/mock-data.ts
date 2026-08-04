@@ -53,6 +53,16 @@ export type RoadmapFoundationArea = {
   unlocks: string[]
 }
 
+export type RoadmapProductPhase = {
+  phase: string
+  stage: "Now" | "Next" | "Later"
+  goal: string
+  sections: Array<{
+    title: string
+    bullets: string[]
+  }>
+}
+
 export const roadmapFeatures: RoadmapFeature[] = [
   {
     id: "accountability",
@@ -500,6 +510,35 @@ export const roadmapFoundationAreas: RoadmapFoundationArea[] = [
     ],
   },
   {
+    title: "Brand, Marketing & Launch Metrics",
+    stage: "Now",
+    readiness: 46,
+    purpose:
+      "Chuẩn bị lớp launch readiness cho MVP: bộ nhận diện, nội dung demo, video người thật - việc thật, traffic tracking và báo cáo tài chính cơ bản.",
+    checkpoints: [
+      "Brand guideline cho UI, video, tone content và demo pitch.",
+      "Content hướng FPT campus: phỏng vấn sinh viên, tình huống học thật, deadline thật.",
+      "Traffic tracking cho landing/demo flow và conversion vào core loop.",
+      "Financial report ban đầu, kể cả mốc doanh thu 0đ, để minh bạch khi trình bày OC2/OC3.",
+    ],
+    buildOrder: [
+      "Brand guideline",
+      "Demo content plan",
+      "Traffic metrics",
+      "Financial report",
+    ],
+    risks: [
+      "Marketing đẹp nhưng không chứng minh được product value.",
+      "Video/content không khớp trải nghiệm thật trong app.",
+      "Metrics chỉ đo view/click mà không đo core loop activation.",
+    ],
+    unlocks: [
+      "Mỗi content phải dẫn về một workflow/demo cụ thể.",
+      "Dùng người thật - việc thật để giữ tính gần gũi.",
+      "Gắn launch metrics với activation và completed outcome.",
+    ],
+  },
+  {
     title: "Integrations & Platform",
     stage: "Later",
     readiness: 29,
@@ -526,6 +565,122 @@ export const roadmapFoundationAreas: RoadmapFoundationArea[] = [
       "Bắt đầu bằng read-only import trước.",
       "Xin permission theo thời điểm cần dùng, không xin ồ ạt.",
       "Luôn có màn review trước khi biến dữ liệu ngoài thành commitment.",
+    ],
+  },
+]
+
+export const roadmapProductPhases: RoadmapProductPhase[] = [
+  {
+    phase: "Giai đoạn 1: MVP - Sản phẩm cốt lõi & Kiểm chứng",
+    stage: "Now",
+    goal:
+      "Hoàn thiện core loop để demo trực tiếp: người dùng nhập mục tiêu, AI tạo plan có workflow mẫu, người dùng focus theo từng step và app đo được mức hoàn thành.",
+    sections: [
+      {
+        title: "AI lập kế hoạch & kho workflow cốt lõi",
+        bullets: [
+          "Hỗ trợ luồng nhập thủ công và luồng hội thoại; AI hỏi câu làm rõ trước khi tạo plan.",
+          "AI quét core workflow library của LockIn, ghép với dữ liệu người dùng và highlight step đến từ user, AI hoặc workflow mẫu.",
+          "Plan có milestone, step, sub-step dạng collapsible, duration, done criteria và source rõ ràng.",
+          "Template browser cho phép chọn workflow dựng sẵn trước khi nhập yêu cầu công việc.",
+        ],
+      },
+      {
+        title: "Focus Session nâng cao",
+        bullets: [
+          "Focus mode hiển thị current step, timer, warning mốc thời gian và evidence cần nộp.",
+          "AI đóng vai trò coach: hướng dẫn cách tiếp cận, tips, nguồn tham khảo, không làm thay người dùng.",
+          "Soft/hard blocking có whitelist, lý do override và liên kết với commitment level.",
+        ],
+      },
+      {
+        title: "Commitment, đo lường & launch readiness",
+        bullets: [
+          "Commitment contract bản nhẹ: deadline, grace period, evidence, recovery review và consequence tự nguyện.",
+          "Basic event tracking cho plan_generated, focus_started, step_completed, task_missed và feedback_submitted.",
+          "Chuẩn bị brand guideline, video người thật - việc thật, FPT campus content, traffic metrics và financial report ban đầu.",
+        ],
+      },
+    ],
+  },
+  {
+    phase: "Giai đoạn 2: Sau MVP - Feedback Loop & Workflow Evolution",
+    stage: "Next",
+    goal:
+      "Dùng phản hồi thật để cải thiện AI, workflow và cơ chế accountability; biến mỗi lần dùng app thành dữ liệu học tập có kiểm soát.",
+    sections: [
+      {
+        title: "AI tự học & cải tiến liên tục",
+        bullets: [
+          "Sau khi hoàn thành plan, AI hỏi step nào hữu ích, step nào sai, estimate có lệch không và thiếu bước nào.",
+          "Workflow tự tiến hóa từ chỉnh sửa của người dùng nhưng luôn cần review trước khi lưu thành version mới.",
+          "AI re-plan khi missed task hoặc scope không còn thực tế, có giải thích lý do thay đổi.",
+        ],
+      },
+      {
+        title: "Workflow upload & quản lý nâng cao",
+        bullets: [
+          "Upload workflow riêng bằng file, paste checklist hoặc import nguồn ngoài ở chế độ read-only.",
+          "AI parse workflow thành step/sub-step, user review rồi lưu vào private workflow library.",
+          "Dropdown chọn nhanh cho category, difficulty, time budget, evidence type, kèm ô nhập nếu option chưa có.",
+        ],
+      },
+      {
+        title: "Accountability & analytics foundation",
+        bullets: [
+          "Reliability score dựa trên start đúng giờ, completion, honest check-in, recovery và evidence level.",
+          "Weekly review cho biết pattern: task hay bị trễ, khung giờ hiệu quả, estimate thường lệch ở đâu.",
+          "Feature flag và experiment tracking cho consequence level, AI wording, reminder timing và focus mode.",
+        ],
+      },
+    ],
+  },
+  {
+    phase: "Giai đoạn 3: Mở rộng - Marketplace, Cá nhân hóa & Ngách chuyên sâu",
+    stage: "Later",
+    goal:
+      "Mở rộng thư viện workflow và cá nhân hóa sâu hơn cho các nhóm người dùng rõ ràng như ôn thi, phỏng vấn, sinh viên và người tự quản lý năng suất.",
+    sections: [
+      {
+        title: "Marketplace & creator ecosystem",
+        bullets: [
+          "Creator studio để publish workflow cá nhân thành template có preview, rating và moderation.",
+          "Quality score kết hợp rating với completion rate thực tế, không chỉ dựa vào cảm tính.",
+          "Template pack chuyên biệt cho luyện thi, phỏng vấn thực tiễn, capstone và deep work week.",
+        ],
+      },
+      {
+        title: "Personal AI coach & advanced focus",
+        bullets: [
+          "Personalization memory ghi preference, khung giờ tốt, loại task hay fail và cách người dùng thích chia nhỏ việc.",
+          "Goal forecast dự báo khả năng kịp deadline dựa trên tốc độ hiện tại.",
+          "Browser extension sync để blocking có hiệu lực ngoài app web, kèm offline/session recovery.",
+        ],
+      },
+    ],
+  },
+  {
+    phase: "Giai đoạn 4: Quy mô B2B/B2C - Education & Organization Workspace",
+    stage: "Later",
+    goal:
+      "Đưa LockIn vào môi trường lớp học, mentor và doanh nghiệp với quyền truy cập rõ ràng, workflow riêng và analytics không xâm phạm quá mức.",
+    sections: [
+      {
+        title: "Education workspace",
+        bullets: [
+          "Giảng viên tạo workflow lớp học, giao milestone, xem progress theo evidence và review blocker.",
+          "Mentor review theo milestone, comment và gợi ý cải thiện mà không chỉnh sửa plan cá nhân tùy tiện.",
+          "Class dashboard tập trung vào learning progress, recovery rate và phần học sinh đang kẹt.",
+        ],
+      },
+      {
+        title: "Organization workspace",
+        bullets: [
+          "Công ty tạo private workflow library, role permission và workspace policy riêng.",
+          "Team progress đo theo deliverable, review và handoff, tránh biến thành giám sát thời gian đơn thuần.",
+          "Governance/privacy controls cho dữ liệu cá nhân, dữ liệu AI và dữ liệu team.",
+        ],
+      },
     ],
   },
 ]

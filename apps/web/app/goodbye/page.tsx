@@ -1,5 +1,8 @@
 import { LogoLab } from "@/components/logo-lab"
 
+export const dynamic = "force-static"
+export const revalidate = false
+
 export default function Page() {
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-neutral-50 px-4 py-8 text-neutral-900 sm:px-6 dark:bg-neutral-900 dark:text-neutral-50">

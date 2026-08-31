@@ -13,7 +13,7 @@ import { Providers } from "@/components/providers"
 import { cn } from "@workspace/ui/lib/utils"
 import "@workspace/ui/styles/globals.css"
 import { AppRouterI18nProvider } from "@workspace/i18n/provider"
-import { I18N_COOKIE_NAME, isSupportedLocale } from "@workspace/i18n"
+import { I18N_COOKIE_NAME, isSupportedLocale, type AppLocale, type TranslationResources } from "@workspace/i18n"
 import { loadTranslations } from "@workspace/i18n/server"
 import { Toaster } from "@workspace/ui/components/sonner"
 import { auth } from "@clerk/nextjs/server"
@@ -62,21 +62,34 @@ export default async function RootLayout({
 }) {
   const cookieStore = await cookies()
   const cookieLocale = cookieStore.get(I18N_COOKIE_NAME)?.value
-  const { userId } = await auth()
-  const settings = userId
-    ? await prisma.userSettings.findUnique({
-        where: { userId },
-        select: { language: true },
-      })
-    : null
-  const storedLocale = settings?.language ?? undefined
-  const requestedLocale = isSupportedLocale(storedLocale)
-    ? storedLocale
-    : cookieLocale
-  const { locale, namespace, translations } = await loadTranslations(
-    requestedLocale,
-    "common"
-  )
+
+  let locale: AppLocale = "en"
+  let namespace = "common"
+  let translations: TranslationResources = {}
+
+  try {
+    const { userId } = await auth()
+    const settings = userId
+      ? await prisma.userSettings.findUnique({
+          where: { userId },
+          select: { language: true },
+        })
+      : null
+    const storedLocale = settings?.language ?? undefined
+    const requestedLocale = isSupportedLocale(storedLocale)
+      ? storedLocale
+      : cookieLocale
+    const loaded = await loadTranslations(requestedLocale, "common")
+    locale = loaded.locale
+    namespace = loaded.namespace
+    translations = loaded.translations
+  } catch {
+    const fallbackLocale = isSupportedLocale(cookieLocale) ? cookieLocale : "en"
+    const loaded = await loadTranslations(fallbackLocale, "common")
+    locale = loaded.locale
+    namespace = loaded.namespace
+    translations = loaded.translations
+  }
 
   return (
     <html

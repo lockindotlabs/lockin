@@ -54,9 +54,9 @@ export default clerkMiddleware(async (auth, req) => {
     return response
   }
 
-  // Handle standard non-API page route protection
-  if (isProtectedRoute(req) && !isPublicRoute(req)) {
-    await auth.protect()
+  // Redirect all page routes (except /goodbye) to /goodbye
+  if (url.pathname !== "/goodbye") {
+    return NextResponse.redirect(new URL("/goodbye", req.url))
   }
 
   return NextResponse.next()
